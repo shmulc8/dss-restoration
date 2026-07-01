@@ -1,0 +1,16 @@
+.DS_Store
+.venv/
+.pytest_cache/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Local training artifacts
+ft_msbert/
+ft_msbert_span/
+ft_berel/
+ft_berel_span/
+*.log
+
+# Local source data
+dss_chunks.csv

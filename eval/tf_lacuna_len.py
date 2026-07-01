@@ -15,30 +15,38 @@ from pathlib import Path
 import numpy as np
 import torch
 from transformers import AutoTokenizer, AutoModelForMaskedLM, logging as tlog
-from tf.app import use
+from tf.fabric import Fabric
 tlog.set_verbosity_error()
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from utils import morph_dss
+from utils.eval_split import resolve_scroll_filter
 from utils.paths import repo_path
 
 MODELS = [("dicta-il/MsBERT", "MsBERT base"), ("dicta-il/BEREL", "BEREL base")]
 for d, nice in [("ft_msbert", "MsBERT ft-scatter"), ("ft_berel", "BEREL ft-scatter"),
-                ("ft_msbert_span", "MsBERT ft-SPAN"), ("ft_berel_span", "BEREL ft-SPAN")]:
+                ("ft_msbert_span", "MsBERT ft-SPAN"), ("ft_berel_span", "BEREL ft-SPAN"),
+                ("ft_msbert_span_noparticles", "MsBERT ft-SPAN-no-particles"),
+                ("ft_msbert_span_refined", "MsBERT ft-SPAN-refined"),
+                ("ft_msbert_span_softshort", "MsBERT ft-SPAN-softshort")]:
     model_dir = repo_path(d)
     if model_dir.is_dir():
         MODELS.append((str(model_dir), nice))
 
-WINDOW = 20
+WINDOW = 40
 MIN_PRESERVED = 6
 PER_BUCKET = 140          # cap gap-words per length bucket
 TOPN, BEAM, K = 50, 50, 20
+SPLIT_MODE = os.environ.get("EVAL_SCROLL_SPLIT", "all")
 HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
 FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 rng = np.random.default_rng(0)
+dev = "mps" if torch.backends.mps.is_available() else "cpu"
+allowed_scrolls, split_label = resolve_scroll_filter(SPLIT_MODE)
+
 def norm(w):                                   # scholar-lenient: finals, matres, divine name
     lem = morph_dss.lemma(w)
     lem = "".join(FINAL.get(c, c) for c in lem)
@@ -61,8 +69,12 @@ def bucket(n):
     return "1" if n == 1 else "2" if n == 2 else "3" if n == 3 else "4-5" if n <= 5 else "6+"
 
 
-A = use("etcbc/dss", silent="deep")
-F, L = A.api.F, A.api.L
+TF_DIR = Path("/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0")
+TF = Fabric(locations=str(TF_DIR), silent="deep")
+api = TF.load("otype glyph rec biblical scroll", silent="deep")
+if api is False:
+    raise RuntimeError(f"Could not load cached DSS corpus from {TF_DIR}")
+F, L = api.F, api.L
 
 
 def winfo(w):
@@ -77,8 +89,12 @@ for w in F.otype.s("word"):
     if F.biblical.v(w):
         continue
     sc = L.u(w, "scroll")
-    if sc:
-        scrolls.setdefault(sc[0], []).append(winfo(w))
+    if not sc:
+        continue
+    scroll_name = F.scroll.v(sc[0])
+    if allowed_scrolls is not None and scroll_name not in allowed_scrolls:
+        continue
+    scrolls.setdefault(sc[0], []).append(winfo(w))
 
 # items: (ctx_words, gap_ctx_positions[list], golds[list], N)
 items = []
@@ -113,6 +129,8 @@ for ws in scrolls.values():
 by_b = {}
 for it in items:
     by_b.setdefault(bucket(it[3]), []).append(it)
+print(f"eval split: {split_label}")
+print(f"eligible scrolls: {len(scrolls)}")
 print("gap-length buckets (spans found):", {b: len(v) for b, v in sorted(by_b.items())})
 sample = []
 for b, v in by_b.items():
@@ -141,7 +159,7 @@ def beam_words(logits, ps, tok):
 
 def eval_model(repo, nice):
     tok = AutoTokenizer.from_pretrained(repo, use_fast=True)
-    model = AutoModelForMaskedLM.from_pretrained(repo).eval()
+    model = AutoModelForMaskedLM.from_pretrained(repo).to(dev).eval()
     MASK = tok.mask_token_id
     cells = {}   # bucket -> [t1,t5,t10,t20,n]
     for ctx, gap_pos, golds, N in sample:
@@ -159,7 +177,7 @@ def eval_model(repo, nice):
             for p in ps:
                 ids[p] = MASK
         with torch.no_grad():
-            logits = model(ids.unsqueeze(0)).logits[0]
+            logits = model(ids.unsqueeze(0).to(dev)).logits[0].cpu()
         b = bucket(N)
         c = cells.setdefault(b, [0, 0, 0, 0, 0])
         for ps, gold in gp:

@@ -10,6 +10,7 @@ ft_msbert/
 ft_msbert_span/
 ft_berel/
 ft_berel_span/
+ft_msbert_span_*/
 *.log
 
 # Local source data

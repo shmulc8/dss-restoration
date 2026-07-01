@@ -15,22 +15,29 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from utils import morph_dss
+from utils.eval_split import resolve_scroll_filter
 from utils.paths import repo_path
 
 MODELS = [
     ("dicta-il/MsBERT", "MsBERT base"),
     ("dicta-il/BEREL", "BEREL base"),
 ]
-for d, nice in [("ft_msbert_span", "MsBERT+DSS-span-ft")]:
+for d, nice in [("ft_msbert_span", "MsBERT+DSS-span-ft"),
+                ("ft_msbert_span_noparticles", "MsBERT+DSS-span-ft-no-particles"),
+                ("ft_msbert_span_refined", "MsBERT+DSS-span-ft-refined"),
+                ("ft_msbert_span_softshort", "MsBERT+DSS-span-ft-softshort")]:
     model_dir = repo_path(d)
     if model_dir.is_dir():
         MODELS.append((str(model_dir), nice))
 
 WINDOW, MIN_PRESERVED, MAX_ITEMS = 20, 8, 300
 TOPN, BEAM, K = 20, 25, 10
+SPLIT_MODE = os.environ.get("EVAL_SCROLL_SPLIT", "all")
 HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
 FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 rng = np.random.default_rng(0)
+dev = "mps" if torch.backends.mps.is_available() else "cpu"
+allowed_scrolls, split_label = resolve_scroll_filter(SPLIT_MODE)
 
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 FUNCTION = {"אשר", "כי", "כיא", "את", "אל", "על", "אם", "לא", "לוא", "כל", "כול",
@@ -70,8 +77,12 @@ for w in F.otype.s("word"):
     if F.biblical.v(w):
         continue
     sc = L.u(w, "scroll")
-    if sc:
-        scrolls.setdefault(sc[0], []).append(winfo(w))
+    if not sc:
+        continue
+    scroll_name = F.scroll.v(sc[0])
+    if allowed_scrolls is not None and scroll_name not in allowed_scrolls:
+        continue
+    scrolls.setdefault(sc[0], []).append(winfo(w))
 
 items = []
 for ws in scrolls.values():
@@ -92,6 +103,7 @@ for ws in scrolls.values():
             items.append((ctx, tpos, ctx[tpos]))
 sel = rng.choice(len(items), size=min(MAX_ITEMS, len(items)), replace=False)
 items = [items[i] for i in sel]
+print(f"eval split: {split_label} | eligible scrolls: {len(scrolls)} | sampled items: {len(items)}")
 
 
 def beam_words(logits, ps, tok):
@@ -114,7 +126,7 @@ def beam_words(logits, ps, tok):
 
 def eval_model(repo, nice):
     tok = AutoTokenizer.from_pretrained(repo, use_fast=True)
-    model = AutoModelForMaskedLM.from_pretrained(repo).eval()
+    model = AutoModelForMaskedLM.from_pretrained(repo).to(dev).eval()
     
     n_all = n_content = 0
     all_exact_1 = all_exact_10 = all_norm_1 = all_norm_10 = 0
@@ -133,7 +145,7 @@ def eval_model(repo, nice):
         for p in ps:
             ids[p] = tok.mask_token_id
         with torch.no_grad():
-            logits = model(ids.unsqueeze(0)).logits[0]
+            logits = model(ids.unsqueeze(0).to(dev)).logits[0].cpu()
         ranked = beam_words(logits, ps, tok)
         
         # metrics

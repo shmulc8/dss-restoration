@@ -5,6 +5,7 @@ base MsBERT model. This is a gentler intervention than training a fresh model
 with the no-particles objective from scratch.
 """
 import math
+import os
 import sys
 from pathlib import Path
 
@@ -17,22 +18,29 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from utils.dss_split import load_split
+from utils.dss_split import load_partition
 from utils.paths import repo_path
 
 tlog.set_verbosity_error()
 
 BASE_REPO = str(repo_path("ft_msbert_span"))
-OUTDIR = repo_path("ft_msbert_span_refined")
-MAX_LEN, EPOCHS, BATCH, LR = 160, 2, 16, 2e-5
+OUTDIR = repo_path(os.environ.get("OUTDIR_NAME", "ft_msbert_span_refined"))
+MAX_LEN = 160
+EPOCHS = int(os.environ.get("EPOCHS", "2"))
+BATCH = int(os.environ.get("BATCH", "16"))
+LR = float(os.environ.get("LR", "2e-5"))
 MASK_FRAC, SPAN_P, SPAN_MAX = 0.15, 0.3, 10
 MIN_TARGET_LEN = 2
+TRAIN_PARTITION = os.environ.get("TRAIN_PARTITION", "fit")
 rng = np.random.default_rng(0)
 
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
-train, _, _ = load_split()
+train = load_partition(TRAIN_PARTITION)
 texts = [row["text"].strip() for row in train]
-print(f"device={dev} | span-ft-continue-no-particles | train chunks={len(texts)}\n")
+print(
+    f"device={dev} | span-ft-continue-no-particles | partition={TRAIN_PARTITION} "
+    f"| epochs={EPOCHS} | lr={LR:g} | train chunks={len(texts)}\n"
+)
 
 
 def count_eligible_words():

@@ -37,7 +37,7 @@ for d, nice in [("ft_msbert", "MsBERT ft-scatter"), ("ft_berel", "BEREL ft-scatt
 
 WINDOW = 40
 MIN_PRESERVED = 6
-PER_BUCKET = 140          # cap gap-words per length bucket
+PER_BUCKET = int(os.environ.get("PER_BUCKET", "140"))          # <=0 means use all spans
 TOPN, BEAM, K = 50, 50, 20
 SPLIT_MODE = os.environ.get("EVAL_SCROLL_SPLIT", "all")
 HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
@@ -134,7 +134,8 @@ print(f"eligible scrolls: {len(scrolls)}")
 print("gap-length buckets (spans found):", {b: len(v) for b, v in sorted(by_b.items())})
 sample = []
 for b, v in by_b.items():
-    idx = rng.choice(len(v), size=min(len(v), PER_BUCKET), replace=False)
+    take = len(v) if PER_BUCKET <= 0 else min(len(v), PER_BUCKET)
+    idx = rng.choice(len(v), size=take, replace=False)
     sample += [v[i] for i in idx]
 print(f"eval spans: {len(sample)}\n")
 

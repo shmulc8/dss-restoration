@@ -9,7 +9,7 @@ listed here are exploratory, superseded, or awaiting a frozen protocol.
 
 | Class | Meaning |
 | :--- | :--- |
-| Grounded diagnostic | The hidden reference is physically preserved text, but the task is not a real lacuna |
+| Synthetic-damage diagnostic | The reference is preserved text hidden artificially; the task is not a real lacuna |
 | Literature-agreement pilot | The reference is one or more modern attributed proposals at a real lacuna |
 | Editorial-label pilot | The reference is an anonymous Text-Fabric reconstruction used only for evaluation |
 | Paper result | Frozen protocol, full leakage audit, uncertainty, and predeclared analysis complete |
@@ -61,6 +61,38 @@ No result currently qualifies as a final paper result.
   claim for the observed deltas.
 - Artifact:
   [`analysis/reports/PRESERVED_RAG_LACUNA_LENGTHS.md`](../analysis/reports/PRESERVED_RAG_LACUNA_LENGTHS.md).
+
+### D. Embible-style synthetic-damage character/word baseline
+
+- Unit: one contiguous span of physically preserved text, hidden artificially
+  for testing. These are synthetic lacunae, not real manuscript lacunae.
+- Scope: 15 development and 30 held-out spans, balanced across one, two, and
+  three words.
+- Primary information: unknown character length, word count, and word
+  boundaries. Search caps are three words and 18 characters.
+- Word-only exact Top-10: 16.7%.
+- Base TavBERT character-only exact Top-10: 6.7%.
+- Scaled Embible overlap ensemble exact Top-10: 6.7%.
+- Separate dev-fitted rank ensemble exact Top-10: 10.0%.
+- All four primary systems score 0% exact Top-10 on the two- and three-word strata;
+  their aggregate hits come from the single-word stratum.
+- Oracle diagnostics: word-boundary-filtered Top-10 is 33.3%, with 46.7%
+  candidate failure; character oracle-length CharHit@5 is 48.3% over 236
+  characters.
+- Status: synthetic-damage diagnostic pilot.
+- Limitation: 30 targets, no confidence interval, base TavBERT is not
+  preserved-DSS fine-tuned, the Embible word-candidate pool is scaled down from
+  1,000 to at most 60, and neither ensemble improves exact recovery over UWC.
+  Like Embible's masked-Tanakh evaluation, this does not measure accuracy on
+  naturally occurring lacunae. The named overlap condition follows the paper's
+  stated rule; it is not an exact reproduction of the discrepant public backend
+  implementation.
+- Frozen held-out sample hash:
+  `9d3e547ba461b7ec2743e6948cc4e8b9f4c72fd7652fd476a91bce94ea265132`.
+- Artifacts:
+  [`analysis/reports/EMBIBLE_DSS_BENCHMARK.md`](../analysis/reports/EMBIBLE_DSS_BENCHMARK.md)
+  and
+  [`analysis/reports/embible_dss_benchmark.json`](../analysis/reports/embible_dss_benchmark.json).
 
 ## Claims that are not supported
 

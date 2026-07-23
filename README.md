@@ -17,7 +17,8 @@ The intended contribution is a leakage-controlled evaluation framework for DSS
 restoration, not a claim that a model has recovered the original wording of a
 damaged manuscript. The framework separates four questions:
 
-1. Can the model recover genuinely preserved DSS language hidden for testing?
+1. Can the model recover preserved DSS language after we hide it synthetically
+   for testing?
 2. Does it rank attested modern scholarly proposals highly at real lacunae?
 3. Do train-only textual parallels improve predictions on the same frozen test
    cases?
@@ -37,6 +38,7 @@ interchangeable and must not be collapsed into one accuracy headline.
 | Attributed real-lacuna comparison | 74 single-word Qumran Digital targets | 63.5% Top-10 | Agreement with any physically compatible attributed reading; not ground truth |
 | RAG ablation on those targets | Same 74 targets | 63.5% to 63.5% Top-10 | No measured improvement |
 | Multiword RAG pilot | 100 held-out Text-Fabric spans | 7.0% to 9.0% exact-sequence Top-10 | Descriptive pilot; word-slot count is supplied and uncertainty is too large for a paper claim |
+| Embible-style synthetic-damage baseline | 30 artificially hidden spans from held-out DSS scrolls | UWC 16.7%, character 6.7%, Embible overlap ensemble 6.7%, rank ensemble 10.0% exact Top-10 | Known-answer pilot, not real-lacuna evaluation; neither ensemble improves UWC and all 2–3 word exact scores are 0% |
 
 The physical-constraint ablation on the 74 Qumran Digital targets scores 9.5%
 Top-10 without visible-letter and approximate-length constraints versus 63.5%
@@ -78,6 +80,9 @@ tests, realistic damage generation, and an unknown-length decoder. The baseline
 matrix also adopts Embible's Hebrew character/word comparison: word-only,
 TavBERT-style character-only, constrained word completion, and a calibrated
 character-word ensemble under known, predicted, and unknown whitespace.
+Like Embible, this comparison creates synthetic damage in intact text so the
+answer is known. Real manuscript lacunae are a separate literature-agreement
+and scholar-evaluation track, not an automatic accuracy test.
 
 ## Current evaluation entry points
 
@@ -90,6 +95,9 @@ character-word ensemble under known, predicted, and unknown whitespace.
 
 # Run the retained pilot evaluations
 .venv/bin/python eval/run_all_experiments.py --pilots
+
+# Run only the Embible-style character/word matrix
+.venv/bin/python eval/run_all_experiments.py --pilots --only embible
 ```
 
 The runner includes only the supported pipeline. Older experimental scripts may
@@ -97,8 +105,9 @@ remain for exploratory diagnosis, but they are not registered paper results.
 
 ## Result terminology
 
-- **Preserved recovery:** the hidden answer was physically present in the
-  manuscript transcription.
+- **Synthetic preserved recovery:** physically preserved transcription is
+  hidden artificially, creating a known-answer benchmark rather than a real
+  lacuna.
 - **Literature agreement:** a prediction matches at least one compatible,
   attributed modern proposal.
 - **Slot score:** an individual missing word is evaluated independently.

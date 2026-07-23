@@ -8,8 +8,9 @@ metrics, and analysis code are frozen.
 
 The paper must answer four questions separately.
 
-**RQ1 — language recovery.** Can a model recover text that is physically
-preserved but hidden from it under a realistic model of manuscript damage?
+**RQ1 — synthetic-damage recovery.** Can a model recover text that is
+physically preserved but hidden artificially under a realistic model of
+manuscript damage?
 
 **RQ2 — literature agreement.** At real lacunae, does the model rank one or
 more physically compatible, attributed scholarly restorations highly?
@@ -20,8 +21,9 @@ retrieval from eligible training material improve the base model, and when?
 **RQ4 — scholar utility.** Do model candidates, retrieved parallels, or their
 combination improve scholars' final decisions, time, or confidence?
 
-RQ1 has manuscript-grounded answers. RQ2 has editorial reference readings.
-Neither substitutes for RQ4.
+RQ1 has known transcription answers because the damage is synthetic. RQ2 has
+editorial reference readings at natural lacunae, but no observable manuscript
+truth. Neither substitutes for RQ4.
 
 ## 2. Corpus and provenance
 
@@ -96,8 +98,18 @@ rankings helps with partial words and whitespace uncertainty.
 
 Embible contributes a particularly relevant Hebrew experimental design. It
 compares word models with TavBERT character predictions and distinguishes
-unknown from known whitespace and word-length information. We will reproduce
-that logic as a controlled DSS ablation with stronger splits and span metrics.
+unknown from known whitespace and word-length information. The first controlled
+DSS baseline matrix is implemented in `eval/tf_embible_dss_benchmark.py`, with
+stronger splits and span metrics. Its current character arm uses base TavBERT;
+it is not yet a final trained-system comparison.
+
+Embible does **not** evaluate naturally occurring inscription lacunae. It
+randomly masks 5%, 10%, or 15% of 1,071 Tanakh verses, and explicitly names
+testing masked Biblical verses instead of actual inscriptions as its main
+limitation. Our analogous automatic benchmark also hides preserved text
+artificially. We improve domain relevance and leakage control by using
+scroll-disjoint, non-biblical DSS text, but we do not turn synthetic damage into
+evidence of accuracy at real lacunae.
 
 Required systems:
 
@@ -107,10 +119,12 @@ Required systems:
    letters and whitespace;
 3. **word-only constrained:** the word model is filtered by a physically
    observable character budget and/or word boundaries;
-4. **character-word ensemble:** combine calibrated character and word scores,
-   reject candidates that contradict visible letters, and let predicted
-   whitespace propose multiple word segmentations;
-5. **oracle boundary diagnostic:** supply gold boundaries only to measure the
+4. **Embible overlap ensemble:** intersect the Top-5 character sequences with
+   word-model candidates, average normalized model scores on overlaps, and
+   fall back to character predictions when there is no overlap;
+5. **rank-fusion ensemble:** retain our dev-fitted character/word rank fusion as
+   a separate baseline rather than calling it Embible's ensemble;
+6. **oracle boundary diagnostic:** supply gold boundaries only to measure the
    ceiling created by boundary information.
 
 Required information regimes:
@@ -126,26 +140,44 @@ Required information regimes:
 Embible's unconstrained condition assumes a single missing word when whitespace
 is unknown. We will not make that assumption for multiword DSS lacunae: U0 must
 search over both content and the number of words, and decoding failure counts as
-a miss.
+a miss. Consequently our U0 is a DSS-motivated extension of UWC, not a literal
+replication of Embible's single-word assumption.
 
-For comparability, add Embible-style 5%, 10%, and 15% random-mask stress tests
-using both of its masking strategies: word-first partial masking, and masking
-that also affects whitespace. These are secondary robustness tests. The primary
-Track A benchmark still samples contiguous damage from the empirical DSS
-distribution rather than uniformly masking Biblical-style text.
+We audited the public [Embible repository](https://github.com/harelm4/Embible)
+at root commit `63dc79f1e4240b01883f5fe03e4e3389b8f2bc0d` and backend master
+`7c9e769`. The released code does not exactly instantiate the prose protocol:
+the paper describes Top-5 character candidates, Top-1,000 word candidates, and
+character fallback when their overlap is empty; backend `Char_model.py` retains
+up to 100 character completions, `SameLengthAndCharsWordModel.py` starts from a
+raw Top-10,000 word pool before filtering, and `ensemble_v2.py` falls back only
+when the word list is empty. Our named Embible-overlap condition follows the
+paper-described Top-5/intersection/fallback rule, records its smaller candidate
+pool, and must therefore be called a **scaled paper-protocol adaptation**, not
+an exact reproduction of either the reported experiment or the released code.
 
-Report CharHit@1/5 and WordHit@1/5 for direct comparison with Embible, but do
-not use them as the DSS headline. Add exact-span Top-K, CER, whitespace
-boundary F1, generated word-count error, and decoder failure rate. Tune ensemble
-weights and stopping rules on development scrolls by exact-span performance,
-not perplexity alone.
+For comparability, the implemented matrix hides one, two, and three contiguous
+words within eight context words on each side: approximately 5%, 10%, and 15%
+of the displayed word sequence. A future direct replication may also use
+Embible's two random-masking strategies, but it remains secondary. The primary
+Track A benchmark samples contiguous damage rather than uniformly masking
+Biblical-style text.
+
+The implemented report includes CharHit@1/5, sequence-derived WordHit@1/5,
+exact-span Top-K, CER, whitespace boundary F1, generated word-count error, and
+decoder failure rate. Sequence-derived WordHit asks whether a word appears in
+the correct position in one of the Top-K complete sequences, so it is stricter
+than and not numerically identical to Embible's independent WordHit. Length
+penalties and ensemble weight are selected on development scrolls by exact-span
+performance, not perplexity. Gold length and boundaries are confined to
+explicitly labelled oracle diagnostics.
 
 ## 4. Evaluation tracks
 
-### Track A — preserved-ink recovery
+### Track A — synthetic preserved-ink recovery
 
 Construct targets from genuinely preserved text, then apply realistic synthetic
-damage. This is the primary automatic ground-truth benchmark.
+damage. This is the primary known-answer benchmark. Its targets are not real
+lacunae, even though the source language is physically preserved DSS text.
 
 Evaluate three information regimes:
 
@@ -164,6 +196,8 @@ letters, surrounding damage, named entities, and formulaicity.
 
 - Use attributed restorations from Qumran Digital or another licensed,
   versioned source.
+- Treat the original missing wording as unobservable: automatic “accuracy” is
+  unavailable at these locations.
 - Preserve every compatible alternative rather than choosing a single gold
   reading.
 - One manuscript location is one primary observation, even when a proposal is

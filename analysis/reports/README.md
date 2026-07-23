@@ -10,6 +10,8 @@ Only these generated reports are current:
 - `qd_researcher_comparison.json`
 - `PRESERVED_RAG_LACUNA_LENGTHS.md`
 - `preserved_rag_lacuna_lengths.json`
+- `EMBIBLE_DSS_BENCHMARK.md`
+- `embible_dss_benchmark.json`
 - corpus and training manifests
 
 Other files in this directory support exploratory interfaces or failure

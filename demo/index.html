@@ -270,6 +270,37 @@
               <div class="source-comparison">
                 <div class="source-comparison-head">
                   <div>
+                    <h5>Embible-style synthetic-damage baseline</h5>
+                    <p class="small">
+                      Preserved held-out DSS text is hidden artificially; these are not
+                      real lacunae. Primary systems receive no gold length or boundaries.
+                    </p>
+                  </div>
+                  <span class="source-count-badge">30 frozen targets</span>
+                </div>
+                <div class="source-table-wrap">
+                  <table class="metric-table source-table">
+                    <thead>
+                      <tr><th>System</th><th>Exact Top-1</th><th>Exact Top-10</th><th>Top-1 CER</th><th>Boundary F1</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Preserved-only word model</td><td>3.3%</td><td>16.7%</td><td>0.890</td><td>0.300</td></tr>
+                      <tr><td>Base TavBERT character model</td><td>6.7%</td><td>6.7%</td><td>0.837</td><td>0.333</td></tr>
+                      <tr><td>Scaled Embible overlap ensemble</td><td>6.7%</td><td>6.7%</td><td>0.802</td><td>0.333</td></tr>
+                      <tr><td>Dev-fitted rank ensemble</td><td>3.3%</td><td>10.0%</td><td>0.856</td><td>0.267</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p class="source-note">
+                  Neither ensemble improves the word model. Exact Top-10 is 0% for every
+                  two- and three-word target. As in Embible's masked-Tanakh evaluation,
+                  this known-answer experiment measures synthetic damage, not accuracy at
+                  naturally occurring lacunae.
+                </p>
+              </div>
+              <div class="source-comparison">
+                <div class="source-comparison-head">
+                  <div>
                     <h5>Agreement by bibliographic source</h5>
                     <p class="small">Each source contributes at most one observation per manuscript target.</p>
                   </div>

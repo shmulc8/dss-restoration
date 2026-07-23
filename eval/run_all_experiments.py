@@ -56,6 +56,19 @@ EXPERIMENTS = (
         ("eval/tf_preserved_rag_multiword_benchmark.py", "--per-bucket", "25"),
         "pilots",
     ),
+    Experiment(
+        "embible",
+        "Embible-style unknown-boundary character/word DSS baseline",
+        (
+            "eval/tf_embible_dss_benchmark.py",
+            "--dev-per-length",
+            "5",
+            "--test-per-length",
+            "10",
+            "--local-files-only",
+        ),
+        "pilots",
+    ),
 )
 
 

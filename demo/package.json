@@ -1,0 +1,11 @@
+{
+  "name": "dss-restoration-demo",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler pages deploy .",
+    "dev": "wrangler pages dev ."
+  },
+  "devDependencies": {
+    "wrangler": "^4.107.0"
+  }
+}

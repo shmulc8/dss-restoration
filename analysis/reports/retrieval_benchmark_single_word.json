@@ -1,0 +1,67 @@
+{
+  "cases": 4196,
+  "conditions": {
+    "fit_any_composition": {
+      "condition": "fit_any_composition",
+      "coverage": {
+        "cases": 4196,
+        "cases_with_passages": 4193,
+        "cases_with_passages_pct": 99.9,
+        "misses": 2736,
+        "gold_present_all_count": 2361,
+        "gold_present_all_pct": 56.3,
+        "gold_present_miss_count": 1227,
+        "gold_present_miss_pct": 44.8
+      },
+      "rerank": {
+        "baseline_top1_count": 826,
+        "baseline_top1_pct": 19.7,
+        "reranked_top1_count": 640,
+        "reranked_top1_pct": 15.3,
+        "delta_cases": -186,
+        "delta_pts": -4.4,
+        "improved_top1_cases": 186,
+        "hurt_top1_cases": 372,
+        "baseline_top5_count": 1460,
+        "baseline_top5_pct": 34.8,
+        "reranked_top5_count": 1460,
+        "reranked_top5_pct": 34.8,
+        "supported_top1_count": 2830,
+        "supported_top1_pct": 67.4,
+        "rerank_ceiling_top1_count": 1134,
+        "rerank_ceiling_top1_pct": 27.0
+      }
+    },
+    "fit_cross_composition_only": {
+      "condition": "fit_cross_composition_only",
+      "coverage": {
+        "cases": 4196,
+        "cases_with_passages": 4012,
+        "cases_with_passages_pct": 95.6,
+        "misses": 2736,
+        "gold_present_all_count": 1972,
+        "gold_present_all_pct": 47.0,
+        "gold_present_miss_count": 946,
+        "gold_present_miss_pct": 34.6
+      },
+      "rerank": {
+        "baseline_top1_count": 826,
+        "baseline_top1_pct": 19.7,
+        "reranked_top1_count": 648,
+        "reranked_top1_pct": 15.4,
+        "delta_cases": -178,
+        "delta_pts": -4.2,
+        "improved_top1_cases": 172,
+        "hurt_top1_cases": 350,
+        "baseline_top5_count": 1460,
+        "baseline_top5_pct": 34.8,
+        "reranked_top5_count": 1460,
+        "reranked_top5_pct": 34.8,
+        "supported_top1_count": 2583,
+        "supported_top1_pct": 61.6,
+        "rerank_ceiling_top1_count": 1026,
+        "rerank_ceiling_top1_pct": 24.5
+      }
+    }
+  }
+}

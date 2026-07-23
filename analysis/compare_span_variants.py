@@ -19,6 +19,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from utils import morph_dss
+from utils.book_filters import resolve_book_exclusions
 from utils.eval_split import resolve_scroll_filter
 from utils.paths import repo_path
 
@@ -34,10 +35,17 @@ for dirname, label in [
     model_dir = repo_path(dirname)
     if model_dir.is_dir():
         MODELS.append((str(model_dir), label))
+for spec in filter(None, os.environ.get("EXTRA_MODELS", "").split(",")):
+    dirname, label = spec.split(":", 1)
+    model_dir = repo_path(dirname)
+    if model_dir.is_dir():
+        MODELS.append((str(model_dir), label))
+MODEL_FILTERS = [part.strip().lower() for part in os.environ.get("MODEL_FILTER", "").split(",") if part.strip()]
 
 WINDOW, MIN_PRESERVED, MAX_ITEMS = 20, 8, 300
 TOPN, BEAM, K = 50, 50, 20
 SPLIT_MODE = os.environ.get("EVAL_SCROLL_SPLIT", "all")
+BOOK_FILTER_MODE = os.environ.get("BOOK_FILTER_MODE", "all")
 HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
 FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
@@ -49,6 +57,14 @@ FUNCTION = {
 rng = np.random.default_rng(0)
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
 allowed_scrolls, split_label = resolve_scroll_filter(SPLIT_MODE)
+excluded_books, book_filter_label = resolve_book_exclusions(BOOK_FILTER_MODE)
+
+if MODEL_FILTERS:
+    MODELS = [
+        (repo, label)
+        for repo, label in MODELS
+        if any(token in label.lower() or token in repo.lower() for token in MODEL_FILTERS)
+    ]
 
 
 def norm(word: str) -> str:
@@ -94,6 +110,8 @@ for word_node in F.otype.s("word"):
     scroll_name = F.scroll.v(scroll[0])
     if allowed_scrolls is not None and scroll_name not in allowed_scrolls:
         continue
+    if scroll_name in excluded_books:
+        continue
     scrolls.setdefault(scroll[0], []).append(winfo(word_node))
 
 items = []
@@ -117,7 +135,10 @@ for words in scrolls.values():
 sel = rng.choice(len(items), size=min(MAX_ITEMS, len(items)), replace=False)
 items = [items[i] for i in sel]
 morph_dss.lemmas([gold for _, _, gold in items])
-print(f"eval split: {split_label} | eligible scrolls: {len(scrolls)} | sampled items: {len(items)}")
+print(
+    f"eval split: {split_label} | book filter: {book_filter_label} "
+    f"| eligible scrolls: {len(scrolls)} | sampled items: {len(items)}"
+)
 
 
 def beam_words(logits, positions, tok):

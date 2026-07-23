@@ -15,3 +15,8 @@ ft_msbert_span_*/
 
 # Local source data
 dss_chunks.csv
+
+# Node dependencies
+node_modules/
+demo/node_modules/
+

@@ -1,0 +1,974 @@
+{
+  "strict_preserved_any_composition": {
+    "condition": "strict_preserved_any_composition",
+    "total_cases": 4196,
+    "matched_cases": 497,
+    "matched_pct": 11.8,
+    "correct_cases": 403,
+    "correct_pct_over_all": 9.6,
+    "correct_pct_over_matched": 81.1,
+    "window_counts": {
+      "2": 223,
+      "4": 56,
+      "5": 113,
+      "3": 105
+    },
+    "mean_support_count": 1.12,
+    "mean_source_groups": 1.14,
+    "examples": [
+      {
+        "row_id": "3",
+        "scroll": "1QS",
+        "excluded_group": null,
+        "gold": "לב",
+        "predicted": "לב",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "לב",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לשים לספר סרך היחד לדרוש אל בכול ⬚⬚⬚ ו בכול נפש לעשות הטוב ו הישר ל כאשר צוה ב יד מושה ו"
+      },
+      {
+        "row_id": "42",
+        "scroll": "1QpHab",
+        "excluded_group": null,
+        "gold": "רשע",
+        "predicted": "ראש",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ראש",
+            1
+          ],
+          [
+            "רואש",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לוא יצא לנצח משפט כיא רשע מכתיר את הצדיק הרשע הוא הכוהן ה ⬚⬚⬚ ו הצדיק הוא מורה הצדק אשר על כן יצא המשפט מעוקל ולוא"
+      },
+      {
+        "row_id": "76",
+        "scroll": "1QpHab",
+        "excluded_group": null,
+        "gold": "כתיאים",
+        "predicted": "שבויים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שבויים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לוא יאמינו בחוקי אל ההולך למרחבי ארץ לרשת משכנות לוא על ה ⬚⬚⬚ אשר ו במישור ילכו לכות ו לבוז את ערי הארץ כיא הוא אשר אמר"
+      },
+      {
+        "row_id": "83",
+        "scroll": "1QpHab",
+        "excluded_group": null,
+        "gold": "כתיאים",
+        "predicted": "שבויים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שבויים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כול העמים כיא הוא אשר אמר מגמת קדים ויאסוף כחול שבי על ה ⬚⬚⬚ אשר והוא במלכים יקלס ורזנים משחק אשר ילעיגו על רבים"
+      },
+      {
+        "row_id": "297",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "פשע",
+        "predicted": "ל",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ל",
+            1
+          ],
+          [
+            "ימכור",
+            1
+          ]
+        ],
+        "source_groups": 2,
+        "context": "במישור אדוני כי ב ו ברזי ו ב לאיש ⬚⬚⬚ ו ברוב לנעוי לב כי מי באלים אדוני ו מי כ"
+      },
+      {
+        "row_id": "344",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "מכאוב",
+        "predicted": "שר",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שר",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "הגות הגי יגון ואנחה בכנור קינה לכול אבל יגון ומספד מרורים עד כלות עולה ואין ⬚⬚⬚ ואין נגע להחלות ו אז אזמרה בכנור ישועות ונבל שמחה ותוף גילה וחליל"
+      },
+      {
+        "row_id": "397",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "ספר",
+        "predicted": "תורה",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "תורה",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אשר בשמים גדול והוא הפלא ו הם לוא יוכלו להבין באלה ו ל ⬚⬚⬚ ולוא יעצורו לדעת בכול שב אל ואני איש פשע ומגולל"
+      },
+      {
+        "row_id": "398",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "חזקה",
+        "predicted": "ים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כיא יש מקוה לאיש מעל ואני יצר החמר נשענתי על ה ⬚⬚⬚ ו ואדעה כיא אמת וכול לוא ישוב אחור ואני ב"
+      },
+      {
+        "row_id": "451",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "קהל",
+        "predicted": "קהל",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "קהל",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "בד בכול קצים השמיעו הגי רנה הביעו בשמחות עולמים ואין השבת השתחוו ביחד ⬚⬚⬚ ברכו המפליא גאות ומודיע עוז לחתום רזים ו לגלות נסתרות להרים כושלים ו"
+      },
+      {
+        "row_id": "453",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "מפליא",
+        "predicted": "מפלי",
+        "hit": false,
+        "window": 4,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "מפלי",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כול קצים השמיעו הגי רנה הביעו בשמחות עולמים ואין השבת השתחוו ביחד קהל ברכו ה ⬚⬚⬚ גאות ומודיע עוז לחתום רזים ו לגלות נסתרות להרים כושלים ו ל שב לכת"
+      },
+      {
+        "row_id": "462",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "דעות",
+        "predicted": "דעות",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "דעות",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "ומודיע עוז לחתום רזים ו לגלות נסתרות להרים כושלים ו ל שב לכת קוי ⬚⬚⬚ ו להשפיל נועדת רום גאים עולם להתם רזי הוד ו להקים פלאות כבוד השופט ב"
+      },
+      {
+        "row_id": "467",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "עפר",
+        "predicted": "עפר",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "עפר",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "השמיעו ואמרו גדול אל עושה פלא כיא השפיל גבהות רום לאין שרית וירם מ ⬚⬚⬚ אביון לרום עולם ו עד שחקים יגביה בקומה ו עם אלים בעדת יחד ו"
+      }
+    ]
+  },
+  "strict_preserved_cross_composition": {
+    "condition": "strict_preserved_cross_composition",
+    "total_cases": 4196,
+    "matched_cases": 377,
+    "matched_pct": 9.0,
+    "correct_cases": 291,
+    "correct_pct_over_all": 6.9,
+    "correct_pct_over_matched": 77.2,
+    "window_counts": {
+      "2": 175,
+      "4": 39,
+      "5": 90,
+      "3": 73
+    },
+    "mean_support_count": 1.13,
+    "mean_source_groups": 1.21,
+    "examples": [
+      {
+        "row_id": "3",
+        "scroll": "1QS",
+        "excluded_group": "community_rule",
+        "gold": "לב",
+        "predicted": "לב",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "לב",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לשים לספר סרך היחד לדרוש אל בכול ⬚⬚⬚ ו בכול נפש לעשות הטוב ו הישר ל כאשר צוה ב יד מושה ו"
+      },
+      {
+        "row_id": "42",
+        "scroll": "1QpHab",
+        "excluded_group": "Pesharim",
+        "gold": "רשע",
+        "predicted": "ראש",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ראש",
+            1
+          ],
+          [
+            "רואש",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לוא יצא לנצח משפט כיא רשע מכתיר את הצדיק הרשע הוא הכוהן ה ⬚⬚⬚ ו הצדיק הוא מורה הצדק אשר על כן יצא המשפט מעוקל ולוא"
+      },
+      {
+        "row_id": "76",
+        "scroll": "1QpHab",
+        "excluded_group": "Pesharim",
+        "gold": "כתיאים",
+        "predicted": "שבויים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שבויים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לוא יאמינו בחוקי אל ההולך למרחבי ארץ לרשת משכנות לוא על ה ⬚⬚⬚ אשר ו במישור ילכו לכות ו לבוז את ערי הארץ כיא הוא אשר אמר"
+      },
+      {
+        "row_id": "83",
+        "scroll": "1QpHab",
+        "excluded_group": "Pesharim",
+        "gold": "כתיאים",
+        "predicted": "שבויים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שבויים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כול העמים כיא הוא אשר אמר מגמת קדים ויאסוף כחול שבי על ה ⬚⬚⬚ אשר והוא במלכים יקלס ורזנים משחק אשר ילעיגו על רבים"
+      },
+      {
+        "row_id": "297",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "פשע",
+        "predicted": "ל",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ל",
+            1
+          ],
+          [
+            "ימכור",
+            1
+          ]
+        ],
+        "source_groups": 2,
+        "context": "במישור אדוני כי ב ו ברזי ו ב לאיש ⬚⬚⬚ ו ברוב לנעוי לב כי מי באלים אדוני ו מי כ"
+      },
+      {
+        "row_id": "344",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "מכאוב",
+        "predicted": "שר",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שר",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "הגות הגי יגון ואנחה בכנור קינה לכול אבל יגון ומספד מרורים עד כלות עולה ואין ⬚⬚⬚ ואין נגע להחלות ו אז אזמרה בכנור ישועות ונבל שמחה ותוף גילה וחליל"
+      },
+      {
+        "row_id": "397",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "ספר",
+        "predicted": "תורה",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "תורה",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אשר בשמים גדול והוא הפלא ו הם לוא יוכלו להבין באלה ו ל ⬚⬚⬚ ולוא יעצורו לדעת בכול שב אל ואני איש פשע ומגולל"
+      },
+      {
+        "row_id": "398",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "חזקה",
+        "predicted": "ים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כיא יש מקוה לאיש מעל ואני יצר החמר נשענתי על ה ⬚⬚⬚ ו ואדעה כיא אמת וכול לוא ישוב אחור ואני ב"
+      },
+      {
+        "row_id": "451",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "קהל",
+        "predicted": "קהל",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "קהל",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "בד בכול קצים השמיעו הגי רנה הביעו בשמחות עולמים ואין השבת השתחוו ביחד ⬚⬚⬚ ברכו המפליא גאות ומודיע עוז לחתום רזים ו לגלות נסתרות להרים כושלים ו"
+      },
+      {
+        "row_id": "453",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "מפליא",
+        "predicted": "מפלי",
+        "hit": false,
+        "window": 4,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "מפלי",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כול קצים השמיעו הגי רנה הביעו בשמחות עולמים ואין השבת השתחוו ביחד קהל ברכו ה ⬚⬚⬚ גאות ומודיע עוז לחתום רזים ו לגלות נסתרות להרים כושלים ו ל שב לכת"
+      },
+      {
+        "row_id": "462",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "דעות",
+        "predicted": "דעות",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "דעות",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "ומודיע עוז לחתום רזים ו לגלות נסתרות להרים כושלים ו ל שב לכת קוי ⬚⬚⬚ ו להשפיל נועדת רום גאים עולם להתם רזי הוד ו להקים פלאות כבוד השופט ב"
+      },
+      {
+        "row_id": "467",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "עפר",
+        "predicted": "עפר",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "עפר",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "השמיעו ואמרו גדול אל עושה פלא כיא השפיל גבהות רום לאין שרית וירם מ ⬚⬚⬚ אביון לרום עולם ו עד שחקים יגביה בקומה ו עם אלים בעדת יחד ו"
+      }
+    ]
+  },
+  "relaxed_preserved_target_any_composition": {
+    "condition": "relaxed_preserved_target_any_composition",
+    "total_cases": 4196,
+    "matched_cases": 757,
+    "matched_pct": 18.0,
+    "correct_cases": 611,
+    "correct_pct_over_all": 14.6,
+    "correct_pct_over_matched": 80.7,
+    "window_counts": {
+      "2": 272,
+      "5": 258,
+      "3": 150,
+      "4": 77
+    },
+    "mean_support_count": 1.15,
+    "mean_source_groups": 1.15,
+    "examples": [
+      {
+        "row_id": "3",
+        "scroll": "1QS",
+        "excluded_group": null,
+        "gold": "לב",
+        "predicted": "ב",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ב",
+            1
+          ],
+          [
+            "לב",
+            1
+          ]
+        ],
+        "source_groups": 2,
+        "context": "לשים לספר סרך היחד לדרוש אל בכול ⬚⬚⬚ ו בכול נפש לעשות הטוב ו הישר ל כאשר צוה ב יד מושה ו"
+      },
+      {
+        "row_id": "5",
+        "scroll": "1QS",
+        "excluded_group": null,
+        "gold": "נפש",
+        "predicted": "נפש",
+        "hit": true,
+        "window": 5,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "נפש",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לשים לספר סרך היחד לדרוש אל בכול לב ו בכול ⬚⬚⬚ לעשות הטוב ו הישר ל כאשר צוה ב יד מושה ו ב יד כול"
+      },
+      {
+        "row_id": "42",
+        "scroll": "1QpHab",
+        "excluded_group": null,
+        "gold": "רשע",
+        "predicted": "ראש",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ראש",
+            1
+          ],
+          [
+            "רואש",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לוא יצא לנצח משפט כיא רשע מכתיר את הצדיק הרשע הוא הכוהן ה ⬚⬚⬚ ו הצדיק הוא מורה הצדק אשר על כן יצא המשפט מעוקל ולוא"
+      },
+      {
+        "row_id": "76",
+        "scroll": "1QpHab",
+        "excluded_group": null,
+        "gold": "כתיאים",
+        "predicted": "שבויים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שבויים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לוא יאמינו בחוקי אל ההולך למרחבי ארץ לרשת משכנות לוא על ה ⬚⬚⬚ אשר ו במישור ילכו לכות ו לבוז את ערי הארץ כיא הוא אשר אמר"
+      },
+      {
+        "row_id": "83",
+        "scroll": "1QpHab",
+        "excluded_group": null,
+        "gold": "כתיאים",
+        "predicted": "שבויים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שבויים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כול העמים כיא הוא אשר אמר מגמת קדים ויאסוף כחול שבי על ה ⬚⬚⬚ אשר והוא במלכים יקלס ורזנים משחק אשר ילעיגו על רבים"
+      },
+      {
+        "row_id": "103",
+        "scroll": "1QpHab",
+        "excluded_group": null,
+        "gold": "אשיב",
+        "predicted": "עולם",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "עולם",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "בטן לוא ירחמו על אעמודה ואתיצבה על ואצפה לראות מה ידבר ו מה ⬚⬚⬚ על ויהוה ויומר כתוב חזון ובאר על הלוחות למען ירוץ הקורא"
+      },
+      {
+        "row_id": "251",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "אמת",
+        "predicted": "אמת",
+        "hit": true,
+        "window": 3,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "אמת",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אדוני כיא ישרתה בכול מעשי עולה ו ותשם שומרי ⬚⬚⬚ נגד ומוכיחי אמת צדק ב כל למחץ מנחמי כוח משמיעי"
+      },
+      {
+        "row_id": "252",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "נגד",
+        "predicted": "נגד",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "נגד",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אדוני כיא ישרתה בכול מעשי עולה ו ותשם שומרי אמת ⬚⬚⬚ ומוכיחי אמת צדק ב כל למחץ מנחמי כוח משמיעי שמחה"
+      },
+      {
+        "row_id": "255",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "מבשר",
+        "predicted": "מבשר",
+        "hit": true,
+        "window": 4,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "מבשר",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אמת צדק ב כל למחץ מנחמי כוח משמיעי שמחה לאבל ⬚⬚⬚ שלום לכול הוות חזקים למוס ומאמצי רוח לפני נגע ותתן מענה"
+      },
+      {
+        "row_id": "270",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "גבורים",
+        "predicted": "גבורים",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "גבורים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כול כי מהווות מהומה אשר דלתי מגן ובריחי ברזל בל יבוא גדוד משמר ⬚⬚⬚ בהלוות מם ב פן יורה גבור גמולי ויפולו מ"
+      },
+      {
+        "row_id": "272",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "גמולי",
+        "predicted": "לי",
+        "hit": false,
+        "window": 4,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "לי",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "ובריחי ברזל בל יבוא גדוד משמר גבורים בהלוות מם ב פן יורה גבור ⬚⬚⬚ ויפולו מחכמים ב ואני ב ב"
+      },
+      {
+        "row_id": "280",
+        "scroll": "1QHa",
+        "excluded_group": null,
+        "gold": "פתוח",
+        "predicted": "פתוח",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "פתוח",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אין נתק וזקים ללוא ישוברו וחומת עוז ובריחי ברזל ודלתי נחושת לאין ⬚⬚⬚ עם תהום נחשבתי לאין ונחלי בליעל אפפו לאין פלט"
+      }
+    ]
+  },
+  "relaxed_preserved_target_cross_composition": {
+    "condition": "relaxed_preserved_target_cross_composition",
+    "total_cases": 4196,
+    "matched_cases": 534,
+    "matched_pct": 12.7,
+    "correct_cases": 415,
+    "correct_pct_over_all": 9.9,
+    "correct_pct_over_matched": 77.7,
+    "window_counts": {
+      "2": 212,
+      "5": 163,
+      "3": 107,
+      "4": 52
+    },
+    "mean_support_count": 1.16,
+    "mean_source_groups": 1.22,
+    "examples": [
+      {
+        "row_id": "3",
+        "scroll": "1QS",
+        "excluded_group": "community_rule",
+        "gold": "לב",
+        "predicted": "ב",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ב",
+            1
+          ],
+          [
+            "לב",
+            1
+          ]
+        ],
+        "source_groups": 2,
+        "context": "לשים לספר סרך היחד לדרוש אל בכול ⬚⬚⬚ ו בכול נפש לעשות הטוב ו הישר ל כאשר צוה ב יד מושה ו"
+      },
+      {
+        "row_id": "5",
+        "scroll": "1QS",
+        "excluded_group": "community_rule",
+        "gold": "נפש",
+        "predicted": "נפש",
+        "hit": true,
+        "window": 5,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "נפש",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לשים לספר סרך היחד לדרוש אל בכול לב ו בכול ⬚⬚⬚ לעשות הטוב ו הישר ל כאשר צוה ב יד מושה ו ב יד כול"
+      },
+      {
+        "row_id": "42",
+        "scroll": "1QpHab",
+        "excluded_group": "Pesharim",
+        "gold": "רשע",
+        "predicted": "ראש",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "ראש",
+            1
+          ],
+          [
+            "רואש",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לוא יצא לנצח משפט כיא רשע מכתיר את הצדיק הרשע הוא הכוהן ה ⬚⬚⬚ ו הצדיק הוא מורה הצדק אשר על כן יצא המשפט מעוקל ולוא"
+      },
+      {
+        "row_id": "76",
+        "scroll": "1QpHab",
+        "excluded_group": "Pesharim",
+        "gold": "כתיאים",
+        "predicted": "שבויים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שבויים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "לוא יאמינו בחוקי אל ההולך למרחבי ארץ לרשת משכנות לוא על ה ⬚⬚⬚ אשר ו במישור ילכו לכות ו לבוז את ערי הארץ כיא הוא אשר אמר"
+      },
+      {
+        "row_id": "83",
+        "scroll": "1QpHab",
+        "excluded_group": "Pesharim",
+        "gold": "כתיאים",
+        "predicted": "שבויים",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "שבויים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כול העמים כיא הוא אשר אמר מגמת קדים ויאסוף כחול שבי על ה ⬚⬚⬚ אשר והוא במלכים יקלס ורזנים משחק אשר ילעיגו על רבים"
+      },
+      {
+        "row_id": "103",
+        "scroll": "1QpHab",
+        "excluded_group": "Pesharim",
+        "gold": "אשיב",
+        "predicted": "עולם",
+        "hit": false,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "עולם",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "בטן לוא ירחמו על אעמודה ואתיצבה על ואצפה לראות מה ידבר ו מה ⬚⬚⬚ על ויהוה ויומר כתוב חזון ובאר על הלוחות למען ירוץ הקורא"
+      },
+      {
+        "row_id": "251",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "אמת",
+        "predicted": "אמת",
+        "hit": true,
+        "window": 3,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "אמת",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אדוני כיא ישרתה בכול מעשי עולה ו ותשם שומרי ⬚⬚⬚ נגד ומוכיחי אמת צדק ב כל למחץ מנחמי כוח משמיעי"
+      },
+      {
+        "row_id": "252",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "נגד",
+        "predicted": "נגד",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "נגד",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אדוני כיא ישרתה בכול מעשי עולה ו ותשם שומרי אמת ⬚⬚⬚ ומוכיחי אמת צדק ב כל למחץ מנחמי כוח משמיעי שמחה"
+      },
+      {
+        "row_id": "255",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "מבשר",
+        "predicted": "מבשר",
+        "hit": true,
+        "window": 4,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "מבשר",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אמת צדק ב כל למחץ מנחמי כוח משמיעי שמחה לאבל ⬚⬚⬚ שלום לכול הוות חזקים למוס ומאמצי רוח לפני נגע ותתן מענה"
+      },
+      {
+        "row_id": "270",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "גבורים",
+        "predicted": "גבורים",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "גבורים",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "כול כי מהווות מהומה אשר דלתי מגן ובריחי ברזל בל יבוא גדוד משמר ⬚⬚⬚ בהלוות מם ב פן יורה גבור גמולי ויפולו מ"
+      },
+      {
+        "row_id": "272",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "גמולי",
+        "predicted": "לי",
+        "hit": false,
+        "window": 4,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "לי",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "ובריחי ברזל בל יבוא גדוד משמר גבורים בהלוות מם ב פן יורה גבור ⬚⬚⬚ ויפולו מחכמים ב ואני ב ב"
+      },
+      {
+        "row_id": "280",
+        "scroll": "1QHa",
+        "excluded_group": "Hodayot",
+        "gold": "פתוח",
+        "predicted": "פתוח",
+        "hit": true,
+        "window": 2,
+        "support_count": 1,
+        "candidate_counts": [
+          [
+            "פתוח",
+            1
+          ]
+        ],
+        "source_groups": 1,
+        "context": "אין נתק וזקים ללוא ישוברו וחומת עוז ובריחי ברזל ודלתי נחושת לאין ⬚⬚⬚ עם תהום נחשבתי לאין ונחלי בליעל אפפו לאין פלט"
+      }
+    ]
+  }
+}

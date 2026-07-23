@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DSS Restoration Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+Hebrew:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-kicker">Local Demo</div>
+          <h1>DSS Restoration Explorer</h1>
+          <p>Researcher-facing restoration preview and oracle-known error triage.</p>
+        </div>
+
+        <section class="panel">
+          <h2>Mode</h2>
+          <div class="segmented" id="mode-switch">
+            <button data-mode="spans" class="active">Researcher</button>
+            <button data-mode="unknown">Unknown</button>
+            <button data-mode="triage">Error Triage</button>
+            <button data-mode="benchmark">Benchmark</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Filters</h2>
+          <label class="field">
+            <span>Search</span>
+            <input id="search-input" type="search" placeholder="target, context, prediction..." />
+          </label>
+
+          <label class="field">
+            <span>Scroll</span>
+            <select id="scroll-filter">
+              <option value="">All scrolls</option>
+            </select>
+          </label>
+
+          <details class="advanced-filters">
+            <summary>Advanced Filters</summary>
+
+            <label class="field">
+              <span>Case Status</span>
+              <select id="status-filter">
+                <option value="">All cases</option>
+                <option value="hit">Hits</option>
+                <option value="miss">Failures</option>
+                <option value="unknown">Unknown / no oracle</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Likely Issue</span>
+              <select id="issue-filter">
+                <option value="">All issues</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Rarity</span>
+              <select id="rarity-filter">
+                <option value="">All</option>
+                <option value="unseen">Unseen</option>
+                <option value="rare">Rare</option>
+                <option value="medium">Medium</option>
+                <option value="common">Common</option>
+              </select>
+            </label>
+
+            <label class="field checkbox">
+              <input id="length-constraint-filter" type="checkbox" />
+              <span>Apply physical length constraint</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="hide-particles-filter" type="checkbox" />
+              <span>Hide single-letter particles</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="short-filter" type="checkbox" />
+              <span>Only short-top1 failures</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="gold-similar-filter" type="checkbox" />
+              <span>Gold appears in similar passages</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="top1-similar-filter" type="checkbox" />
+              <span>Top-1 appears in similar passages</span>
+            </label>
+
+            <label class="field">
+              <span>Sort</span>
+              <select id="sort-select">
+                <option value="default">Default</option>
+                <option value="rarity-asc">Rarity: rare first</option>
+                <option value="rarity-desc">Rarity: common first</option>
+                <option value="alpha">Target A-Z</option>
+              </select>
+            </label>
+          </details>
+        </section>
+
+        <section class="panel">
+          <h2>Evidence</h2>
+          <div class="legend">
+            <span class="pill neutral">Needs reading</span>
+            <span class="pill issue">Data issue</span>
+            <span class="pill warn">Model issue</span>
+            <span class="pill good">Interesting example</span>
+          </div>
+          <p class="small">
+            Similar passages are retrieved from the `fit` corpus, not from the held-out scrolls.
+          </p>
+          <p class="small">
+            The benchmark view separates cross-composition evidence from same-composition parallel witnesses.
+          </p>
+          <p class="small">
+            Triage selections and notes are stored in your browser only via local storage.
+          </p>
+        </section>
+      </aside>
+
+      <main class="main">
+        <section class="hero">
+          <div>
+            <div class="hero-kicker">Model</div>
+            <h2 id="hero-title">MsBERT + span-ft-refined</h2>
+            <p id="hero-subtitle">
+              Real held-out lacuna spans for researcher-facing review, plus benchmark probes for diagnosis.
+            </p>
+          </div>
+          <div class="hero-stats" id="hero-stats"></div>
+        </section>
+
+        <section class="content-mode active" id="mode-spans">
+          <div class="section-head">
+            <h3>Researcher View</h3>
+            <p>Real held-out lacuna spans with per-slot predictions under the span benchmark regime. <strong>Hover a prediction slot</strong> to highlight the context words the model attended to when filling it — final-layer attention saliency, in the spirit of DeepMind's Ithaca.</p>
+          </div>
+          <div class="result-toolbar">
+            <span id="spans-count"></span>
+            <div class="pager">
+              <button id="spans-prev" title="Previous page">‹</button>
+              <span id="spans-page"></span>
+              <button id="spans-next" title="Next page">›</button>
+            </div>
+          </div>
+          <div id="spans-cards" class="card-grid"></div>
+        </section>
+
+        <section class="content-mode" id="mode-unknown">
+          <div class="section-head">
+            <h3>Unknown Gaps</h3>
+            <p>Strong uncertainty and loss markers from the TF layer. No oracle is available for these cases.</p>
+          </div>
+          <div class="result-toolbar">
+            <span id="unknown-count"></span>
+            <div class="pager">
+              <button id="unknown-prev" title="Previous page">‹</button>
+              <span id="unknown-page"></span>
+              <button id="unknown-next" title="Next page">›</button>
+            </div>
+          </div>
+          <div id="unknown-cards" class="card-grid"></div>
+        </section>
+
+        <section class="content-mode" id="mode-triage">
+          <div class="section-head">
+            <h3>Oracle-Known Triage</h3>
+            <p>Use this when the gold word is known and you want to classify why the model failed. <strong>Hover the predictions</strong> to highlight which context words drove the model's guess.</p>
+          </div>
+          <div class="result-toolbar">
+            <span id="triage-count"></span>
+            <div class="pager">
+              <button id="triage-prev" title="Previous page">‹</button>
+              <span id="triage-page"></span>
+              <button id="triage-next" title="Next page">›</button>
+            </div>
+          </div>
+          <div id="triage-cards" class="card-grid"></div>
+        </section>
+
+        <section class="content-mode" id="mode-benchmark">
+          <div class="section-head">
+            <h3>Benchmark Snapshot & Model Achievements</h3>
+            <p>Held-out Hebrew-only benchmark comparing decoding architectures and researcher-assist signals.</p>
+          </div>
+          <div class="benchmark-panels">
+            <!-- Key Breakthrough Panel -->
+            <div class="panel wide highlight-panel">
+              <div class="panel-header-badge">Key Breakthrough</div>
+              <h4>Autoregressive Sequence-Level Restoration (Sequence Accuracy)</h4>
+              <p class="small">
+                Traditional MLMs predict slots independently (Parallel Decoding), which ignores syntax constraints and causes duplicates like <code>אשר אשר</code>. 
+                Our <strong>Autoregressive Beam Search</strong> decodes tokens left-to-right, conditioning each step on previous predictions. 
+                This results in dramatic relative accuracy improvements for full, grammatically coherent sequence restoration (Sequence Top-1).
+              </p>
+              <div id="benchmark-sequence-comparison"></div>
+            </div>
+
+            <div class="panel wide">
+              <h4>Top-10 Slot-Level Accuracy by Gap Length</h4>
+              <p class="small">Independent slot recovery accuracy (percentage of individual gap words correct in place).</p>
+              <div id="benchmark-top10"></div>
+            </div>
+            <!-- Biblical Contrast Panel -->
+            <div class="panel wide">
+              <h4>Biblical Contrast Set (Control Group)</h4>
+              <p class="small">
+                Evaluated on 60 biblical scroll fragments. Since biblical texts share high similarity with known canonical manuscripts, this serves as an upper-bound sanity check on the models' classical Hebrew language proficiency.
+              </p>
+              <div id="benchmark-biblical"></div>
+            </div>
+            <div class="panel wide">
+              <h4>Retrieval And Parallel Witnesses</h4>
+              <div id="benchmark-retrieval" class="benchmark-retrieval"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+
+
+    <template id="triage-card-template">
+      <article class="result-card triage-card">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">Failure case</div>
+            <h4 class="target"></h4>
+          </div>
+          <span class="issue-badge"></span>
+        </div>
+        <p class="context"></p>
+        <div class="gold-line"></div>
+        <div class="predictions"></div>
+        <div class="similar-passages"></div>
+        <div class="meta"></div>
+        <div class="triage-controls">
+          <select class="triage-status">
+            <option value="">No tag</option>
+            <option value="interesting">Interesting example</option>
+            <option value="data-issue">Data issue</option>
+            <option value="model-issue">Model issue</option>
+            <option value="needs-reading">Needs reading</option>
+          </select>
+          <textarea class="triage-note" rows="3" placeholder="Local note about this failure..."></textarea>
+        </div>
+      </article>
+    </template>
+
+    <template id="span-card-template">
+      <article class="result-card">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">Multi-word gap</div>
+            <h4 class="target"></h4>
+          </div>
+          <button class="reveal-btn" type="button" aria-expanded="false">Reveal oracle</button>
+        </div>
+        <div class="oracle"></div>
+        <p class="context"></p>
+        <div class="span-meta"></div>
+        <div class="span-slots"></div>
+      </article>
+    </template>
+
+    <template id="unknown-card-template">
+      <article class="result-card">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">No oracle</div>
+            <h4 class="target"></h4>
+          </div>
+          <span class="issue-badge neutral">Unknown</span>
+        </div>
+        <p class="context"></p>
+        <div class="span-meta"></div>
+        <div class="span-slots"></div>
+      </article>
+    </template>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+  </html>

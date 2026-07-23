@@ -772,6 +772,61 @@ details.advanced-filters .field {
   line-height: 1.5;
 }
 
+.source-comparison {
+  display: grid;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.source-comparison-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.source-comparison-head h5 {
+  margin: 0 0 4px;
+  color: var(--ink);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+}
+
+.source-comparison-head p {
+  margin: 0;
+}
+
+.source-count-badge {
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  border: 1px solid rgba(13, 148, 136, 0.22);
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary-hover);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.source-table-wrap {
+  overflow-x: auto;
+}
+
+.source-table th:not(:first-child),
+.source-table td:not(:first-child) {
+  text-align: center;
+}
+
+.source-table .small-sample td {
+  background: rgba(245, 158, 11, 0.055);
+}
+
+.source-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
 .benchmark-caveat {
   margin: 0;
   padding: 12px 14px;

@@ -94,6 +94,34 @@ No result currently qualifies as a final paper result.
   and
   [`analysis/reports/embible_dss_benchmark.json`](../analysis/reports/embible_dss_benchmark.json).
 
+### E. Fixed-decoder Bible domain transfer
+
+- Source: Embible's released Biblical validation and test JSONL at pinned
+  backend commit `7c9e769274a273d0b357b066d932f1c6833ca5f8`.
+- Canonical resolution: 526/535 validation and 527/536 test rows matched a
+  unique unpointed verse; nine ambiguous rows in each split were excluded.
+- Evaluation: 60 development and 120 held-out spans, balanced across one, two,
+  and three hidden words, with at most one target per verse.
+- Biblical text was used only for development calibration and held-out
+  evaluation, never model training.
+- UWC exact Top-10: 80.0% for one word, 42.5% for two words, and 27.5% for three
+  words. The corresponding DSS diagnostic is 50.0%, 0.0%, and 0.0%.
+- Overall balanced UWC exact Top-10: 50.0% on Bible versus 16.7% on DSS.
+- Base TavBERT exact Top-10: 25.0%, 2.5%, and 2.5%. The paper-style overlap
+  ensemble scores 22.5%, 2.5%, and 2.5%.
+- Development selected rank-ensemble word weight 1.0, making it identical to
+  UWC. The character arm therefore adds no value in this diagnostic.
+- Oracle-boundary CWC exact Top-10: 90.0%, 62.5%, and 42.5%.
+- Status: domain-transfer diagnostic pilot.
+- Interpretation: the same word model and decoder recover multiword Biblical
+  spans but not DSS spans. Domain generalization is therefore a major measured
+  bottleneck, although the different sample sizes and small DSS strata prevent
+  a final inferential claim.
+- Artifact:
+  [`analysis/reports/EMBIBLE_BIBLE_TRANSFER.md`](../analysis/reports/EMBIBLE_BIBLE_TRANSFER.md)
+  and
+  [`analysis/reports/embible_bible_transfer.json`](../analysis/reports/embible_bible_transfer.json).
+
 ## Claims that are not supported
 
 The repository does not currently claim:

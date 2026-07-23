@@ -12,6 +12,8 @@ Only these generated reports are current:
 - `preserved_rag_lacuna_lengths.json`
 - `EMBIBLE_DSS_BENCHMARK.md`
 - `embible_dss_benchmark.json`
+- `EMBIBLE_BIBLE_TRANSFER.md`
+- `embible_bible_transfer.json`
 - corpus and training manifests
 
 Other files in this directory support exploratory interfaces or failure

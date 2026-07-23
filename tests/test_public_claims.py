@@ -64,3 +64,21 @@ def test_embible_public_numbers_match_generated_report() -> None:
         actual = report["results"][system]["top10"]
         assert f"{actual:.1f}%" == displayed
         assert displayed in surfaces
+
+
+def test_bible_transfer_public_numbers_match_generated_report() -> None:
+    report = json.loads(
+        (ROOT / "analysis" / "reports" / "embible_bible_transfer.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert report["protocol"]["bible_used_for_training"] is False
+    assert report["protocol"]["test_items"] == 120
+    expected = {"1": "80.0%", "2": "42.5%", "3": "27.5%"}
+    surfaces = "\n".join(
+        path.read_text(encoding="utf-8") for path in PUBLIC_SURFACES
+    )
+    for word_count, displayed in expected.items():
+        actual = report["results"]["by_word_count"][word_count]["uwc_word"]["top10"]
+        assert f"{actual:.1f}%" == displayed
+        assert displayed in surfaces

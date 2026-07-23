@@ -1,0 +1,9514 @@
+{
+  "protocol": {
+    "purpose": "domain transfer with the DSS task and decoder held fixed",
+    "bible_used_for_training": false,
+    "source_repository": "https://github.com/harelm4/Embible-Backend",
+    "source_commit": "7c9e769274a273d0b357b066d932f1c6833ca5f8",
+    "source_sha256": {
+      "dev": "3646d0d7e39e85006c4fa4b1531a1f8a847d7ea56e0a3d8cd66ebaa825ecf96f",
+      "test": "c3a707c1d8ef6d934df9f55467abadd9b7e6e42fae9c534a18fc517a0277e7ea"
+    },
+    "canonical_book_sha256": {
+      "dev": {
+        "Amos": "d0043df2b3a57c3dea9128066d84200d23b4b09a8a316186ac725f120a292b47",
+        "Chronicles_1": "e034cafdd707c6e7a5a8b884cd45e5e70a34fc11b5ced90a0bb930f6b28d932e",
+        "Chronicles_2": "dc6a32f8d2d096873364e0be86f9fc290001a88630ad5d77e74506cc07cd416c",
+        "Daniel": "26ea8d1202d5b3f5c7c72b12a3832965ada4d210c7e97e15b606384ba02aff1b",
+        "Deuteronomy": "eee5bcccdb25112edeabbabaa6003292bcb11f0371287ccc21f7ade177ba6ae5",
+        "Ecclesiastes": "2f624cf656476797f14de790934b4a5eb4b07590e204b8ddb59f6465ffe02d50",
+        "Esther": "151a7656f0e2a20e7d3bce44257d055b2358287d6179289b4712ea52cabfba91",
+        "Exodus": "4d9c33452f80b9e010333a63cb35ed171adf75e066383cabdca05d54ac5c12cd",
+        "Ezekiel": "1a7c2eba8c3611c4934a5a771eb842ce933ba572e15495bc62fa48aaeec8886b",
+        "Ezra": "d78f881dffbed864e2fcbd40794cc7b8da58ff3cc7d8211f0bcfc4e671dcb740",
+        "Genesis": "e8792150b2f9d17d5c0c562d5c754f3227639f55a55d34ea06fcd0fbeecf1456",
+        "Habakkuk": "a69771dfa5af1c0f65909a6a63714830cd03a3cbbf12aeca869e3ba7a746aa39",
+        "Haggai": "78a6d9c517ac627760beafd363749e42585c595a217ae06dbbe98e8dccb9edda",
+        "Hosea": "c88f569ba824667fb1ecc3f4903504dd68141e35fc9d2f064e4cac524a041536",
+        "Isaiah": "3c221c1210945cbceefe7c4180ad6ad6b30da49fee7a2d2aadfd9f5668ffee60",
+        "Jeremiah": "70c2c33e34d933a908e1fb96ca5cf87f3c8f96955c6398abefa08ce466c61e45",
+        "Job": "830f0e1e11b3bcd5cdb7d5d6c2b8cfbededa5b424d332b725a3f21196443f70b",
+        "Joel": "3797b4b11339d747f3f2ee7092912b94032f9a7ef86052727253a60160152363",
+        "Jonah": "2ac51718c0b45c86a121a8572100df880a5669c0670e711f4474e2be75134ceb",
+        "Joshua": "e44a7c83417c00ad03d9f42172deb09022ea708521125c08ec6d75f8f23a418a",
+        "Judges": "8e84a5632e25a9be09d9e028ecfb81c22762846f70b0a28d6fc7d1cdd762ce6c",
+        "Kings_1": "91765ce458ee1080981d3efcb6ed96b7efe61ca971d0a28091b85f9ef64cb397",
+        "Kings_2": "d64d6e75f1c3d57ed23b06f8d6256c6dce4dc8e7b273cc1dd724dbc1d37134c5",
+        "Lamentations": "730cf103499c067d8be2734d88a327ccac0287db477382b2e452fb9534503615",
+        "Leviticus": "982a1db8b0ace327bcb5947b6fa8dfa7fae3a3ccb9b195b616145492d34f9e44",
+        "Malachi": "cfe8a0ec1130623da62f4ad1c2722dfff05dcbfc3032f3a2991f49b6c25e4551",
+        "Micah": "57dd8798d3b1fcf503e000f79be0c44cbac0f4f243317bbeb8e12c87d055ec64",
+        "Nahum": "1b188ceb7d349dc388f49b36d46417f6b5f98c193ca0443e8a03dabe79dd9666",
+        "Nehemiah": "fda3d7fddfe6c35c609020aebcbb384dd43a6f6ef068269b8b12e4dc6948a8e9",
+        "Numbers": "201e40cac991fb0642ffaa4018a76f515483f2beec9c8cd99a7c4f6d697e623d",
+        "Obadiah": "ceda118f956aa9b33199fe7c9672c08cf479f1cb379074718211c1907c3076c9",
+        "Proverbs": "2de9d1c73852bc238c4729b5755b52e297b7b076a4af928a623d38602cf5bc2f",
+        "Psalms": "d3679714bc774d6efd2670a2f37dd32cf8b4b54870f9e96a77fd3df6d2054587",
+        "Ruth": "b7db3d2dcc22286c8f10e00806ff4d8a3921d25c4d4b3974ae4fdc99f526293b",
+        "Samuel_1": "58b35e64af527d2f0d6a3e46b1332d241e828a87b9f371813a8c680368240138",
+        "Samuel_2": "0045c717c54f8e274b1f2f35be93afd6f5c7617f0ad0160d76a3e29c952377cf",
+        "Song_of_Songs": "ec3cfdf650b5ba8bbe0d8a141fa1315bf368552b360db2cd58db2a1bbf806841",
+        "Zechariah": "eeff6271acbfa66461513f1542ed7d9ae316702a5daffc4003e0348672dad3e8",
+        "Zephaniah": "29bb9e081aa4d491ebc3ae8bc97402803568420286b9f4df4f64cda5ca2ba0c3"
+      },
+      "test": {
+        "Amos": "d0043df2b3a57c3dea9128066d84200d23b4b09a8a316186ac725f120a292b47",
+        "Chronicles_1": "e034cafdd707c6e7a5a8b884cd45e5e70a34fc11b5ced90a0bb930f6b28d932e",
+        "Chronicles_2": "dc6a32f8d2d096873364e0be86f9fc290001a88630ad5d77e74506cc07cd416c",
+        "Daniel": "26ea8d1202d5b3f5c7c72b12a3832965ada4d210c7e97e15b606384ba02aff1b",
+        "Deuteronomy": "eee5bcccdb25112edeabbabaa6003292bcb11f0371287ccc21f7ade177ba6ae5",
+        "Ecclesiastes": "2f624cf656476797f14de790934b4a5eb4b07590e204b8ddb59f6465ffe02d50",
+        "Esther": "151a7656f0e2a20e7d3bce44257d055b2358287d6179289b4712ea52cabfba91",
+        "Exodus": "4d9c33452f80b9e010333a63cb35ed171adf75e066383cabdca05d54ac5c12cd",
+        "Ezekiel": "1a7c2eba8c3611c4934a5a771eb842ce933ba572e15495bc62fa48aaeec8886b",
+        "Ezra": "d78f881dffbed864e2fcbd40794cc7b8da58ff3cc7d8211f0bcfc4e671dcb740",
+        "Genesis": "e8792150b2f9d17d5c0c562d5c754f3227639f55a55d34ea06fcd0fbeecf1456",
+        "Habakkuk": "a69771dfa5af1c0f65909a6a63714830cd03a3cbbf12aeca869e3ba7a746aa39",
+        "Haggai": "78a6d9c517ac627760beafd363749e42585c595a217ae06dbbe98e8dccb9edda",
+        "Hosea": "c88f569ba824667fb1ecc3f4903504dd68141e35fc9d2f064e4cac524a041536",
+        "Isaiah": "3c221c1210945cbceefe7c4180ad6ad6b30da49fee7a2d2aadfd9f5668ffee60",
+        "Jeremiah": "70c2c33e34d933a908e1fb96ca5cf87f3c8f96955c6398abefa08ce466c61e45",
+        "Job": "830f0e1e11b3bcd5cdb7d5d6c2b8cfbededa5b424d332b725a3f21196443f70b",
+        "Joel": "3797b4b11339d747f3f2ee7092912b94032f9a7ef86052727253a60160152363",
+        "Jonah": "2ac51718c0b45c86a121a8572100df880a5669c0670e711f4474e2be75134ceb",
+        "Joshua": "e44a7c83417c00ad03d9f42172deb09022ea708521125c08ec6d75f8f23a418a",
+        "Judges": "8e84a5632e25a9be09d9e028ecfb81c22762846f70b0a28d6fc7d1cdd762ce6c",
+        "Kings_1": "91765ce458ee1080981d3efcb6ed96b7efe61ca971d0a28091b85f9ef64cb397",
+        "Kings_2": "d64d6e75f1c3d57ed23b06f8d6256c6dce4dc8e7b273cc1dd724dbc1d37134c5",
+        "Lamentations": "730cf103499c067d8be2734d88a327ccac0287db477382b2e452fb9534503615",
+        "Leviticus": "982a1db8b0ace327bcb5947b6fa8dfa7fae3a3ccb9b195b616145492d34f9e44",
+        "Malachi": "cfe8a0ec1130623da62f4ad1c2722dfff05dcbfc3032f3a2991f49b6c25e4551",
+        "Micah": "57dd8798d3b1fcf503e000f79be0c44cbac0f4f243317bbeb8e12c87d055ec64",
+        "Nahum": "1b188ceb7d349dc388f49b36d46417f6b5f98c193ca0443e8a03dabe79dd9666",
+        "Nehemiah": "fda3d7fddfe6c35c609020aebcbb384dd43a6f6ef068269b8b12e4dc6948a8e9",
+        "Numbers": "201e40cac991fb0642ffaa4018a76f515483f2beec9c8cd99a7c4f6d697e623d",
+        "Obadiah": "ceda118f956aa9b33199fe7c9672c08cf479f1cb379074718211c1907c3076c9",
+        "Proverbs": "2de9d1c73852bc238c4729b5755b52e297b7b076a4af928a623d38602cf5bc2f",
+        "Psalms": "d3679714bc774d6efd2670a2f37dd32cf8b4b54870f9e96a77fd3df6d2054587",
+        "Ruth": "b7db3d2dcc22286c8f10e00806ff4d8a3921d25c4d4b3974ae4fdc99f526293b",
+        "Samuel_1": "58b35e64af527d2f0d6a3e46b1332d241e828a87b9f371813a8c680368240138",
+        "Samuel_2": "0045c717c54f8e274b1f2f35be93afd6f5c7617f0ad0160d76a3e29c952377cf",
+        "Song_of_Songs": "ec3cfdf650b5ba8bbe0d8a141fa1315bf368552b360db2cd58db2a1bbf806841",
+        "Zechariah": "eeff6271acbfa66461513f1542ed7d9ae316702a5daffc4003e0348672dad3e8",
+        "Zephaniah": "29bb9e081aa4d491ebc3ae8bc97402803568420286b9f4df4f64cda5ca2ba0c3"
+      }
+    },
+    "source_resolution": {
+      "dev": {
+        "unique": 526,
+        "ambiguous": 9,
+        "missing": 0
+      },
+      "test": {
+        "unique": 527,
+        "ambiguous": 9,
+        "missing": 0
+      }
+    },
+    "damage": "contiguous one-, two-, and three-word synthetic gaps",
+    "not_embible_metric_replication": true,
+    "word_model": "ft_msbert_span_preserved_nonbib",
+    "word_model_sha256": "013ca67a3808034c70510da61d7e3a458196cd9ee8245a9d9072b91e4bd4bfc6",
+    "char_model": "tau/tavbert-he",
+    "char_model_revision": "41265b09a862144b2517afdfd46da4388f1380df",
+    "dev_items": 60,
+    "test_items": 120,
+    "dev_per_length": 20,
+    "test_per_length": 40,
+    "dev_seed": 171,
+    "test_seed": 173,
+    "dev_sample_sha256": "6f5b3b5e7db7a1f0173587202308691c2ae54d18032780cc18fe43cca91ca973",
+    "test_sample_sha256": "b3c7821d492ad776e4befe6cb84f6fd39290191fab2cdb88a4ee96ccf40e1199",
+    "eligible_dev_by_words": {
+      "1": 715,
+      "2": 583,
+      "3": 462
+    },
+    "eligible_test_by_words": {
+      "1": 683,
+      "2": 554,
+      "3": 439
+    },
+    "dev_fit": {
+      "word_length_penalty": 0.5,
+      "char_length_penalty": 1.0,
+      "ensemble_word_weight": 1.0
+    }
+  },
+  "results": {
+    "uwc_word": {
+      "n": 120,
+      "top1": 27.5,
+      "top5": 45.0,
+      "top10": 50.0,
+      "mean_top1_cer": 0.577674987049987,
+      "mean_boundary_f1": 0.4097222222222222,
+      "mean_word_count_error": 0.8083333333333333,
+      "decoder_failure_rate": 0.0,
+      "word_hit1": 22.5,
+      "word_hit5": 42.916666666666664
+    },
+    "char_unknown": {
+      "n": 120,
+      "top1": 5.833333333333333,
+      "top5": 9.166666666666666,
+      "top10": 10.0,
+      "mean_top1_cer": 0.8139114242239243,
+      "mean_boundary_f1": 0.3472222222222222,
+      "mean_word_count_error": 0.9,
+      "decoder_failure_rate": 0.0,
+      "word_hit1": 3.3333333333333335,
+      "word_hit5": 6.25
+    },
+    "embible_overlap_ensemble": {
+      "n": 120,
+      "top1": 7.5,
+      "top5": 9.166666666666666,
+      "top10": 9.166666666666666,
+      "mean_top1_cer": 0.7953474187849188,
+      "mean_boundary_f1": 0.33611111111111114,
+      "mean_word_count_error": 0.9333333333333333,
+      "decoder_failure_rate": 0.0,
+      "word_hit1": 4.166666666666667,
+      "word_hit5": 6.25
+    },
+    "rank_ensemble": {
+      "n": 120,
+      "top1": 27.5,
+      "top5": 45.0,
+      "top10": 50.0,
+      "mean_top1_cer": 0.577674987049987,
+      "mean_boundary_f1": 0.4097222222222222,
+      "mean_word_count_error": 0.8083333333333333,
+      "decoder_failure_rate": 0.0,
+      "word_hit1": 22.5,
+      "word_hit5": 42.916666666666664
+    },
+    "cwc_word_oracle": {
+      "n": 120,
+      "top1": 55.833333333333336,
+      "top5": 64.16666666666667,
+      "top10": 65.0,
+      "mean_top1_cer": 0.3068775668775669,
+      "mean_boundary_f1": 0.8333333333333334,
+      "mean_word_count_error": 0.44166666666666665,
+      "decoder_failure_rate": 0.16666666666666666,
+      "word_hit1": 58.333333333333336,
+      "word_hit5": 62.916666666666664
+    },
+    "by_word_count": {
+      "1": {
+        "uwc_word": {
+          "n": 40,
+          "top1": 57.5,
+          "top5": 77.5,
+          "top10": 80.0,
+          "mean_top1_cer": 0.4147222222222222,
+          "mean_boundary_f1": 0.8,
+          "mean_word_count_error": 0.25,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 57.5,
+          "word_hit5": 77.5
+        },
+        "char_unknown": {
+          "n": 40,
+          "top1": 17.5,
+          "top5": 22.5,
+          "top10": 25.0,
+          "mean_top1_cer": 0.7230357142857142,
+          "mean_boundary_f1": 0.95,
+          "mean_word_count_error": 0.05,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 17.5,
+          "word_hit5": 22.5
+        },
+        "embible_overlap_ensemble": {
+          "n": 40,
+          "top1": 20.0,
+          "top5": 22.5,
+          "top10": 22.5,
+          "mean_top1_cer": 0.682797619047619,
+          "mean_boundary_f1": 0.95,
+          "mean_word_count_error": 0.05,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 20.0,
+          "word_hit5": 22.5
+        },
+        "rank_ensemble": {
+          "n": 40,
+          "top1": 57.5,
+          "top5": 77.5,
+          "top10": 80.0,
+          "mean_top1_cer": 0.4147222222222222,
+          "mean_boundary_f1": 0.8,
+          "mean_word_count_error": 0.25,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 57.5,
+          "word_hit5": 77.5
+        },
+        "cwc_word_oracle": {
+          "n": 40,
+          "top1": 80.0,
+          "top5": 87.5,
+          "top10": 90.0,
+          "mean_top1_cer": 0.13234126984126984,
+          "mean_boundary_f1": 1.0,
+          "mean_word_count_error": 0.0,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 80.0,
+          "word_hit5": 87.5
+        }
+      },
+      "2": {
+        "uwc_word": {
+          "n": 40,
+          "top1": 15.0,
+          "top5": 32.5,
+          "top10": 42.5,
+          "mean_top1_cer": 0.6318344155844156,
+          "mean_boundary_f1": 0.275,
+          "mean_word_count_error": 0.675,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 18.75,
+          "word_hit5": 43.75
+        },
+        "char_unknown": {
+          "n": 40,
+          "top1": 0.0,
+          "top5": 2.5,
+          "top10": 2.5,
+          "mean_top1_cer": 0.8780059523809524,
+          "mean_boundary_f1": 0.025,
+          "mean_word_count_error": 0.975,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 1.25,
+          "word_hit5": 3.75
+        },
+        "embible_overlap_ensemble": {
+          "n": 40,
+          "top1": 2.5,
+          "top5": 2.5,
+          "top10": 2.5,
+          "mean_top1_cer": 0.8610416666666667,
+          "mean_boundary_f1": 0.025,
+          "mean_word_count_error": 0.975,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 2.5,
+          "word_hit5": 3.75
+        },
+        "rank_ensemble": {
+          "n": 40,
+          "top1": 15.0,
+          "top5": 32.5,
+          "top10": 42.5,
+          "mean_top1_cer": 0.6318344155844156,
+          "mean_boundary_f1": 0.275,
+          "mean_word_count_error": 0.675,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 18.75,
+          "word_hit5": 43.75
+        },
+        "cwc_word_oracle": {
+          "n": 40,
+          "top1": 55.0,
+          "top5": 62.5,
+          "top10": 62.5,
+          "mean_top1_cer": 0.2971410533910534,
+          "mean_boundary_f1": 0.825,
+          "mean_word_count_error": 0.35,
+          "decoder_failure_rate": 0.175,
+          "word_hit1": 65.0,
+          "word_hit5": 68.75
+        }
+      },
+      "3": {
+        "uwc_word": {
+          "n": 40,
+          "top1": 10.0,
+          "top5": 25.0,
+          "top10": 27.5,
+          "mean_top1_cer": 0.6864683233433233,
+          "mean_boundary_f1": 0.15416666666666667,
+          "mean_word_count_error": 1.5,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 13.333333333333334,
+          "word_hit5": 30.833333333333332
+        },
+        "char_unknown": {
+          "n": 40,
+          "top1": 0.0,
+          "top5": 2.5,
+          "top10": 2.5,
+          "mean_top1_cer": 0.840692606005106,
+          "mean_boundary_f1": 0.06666666666666667,
+          "mean_word_count_error": 1.675,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 0.0,
+          "word_hit5": 2.5
+        },
+        "embible_overlap_ensemble": {
+          "n": 40,
+          "top1": 0.0,
+          "top5": 2.5,
+          "top10": 2.5,
+          "mean_top1_cer": 0.8422029706404706,
+          "mean_boundary_f1": 0.03333333333333333,
+          "mean_word_count_error": 1.775,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 0.0,
+          "word_hit5": 2.5
+        },
+        "rank_ensemble": {
+          "n": 40,
+          "top1": 10.0,
+          "top5": 25.0,
+          "top10": 27.5,
+          "mean_top1_cer": 0.6864683233433233,
+          "mean_boundary_f1": 0.15416666666666667,
+          "mean_word_count_error": 1.5,
+          "decoder_failure_rate": 0.0,
+          "word_hit1": 13.333333333333334,
+          "word_hit5": 30.833333333333332
+        },
+        "cwc_word_oracle": {
+          "n": 40,
+          "top1": 32.5,
+          "top5": 42.5,
+          "top10": 42.5,
+          "mean_top1_cer": 0.49115037740037737,
+          "mean_boundary_f1": 0.675,
+          "mean_word_count_error": 0.975,
+          "decoder_failure_rate": 0.325,
+          "word_hit1": 46.666666666666664,
+          "word_hit5": 50.833333333333336
+        }
+      }
+    },
+    "char_oracle_length": {
+      "n_characters": 1075,
+      "char_hit1": 25.302325581395348,
+      "char_hit5": 61.30232558139535
+    }
+  },
+  "cases": [
+    {
+      "item_id": "embible-bible:test:Genesis:10364:8:3",
+      "scroll": "Genesis:262",
+      "left_context": [
+        "ותלך",
+        "ותשב",
+        "לה",
+        "מנגד",
+        "הרחק",
+        "כמטחוי",
+        "קשת",
+        "כי"
+      ],
+      "gold": [
+        "אמרה",
+        "אל",
+        "אראה"
+      ],
+      "right_context": [
+        "במות",
+        "הילד",
+        "ותשב",
+        "מנגד",
+        "ותשא",
+        "את",
+        "קלה",
+        "ותבך"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לא אראה",
+          "ראתה",
+          "אמרה לא אראה",
+          "אמרה אל אראה",
+          "אראה",
+          "אמרה אראה",
+          "לא תוכל לראות",
+          "לא אראה עוד",
+          "ראתה את",
+          "לא יראה"
+        ],
+        "char_unknown": [
+          "אם",
+          "לם",
+          "אא",
+          "הם",
+          "זם",
+          "כם",
+          "אל",
+          "אש",
+          "אה",
+          "עם"
+        ],
+        "embible_overlap_ensemble": [
+          "אם",
+          "לם",
+          "אא",
+          "הם",
+          "זם"
+        ],
+        "rank_ensemble": [
+          "לא אראה",
+          "ראתה",
+          "אמרה לא אראה",
+          "אמרה אל אראה",
+          "אראה",
+          "אמרה אראה",
+          "לא תוכל לראות",
+          "לא אראה עוד",
+          "ראתה את",
+          "לא יראה"
+        ],
+        "cwc_word_oracle": [
+          "אמרה לא אראה",
+          "אמרה אל אראה",
+          "ראתה כי ראתה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Esther:8739:9:3",
+      "scroll": "Esther:209",
+      "left_context": [
+        "המלך",
+        "פקידים",
+        "בכל",
+        "מדינות",
+        "מלכותו",
+        "ויקבצו",
+        "את",
+        "כל"
+      ],
+      "gold": [
+        "נערה",
+        "בתולה",
+        "טובת"
+      ],
+      "right_context": [
+        "מראה",
+        "אל",
+        "שושן",
+        "הבירה",
+        "אל",
+        "בית",
+        "הנשים",
+        "אל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אנשי",
+          "איש יפה",
+          "איש",
+          "איש מראי",
+          "הנשים טובות",
+          "איש איש יפה",
+          "כלי",
+          "איש אשר לו",
+          "איש לבוש",
+          "איש איש מראי"
+        ],
+        "char_unknown": [
+          "כל",
+          "בני",
+          "בשי",
+          "בל",
+          "כי",
+          "במי",
+          "ברי",
+          "ביי",
+          "אנשי",
+          "על"
+        ],
+        "embible_overlap_ensemble": [
+          "בני"
+        ],
+        "rank_ensemble": [
+          "אנשי",
+          "איש יפה",
+          "איש",
+          "איש מראי",
+          "הנשים טובות",
+          "איש איש יפה",
+          "כלי",
+          "איש אשר לו",
+          "איש לבוש",
+          "איש איש מראי"
+        ],
+        "cwc_word_oracle": [
+          "נערה בתולה טובת"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jeremiah:5733:16:3",
+      "scroll": "Jeremiah:118",
+      "left_context": [
+        "אמר",
+        "יהוה",
+        "כן",
+        "אתן",
+        "את",
+        "צדקיהו",
+        "מלך",
+        "יהודה"
+      ],
+      "gold": [
+        "ואת",
+        "שריו",
+        "ואת"
+      ],
+      "right_context": [
+        "שארית",
+        "ירושלם",
+        "הנשארים",
+        "בארץ",
+        "הזאת",
+        "והישבים",
+        "בארץ",
+        "מצרים"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ואת",
+          "ואת כל",
+          "מלך ישראל ואת",
+          "את כל",
+          "את",
+          "עבדו ואת",
+          "ואת שריה ואת",
+          "וכול",
+          "ואת כול",
+          "ו כול"
+        ],
+        "char_unknown": [
+          "על",
+          "ואת",
+          "אל",
+          "ואל",
+          "כל",
+          "וכת",
+          "ואך",
+          "לאת",
+          "מאת",
+          "וכל"
+        ],
+        "embible_overlap_ensemble": [
+          "ואת",
+          "על",
+          "אל",
+          "ואל",
+          "כל"
+        ],
+        "rank_ensemble": [
+          "ואת",
+          "ואת כל",
+          "מלך ישראל ואת",
+          "את כל",
+          "את",
+          "עבדו ואת",
+          "ואת שריה ואת",
+          "וכול",
+          "ואת כול",
+          "ו כול"
+        ],
+        "cwc_word_oracle": [
+          "ואת שריה ואת",
+          "ואת שריו ואת",
+          "עבד יהוה ואת",
+          "נאם יהוה ואת"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Leviticus:2790:15:3",
+      "scroll": "Leviticus:62",
+      "left_context": [
+        "ראש",
+        "השעיר",
+        "החי",
+        "והתודה",
+        "עליו",
+        "את",
+        "כל",
+        "עונת"
+      ],
+      "gold": [
+        "בני",
+        "ישראל",
+        "ואת"
+      ],
+      "right_context": [
+        "כל",
+        "פשעיהם",
+        "לכל",
+        "חטאתם",
+        "ונתן",
+        "אתם",
+        "על",
+        "ראש"
+      ],
+      "top10": {
+        "uwc_word": [
+          "עוונות ואת",
+          "עוונות ישראל ואת",
+          "ואת",
+          "בני ישראל ואת",
+          "עוונות עימו ואת",
+          "עוונות עמו ואת",
+          "החטאת ואת",
+          "עוונות העדה ואת",
+          "עוונות העם ואת",
+          "עוונות יהוה ואת"
+        ],
+        "char_unknown": [
+          "השויים ואת",
+          "השוים ואת",
+          "השיים ואת",
+          "השרים ואת",
+          "השויו ואת",
+          "השייים ואת",
+          "השריים ואת",
+          "השייו ואת",
+          "השריו ואת",
+          "השמים ואת"
+        ],
+        "embible_overlap_ensemble": [
+          "השויים ואת",
+          "השוים ואת",
+          "השיים ואת",
+          "השרים ואת",
+          "השויו ואת"
+        ],
+        "rank_ensemble": [
+          "עוונות ואת",
+          "עוונות ישראל ואת",
+          "ואת",
+          "בני ישראל ואת",
+          "עוונות עימו ואת",
+          "עוונות עמו ואת",
+          "החטאת ואת",
+          "עוונות העדה ואת",
+          "עוונות העם ואת",
+          "עוונות יהוה ואת"
+        ],
+        "cwc_word_oracle": [
+          "בני ישראל ואת"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Deuteronomy:12759:15:3",
+      "scroll": "Deuteronomy:290",
+      "left_context": [
+        "ראובן",
+        "אשר",
+        "פצתה",
+        "הארץ",
+        "את",
+        "פיה",
+        "ותבלעם",
+        "ואת"
+      ],
+      "gold": [
+        "בתיהם",
+        "ואת",
+        "אהליהם"
+      ],
+      "right_context": [
+        "ואת",
+        "כל",
+        "היקום",
+        "אשר",
+        "ברגליהם",
+        "בקרב",
+        "כל",
+        "ישראל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אהליהם",
+          "כל אשר להם",
+          "כל היקום",
+          "כל בהמתה",
+          "כל יושבי הארץ",
+          "כל עשב השדה",
+          "כל עפר הארץ",
+          "כל חילם",
+          "בתיהם",
+          "מי הירדן"
+        ],
+        "char_unknown": [
+          "כל השרים",
+          "כל הערים",
+          "כל הארים",
+          "כל הירים",
+          "כל השוים",
+          "כל ההרים",
+          "כל העוים",
+          "כל הברים",
+          "כל האוים",
+          "כל השמים"
+        ],
+        "embible_overlap_ensemble": [
+          "כל השרים",
+          "כל הערים",
+          "כל הארים",
+          "כל הירים",
+          "כל השוים"
+        ],
+        "rank_ensemble": [
+          "אהליהם",
+          "כל אשר להם",
+          "כל היקום",
+          "כל בהמתה",
+          "כל יושבי הארץ",
+          "כל עשב השדה",
+          "כל עפר הארץ",
+          "כל חילם",
+          "בתיהם",
+          "מי הירדן"
+        ],
+        "cwc_word_oracle": [
+          "בתיהם ואת אהליהם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_1:7914:15:3",
+      "scroll": "Kings_1:187",
+      "left_context": [
+        "את",
+        "כרמך",
+        "ויהי",
+        "לי",
+        "לגן",
+        "ירק",
+        "כי",
+        "הוא"
+      ],
+      "gold": [
+        "קרוב",
+        "אצל",
+        "ביתי"
+      ],
+      "right_context": [
+        "ואתנה",
+        "לך",
+        "תחתיו",
+        "כרם",
+        "טוב",
+        "ממנו",
+        "אם",
+        "טוב"
+      ],
+      "top10": {
+        "uwc_word": [
+          "טוב",
+          "מאכל אלוהים",
+          "מאכל",
+          "למאכל",
+          "מאכל אדם",
+          "מאכל בני אדם",
+          "בגללי",
+          "עץ מאכל",
+          "מאכל אדוני",
+          "יהיה לך למאכל"
+        ],
+        "char_unknown": [
+          "ירב",
+          "יוב",
+          "יפב",
+          "ירן",
+          "גם",
+          "גן",
+          "גר",
+          "ירק",
+          "רם",
+          "רן"
+        ],
+        "embible_overlap_ensemble": [
+          "ירב",
+          "יוב",
+          "יפב",
+          "ירן",
+          "גם"
+        ],
+        "rank_ensemble": [
+          "טוב",
+          "מאכל אלוהים",
+          "מאכל",
+          "למאכל",
+          "מאכל אדם",
+          "מאכל בני אדם",
+          "בגללי",
+          "עץ מאכל",
+          "מאכל אדוני",
+          "יהיה לך למאכל"
+        ],
+        "cwc_word_oracle": [
+          "מאכל בני האדם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Chronicles_1:15974:11:3",
+      "scroll": "Chronicles_1:345",
+      "left_context": [
+        "אתה",
+        "בחן",
+        "לבב",
+        "ומישרים",
+        "תרצה",
+        "אני",
+        "בישר",
+        "לבבי"
+      ],
+      "gold": [
+        "התנדבתי",
+        "כל",
+        "אלה"
+      ],
+      "right_context": [
+        "ועתה",
+        "עמך",
+        "הנמצאו",
+        "פה",
+        "ראיתי",
+        "בשמחה",
+        "להתנדב",
+        "לך"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אמרתי",
+          "אודיעך",
+          "ו",
+          "עשיתי",
+          "בחרתי",
+          "אשיחה",
+          "תחפוץ",
+          "אתה בוחן כליות",
+          "חפצתי",
+          "עמך"
+        ],
+        "char_unknown": [
+          "לך",
+          "כך",
+          "בך",
+          "עמה",
+          "עך",
+          "עמך",
+          "עתה",
+          "פך",
+          "אך",
+          "עתך"
+        ],
+        "embible_overlap_ensemble": [
+          "לך"
+        ],
+        "rank_ensemble": [
+          "אמרתי",
+          "אודיעך",
+          "ו",
+          "עשיתי",
+          "בחרתי",
+          "אשיחה",
+          "תחפוץ",
+          "אתה בוחן כליות",
+          "חפצתי",
+          "עמך"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jeremiah:5791:15:3",
+      "scroll": "Jeremiah:128",
+      "left_context": [
+        "מלך",
+        "יהודה",
+        "ויאמר",
+        "אל",
+        "כל",
+        "עם",
+        "יהודה",
+        "לאמר"
+      ],
+      "gold": [
+        "כה",
+        "אמר",
+        "יהוה"
+      ],
+      "right_context": [
+        "צבאות",
+        "ציון",
+        "שדה",
+        "תחרש",
+        "וירושלים",
+        "עיים",
+        "תהיה",
+        "והר"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כה אמר יהוה",
+          "יהוה",
+          "אדוני יהוה",
+          "אמר יהוה",
+          "נאם יהוה",
+          "אדוני אדוני יהוה",
+          "אדוני",
+          "יהוה אלוהי",
+          "אדוני יהוה אלוהי",
+          "כה אמר אדוני"
+        ],
+        "char_unknown": [
+          "אל כל",
+          "כל כל",
+          "אל הל",
+          "כל",
+          "אל כם",
+          "אל כר",
+          "אי כל",
+          "לל כל",
+          "אל כת",
+          "אל"
+        ],
+        "embible_overlap_ensemble": [
+          "אל כל",
+          "כל כל",
+          "אל הל",
+          "כל",
+          "אל כם"
+        ],
+        "rank_ensemble": [
+          "כה אמר יהוה",
+          "יהוה",
+          "אדוני יהוה",
+          "אמר יהוה",
+          "נאם יהוה",
+          "אדוני אדוני יהוה",
+          "אדוני",
+          "יהוה אלוהי",
+          "אדוני יהוה אלוהי",
+          "כה אמר אדוני"
+        ],
+        "cwc_word_oracle": [
+          "כה אמר יהוה",
+          "כן אמר יהוה",
+          "כי אמר יהוה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jeremiah:5940:22:3",
+      "scroll": "Jeremiah:124",
+      "left_context": [
+        "את",
+        "שדי",
+        "אשר",
+        "בענתות",
+        "אשר",
+        "בארץ",
+        "בנימין",
+        "כי"
+      ],
+      "gold": [
+        "לך",
+        "משפט",
+        "הירשה"
+      ],
+      "right_context": [
+        "ולך",
+        "הגאלה",
+        "קנה",
+        "לך",
+        "ואדע",
+        "כי",
+        "דבר",
+        "יהוה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אני",
+          "אני יהוה",
+          "אני יהוה אלוהים",
+          "לך",
+          "לך הכסף",
+          "לכה",
+          "אני יהוה אלוהיך",
+          "לך הגאלה",
+          "לוא",
+          "לי"
+        ],
+        "char_unknown": [
+          "אך",
+          "לך",
+          "בך",
+          "אתי",
+          "אני",
+          "אתך",
+          "אנך",
+          "אתה",
+          "אי",
+          "שך"
+        ],
+        "embible_overlap_ensemble": [
+          "לך",
+          "אני"
+        ],
+        "rank_ensemble": [
+          "אני",
+          "אני יהוה",
+          "אני יהוה אלוהים",
+          "לך",
+          "לך הכסף",
+          "לכה",
+          "אני יהוה אלוהיך",
+          "לך הגאלה",
+          "לוא",
+          "לי"
+        ],
+        "cwc_word_oracle": [
+          "לי הכסף והזהב"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jeremiah:5322:8:3",
+      "scroll": "Jeremiah:133",
+      "left_context": [
+        "עמד",
+        "בשער",
+        "בית",
+        "יהוה",
+        "וקראת",
+        "שם",
+        "את",
+        "הדבר"
+      ],
+      "gold": [
+        "הזה",
+        "ואמרת",
+        "שמעו"
+      ],
+      "right_context": [
+        "דבר",
+        "יהוה",
+        "כל",
+        "יהודה",
+        "הבאים",
+        "בשערים",
+        "האלה",
+        "להשתחות"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אשר",
+          "אשר היה",
+          "הזה אשר",
+          "הזה לאמור שמעו",
+          "אשר ראו",
+          "אשר ראו את",
+          "הזה לאמר שמעו",
+          "אשר היה את",
+          "הזה שמעו",
+          "הזה את"
+        ],
+        "char_unknown": [
+          "הזה את",
+          "הזה אל",
+          "הזה כת",
+          "הזה אה",
+          "הזה עת",
+          "הזהא את",
+          "הזא את",
+          "הזה אר",
+          "הזה אא",
+          "הזהה את"
+        ],
+        "embible_overlap_ensemble": [
+          "הזה את"
+        ],
+        "rank_ensemble": [
+          "אשר",
+          "אשר היה",
+          "הזה אשר",
+          "הזה לאמור שמעו",
+          "אשר ראו",
+          "אשר ראו את",
+          "הזה לאמר שמעו",
+          "אשר היה את",
+          "הזה שמעו",
+          "הזה את"
+        ],
+        "cwc_word_oracle": [
+          "הזה לאמור שמעו"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Zephaniah:17293:8:3",
+      "scroll": "Zephaniah:391",
+      "left_context": [
+        "זאת",
+        "העיר",
+        "העליזה",
+        "היושבת",
+        "לבטח",
+        "האמרה",
+        "בלבבה",
+        "אני"
+      ],
+      "gold": [
+        "ואפסי",
+        "עוד",
+        "איך"
+      ],
+      "right_context": [
+        "היתה",
+        "לשמה",
+        "מרבץ",
+        "לחיה",
+        "כל",
+        "עובר",
+        "עליה",
+        "ישרק"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יהוה",
+          "יהוה צבאות",
+          "יהוה אשר",
+          "יהוה כי",
+          "יהוה אני יהוה",
+          "יהוה יהוה צבאות",
+          "יהוה יהוה",
+          "יהוה הנני",
+          "יהוה היא",
+          "יהוה על כן"
+        ],
+        "char_unknown": [
+          "לא",
+          "כא",
+          "לי",
+          "לו",
+          "לם",
+          "לה",
+          "מו ה כי",
+          "מויה כי",
+          "זא",
+          "איי"
+        ],
+        "embible_overlap_ensemble": [
+          "לא",
+          "כא",
+          "לי",
+          "לו",
+          "לם"
+        ],
+        "rank_ensemble": [
+          "יהוה",
+          "יהוה צבאות",
+          "יהוה אשר",
+          "יהוה כי",
+          "יהוה אני יהוה",
+          "יהוה יהוה צבאות",
+          "יהוה יהוה",
+          "יהוה הנני",
+          "יהוה היא",
+          "יהוה על כן"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_2:3587:16:3",
+      "scroll": "Samuel_2:74",
+      "left_context": [
+        "בני",
+        "אשר",
+        "יצא",
+        "ממעי",
+        "מבקש",
+        "את",
+        "נפשי",
+        "ואף"
+      ],
+      "gold": [
+        "כי",
+        "עתה",
+        "בן"
+      ],
+      "right_context": [
+        "הימיני",
+        "הנחו",
+        "לו",
+        "ויקלל",
+        "כי",
+        "אמר",
+        "לו",
+        "יהוה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "את",
+          "בן",
+          "על",
+          "בני",
+          "את בן",
+          "אבנר בן",
+          "שאול בן",
+          "את בני",
+          "אתה בן",
+          "את אבישי בן"
+        ],
+        "char_unknown": [
+          "את",
+          "בצד",
+          "הצד",
+          "את הצד",
+          "ביד",
+          "את היד",
+          "את הצת",
+          "את הית",
+          "את בצד",
+          "את הצן"
+        ],
+        "embible_overlap_ensemble": [
+          "את"
+        ],
+        "rank_ensemble": [
+          "את",
+          "בן",
+          "על",
+          "בני",
+          "את בן",
+          "אבנר בן",
+          "שאול בן",
+          "את בני",
+          "אתה בן",
+          "את אבישי בן"
+        ],
+        "cwc_word_oracle": [
+          "על מות בן",
+          "את בני בן",
+          "על בני בן"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jonah:5141:9:3",
+      "scroll": "Jonah:114",
+      "left_context": [
+        "יונה",
+        "מן",
+        "העיר",
+        "וישב",
+        "מקדם",
+        "לעיר",
+        "ויעש",
+        "לו"
+      ],
+      "gold": [
+        "שם",
+        "סכה",
+        "וישב"
+      ],
+      "right_context": [
+        "תחתיה",
+        "בצל",
+        "עד",
+        "אשר",
+        "יראה",
+        "מה",
+        "יהיה",
+        "בעיר"
+      ],
+      "top10": {
+        "uwc_word": [
+          "בית",
+          "כסא",
+          "חצר",
+          "חומה",
+          "צלם",
+          "שם",
+          "מושב",
+          "כסא וישב",
+          "אהל",
+          "אוהל"
+        ],
+        "char_unknown": [
+          "לו",
+          "לם",
+          "לן",
+          "לה",
+          "לד",
+          "לי",
+          "לץ",
+          "לל",
+          "כו",
+          "לת"
+        ],
+        "embible_overlap_ensemble": [
+          "לו",
+          "לם",
+          "לן",
+          "לה",
+          "לד"
+        ],
+        "rank_ensemble": [
+          "בית",
+          "כסא",
+          "חצר",
+          "חומה",
+          "צלם",
+          "שם",
+          "מושב",
+          "כסא וישב",
+          "אהל",
+          "אוהל"
+        ],
+        "cwc_word_oracle": [
+          "שם עיר וישב"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Song_of_Songs:6912:8:3",
+      "scroll": "Song_of_Songs:162",
+      "left_context": [
+        "מים",
+        "רבים",
+        "לא",
+        "יוכלו",
+        "לכבות",
+        "את",
+        "האהבה",
+        "ונהרות"
+      ],
+      "gold": [
+        "לא",
+        "ישטפוה",
+        "אם"
+      ],
+      "right_context": [
+        "יתן",
+        "איש",
+        "את",
+        "כל",
+        "הון",
+        "ביתו",
+        "באהבה",
+        "בוז"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לא ישטפוה אם",
+          "אם",
+          "לא ישטפוה",
+          "מים רבים",
+          "מים רבים אם",
+          "לא",
+          "אל ישטפוה אם",
+          "מים ישטפוה",
+          "אין ישטפוה אם",
+          "אל ישטפוה"
+        ],
+        "char_unknown": [
+          "לא",
+          "ולא",
+          "רבים",
+          "האים לא",
+          "ולם",
+          "הבים",
+          "הבים לא",
+          "ראים",
+          "ראים לא",
+          "לם"
+        ],
+        "embible_overlap_ensemble": [
+          "לא",
+          "רבים"
+        ],
+        "rank_ensemble": [
+          "לא ישטפוה אם",
+          "אם",
+          "לא ישטפוה",
+          "מים רבים",
+          "מים רבים אם",
+          "לא",
+          "אל ישטפוה אם",
+          "מים ישטפוה",
+          "אין ישטפוה אם",
+          "אל ישטפוה"
+        ],
+        "cwc_word_oracle": [
+          "לא ישטפוה אם",
+          "אל ישטפוה אם",
+          "בל ישטפוה אם",
+          "לא ישטפוה כי"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Judges:1651:10:3",
+      "scroll": "Judges:29",
+      "left_context": [
+        "אפרים",
+        "ויעבר",
+        "צפונה",
+        "ויאמרו",
+        "ליפתח",
+        "מדוע",
+        "עברת",
+        "להלחם"
+      ],
+      "gold": [
+        "בבני",
+        "עמון",
+        "ולנו"
+      ],
+      "right_context": [
+        "לא",
+        "קראת",
+        "ללכת",
+        "עמך",
+        "ביתך",
+        "נשרף",
+        "עליך",
+        "באש"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כי",
+          "אשר",
+          "עם ישראל אשר",
+          "עם ישראל כי",
+          "מדוע",
+          "עם ישראל למה",
+          "למה",
+          "עם ישראל מדוע",
+          "עם אשר",
+          "ואתה"
+        ],
+        "char_unknown": [
+          "אם",
+          "אי",
+          "ממוע",
+          "עמוע",
+          "עמךך מדוע",
+          "מדוע",
+          "ומוע",
+          "במוע",
+          "עדוע",
+          "כם"
+        ],
+        "embible_overlap_ensemble": [
+          "אם"
+        ],
+        "rank_ensemble": [
+          "כי",
+          "אשר",
+          "עם ישראל אשר",
+          "עם ישראל כי",
+          "מדוע",
+          "עם ישראל למה",
+          "למה",
+          "עם ישראל מדוע",
+          "עם אשר",
+          "ואתה"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_1:7630:8:3",
+      "scroll": "Kings_1:186",
+      "left_context": [
+        "וישלח",
+        "המלך",
+        "רחבעם",
+        "את",
+        "אדרם",
+        "אשר",
+        "על",
+        "המס"
+      ],
+      "gold": [
+        "וירגמו",
+        "כל",
+        "ישראל"
+      ],
+      "right_context": [
+        "בו",
+        "אבן",
+        "וימת",
+        "והמלך",
+        "רחבעם",
+        "התאמץ",
+        "לעלות",
+        "במרכבה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "וירגמו",
+          "בית יהוה וירגמו",
+          "ויאחז",
+          "אשר למלך וירגמו",
+          "מאתיים וירגמו",
+          "ויחזק",
+          "אשר נטה",
+          "אשר יצק",
+          "אשר שם",
+          "אשר וירגמו"
+        ],
+        "char_unknown": [
+          "יש",
+          "אשר ייה",
+          "אשר ייו",
+          "אשר ירה",
+          "תש",
+          "ושר ייה",
+          "אשר ישה",
+          "אשר יבה",
+          "אשר יוה",
+          "אשר יאה"
+        ],
+        "embible_overlap_ensemble": [
+          "אשר ירה"
+        ],
+        "rank_ensemble": [
+          "וירגמו",
+          "בית יהוה וירגמו",
+          "ויאחז",
+          "אשר למלך וירגמו",
+          "מאתיים וירגמו",
+          "ויחזק",
+          "אשר נטה",
+          "אשר יצק",
+          "אשר שם",
+          "אשר וירגמו"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jeremiah:5820:8:3",
+      "scroll": "Jeremiah:125",
+      "left_context": [
+        "ויהי",
+        "בשנה",
+        "ההיא",
+        "בראשית",
+        "ממלכת",
+        "צדקיה",
+        "מלך",
+        "יהודה"
+      ],
+      "gold": [
+        "בשנת",
+        "בשנה",
+        "הרבעית"
+      ],
+      "right_context": [
+        "בחדש",
+        "החמישי",
+        "אמר",
+        "אלי",
+        "חנניה",
+        "בן",
+        "עזור",
+        "הנביא"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לאמור",
+          "בירושלם",
+          "מלך ישראל",
+          "על בית יהוה",
+          "מלך יהודה",
+          "מלך ירושלים",
+          "בן מלך ישראל",
+          "מלך בבל",
+          "בית יהוה",
+          "אשר"
+        ],
+        "char_unknown": [
+          "הש ייי",
+          "ויהי",
+          "ויני",
+          "הש יוי",
+          "ויוי",
+          "הש יית",
+          "היי",
+          "הש יות",
+          "היהי",
+          "היני"
+        ],
+        "embible_overlap_ensemble": [
+          "ויהי"
+        ],
+        "rank_ensemble": [
+          "לאמור",
+          "בירושלם",
+          "מלך ישראל",
+          "על בית יהוה",
+          "מלך יהודה",
+          "מלך ירושלים",
+          "בן מלך ישראל",
+          "מלך בבל",
+          "בית יהוה",
+          "אשר"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Deuteronomy:13201:8:3",
+      "scroll": "Deuteronomy:291",
+      "left_context": [
+        "ובאו",
+        "עליך",
+        "כל",
+        "הקללות",
+        "האלה",
+        "ורדפוך",
+        "והשיגוך",
+        "עד"
+      ],
+      "gold": [
+        "השמדך",
+        "כי",
+        "לא"
+      ],
+      "right_context": [
+        "שמעת",
+        "בקול",
+        "יהוה",
+        "אלהיך",
+        "לשמר",
+        "מצותיו",
+        "וחקתיו",
+        "אשר"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אשר לא",
+          "אשר",
+          "מאוד כי",
+          "אשר לוא",
+          "מאד כי",
+          "כי",
+          "תכלית הקללות כי",
+          "אשר תשמע כי",
+          "עולם כי לוא",
+          "בלתי סרה כי"
+        ],
+        "char_unknown": [
+          "אשר שר",
+          "אשראשר",
+          "האר אשר",
+          "אשר",
+          "אשר לר",
+          "אשראלר",
+          "אאר אשר",
+          "עאר אשר",
+          "האו אשר",
+          "עשר שר"
+        ],
+        "embible_overlap_ensemble": [
+          "אשר"
+        ],
+        "rank_ensemble": [
+          "אשר לא",
+          "אשר",
+          "מאוד כי",
+          "אשר לוא",
+          "מאד כי",
+          "כי",
+          "תכלית הקללות כי",
+          "אשר תשמע כי",
+          "עולם כי לוא",
+          "בלתי סרה כי"
+        ],
+        "cwc_word_oracle": [
+          "תכלית כי לא"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_2:8574:8:3",
+      "scroll": "Kings_2:197",
+      "left_context": [
+        "ויבא",
+        "ישעיהו",
+        "הנביא",
+        "אל",
+        "המלך",
+        "חזקיהו",
+        "ויאמר",
+        "אליו"
+      ],
+      "gold": [
+        "מה",
+        "אמרו",
+        "האנשים"
+      ],
+      "right_context": [
+        "האלה",
+        "ומאין",
+        "יבאו",
+        "אליך",
+        "ויאמר",
+        "חזקיהו",
+        "מארץ",
+        "רחוקה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "מה הערים",
+          "האנשים",
+          "מה משפט האנשים",
+          "מה המה האנשים",
+          "מה נורא הגוים",
+          "מה נורא האנשים",
+          "מה האנשים",
+          "מה האבנים",
+          "העברים",
+          "מי האנשים"
+        ],
+        "char_unknown": [
+          "הדברים",
+          "מא הדברים",
+          "מי הדברים",
+          "מה הדברים",
+          "מדברים",
+          "מאיהדברים",
+          "מת הדברים",
+          "הדבשים",
+          "מא הדבמים",
+          "מל הדברים"
+        ],
+        "embible_overlap_ensemble": [
+          "הדברים",
+          "מה הדברים"
+        ],
+        "rank_ensemble": [
+          "מה הערים",
+          "האנשים",
+          "מה משפט האנשים",
+          "מה המה האנשים",
+          "מה נורא הגוים",
+          "מה נורא האנשים",
+          "מה האנשים",
+          "מה האבנים",
+          "העברים",
+          "מי האנשים"
+        ],
+        "cwc_word_oracle": [
+          "מה משפט האנשים",
+          "מה נורא האנשים",
+          "מה אמרו האנשים",
+          "מה משפט הגברים",
+          "מה נורא העברים"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Haggai:8895:10:3",
+      "scroll": "Haggai:213",
+      "left_context": [
+        "את",
+        "רוח",
+        "זרבבל",
+        "בן",
+        "שלתיאל",
+        "פחת",
+        "יהודה",
+        "ואת"
+      ],
+      "gold": [
+        "רוח",
+        "יהושע",
+        "בן"
+      ],
+      "right_context": [
+        "יהוצדק",
+        "הכהן",
+        "הגדול",
+        "ואת",
+        "רוח",
+        "כל",
+        "שארית",
+        "העם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "רוח יהושוע בן",
+          "רוח",
+          "יהושוע בן",
+          "רוח יהושע בן",
+          "יהושע בן",
+          "ישוע בן",
+          "רוח ישוע בן",
+          "זכריה בן",
+          "רוח זכריה בן",
+          "רוח מתתיה בן"
+        ],
+        "char_unknown": [
+          "רוח כל",
+          "רוחרכל",
+          "רוח ול",
+          "רוח",
+          "רוח בל",
+          "רוחרול",
+          "רוח כן",
+          "רוח רית",
+          "רוח רחת",
+          "רוח פית"
+        ],
+        "embible_overlap_ensemble": [
+          "רוח"
+        ],
+        "rank_ensemble": [
+          "רוח יהושוע בן",
+          "רוח",
+          "יהושוע בן",
+          "רוח יהושע בן",
+          "יהושע בן",
+          "ישוע בן",
+          "רוח ישוע בן",
+          "זכריה בן",
+          "רוח זכריה בן",
+          "רוח מתתיה בן"
+        ],
+        "cwc_word_oracle": [
+          "רוח יהושע בן",
+          "רוח זכריה בן",
+          "רוח מתתיה בן",
+          "רוח יוחנן בן",
+          "רוח פינחס בן",
+          "רוח וישוע בן",
+          "רוח יאשיה בן",
+          "רוח שמעון בן"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Chronicles_1:15467:10:3",
+      "scroll": "Chronicles_1:355",
+      "left_context": [
+        "גם",
+        "שלשום",
+        "גם",
+        "בהיות",
+        "שאול",
+        "מלך",
+        "אתה",
+        "המוציא"
+      ],
+      "gold": [
+        "והמביא",
+        "את",
+        "ישראל"
+      ],
+      "right_context": [
+        "ויאמר",
+        "יהוה",
+        "אלהיך",
+        "לך",
+        "אתה",
+        "תרעה",
+        "את",
+        "עמי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "והמביא את ישראל",
+          "והמביא את עמי",
+          "והמביא",
+          "את ישראל",
+          "והמביא על ישראל",
+          "והמביא כול",
+          "והמביא אותי",
+          "והמביא את העם",
+          "ישראל",
+          "והמביא מחר"
+        ],
+        "char_unknown": [
+          "את האוך",
+          "את הארך",
+          "את האוץ",
+          "את הארץ",
+          "את האוי",
+          "את האיך",
+          "את האמך",
+          "את הארי",
+          "את האיץ",
+          "את האמץ"
+        ],
+        "embible_overlap_ensemble": [
+          "את האוך",
+          "את הארך",
+          "את האוץ",
+          "את הארץ",
+          "את האוי"
+        ],
+        "rank_ensemble": [
+          "והמביא את ישראל",
+          "והמביא את עמי",
+          "והמביא",
+          "את ישראל",
+          "והמביא על ישראל",
+          "והמביא כול",
+          "והמביא אותי",
+          "והמביא את העם",
+          "ישראל",
+          "והמביא מחר"
+        ],
+        "cwc_word_oracle": [
+          "והמביא את ישראל",
+          "והמביא על ישראל",
+          "והמביא אל ישראל"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Judges:1323:11:3",
+      "scroll": "Judges:39",
+      "left_context": [
+        "את",
+        "ישבי",
+        "בית",
+        "שמש",
+        "ואת",
+        "ישבי",
+        "בית",
+        "ענת"
+      ],
+      "gold": [
+        "וישב",
+        "בקרב",
+        "הכנעני"
+      ],
+      "right_context": [
+        "ישבי",
+        "הארץ",
+        "וישבי",
+        "בית",
+        "שמש",
+        "ובית",
+        "ענת",
+        "היו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כול",
+          "המה",
+          "הם",
+          "כי כול",
+          "כי",
+          "המה כול",
+          "המה היו",
+          "ו כול",
+          "את כול",
+          "הם היו"
+        ],
+        "char_unknown": [
+          "היו את",
+          "היו ואת",
+          "ואת",
+          "היו כת",
+          "היו אל",
+          "היווואת",
+          "ויו ואת",
+          "ויו את",
+          "היוו את",
+          "היו וכת"
+        ],
+        "embible_overlap_ensemble": [
+          "ואת"
+        ],
+        "rank_ensemble": [
+          "כול",
+          "המה",
+          "הם",
+          "כי כול",
+          "כי",
+          "המה כול",
+          "המה היו",
+          "ו כול",
+          "את כול",
+          "הם היו"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Amos:20011:13:3",
+      "scroll": "Amos:455",
+      "left_context": [
+        "בעיר",
+        "תזנה",
+        "ובניך",
+        "ובנתיך",
+        "בחרב",
+        "יפלו",
+        "ואדמתך",
+        "בחבל"
+      ],
+      "gold": [
+        "תחלק",
+        "ואתה",
+        "על"
+      ],
+      "right_context": [
+        "אדמה",
+        "טמאה",
+        "תמות",
+        "וישראל",
+        "גלה",
+        "יגלה",
+        "מעל",
+        "אדמתו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "על",
+          "תכה על",
+          "אל",
+          "יפלו על",
+          "יפולו על",
+          "תכה כי על",
+          "תעלה על",
+          "תכה ועל",
+          "ברזל על",
+          "יפולו ועל"
+        ],
+        "char_unknown": [
+          "על",
+          "ועל",
+          "כל",
+          "של",
+          "מעל",
+          "אעל",
+          "אל",
+          "ויל",
+          "וכל",
+          "עי"
+        ],
+        "embible_overlap_ensemble": [
+          "על",
+          "ועל",
+          "כל",
+          "מעל",
+          "של"
+        ],
+        "rank_ensemble": [
+          "על",
+          "תכה על",
+          "אל",
+          "יפלו על",
+          "יפולו על",
+          "תכה כי על",
+          "תעלה על",
+          "תכה ועל",
+          "ברזל על",
+          "יפולו ועל"
+        ],
+        "cwc_word_oracle": [
+          "ברזל תלבש על",
+          "ברזל יפלו על",
+          "ברזל תלכד על",
+          "ברזל תבוא על",
+          "ברזל תכלה על",
+          "יפלו ואתה על",
+          "ברזל תניף על",
+          "ברזל תשבר על"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Genesis:10219:9:3",
+      "scroll": "Genesis:238",
+      "left_context": [
+        "שרי",
+        "אשת",
+        "אברם",
+        "את",
+        "הגר",
+        "המצרית",
+        "שפחתה",
+        "מקץ"
+      ],
+      "gold": [
+        "עשר",
+        "שנים",
+        "לשבת"
+      ],
+      "right_context": [
+        "אברם",
+        "בארץ",
+        "כנען",
+        "ותתן",
+        "אתה",
+        "לאברם",
+        "אישה",
+        "לו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "עשר שנים לשבת",
+          "ארבעים שנה לשבת",
+          "בוא",
+          "עשרים שנה לשבת",
+          "שנים לשבת",
+          "ימים לשבת",
+          "ארבע שנים לשבת",
+          "חמש שנים לשבת",
+          "שבע שנים לשבת",
+          "לשבת"
+        ],
+        "char_unknown": [
+          "אשת",
+          "אשי",
+          "אמת",
+          "אית",
+          "אמי",
+          "את",
+          "אל",
+          "איי",
+          "אנת",
+          "אות"
+        ],
+        "embible_overlap_ensemble": [
+          "אשת"
+        ],
+        "rank_ensemble": [
+          "עשר שנים לשבת",
+          "ארבעים שנה לשבת",
+          "בוא",
+          "עשרים שנה לשבת",
+          "שנים לשבת",
+          "ימים לשבת",
+          "ארבע שנים לשבת",
+          "חמש שנים לשבת",
+          "שבע שנים לשבת",
+          "לשבת"
+        ],
+        "cwc_word_oracle": [
+          "עשר שנים לשבת",
+          "חמש שנים לשבת",
+          "שבע שנים לשבת",
+          "שלש שנים לשבת",
+          "תשע שנים לשבת"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_1:7483:10:3",
+      "scroll": "Kings_1:177",
+      "left_context": [
+        "יהיה",
+        "בארץ",
+        "דבר",
+        "כי",
+        "יהיה",
+        "שדפון",
+        "ירקון",
+        "ארבה"
+      ],
+      "gold": [
+        "חסיל",
+        "כי",
+        "יהיה"
+      ],
+      "right_context": [
+        "כי",
+        "יצר",
+        "לו",
+        "איבו",
+        "בארץ",
+        "שעריו",
+        "כל",
+        "נגע"
+      ],
+      "top10": {
+        "uwc_word": [
+          "חסיל",
+          "חסיל כי יהיה",
+          "חסיל ארבה חסיל",
+          "ארבה חסיל",
+          "חסיל כול",
+          "חסיל חסיל",
+          "חסיל ארבה",
+          "חסיל עד",
+          "כל נגע",
+          "חסיל וכול"
+        ],
+        "char_unknown": [
+          "בארץ דבר",
+          "דבר",
+          "לו",
+          "בארץ דבו",
+          "בארץ דור",
+          "בארץ דיר",
+          "בארץ אבר",
+          "לארץ דבר",
+          "בארץ דבם",
+          "בארץ דבה"
+        ],
+        "embible_overlap_ensemble": [
+          "דבר"
+        ],
+        "rank_ensemble": [
+          "חסיל",
+          "חסיל כי יהיה",
+          "חסיל ארבה חסיל",
+          "ארבה חסיל",
+          "חסיל כול",
+          "חסיל חסיל",
+          "חסיל ארבה",
+          "חסיל עד",
+          "כל נגע",
+          "חסיל וכול"
+        ],
+        "cwc_word_oracle": [
+          "חסיל כי יהיה",
+          "חסיל או ארבה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jeremiah:6213:14:3",
+      "scroll": "Jeremiah:140",
+      "left_context": [
+        "אתם",
+        "ראיתם",
+        "את",
+        "כל",
+        "הרעה",
+        "אשר",
+        "הבאתי",
+        "על"
+      ],
+      "gold": [
+        "ירושלם",
+        "ועל",
+        "כל"
+      ],
+      "right_context": [
+        "ערי",
+        "יהודה",
+        "והנם",
+        "חרבה",
+        "היום",
+        "הזה",
+        "ואין",
+        "בהם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כל",
+          "ירושלים ועל",
+          "ירושלם ועל",
+          "ירושלים ועל כל",
+          "ירושלם ועל כל",
+          "בית ישראל ועל",
+          "ישראל ועל",
+          "יהודה ועל כל",
+          "כול",
+          "ירושלים ועל כול"
+        ],
+        "char_unknown": [
+          "כל",
+          "שאי",
+          "כלי כל",
+          "שאל",
+          "ראי",
+          "כל כל",
+          "כאי",
+          "שלי",
+          "שאר",
+          "פלי כל"
+        ],
+        "embible_overlap_ensemble": [
+          "כל"
+        ],
+        "rank_ensemble": [
+          "כל",
+          "ירושלים ועל",
+          "ירושלם ועל",
+          "ירושלים ועל כל",
+          "ירושלם ועל כל",
+          "בית ישראל ועל",
+          "ישראל ועל",
+          "יהודה ועל כל",
+          "כול",
+          "ירושלים ועל כול"
+        ],
+        "cwc_word_oracle": [
+          "ירושלם ועל כל",
+          "ירושלם ואת כל"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_1:4861:8:3",
+      "scroll": "Samuel_1:84",
+      "left_context": [
+        "ועתה",
+        "אל",
+        "יפל",
+        "דמי",
+        "ארצה",
+        "מנגד",
+        "פני",
+        "יהוה"
+      ],
+      "gold": [
+        "כי",
+        "יצא",
+        "מלך"
+      ],
+      "right_context": [
+        "ישראל",
+        "לבקש",
+        "את",
+        "פרעש",
+        "אחד",
+        "כאשר",
+        "ירדף",
+        "הקרא"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אלוהי",
+          "אלהי",
+          "אל אלוהי",
+          "אלהי צבאות אלוהי",
+          "ואל אלוהי",
+          "אלוהי צבאות אלוהי",
+          "כי יבוא אלוהי",
+          "אשר אלוהי",
+          "ויצאו בני",
+          "אלהי צבאות"
+        ],
+        "char_unknown": [
+          "ובני",
+          "בבני",
+          "על",
+          "לבני",
+          "אל",
+          "בני",
+          "בנל",
+          "עת",
+          "כבני",
+          "ופני"
+        ],
+        "embible_overlap_ensemble": [
+          "על",
+          "אל"
+        ],
+        "rank_ensemble": [
+          "אלוהי",
+          "אלהי",
+          "אל אלוהי",
+          "אלהי צבאות אלוהי",
+          "ואל אלוהי",
+          "אלוהי צבאות אלוהי",
+          "כי יבוא אלוהי",
+          "אשר אלוהי",
+          "ויצאו בני",
+          "אלהי צבאות"
+        ],
+        "cwc_word_oracle": [
+          "עד בוא מלך",
+          "כי יצא מלך",
+          "כי באו בני"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Deuteronomy:13111:9:3",
+      "scroll": "Deuteronomy:303",
+      "left_context": [
+        "בהניח",
+        "יהוה",
+        "אלהיך",
+        "לך",
+        "מכל",
+        "איביך",
+        "מסביב",
+        "בארץ"
+      ],
+      "gold": [
+        "אשר",
+        "יהוה",
+        "אלהיך"
+      ],
+      "right_context": [
+        "נתן",
+        "לך",
+        "נחלה",
+        "לרשתה",
+        "תמחה",
+        "את",
+        "זכר",
+        "עמלק"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אשר יהוה אלוהיך",
+          "אשר יהוה",
+          "אשר",
+          "אשר אנוכי",
+          "אלוהיך",
+          "אשר אני",
+          "אשר הוא",
+          "חמדה אשר יהוה",
+          "אתה",
+          "יהוה"
+        ],
+        "char_unknown": [
+          "ישראל אשר",
+          "ישראל",
+          "משראל אשר",
+          "ישראל אלר",
+          "ישראל ושר",
+          "אשר",
+          "אשראל אשר",
+          "ישראל אשה",
+          "ישר ל אשר",
+          "השראל אשר"
+        ],
+        "embible_overlap_ensemble": [
+          "ישראל אשר",
+          "ישראל",
+          "משראל אשר",
+          "ישראל אלר",
+          "ישראל ושר"
+        ],
+        "rank_ensemble": [
+          "אשר יהוה אלוהיך",
+          "אשר יהוה",
+          "אשר",
+          "אשר אנוכי",
+          "אלוהיך",
+          "אשר אני",
+          "אשר הוא",
+          "חמדה אשר יהוה",
+          "אתה",
+          "יהוה"
+        ],
+        "cwc_word_oracle": [
+          "אשר יהוה אלהיך"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Amos:20004:12:3",
+      "scroll": "Amos:452",
+      "left_context": [
+        "אל",
+        "אל",
+        "ירבעם",
+        "מלך",
+        "ישראל",
+        "לאמר",
+        "קשר",
+        "עליך"
+      ],
+      "gold": [
+        "עמוס",
+        "בקרב",
+        "בית"
+      ],
+      "right_context": [
+        "ישראל",
+        "לא",
+        "תוכל",
+        "הארץ",
+        "להכיל",
+        "את",
+        "כל",
+        "דבריו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "את",
+          "בעשא מלך",
+          "מלך",
+          "אל",
+          "עמוס מלך",
+          "אל אלוהי",
+          "את מלך",
+          "ירבעם מלך",
+          "את כל",
+          "מלך על"
+        ],
+        "char_unknown": [
+          "כי ארץ",
+          "כל ארץ",
+          "אי ארץ",
+          "כם ארץ",
+          "כי ארת",
+          "עי ארץ",
+          "כת ארץ",
+          "כי ארך",
+          "לארץ",
+          "כי ארי"
+        ],
+        "embible_overlap_ensemble": [
+          "כי ארץ",
+          "כל ארץ",
+          "אי ארץ",
+          "כם ארץ",
+          "כי ארת"
+        ],
+        "rank_ensemble": [
+          "את",
+          "בעשא מלך",
+          "מלך",
+          "אל",
+          "עמוס מלך",
+          "אל אלוהי",
+          "את מלך",
+          "ירבעם מלך",
+          "את כל",
+          "מלך על"
+        ],
+        "cwc_word_oracle": [
+          "בעשא בעשא מלך"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_2:8126:8:3",
+      "scroll": "Kings_2:191",
+      "left_context": [
+        "ויאמר",
+        "נעמן",
+        "ולא",
+        "יתן",
+        "נא",
+        "לעבדך",
+        "משא",
+        "צמד"
+      ],
+      "gold": [
+        "פרדים",
+        "אדמה",
+        "כי"
+      ],
+      "right_context": [
+        "לוא",
+        "יעשה",
+        "עוד",
+        "עבדך",
+        "עלה",
+        "וזבח",
+        "לאלהים",
+        "אחרים"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כי",
+          "לאמור",
+          "כסף כי",
+          "כסף",
+          "פרשים כי",
+          "ו",
+          "ארם",
+          "לאמר",
+          "איש לאמור",
+          "אשר"
+        ],
+        "char_unknown": [
+          "כי",
+          "כה",
+          "אי",
+          "כד",
+          "כא",
+          "ולהים",
+          "זי",
+          "עי",
+          "כם",
+          "הי"
+        ],
+        "embible_overlap_ensemble": [
+          "כי"
+        ],
+        "rank_ensemble": [
+          "כי",
+          "לאמור",
+          "כסף כי",
+          "כסף",
+          "פרשים כי",
+          "ו",
+          "ארם",
+          "לאמר",
+          "איש לאמור",
+          "אשר"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_2:8626:9:3",
+      "scroll": "Kings_2:194",
+      "left_context": [
+        "רך",
+        "לבבך",
+        "ותכנע",
+        "מפני",
+        "יהוה",
+        "בשמעך",
+        "אשר",
+        "דברתי"
+      ],
+      "gold": [
+        "על",
+        "המקום",
+        "הזה"
+      ],
+      "right_context": [
+        "ועל",
+        "ישביו",
+        "להיות",
+        "לשמה",
+        "ולקללה",
+        "ותקרע",
+        "את",
+        "בגדיך"
+      ],
+      "top10": {
+        "uwc_word": [
+          "עליו",
+          "על יהודה",
+          "עליו עליו",
+          "על יהוה",
+          "על מואב",
+          "על בעשא",
+          "עליו על יהודה",
+          "אל יהוה",
+          "עליו על בעשא",
+          "על ירושלים"
+        ],
+        "char_unknown": [
+          "עליו",
+          "עלייך",
+          "עליך",
+          "עלייו",
+          "על יהיה",
+          "על יהיך",
+          "עלי",
+          "על יהיו",
+          "על יהוה",
+          "על יהוך"
+        ],
+        "embible_overlap_ensemble": [
+          "עליו",
+          "עליך",
+          "עלייך"
+        ],
+        "rank_ensemble": [
+          "עליו",
+          "על יהודה",
+          "עליו עליו",
+          "על יהוה",
+          "על מואב",
+          "על בעשא",
+          "עליו על יהודה",
+          "אל יהוה",
+          "עליו על בעשא",
+          "על ירושלים"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_2:3672:18:3",
+      "scroll": "Samuel_2:75",
+      "left_context": [
+        "אל",
+        "זקני",
+        "יהודה",
+        "לאמר",
+        "למה",
+        "תהיו",
+        "אחרנים",
+        "להשיב"
+      ],
+      "gold": [
+        "את",
+        "המלך",
+        "אל"
+      ],
+      "right_context": [
+        "ביתו",
+        "ודבר",
+        "כל",
+        "ישראל",
+        "בא",
+        "אל",
+        "המלך",
+        "אל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "איש אל",
+          "אל",
+          "את",
+          "איש איש אל",
+          "את המלך אל",
+          "את יואב אל",
+          "את איש אל",
+          "אל המלך אל",
+          "איש את שיבת",
+          "איש את שבות"
+        ],
+        "char_unknown": [
+          "את",
+          "את המלך את",
+          "את את",
+          "את אל",
+          "את המלך אל",
+          "את באת",
+          "את ו את",
+          "את בת",
+          "את אן",
+          "את ה את"
+        ],
+        "embible_overlap_ensemble": [
+          "את",
+          "את המלך אל",
+          "את אל"
+        ],
+        "rank_ensemble": [
+          "איש אל",
+          "אל",
+          "את",
+          "איש איש אל",
+          "את המלך אל",
+          "את יואב אל",
+          "את איש אל",
+          "אל המלך אל",
+          "איש את שיבת",
+          "איש את שבות"
+        ],
+        "cwc_word_oracle": [
+          "את המלך אל",
+          "את יואב אל",
+          "אל המלך אל",
+          "את האיש אל"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ezekiel:16795:14:3",
+      "scroll": "Ezekiel:371",
+      "left_context": [
+        "כלם",
+        "חללים",
+        "הנפלים",
+        "בחרב",
+        "אשר",
+        "ירדו",
+        "ערלים",
+        "אל"
+      ],
+      "gold": [
+        "ארץ",
+        "תחתיות",
+        "אשר"
+      ],
+      "right_context": [
+        "נתנו",
+        "חתיתם",
+        "בארץ",
+        "חיים",
+        "וישאו",
+        "כלמתם",
+        "את",
+        "יורדי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "חלליהם אשר",
+          "אשר",
+          "חלליהם כי",
+          "הכשדים אשר",
+          "קבר",
+          "חלליהם",
+          "קבר אשר",
+          "יורדי בור אשר",
+          "ערלים",
+          "ארץ חיים אשר"
+        ],
+        "char_unknown": [
+          "הארץ אשר",
+          "הארם אשר",
+          "הררץ אשר",
+          "האר אשר",
+          "המרץ אשר",
+          "הירץ אשר",
+          "היר אשר",
+          "האיץ אשר",
+          "הרר אשר",
+          "הארר אשר"
+        ],
+        "embible_overlap_ensemble": [
+          "הארץ אשר"
+        ],
+        "rank_ensemble": [
+          "חלליהם אשר",
+          "אשר",
+          "חלליהם כי",
+          "הכשדים אשר",
+          "קבר",
+          "חלליהם",
+          "קבר אשר",
+          "יורדי בור אשר",
+          "ערלים",
+          "ארץ חיים אשר"
+        ],
+        "cwc_word_oracle": [
+          "ארץ מלחמתם אשר",
+          "עיר מלחמתם אשר",
+          "עמק יהושפט אשר"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ezekiel:16761:10:3",
+      "scroll": "Ezekiel:363",
+      "left_context": [
+        "עממהו",
+        "בגן",
+        "אלהים",
+        "ברושים",
+        "לא",
+        "דמו",
+        "אל",
+        "סעפתיו"
+      ],
+      "gold": [
+        "וערמנים",
+        "לא",
+        "היו"
+      ],
+      "right_context": [
+        "כפארתיו",
+        "כל",
+        "עץ",
+        "בגן",
+        "אלהים",
+        "לא",
+        "דמה",
+        "אליו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כן",
+          "ולא",
+          "אשר",
+          "כל עץ",
+          "לא",
+          "כל עצי השדה",
+          "ו",
+          "כול עץ",
+          "כל עצי",
+          "לא דמו אל"
+        ],
+        "char_unknown": [
+          "ואל",
+          "אל",
+          "אאל",
+          "ואו",
+          "לא דמו",
+          "דאל",
+          "לא דיו",
+          "לל דמו",
+          "לל דיו",
+          "באל"
+        ],
+        "embible_overlap_ensemble": [
+          "אל",
+          "לא דמו"
+        ],
+        "rank_ensemble": [
+          "כן",
+          "ולא",
+          "אשר",
+          "כל עץ",
+          "לא",
+          "כל עצי השדה",
+          "ו",
+          "כול עץ",
+          "כל עצי",
+          "לא דמו אל"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Amos:19950:9:3",
+      "scroll": "Amos:454",
+      "left_context": [
+        "בכם",
+        "דבר",
+        "בדרך",
+        "מצרים",
+        "הרגתי",
+        "בחרב",
+        "בחוריכם",
+        "עם"
+      ],
+      "gold": [
+        "שבי",
+        "סוסיכם",
+        "ואעלה"
+      ],
+      "right_context": [
+        "באש",
+        "מחניכם",
+        "ובאפכם",
+        "ולא",
+        "שבתם",
+        "עדי",
+        "נאם",
+        "יהוה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "שרפו",
+          "חרב הרגתי",
+          "נפלו",
+          "בני ישראל שרפו",
+          "חרב",
+          "יהוה",
+          "בני ישראל ואעלה",
+          "הרגתי",
+          "חרב נפלו",
+          "חרב נתתי"
+        ],
+        "char_unknown": [
+          "אם",
+          "אש",
+          "כם",
+          "כש",
+          "אי",
+          "אשר",
+          "אבר",
+          "אב",
+          "אר",
+          "בבריכם"
+        ],
+        "embible_overlap_ensemble": [
+          "אם",
+          "אש",
+          "כם",
+          "כש",
+          "אי"
+        ],
+        "rank_ensemble": [
+          "שרפו",
+          "חרב הרגתי",
+          "נפלו",
+          "בני ישראל שרפו",
+          "חרב",
+          "יהוה",
+          "בני ישראל ואעלה",
+          "הרגתי",
+          "חרב נפלו",
+          "חרב נתתי"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Chronicles_1:15717:8:3",
+      "scroll": "Chronicles_1:351",
+      "left_context": [
+        "ויגד",
+        "לדויד",
+        "ויאסף",
+        "את",
+        "כל",
+        "ישראל",
+        "ויעבר",
+        "הירדן"
+      ],
+      "gold": [
+        "ויבא",
+        "אלהם",
+        "ויערך"
+      ],
+      "right_context": [
+        "אלהם",
+        "ויערך",
+        "דויד",
+        "לקראת",
+        "ארם",
+        "מלחמה",
+        "וילחמו",
+        "עמו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ויאמר",
+          "וידבר",
+          "ויקרא",
+          "ויבא",
+          "ויצא",
+          "ויקרא דויד",
+          "וילך",
+          "ולא שמע",
+          "ויבוא",
+          "וישם פניו"
+        ],
+        "char_unknown": [
+          "את",
+          "אל",
+          "וילחר",
+          "ויגר",
+          "וילמר",
+          "ויגד",
+          "ויגם",
+          "ויגא",
+          "ויאחר",
+          "וילור"
+        ],
+        "embible_overlap_ensemble": [
+          "את",
+          "אל",
+          "וילחר",
+          "ויגר",
+          "וילמר"
+        ],
+        "rank_ensemble": [
+          "ויאמר",
+          "וידבר",
+          "ויקרא",
+          "ויבא",
+          "ויצא",
+          "ויקרא דויד",
+          "וילך",
+          "ולא שמע",
+          "ויבוא",
+          "וישם פניו"
+        ],
+        "cwc_word_oracle": [
+          "לפני יהוה ויאמר"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Esther:8861:9:3",
+      "scroll": "Esther:206",
+      "left_context": [
+        "היהודיים",
+        "היהודים",
+        "אשר",
+        "בשושן",
+        "גם",
+        "ביום",
+        "ארבעה",
+        "עשר"
+      ],
+      "gold": [
+        "לחדש",
+        "אדר",
+        "ויהרגו"
+      ],
+      "right_context": [
+        "בשושן",
+        "שלש",
+        "מאות",
+        "איש",
+        "ובבזה",
+        "לא",
+        "שלחו",
+        "את"
+      ],
+      "top10": {
+        "uwc_word": [
+          "הרגו",
+          "איש הרגו",
+          "נפלו",
+          "נקהלו היהודים אשר",
+          "נקהלו כול אשר",
+          "הכו",
+          "נפלו מהם",
+          "שברו",
+          "נקהלו אשר",
+          "בו הרגו"
+        ],
+        "char_unknown": [
+          "ביקרו",
+          "ניקרו",
+          "חיו",
+          "היו",
+          "ביירו",
+          "ביברו",
+          "שיו",
+          "ליקרו",
+          "ביקרם",
+          "היקרו"
+        ],
+        "embible_overlap_ensemble": [
+          "היו"
+        ],
+        "rank_ensemble": [
+          "הרגו",
+          "איש הרגו",
+          "נפלו",
+          "נקהלו היהודים אשר",
+          "נקהלו כול אשר",
+          "הכו",
+          "נפלו מהם",
+          "שברו",
+          "נקהלו אשר",
+          "בו הרגו"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Deuteronomy:13049:8:3",
+      "scroll": "Deuteronomy:309",
+      "left_context": [
+        "על",
+        "דבר",
+        "אשר",
+        "לא",
+        "קדמו",
+        "אתכם",
+        "בלחם",
+        "ובמים"
+      ],
+      "gold": [
+        "בדרך",
+        "בצאתכם",
+        "ממצרים"
+      ],
+      "right_context": [
+        "ואשר",
+        "שכר",
+        "עליך",
+        "את",
+        "בלעם",
+        "בן",
+        "בעור",
+        "מפתור"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כול",
+          "את בלעם",
+          "כול ימי קדם",
+          "את בני ישראל",
+          "את מואב",
+          "ו",
+          "כול ימי חייך",
+          "מדיין",
+          "וכול",
+          "כול ימי חייו"
+        ],
+        "char_unknown": [
+          "טבבים",
+          "טביים",
+          "בם",
+          "בן",
+          "בבים",
+          "טובים",
+          "במים",
+          "טויים",
+          "באים",
+          "בה"
+        ],
+        "embible_overlap_ensemble": [
+          "טבבים",
+          "טביים",
+          "בם",
+          "בן",
+          "בבים"
+        ],
+        "rank_ensemble": [
+          "כול",
+          "את בלעם",
+          "כול ימי קדם",
+          "את בני ישראל",
+          "את מואב",
+          "ו",
+          "כול ימי חייך",
+          "מדיין",
+          "וכול",
+          "כול ימי חייו"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Malachi:20283:11:3",
+      "scroll": "Malachi:463",
+      "left_context": [
+        "ופנה",
+        "דרך",
+        "לפני",
+        "ופתאם",
+        "יבוא",
+        "אל",
+        "היכלו",
+        "האדון"
+      ],
+      "gold": [
+        "אשר",
+        "אתם",
+        "מבקשים"
+      ],
+      "right_context": [
+        "ומלאך",
+        "הברית",
+        "אשר",
+        "אתם",
+        "חפצים",
+        "הנה",
+        "בא",
+        "אמר"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יהוה צבאות",
+          "יהוה",
+          "יהוה צבאות שמו",
+          "אדוני יהוה",
+          "יהוה אלוהי ישראל",
+          "אשר אתם מבקשים",
+          "אשר אני שלחו",
+          "יהוה צבאות יהוה",
+          "יהוה צבאות כול",
+          "יהוה אלהי ישראל"
+        ],
+        "char_unknown": [
+          "הזה",
+          "הגדול",
+          "הגדוך",
+          "הגדור",
+          "הגדון",
+          "הגדוא",
+          "הזר",
+          "הזא",
+          "הגדוה",
+          "הגדוי"
+        ],
+        "embible_overlap_ensemble": [
+          "הזה"
+        ],
+        "rank_ensemble": [
+          "יהוה צבאות",
+          "יהוה",
+          "יהוה צבאות שמו",
+          "אדוני יהוה",
+          "יהוה אלוהי ישראל",
+          "אשר אתם מבקשים",
+          "אשר אני שלחו",
+          "יהוה צבאות יהוה",
+          "יהוה צבאות כול",
+          "יהוה אלהי ישראל"
+        ],
+        "cwc_word_oracle": [
+          "אשר אתם מבקשים"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_2:8096:9:3",
+      "scroll": "Kings_2:198",
+      "left_context": [
+        "עבר",
+        "לפניהם",
+        "וישם",
+        "את",
+        "המשענת",
+        "על",
+        "פני",
+        "הנער"
+      ],
+      "gold": [
+        "ואין",
+        "קול",
+        "ואין"
+      ],
+      "right_context": [
+        "קשב",
+        "וישב",
+        "לקראתו",
+        "ויגד",
+        "לו",
+        "לאמר",
+        "לא",
+        "הקיץ"
+      ],
+      "top10": {
+        "uwc_word": [
+          "קשב רב",
+          "קשב קשב רב",
+          "ו קשב ו",
+          "ו",
+          "קשב ורב",
+          "קשב אל",
+          "רב",
+          "קשב",
+          "וישם קשב רב",
+          "אשר"
+        ],
+        "char_unknown": [
+          "אשר",
+          "ושר",
+          "לן",
+          "השר",
+          "לי",
+          "לא",
+          "אן",
+          "בן",
+          "אי",
+          "בי"
+        ],
+        "embible_overlap_ensemble": [
+          "אשר"
+        ],
+        "rank_ensemble": [
+          "קשב רב",
+          "קשב קשב רב",
+          "ו קשב ו",
+          "ו",
+          "קשב ורב",
+          "קשב אל",
+          "רב",
+          "קשב",
+          "וישם קשב רב",
+          "אשר"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Joshua:21777:11:2",
+      "scroll": "Joshua:488",
+      "left_context": [
+        "בן",
+        "גלעד",
+        "בן",
+        "מכיר",
+        "בן",
+        "מנשה",
+        "לא",
+        "היו"
+      ],
+      "gold": [
+        "לו",
+        "בנים"
+      ],
+      "right_context": [
+        "כי",
+        "אם",
+        "בנות",
+        "ואלה",
+        "שמות",
+        "בנתיו",
+        "מחלה",
+        "ונעה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לו בנים",
+          "בנים",
+          "לו בנים אתו",
+          "לו בנים ובנות",
+          "לו בנים אחרים",
+          "בנים לו",
+          "לו בנים זכרים",
+          "לו בנים בנים",
+          "לו בני בנים",
+          "לו"
+        ],
+        "char_unknown": [
+          "לו בנות",
+          "לו בנית",
+          "לו בנום",
+          "לו בנים",
+          "בנית",
+          "בנים",
+          "לו",
+          "לי בנות",
+          "לי בנית",
+          "לה בנות"
+        ],
+        "embible_overlap_ensemble": [
+          "לו בנים"
+        ],
+        "rank_ensemble": [
+          "לו בנים",
+          "בנים",
+          "לו בנים אתו",
+          "לו בנים ובנות",
+          "לו בנים אחרים",
+          "בנים לו",
+          "לו בנים זכרים",
+          "לו בנים בנים",
+          "לו בני בנים",
+          "לו"
+        ],
+        "cwc_word_oracle": [
+          "לו בנים",
+          "לי בנים"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Chronicles_2:21057:8:2",
+      "scroll": "Chronicles_2:471",
+      "left_context": [
+        "אמרת",
+        "הנה",
+        "הכית",
+        "את",
+        "אדום",
+        "ונשאך",
+        "לבך",
+        "להכביד"
+      ],
+      "gold": [
+        "עתה",
+        "שבה"
+      ],
+      "right_context": [
+        "בביתך",
+        "למה",
+        "תתגרה",
+        "ברעה",
+        "ונפלת",
+        "אתה",
+        "ויהודה",
+        "עמך"
+      ],
+      "top10": {
+        "uwc_word": [
+          "את ישראל",
+          "אש",
+          "דמים",
+          "עוד",
+          "בוא",
+          "אל תתגרה",
+          "אתה",
+          "רעה",
+          "תתגרה",
+          "עלה"
+        ],
+        "char_unknown": [
+          "עליה",
+          "על יהודה",
+          "עליך",
+          "על יהויה",
+          "על יהרדה",
+          "על יהודם",
+          "על ההודה",
+          "על יהריה",
+          "עלתה",
+          "על יהודך"
+        ],
+        "embible_overlap_ensemble": [
+          "עליה",
+          "על יהודה",
+          "עליך",
+          "על יהויה",
+          "על יהרדה"
+        ],
+        "rank_ensemble": [
+          "את ישראל",
+          "אש",
+          "דמים",
+          "עוד",
+          "בוא",
+          "אל תתגרה",
+          "אתה",
+          "רעה",
+          "תתגרה",
+          "עלה"
+        ],
+        "cwc_word_oracle": [
+          "בוא ושב",
+          "קום ושב"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Isaiah:681:10:2",
+      "scroll": "Isaiah:10",
+      "left_context": [
+        "על",
+        "משענת",
+        "הקנה",
+        "הרצוץ",
+        "הזה",
+        "על",
+        "מצרים",
+        "אשר"
+      ],
+      "gold": [
+        "יסמך",
+        "איש"
+      ],
+      "right_context": [
+        "עליו",
+        "ובא",
+        "בכפו",
+        "ונקבה",
+        "כן",
+        "פרעה",
+        "מלך",
+        "מצרים"
+      ],
+      "top10": {
+        "uwc_word": [
+          "בטחת",
+          "נשען",
+          "הוא נשען",
+          "בטחת בו",
+          "רכב",
+          "לא נשען",
+          "אתה בטחת",
+          "נטה",
+          "אין סומך",
+          "יסמך איש"
+        ],
+        "char_unknown": [
+          "נם",
+          "שם",
+          "בם",
+          "קם",
+          "עפה",
+          "חם",
+          "נא",
+          "שא",
+          "בא",
+          "קא"
+        ],
+        "embible_overlap_ensemble": [
+          "נם",
+          "שם",
+          "בם",
+          "קם",
+          "עפה"
+        ],
+        "rank_ensemble": [
+          "בטחת",
+          "נשען",
+          "הוא נשען",
+          "בטחת בו",
+          "רכב",
+          "לא נשען",
+          "אתה בטחת",
+          "נטה",
+          "אין סומך",
+          "יסמך איש"
+        ],
+        "cwc_word_oracle": [
+          "יסמך איש"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_2:8439:11:2",
+      "scroll": "Kings_2:199",
+      "left_context": [
+        "אשר",
+        "לפני",
+        "יהוה",
+        "ויקרב",
+        "מאת",
+        "פני",
+        "הבית",
+        "מבין"
+      ],
+      "gold": [
+        "המזבח",
+        "ומבין"
+      ],
+      "right_context": [
+        "בית",
+        "יהוה",
+        "ויתן",
+        "אתו",
+        "על",
+        "ירך",
+        "המזבח",
+        "צפונה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "שני כתלי",
+          "שערי",
+          "האולם אשר לפני",
+          "פני",
+          "האולם אשר פתח",
+          "כתלי",
+          "האולם אשר",
+          "האולם נוכח",
+          "שני שערי",
+          "שני קצות המזבח"
+        ],
+        "char_unknown": [
+          "פני",
+          "כל",
+          "עני",
+          "הל",
+          "פתי",
+          "פרי",
+          "פלי",
+          "פצי",
+          "אל",
+          "שני"
+        ],
+        "embible_overlap_ensemble": [
+          "פני"
+        ],
+        "rank_ensemble": [
+          "שני כתלי",
+          "שערי",
+          "האולם אשר לפני",
+          "פני",
+          "האולם אשר פתח",
+          "כתלי",
+          "האולם אשר",
+          "האולם נוכח",
+          "שני שערי",
+          "שני קצות המזבח"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jeremiah:6088:12:2",
+      "scroll": "Jeremiah:123",
+      "left_context": [
+        "ושם",
+        "בעל",
+        "פקדת",
+        "ושמו",
+        "יראייה",
+        "בן",
+        "שלמיה",
+        "בן"
+      ],
+      "gold": [
+        "חנניה",
+        "ויתפש"
+      ],
+      "right_context": [
+        "את",
+        "ירמיהו",
+        "הנביא",
+        "לאמר",
+        "אל",
+        "הכשדים",
+        "אתה",
+        "נפל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "חנניה",
+          "מעשיה",
+          "חנניה ציוה",
+          "חנניה אשר הפקיד",
+          "חנניה צוה",
+          "חנניה אשר ציוה",
+          "חנניה הפקיד",
+          "חנניה שאל",
+          "חנניה ויתפש",
+          "חנניה קרא"
+        ],
+        "char_unknown": [
+          "יריייה",
+          "ילויה",
+          "ימויה",
+          "ילייה",
+          "ירוייה",
+          "ימייה",
+          "ירויה",
+          "יהויה",
+          "ייויה",
+          "יליייה"
+        ],
+        "embible_overlap_ensemble": [
+          "יריייה",
+          "ילויה",
+          "ימויה",
+          "ילייה",
+          "ירוייה"
+        ],
+        "rank_ensemble": [
+          "חנניה",
+          "מעשיה",
+          "חנניה ציוה",
+          "חנניה אשר הפקיד",
+          "חנניה צוה",
+          "חנניה אשר ציוה",
+          "חנניה הפקיד",
+          "חנניה שאל",
+          "חנניה ויתפש",
+          "חנניה קרא"
+        ],
+        "cwc_word_oracle": [
+          "חנניה הפקיד",
+          "חנניה ויתפש",
+          "חנניה הכוהן",
+          "חנניה הזהיר"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ezekiel:16803:9:2",
+      "scroll": "Ezekiel:385",
+      "left_context": [
+        "נתתי",
+        "את",
+        "חתיתו",
+        "חתיתי",
+        "בארץ",
+        "חיים",
+        "והשכב",
+        "בתוך"
+      ],
+      "gold": [
+        "ערלים",
+        "את"
+      ],
+      "right_context": [
+        "חללי",
+        "חרב",
+        "פרעה",
+        "וכל",
+        "המונה",
+        "נאם",
+        "אדני",
+        "יהוה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כול",
+          "מצרים",
+          "המונה כול",
+          "מצרים כול",
+          "המונו כול",
+          "המונה",
+          "המונו",
+          "חללים",
+          "ערלים כול",
+          "כולם"
+        ],
+        "char_unknown": [
+          "כל",
+          "אל",
+          "כם",
+          "על",
+          "הל",
+          "לל",
+          "כב",
+          "שאל",
+          "שול",
+          "כת"
+        ],
+        "embible_overlap_ensemble": [
+          "כל"
+        ],
+        "rank_ensemble": [
+          "כול",
+          "מצרים",
+          "המונה כול",
+          "מצרים כול",
+          "המונו כול",
+          "המונה",
+          "המונו",
+          "חללים",
+          "ערלים כול",
+          "כולם"
+        ],
+        "cwc_word_oracle": [
+          "מצרים את",
+          "המונה את",
+          "המונו את"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_1:4191:9:2",
+      "scroll": "Samuel_1:92",
+      "left_context": [
+        "אליו",
+        "האיש",
+        "קטר",
+        "יקטירון",
+        "כיום",
+        "החלב",
+        "וקח",
+        "לך"
+      ],
+      "gold": [
+        "כאשר",
+        "תאוה"
+      ],
+      "right_context": [
+        "נפשך",
+        "ואמר",
+        "לו",
+        "לא",
+        "כי",
+        "עתה",
+        "תתן",
+        "ואם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "את",
+          "את שאהבה",
+          "בשר חי",
+          "את החלב חי",
+          "את בשר תאוה",
+          "בשר חי חי",
+          "בשר תאוה",
+          "את בשר חי",
+          "חי",
+          "את בשר"
+        ],
+        "char_unknown": [
+          "את",
+          "אל",
+          "כת",
+          "וכל",
+          "ואל",
+          "וול",
+          "וכת",
+          "ומל",
+          "וכר",
+          "וכם"
+        ],
+        "embible_overlap_ensemble": [
+          "את"
+        ],
+        "rank_ensemble": [
+          "את",
+          "את שאהבה",
+          "בשר חי",
+          "את החלב חי",
+          "את בשר תאוה",
+          "בשר חי חי",
+          "בשר תאוה",
+          "את בשר חי",
+          "חי",
+          "את בשר"
+        ],
+        "cwc_word_oracle": [
+          "כאשר תאוה",
+          "מאשר תאוה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_2:8015:8:2",
+      "scroll": "Kings_2:202",
+      "left_context": [
+        "ויאמר",
+        "אליהו",
+        "אל",
+        "אלישע",
+        "שב",
+        "נא",
+        "פה",
+        "כי"
+      ],
+      "gold": [
+        "יהוה",
+        "שלחני"
+      ],
+      "right_context": [
+        "עד",
+        "בית",
+        "אל",
+        "ויאמר",
+        "אלישע",
+        "חי",
+        "יהוה",
+        "וחי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "תבוא",
+          "הביאותני",
+          "בא",
+          "בא האלוהים",
+          "אני בא",
+          "עלית",
+          "באת",
+          "עמך",
+          "באתה",
+          "שלחך"
+        ],
+        "char_unknown": [
+          "אא",
+          "אוך",
+          "שא",
+          "אתך",
+          "לא",
+          "אוה",
+          "אוא",
+          "אתה",
+          "אוי",
+          "אתא"
+        ],
+        "embible_overlap_ensemble": [
+          "אא",
+          "אוך",
+          "שא",
+          "אתך",
+          "לא"
+        ],
+        "rank_ensemble": [
+          "תבוא",
+          "הביאותני",
+          "בא",
+          "בא האלוהים",
+          "אני בא",
+          "עלית",
+          "באת",
+          "עמך",
+          "באתה",
+          "שלחך"
+        ],
+        "cwc_word_oracle": [
+          "יהוה שלחני"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Genesis:10535:9:2",
+      "scroll": "Genesis:257",
+      "left_context": [
+        "כי",
+        "ארכו",
+        "לו",
+        "שם",
+        "הימים",
+        "וישקף",
+        "אבימלך",
+        "מלך"
+      ],
+      "gold": [
+        "פלשתים",
+        "בעד"
+      ],
+      "right_context": [
+        "החלון",
+        "וירא",
+        "והנה",
+        "יצחק",
+        "מצחק",
+        "את",
+        "רבקה",
+        "אשתו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "פלישתים בעד",
+          "פלישתים",
+          "פלישתים על פני",
+          "פלשתים",
+          "גרר בעד",
+          "גרר",
+          "פלשתים בעד",
+          "פלישתים מן החלון",
+          "פלישתים אל פתח",
+          "פלישתים על ראש"
+        ],
+        "char_unknown": [
+          "ישראל את",
+          "ישראל אל",
+          "ישראם את",
+          "ישראל עת",
+          "ישראה את",
+          "השראל את",
+          "ישראל אן",
+          "ישראל אד",
+          "ישראל מת",
+          "ישריל את"
+        ],
+        "embible_overlap_ensemble": [
+          "ישראל את",
+          "ישראל אל",
+          "ישראם את",
+          "ישראל עת",
+          "ישראה את"
+        ],
+        "rank_ensemble": [
+          "פלישתים בעד",
+          "פלישתים",
+          "פלישתים על פני",
+          "פלשתים",
+          "גרר בעד",
+          "גרר",
+          "פלשתים בעד",
+          "פלישתים מן החלון",
+          "פלישתים אל פתח",
+          "פלישתים על ראש"
+        ],
+        "cwc_word_oracle": [
+          "פלשתים בעד",
+          "רחובות בעד"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Genesis:10716:9:2",
+      "scroll": "Genesis:248",
+      "left_context": [
+        "כה",
+        "יאמר",
+        "נקדים",
+        "יהיה",
+        "שכרך",
+        "וילדו",
+        "כל",
+        "הצאן"
+      ],
+      "gold": [
+        "נקדים",
+        "ואם"
+      ],
+      "right_context": [
+        "כה",
+        "יאמר",
+        "עקדים",
+        "יהיה",
+        "שכרך",
+        "וילדו",
+        "כל",
+        "הצאן"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אם",
+          "ואם",
+          "או",
+          "נקדים אם",
+          "נקדים ואם",
+          "עקודים ואם",
+          "עקודים אם",
+          "נקדים או",
+          "עקודים נקודים אם",
+          "עקודים נקודים ואם"
+        ],
+        "char_unknown": [
+          "כה יאמר יו כל הצאן",
+          "כה יאמר דו כל הצאן",
+          "כה יאמר יי כל הצאן",
+          "כה יאמר די כל הצאן",
+          "כל יאמן",
+          "כה יאמר יו כל הצין",
+          "כה יאמר יו כל שצאן",
+          "כה יאמר יה כל הצאן",
+          "כה יאמר יו כל הכאן",
+          "כה יאמר וו כל הצאן"
+        ],
+        "embible_overlap_ensemble": [
+          "כה יאמר יו כל הצאן",
+          "כה יאמר דו כל הצאן",
+          "כה יאמר יי כל הצאן",
+          "כה יאמר די כל הצאן",
+          "כל יאמן"
+        ],
+        "rank_ensemble": [
+          "אם",
+          "ואם",
+          "או",
+          "נקדים אם",
+          "נקדים ואם",
+          "עקודים ואם",
+          "עקודים אם",
+          "נקדים או",
+          "עקודים נקודים אם",
+          "עקודים נקודים ואם"
+        ],
+        "cwc_word_oracle": [
+          "נקדים ואם",
+          "יחדיו ואם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jeremiah:6018:11:2",
+      "scroll": "Jeremiah:120",
+      "left_context": [
+        "שמי",
+        "ותשבו",
+        "איש",
+        "את",
+        "עבדו",
+        "ואיש",
+        "את",
+        "שפחתו"
+      ],
+      "gold": [
+        "אשר",
+        "שלחתם"
+      ],
+      "right_context": [
+        "חפשים",
+        "לנפשם",
+        "ותכבשו",
+        "אתם",
+        "להיות",
+        "לכם",
+        "לעבדים",
+        "ולשפחות"
+      ],
+      "top10": {
+        "uwc_word": [
+          "תשלחו",
+          "תשלחו אתם",
+          "תשלחו אותם",
+          "תשלחו תשלחו אותם",
+          "תשלחו תשלחו אתם",
+          "ישלחו",
+          "תשלחו בני ישראל",
+          "תשלחו ו יהיו",
+          "לשלח",
+          "תשלחו ו הם"
+        ],
+        "char_unknown": [
+          "ותהיו",
+          "וההיו",
+          "והיו",
+          "ואיו",
+          "תתהיו",
+          "ויהיו",
+          "ותייו",
+          "הם",
+          "לתהיו",
+          "תהיו"
+        ],
+        "embible_overlap_ensemble": [
+          "ותהיו",
+          "וההיו",
+          "והיו",
+          "ואיו",
+          "תתהיו"
+        ],
+        "rank_ensemble": [
+          "תשלחו",
+          "תשלחו אתם",
+          "תשלחו אותם",
+          "תשלחו תשלחו אותם",
+          "תשלחו תשלחו אתם",
+          "ישלחו",
+          "תשלחו בני ישראל",
+          "תשלחו ו יהיו",
+          "לשלח",
+          "תשלחו ו הם"
+        ],
+        "cwc_word_oracle": [
+          "אשר שלחתם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Esther:8868:11:2",
+      "scroll": "Esther:208",
+      "left_context": [
+        "בהם",
+        "היהודים",
+        "מאויביהם",
+        "והחדש",
+        "אשר",
+        "נהפך",
+        "להם",
+        "מיגון"
+      ],
+      "gold": [
+        "לשמחה",
+        "ומאבל"
+      ],
+      "right_context": [
+        "ליום",
+        "טוב",
+        "לעשות",
+        "אותם",
+        "ימי",
+        "משתה",
+        "ושמחה",
+        "ומשלוח"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לשמחה",
+          "לשמחה נהפך להם",
+          "לשמחה מאבל",
+          "לשמחה הוא להם",
+          "לשמחה נהפך",
+          "לשמחה נכון",
+          "לשמחה ואור",
+          "לשמחה היה להם",
+          "לשמחה ולילה",
+          "לשמחה הפכו"
+        ],
+        "char_unknown": [
+          "רע",
+          "חע",
+          "טוב",
+          "רב",
+          "קע",
+          "חב",
+          "רז",
+          "רם",
+          "חז",
+          "חם"
+        ],
+        "embible_overlap_ensemble": [
+          "רע",
+          "חע",
+          "טוב",
+          "רב",
+          "קע"
+        ],
+        "rank_ensemble": [
+          "לשמחה",
+          "לשמחה נהפך להם",
+          "לשמחה מאבל",
+          "לשמחה הוא להם",
+          "לשמחה נהפך",
+          "לשמחה נכון",
+          "לשמחה ואור",
+          "לשמחה היה להם",
+          "לשמחה ולילה",
+          "לשמחה הפכו"
+        ],
+        "cwc_word_oracle": [
+          "לשמחה ולילה",
+          "לשמחה זכרון",
+          "לשמחה ומשתה",
+          "לשמחה יהפכו",
+          "לשמחה שמרים",
+          "לשמחה יהפוך",
+          "לשמחה הכינו"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ecclesiastes:20380:12:2",
+      "scroll": "Ecclesiastes:470",
+      "left_context": [
+        "גם",
+        "בן",
+        "ואח",
+        "אין",
+        "לו",
+        "ואין",
+        "קץ",
+        "לכל"
+      ],
+      "gold": [
+        "עמלו",
+        "גם"
+      ],
+      "right_context": [
+        "עיניו",
+        "עינו",
+        "לא",
+        "תשבע",
+        "עשר",
+        "ולמי",
+        "אני",
+        "עמל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "עמלו ראות",
+          "עמלו בלתי ראות",
+          "עמלו כול יקר",
+          "אשר שאלו",
+          "עמלו",
+          "ראות",
+          "עמלו לכל מראה",
+          "עמלו מנגד",
+          "עמלו לוא ראו",
+          "עמלו ונגד"
+        ],
+        "char_unknown": [
+          "אור",
+          "אל",
+          "עור",
+          "קל",
+          "אשר",
+          "עשר",
+          "כל",
+          "איר",
+          "בל",
+          "עיר"
+        ],
+        "embible_overlap_ensemble": [
+          "אשר"
+        ],
+        "rank_ensemble": [
+          "עמלו ראות",
+          "עמלו בלתי ראות",
+          "עמלו כול יקר",
+          "אשר שאלו",
+          "עמלו",
+          "ראות",
+          "עמלו לכל מראה",
+          "עמלו מנגד",
+          "עמלו לוא ראו",
+          "עמלו ונגד"
+        ],
+        "cwc_word_oracle": [
+          "עמלו את"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Isaiah:1004:10:2",
+      "scroll": "Isaiah:6",
+      "left_context": [
+        "אמניך",
+        "ושרותיהם",
+        "מיניקתיך",
+        "אפים",
+        "ארץ",
+        "ישתחוו",
+        "לך",
+        "ועפר"
+      ],
+      "gold": [
+        "רגליך",
+        "ילחכו"
+      ],
+      "right_context": [
+        "וידעת",
+        "כי",
+        "אני",
+        "יהוה",
+        "אשר",
+        "לא",
+        "יבשו",
+        "קוי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "תאכל",
+          "יהיו לך",
+          "ארץ ישתחוו לך",
+          "עולם יהיו לך",
+          "עולם יהיה זרעך",
+          "עולם יהיה לך",
+          "עולם ישתחוו לך",
+          "תלבש",
+          "אתה תאכל",
+          "יהיו"
+        ],
+        "char_unknown": [
+          "לך",
+          "בך",
+          "ישריך",
+          "ישויך",
+          "ישייך",
+          "ייריך",
+          "ישוייך",
+          "ייויך",
+          "לי",
+          "למך"
+        ],
+        "embible_overlap_ensemble": [
+          "לך"
+        ],
+        "rank_ensemble": [
+          "תאכל",
+          "יהיו לך",
+          "ארץ ישתחוו לך",
+          "עולם יהיו לך",
+          "עולם יהיה זרעך",
+          "עולם יהיה לך",
+          "עולם ישתחוו לך",
+          "תלבש",
+          "אתה תאכל",
+          "יהיו"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Joshua:21805:10:2",
+      "scroll": "Joshua:497",
+      "left_context": [
+        "הגבול",
+        "לוזה",
+        "אל",
+        "כתף",
+        "לוזה",
+        "נגבה",
+        "היא",
+        "בית"
+      ],
+      "gold": [
+        "אל",
+        "וירד"
+      ],
+      "right_context": [
+        "הגבול",
+        "עטרות",
+        "אדר",
+        "על",
+        "ההר",
+        "אשר",
+        "מנגב",
+        "לבית"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אל",
+          "אל ונסב",
+          "אל ועלה",
+          "שמש",
+          "אל אשר על",
+          "אל אשר מעבר",
+          "שמש ונסב",
+          "שמש אשר על",
+          "שמש ועלה",
+          "אל ויצא"
+        ],
+        "char_unknown": [
+          "על",
+          "אל",
+          "מל",
+          "של",
+          "הל",
+          "ען",
+          "בל",
+          "אן",
+          "חל",
+          "איר"
+        ],
+        "embible_overlap_ensemble": [
+          "אל"
+        ],
+        "rank_ensemble": [
+          "אל",
+          "אל ונסב",
+          "אל ועלה",
+          "שמש",
+          "אל אשר על",
+          "אל אשר מעבר",
+          "שמש ונסב",
+          "שמש אשר על",
+          "שמש ועלה",
+          "אל ויצא"
+        ],
+        "cwc_word_oracle": [
+          "אל ונסב",
+          "אל ועלה",
+          "אל ויצא",
+          "אל ותאר",
+          "אל וירד",
+          "אל מעבר"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_2:3679:8:2",
+      "scroll": "Samuel_2:72",
+      "left_context": [
+        "ועברה",
+        "העברה",
+        "לעביר",
+        "את",
+        "בית",
+        "המלך",
+        "ולעשות",
+        "הטוב"
+      ],
+      "gold": [
+        "בעינו",
+        "בעיניו"
+      ],
+      "right_context": [
+        "ושמעי",
+        "בן",
+        "גרא",
+        "נפל",
+        "לפני",
+        "המלך",
+        "בעברו",
+        "בירדן"
+      ],
+      "top10": {
+        "uwc_word": [
+          "בעיני יהוה",
+          "לו",
+          "אשר עשה",
+          "והישר",
+          "הזה",
+          "אשר דבר",
+          "בעיני ייי",
+          "בעיניו",
+          "והישר בעיני יהוה",
+          "בישראל"
+        ],
+        "char_unknown": [
+          "לו",
+          "בו",
+          "בוה",
+          "לה",
+          "לוה",
+          "בה",
+          "בבה",
+          "לבה",
+          "בזה",
+          "בוו"
+        ],
+        "embible_overlap_ensemble": [
+          "לו"
+        ],
+        "rank_ensemble": [
+          "בעיני יהוה",
+          "לו",
+          "אשר עשה",
+          "והישר",
+          "הזה",
+          "אשר דבר",
+          "בעיני ייי",
+          "בעיניו",
+          "והישר בעיני יהוה",
+          "בישראל"
+        ],
+        "cwc_word_oracle": [
+          "בעיני אבשלום",
+          "בעיני האלהים"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Genesis:10039:20:2",
+      "scroll": "Genesis:244",
+      "left_context": [
+        "עוד",
+        "את",
+        "האדמה",
+        "בעבור",
+        "האדם",
+        "כי",
+        "יצר",
+        "לב"
+      ],
+      "gold": [
+        "האדם",
+        "רע"
+      ],
+      "right_context": [
+        "מנעריו",
+        "ולא",
+        "אסף",
+        "עוד",
+        "להכות",
+        "את",
+        "כל",
+        "חי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "האדם רע מנעוריו",
+          "האדם רע",
+          "האדם",
+          "האדם רע הוא",
+          "האדם רע מאד",
+          "האדם רע עליו",
+          "האדם רע כול",
+          "האדם רע מאוד",
+          "אדם רע",
+          "האדם רע לו"
+        ],
+        "char_unknown": [
+          "רב",
+          "רם",
+          "רע",
+          "רי",
+          "רת",
+          "רק",
+          "רז",
+          "לב",
+          "לם",
+          "אחד"
+        ],
+        "embible_overlap_ensemble": [
+          "רע"
+        ],
+        "rank_ensemble": [
+          "האדם רע מנעוריו",
+          "האדם רע",
+          "האדם",
+          "האדם רע הוא",
+          "האדם רע מאד",
+          "האדם רע עליו",
+          "האדם רע כול",
+          "האדם רע מאוד",
+          "אדם רע",
+          "האדם רע לו"
+        ],
+        "cwc_word_oracle": [
+          "האדם רע",
+          "אנוש רע",
+          "הנער רע",
+          "האדם רק"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Esther:8745:8:2",
+      "scroll": "Esther:205",
+      "left_context": [
+        "ותיטב",
+        "הנערה",
+        "בעיניו",
+        "ותשא",
+        "חסד",
+        "לפניו",
+        "ויבהל",
+        "את"
+      ],
+      "gold": [
+        "תמרוקיה",
+        "ואת"
+      ],
+      "right_context": [
+        "מנותה",
+        "לתת",
+        "לה",
+        "ואת",
+        "שבע",
+        "הנערות",
+        "הראיות",
+        "לתת"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כל",
+          "כל אשר",
+          "כל אשר שאל",
+          "כל טוב",
+          "כל אשר בידו",
+          "הנערה ואת",
+          "הנערות ואת",
+          "כל איש",
+          "כל מיני",
+          "כל אשר לו"
+        ],
+        "char_unknown": [
+          "כל",
+          "הנערה ואת",
+          "אבע",
+          "הנערה אאת",
+          "אל",
+          "הל",
+          "כז",
+          "אבר",
+          "כי",
+          "שבע"
+        ],
+        "embible_overlap_ensemble": [
+          "כל",
+          "הנערה ואת"
+        ],
+        "rank_ensemble": [
+          "כל",
+          "כל אשר",
+          "כל אשר שאל",
+          "כל טוב",
+          "כל אשר בידו",
+          "הנערה ואת",
+          "הנערות ואת",
+          "כל איש",
+          "כל מיני",
+          "כל אשר לו"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ezekiel:17210:8:2",
+      "scroll": "Ezekiel:374",
+      "left_context": [
+        "ויאמר",
+        "אלי",
+        "המים",
+        "האלה",
+        "יוצאים",
+        "אל",
+        "הגלילה",
+        "הקדמונה"
+      ],
+      "gold": [
+        "וירדו",
+        "על"
+      ],
+      "right_context": [
+        "הערבה",
+        "ובאו",
+        "הימה",
+        "אל",
+        "הימה",
+        "המוצאים",
+        "ונרפאו",
+        "ונרפו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "וירדו אל",
+          "ו על ים",
+          "וירדו אל ים",
+          "על",
+          "וירדו על",
+          "ו אל ים",
+          "אל",
+          "ועל",
+          "ו יוצאים אל",
+          "וירדו על ים"
+        ],
+        "char_unknown": [
+          "ואל",
+          "אל",
+          "מל",
+          "אן",
+          "ומל",
+          "מן",
+          "ואד",
+          "ואן",
+          "ואלה אל",
+          "ואך"
+        ],
+        "embible_overlap_ensemble": [
+          "ואל",
+          "אל"
+        ],
+        "rank_ensemble": [
+          "וירדו אל",
+          "ו על ים",
+          "וירדו אל ים",
+          "על",
+          "וירדו על",
+          "ו אל ים",
+          "אל",
+          "ועל",
+          "ו יוצאים אל",
+          "וירדו על ים"
+        ],
+        "cwc_word_oracle": [
+          "וירדו אל",
+          "וירדו על",
+          "וירדו עד",
+          "ויצאו אל",
+          "ויבאו אל",
+          "ויחנו על"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Isaiah:1104:9:2",
+      "scroll": "Isaiah:7",
+      "left_context": [
+        "הנכר",
+        "הנלוים",
+        "על",
+        "יהוה",
+        "לשרתו",
+        "ולאהבה",
+        "את",
+        "שם"
+      ],
+      "gold": [
+        "יהוה",
+        "להיות"
+      ],
+      "right_context": [
+        "לו",
+        "לעבדים",
+        "כל",
+        "שמר",
+        "שבת",
+        "מחללו",
+        "ומחזיקים",
+        "בבריתי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יהוה להיות",
+          "יהוה לשרתו להיות",
+          "יהוה",
+          "יהוה לשרתו והיו",
+          "יהוה אלוהיך להיות",
+          "יהוה לשרתו ולהיות",
+          "קודשו להיות",
+          "יהוה אלוהיו להיות",
+          "אלוהיו",
+          "קודשו לשרתו להיות"
+        ],
+        "char_unknown": [
+          "ישראל",
+          "ישואל",
+          "השראל",
+          "ישראים",
+          "ישראם",
+          "השראים",
+          "ישראל ווכים",
+          "ישראל נופכים",
+          "ישריל",
+          "ישראל הופכים"
+        ],
+        "embible_overlap_ensemble": [
+          "ישראל"
+        ],
+        "rank_ensemble": [
+          "יהוה להיות",
+          "יהוה לשרתו להיות",
+          "יהוה",
+          "יהוה לשרתו והיו",
+          "יהוה אלוהיך להיות",
+          "יהוה לשרתו ולהיות",
+          "קודשו להיות",
+          "יהוה אלוהיו להיות",
+          "אלוהיו",
+          "קודשו לשרתו להיות"
+        ],
+        "cwc_word_oracle": [
+          "יהוה להיות",
+          "קדשו להיות",
+          "יהוה לשרתו",
+          "יהוה ואתנם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Daniel:13505:8:2",
+      "scroll": "Daniel:312",
+      "left_context": [
+        "בלטשאצר",
+        "רב",
+        "חרטמיא",
+        "די",
+        "אנה",
+        "ידעת",
+        "די",
+        "רוח"
+      ],
+      "gold": [
+        "אלהין",
+        "קדישין"
+      ],
+      "right_context": [
+        "בך",
+        "וכל",
+        "רז",
+        "לא",
+        "אנס",
+        "לך",
+        "חזוי",
+        "חלמי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אלהין קדישין",
+          "אלהין",
+          "אלהין קדישין קדישין",
+          "קדישין",
+          "אלהין קדישין די",
+          "די אלהין קדישין",
+          "אלהין קדישין יהב",
+          "אלהין קדישין עדת",
+          "אלהין קדישין מהלכין",
+          "די לא איתי"
+        ],
+        "char_unknown": [
+          "יש",
+          "יא",
+          "לש",
+          "איה",
+          "לא ייה",
+          "לא",
+          "לא איה",
+          "אוה",
+          "יי",
+          "אעה"
+        ],
+        "embible_overlap_ensemble": [
+          "יש",
+          "יא",
+          "לש",
+          "איה",
+          "לא ייה"
+        ],
+        "rank_ensemble": [
+          "אלהין קדישין",
+          "אלהין",
+          "אלהין קדישין קדישין",
+          "קדישין",
+          "אלהין קדישין די",
+          "די אלהין קדישין",
+          "אלהין קדישין יהב",
+          "אלהין קדישין עדת",
+          "אלהין קדישין מהלכין",
+          "די לא איתי"
+        ],
+        "cwc_word_oracle": [
+          "אלהין קדישין",
+          "נבואה קדישין",
+          "יתירא קדישין",
+          "אלהים קדישין",
+          "קודשי קדישין"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Zephaniah:17301:10:2",
+      "scroll": "Zephaniah:389",
+      "left_context": [
+        "לי",
+        "נאם",
+        "יהוה",
+        "ליום",
+        "קומי",
+        "לעד",
+        "כי",
+        "משפטי"
+      ],
+      "gold": [
+        "לאסף",
+        "גוים"
+      ],
+      "right_context": [
+        "לקבצי",
+        "ממלכות",
+        "לשפך",
+        "עליהם",
+        "זעמי",
+        "כל",
+        "חרון",
+        "אפי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "מאסו",
+          "את יהוה",
+          "יצא",
+          "את יהוה צבאות",
+          "יהוה אמת",
+          "את אדוני יהוה",
+          "יצאו",
+          "יצא נאם יהוה",
+          "יהוה",
+          "מאסו נאם יהוה"
+        ],
+        "char_unknown": [
+          "יהוה",
+          "יהוו",
+          "יהיה",
+          "יהיו",
+          "הם",
+          "הא",
+          "הי",
+          "אהוה",
+          "היו",
+          "לם"
+        ],
+        "embible_overlap_ensemble": [
+          "יהוה"
+        ],
+        "rank_ensemble": [
+          "מאסו",
+          "את יהוה",
+          "יצא",
+          "את יהוה צבאות",
+          "יהוה אמת",
+          "את אדוני יהוה",
+          "יצאו",
+          "יצא נאם יהוה",
+          "יהוה",
+          "מאסו נאם יהוה"
+        ],
+        "cwc_word_oracle": [
+          "יהוה מאסו",
+          "מאסו יהוה",
+          "קנאת יהוה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_1:7492:11:2",
+      "scroll": "Kings_1:174",
+      "left_context": [
+        "כי",
+        "אין",
+        "אדם",
+        "אשר",
+        "לא",
+        "יחטא",
+        "ואנפת",
+        "בם"
+      ],
+      "gold": [
+        "ונתתם",
+        "לפני"
+      ],
+      "right_context": [
+        "אויב",
+        "ושבום",
+        "שביהם",
+        "אל",
+        "ארץ",
+        "האויב",
+        "רחוקה",
+        "או"
+      ],
+      "top10": {
+        "uwc_word": [
+          "עד",
+          "יד",
+          "את",
+          "רוח",
+          "עד בוא",
+          "עד שערי",
+          "עד נפלו ביד",
+          "מלאכי",
+          "ה",
+          "עד קראם"
+        ],
+        "char_unknown": [
+          "אל ארץ",
+          "אל ארי",
+          "אל ברץ",
+          "על ארץ",
+          "אל אוץ",
+          "אל ארת",
+          "אל איץ",
+          "אל",
+          "אל אבץ",
+          "אל ירץ"
+        ],
+        "embible_overlap_ensemble": [
+          "אל ארץ"
+        ],
+        "rank_ensemble": [
+          "עד",
+          "יד",
+          "את",
+          "רוח",
+          "עד בוא",
+          "עד שערי",
+          "עד נפלו ביד",
+          "מלאכי",
+          "ה",
+          "עד קראם"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_2:8347:10:2",
+      "scroll": "Kings_2:192",
+      "left_context": [
+        "את",
+        "חליו",
+        "אשר",
+        "ימות",
+        "בו",
+        "וירד",
+        "אליו",
+        "יואש"
+      ],
+      "gold": [
+        "מלך",
+        "ישראל"
+      ],
+      "right_context": [
+        "ויבך",
+        "על",
+        "פניו",
+        "ויאמר",
+        "אבי",
+        "אבי",
+        "רכב",
+        "ישראל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "הכוהן",
+          "בן אחזיהו",
+          "מלך ישראל",
+          "בן ירבעם",
+          "אביו",
+          "בן יהואחז הכוהן",
+          "איש ישראל",
+          "בן יהואחז אביו",
+          "בן אחזיהו הנביא",
+          "בן אחזיה"
+        ],
+        "char_unknown": [
+          "הם",
+          "בם",
+          "ויויו",
+          "ויריו",
+          "חם",
+          "הו",
+          "בו",
+          "חו",
+          "ויייו",
+          "ויליו"
+        ],
+        "embible_overlap_ensemble": [
+          "הם",
+          "בם",
+          "ויויו",
+          "ויריו",
+          "חם"
+        ],
+        "rank_ensemble": [
+          "הכוהן",
+          "בן אחזיהו",
+          "מלך ישראל",
+          "בן ירבעם",
+          "אביו",
+          "בן יהואחז הכוהן",
+          "איש ישראל",
+          "בן יהואחז אביו",
+          "בן אחזיהו הנביא",
+          "בן אחזיה"
+        ],
+        "cwc_word_oracle": [
+          "מלך ישראל",
+          "איש ישראל"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Deuteronomy:12675:8:2",
+      "scroll": "Deuteronomy:297",
+      "left_context": [
+        "המסת",
+        "הגדלת",
+        "אשר",
+        "ראו",
+        "עיניך",
+        "והאתת",
+        "והמפתים",
+        "והיד"
+      ],
+      "gold": [
+        "החזקה",
+        "והזרע"
+      ],
+      "right_context": [
+        "הנטויה",
+        "אשר",
+        "הוצאך",
+        "יהוה",
+        "אלהיך",
+        "כן",
+        "יעשה",
+        "יהוה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "החזקה החזקה וזרועך",
+          "החזקה והזרוע",
+          "החזקה",
+          "החזקה החזקה והזרוע",
+          "החזקה וזרועך",
+          "החזקה כול היד",
+          "החזקה והים והזרוע",
+          "החזקה כול יד",
+          "החזקה הזאת וזרועך",
+          "החזקה הוצאך וזרועך"
+        ],
+        "char_unknown": [
+          "ההוויה",
+          "אל",
+          "ההטויה",
+          "אן",
+          "הנוויה",
+          "הנטויה",
+          "ההרויה",
+          "ההווית",
+          "ההדויה",
+          "אם"
+        ],
+        "embible_overlap_ensemble": [
+          "ההוויה",
+          "אל",
+          "ההטויה",
+          "אן",
+          "הנוויה"
+        ],
+        "rank_ensemble": [
+          "החזקה החזקה וזרועך",
+          "החזקה והזרוע",
+          "החזקה",
+          "החזקה החזקה והזרוע",
+          "החזקה וזרועך",
+          "החזקה כול היד",
+          "החזקה והים והזרוע",
+          "החזקה כול יד",
+          "החזקה הזאת וזרועך",
+          "החזקה הוצאך וזרועך"
+        ],
+        "cwc_word_oracle": [
+          "החזקה והזרע",
+          "החזקה וזרוע",
+          "החזקה הזרוע",
+          "החזקה החזקה",
+          "החזקה והשבת",
+          "החזקה וזרעך",
+          "החזקה והמטה",
+          "החזקה והנגע",
+          "החזקה והחרב"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Isaiah:677:9:2",
+      "scroll": "Isaiah:13",
+      "left_context": [
+        "מלך",
+        "אשור",
+        "את",
+        "רב",
+        "שקה",
+        "מלכיש",
+        "ירושלמה",
+        "אל"
+      ],
+      "gold": [
+        "המלך",
+        "חזקיהו"
+      ],
+      "right_context": [
+        "בחיל",
+        "כבד",
+        "ויעמד",
+        "בתעלת",
+        "הברכה",
+        "העליונה",
+        "במסלת",
+        "שדה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "רומה",
+          "ירושלים",
+          "ירושלם",
+          "מלך אשור",
+          "ארץ יהודה",
+          "בית יהוה",
+          "ארץ ישראל",
+          "ערי יהודה",
+          "חזקיהו",
+          "בני אשור"
+        ],
+        "char_unknown": [
+          "הם",
+          "הר",
+          "הי",
+          "הב",
+          "השה",
+          "ישה",
+          "ישור",
+          "הה",
+          "הו",
+          "מם"
+        ],
+        "embible_overlap_ensemble": [
+          "הם",
+          "הר",
+          "הי",
+          "הב",
+          "השה"
+        ],
+        "rank_ensemble": [
+          "רומה",
+          "ירושלים",
+          "ירושלם",
+          "מלך אשור",
+          "ארץ יהודה",
+          "בית יהוה",
+          "ארץ ישראל",
+          "ערי יהודה",
+          "חזקיהו",
+          "בני אשור"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Amos:20028:8:2",
+      "scroll": "Amos:451",
+      "left_context": [
+        "ואם",
+        "יחבאו",
+        "בראש",
+        "הכרמל",
+        "משם",
+        "אחפש",
+        "ולקחתים",
+        "ואם"
+      ],
+      "gold": [
+        "יסתרו",
+        "מנגד"
+      ],
+      "right_context": [
+        "עיני",
+        "בקרקע",
+        "הים",
+        "משם",
+        "אצוה",
+        "את",
+        "הנחש",
+        "ונשכם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יסתרו מנגד",
+          "ראו",
+          "יראו",
+          "תראינה",
+          "יסתרו",
+          "אשים",
+          "אשים את",
+          "שמתי",
+          "אשא",
+          "אכה את"
+        ],
+        "char_unknown": [
+          "ים",
+          "יחבאו",
+          "יא י את",
+          "יחבמו",
+          "יא ו את",
+          "אם",
+          "יחיאו את",
+          "יחי ו את",
+          "יח י את",
+          "יש"
+        ],
+        "embible_overlap_ensemble": [
+          "ים",
+          "יחבאו",
+          "יא י את",
+          "יחבמו",
+          "יא ו את"
+        ],
+        "rank_ensemble": [
+          "יסתרו מנגד",
+          "ראו",
+          "יראו",
+          "תראינה",
+          "יסתרו",
+          "אשים",
+          "אשים את",
+          "שמתי",
+          "אשא",
+          "אכה את"
+        ],
+        "cwc_word_oracle": [
+          "יסתרו מנגד"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Zechariah:20171:8:2",
+      "scroll": "Zechariah:459",
+      "left_context": [
+        "והכרתי",
+        "רכב",
+        "מאפרים",
+        "וסוס",
+        "מירושלם",
+        "ונכרתה",
+        "קשת",
+        "מלחמה"
+      ],
+      "gold": [
+        "ודבר",
+        "שלום"
+      ],
+      "right_context": [
+        "לגוים",
+        "ומשלו",
+        "מים",
+        "עד",
+        "ים",
+        "ומנהר",
+        "עד",
+        "אפסי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ונתתיו",
+          "סביב",
+          "והיתה",
+          "ונשא נס",
+          "והיתה להבה",
+          "והיו",
+          "והיו לבז",
+          "והיה שלום",
+          "ונשא מנחה",
+          "והיתה מלחמה"
+        ],
+        "char_unknown": [
+          "זם",
+          "מים",
+          "זו",
+          "עם",
+          "מיה",
+          "עו",
+          "גם",
+          "גו",
+          "משם",
+          "זד"
+        ],
+        "embible_overlap_ensemble": [
+          "זם",
+          "מים",
+          "זו",
+          "עם",
+          "מיה"
+        ],
+        "rank_ensemble": [
+          "ונתתיו",
+          "סביב",
+          "והיתה",
+          "ונשא נס",
+          "והיתה להבה",
+          "והיו",
+          "והיו לבז",
+          "והיה שלום",
+          "ונשא מנחה",
+          "והיתה מלחמה"
+        ],
+        "cwc_word_oracle": [
+          "והיה שלום",
+          "ונשא מנחה",
+          "ועשה שלום",
+          "ונתן שלום"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Chronicles_2:20941:10:2",
+      "scroll": "Chronicles_2:474",
+      "left_context": [
+        "ויצאו",
+        "למדבר",
+        "תקוע",
+        "ובצאתם",
+        "עמד",
+        "יהושפט",
+        "ויאמר",
+        "שמעוני"
+      ],
+      "gold": [
+        "יהודה",
+        "וישבי"
+      ],
+      "right_context": [
+        "ירושלם",
+        "האמינו",
+        "ביהוה",
+        "אלהיכם",
+        "ותאמנו",
+        "האמינו",
+        "בנביאיו",
+        "והצליחו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יושבי",
+          "בני ישראל יושבי",
+          "ישבי",
+          "עמי יושבי",
+          "אנשי",
+          "כל יושבי",
+          "עמי",
+          "עמי וישבי",
+          "בני יהודה יושבי",
+          "בני עמי יושבי"
+        ],
+        "char_unknown": [
+          "אל",
+          "בל",
+          "אן",
+          "על",
+          "אלי",
+          "אני",
+          "בלי",
+          "בני",
+          "מלי",
+          "אלך"
+        ],
+        "embible_overlap_ensemble": [
+          "אל"
+        ],
+        "rank_ensemble": [
+          "יושבי",
+          "בני ישראל יושבי",
+          "ישבי",
+          "עמי יושבי",
+          "אנשי",
+          "כל יושבי",
+          "עמי",
+          "עמי וישבי",
+          "בני יהודה יושבי",
+          "בני עמי יושבי"
+        ],
+        "cwc_word_oracle": [
+          "יהודה וישבי"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Jeremiah:5300:8:2",
+      "scroll": "Jeremiah:122",
+      "left_context": [
+        "על",
+        "מי",
+        "אדברה",
+        "ואעידה",
+        "וישמעו",
+        "הנה",
+        "ערלה",
+        "אזנם"
+      ],
+      "gold": [
+        "ולא",
+        "יוכלו"
+      ],
+      "right_context": [
+        "להקשיב",
+        "הנה",
+        "דבר",
+        "יהוה",
+        "היה",
+        "להם",
+        "לחרפה",
+        "לא"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ולא יוכלו",
+          "ולא שמעו",
+          "ולא יכלו",
+          "וימאנו",
+          "משמוע ולא יוכלו",
+          "מיאנו",
+          "ממאן",
+          "משמוע",
+          "לא יוכלו",
+          "משמוע ולא שמעו"
+        ],
+        "char_unknown": [
+          "לא",
+          "היה",
+          "היו",
+          "מא",
+          "כא",
+          "לי",
+          "לם",
+          "הים",
+          "הא",
+          "לה"
+        ],
+        "embible_overlap_ensemble": [
+          "לא",
+          "היה",
+          "היו",
+          "מא",
+          "כא"
+        ],
+        "rank_ensemble": [
+          "ולא יוכלו",
+          "ולא שמעו",
+          "ולא יכלו",
+          "וימאנו",
+          "משמוע ולא יוכלו",
+          "מיאנו",
+          "ממאן",
+          "משמוע",
+          "לא יוכלו",
+          "משמוע ולא שמעו"
+        ],
+        "cwc_word_oracle": [
+          "ולא יוכלו",
+          "לוא יוכלו",
+          "ולא ישמעו",
+          "ולא אביתם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Numbers:14403:8:2",
+      "scroll": "Numbers:334",
+      "left_context": [
+        "ויהי",
+        "ממחרת",
+        "ויבא",
+        "משה",
+        "אל",
+        "אהל",
+        "העדות",
+        "והנה"
+      ],
+      "gold": [
+        "פרח",
+        "מטה"
+      ],
+      "right_context": [
+        "אהרן",
+        "לבית",
+        "לוי",
+        "ויצא",
+        "פרח",
+        "ויצץ",
+        "ציץ",
+        "ויגמל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "פרח מטה מטה",
+          "פרח מטה",
+          "פרח",
+          "מטה",
+          "פרח מטה בני",
+          "נדחף",
+          "פרח פרח מטה",
+          "פרח מטה מבני",
+          "מטה אהרון מטה",
+          "עלה מטה מטה"
+        ],
+        "char_unknown": [
+          "בא",
+          "נכנס",
+          "נונס",
+          "נכלס",
+          "נכנא",
+          "נגנס",
+          "נכבס",
+          "ילא",
+          "נכוס",
+          "יכנס"
+        ],
+        "embible_overlap_ensemble": [
+          "בא",
+          "נכנס"
+        ],
+        "rank_ensemble": [
+          "פרח מטה מטה",
+          "פרח מטה",
+          "פרח",
+          "מטה",
+          "פרח מטה בני",
+          "נדחף",
+          "פרח פרח מטה",
+          "פרח מטה מבני",
+          "מטה אהרון מטה",
+          "עלה מטה מטה"
+        ],
+        "cwc_word_oracle": [
+          "פרח מטה",
+          "עלה מטה",
+          "כול מטה",
+          "מטה מטה",
+          "הוא מטה",
+          "כול בני",
+          "שני בני",
+          "גפן מטה",
+          "פרח בית",
+          "היה מטה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_1:7260:8:2",
+      "scroll": "Kings_1:178",
+      "left_context": [
+        "ויגד",
+        "למלך",
+        "שלמה",
+        "כי",
+        "נס",
+        "יואב",
+        "אל",
+        "אהל"
+      ],
+      "gold": [
+        "יהוה",
+        "והנה"
+      ],
+      "right_context": [
+        "אצל",
+        "המזבח",
+        "וישלח",
+        "שלמה",
+        "את",
+        "בניהו",
+        "בן",
+        "יהוידע"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יהוה",
+          "יהוה אל",
+          "יהוה אשר",
+          "יהוה ו",
+          "יהוה ויעמוד",
+          "יהוה אשר הכין",
+          "יהוה ויעמד",
+          "יהוה להקטיר",
+          "ה",
+          "יהוה אל המזבח"
+        ],
+        "char_unknown": [
+          "המלכים",
+          "המוכים",
+          "הר",
+          "ימלב",
+          "המליים",
+          "ימאב",
+          "הס",
+          "המלרים",
+          "הם",
+          "המלוים"
+        ],
+        "embible_overlap_ensemble": [
+          "המלכים",
+          "המוכים",
+          "הר",
+          "ימלב",
+          "המליים"
+        ],
+        "rank_ensemble": [
+          "יהוה",
+          "יהוה אל",
+          "יהוה אשר",
+          "יהוה ו",
+          "יהוה ויעמוד",
+          "יהוה אשר הכין",
+          "יהוה ויעמד",
+          "יהוה להקטיר",
+          "ה",
+          "יהוה אל המזבח"
+        ],
+        "cwc_word_oracle": [
+          "יהוה ויבא"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Daniel:13490:10:2",
+      "scroll": "Daniel:311",
+      "left_context": [
+        "מלכא",
+        "תוה",
+        "וקם",
+        "בהתבהלה",
+        "ענה",
+        "ואמר",
+        "להדברוהי",
+        "הלא"
+      ],
+      "gold": [
+        "גברין",
+        "תלתא"
+      ],
+      "right_context": [
+        "רמינא",
+        "לגוא",
+        "נורא",
+        "מכפתין",
+        "ענין",
+        "ואמרין",
+        "למלכא",
+        "יציבא"
+      ],
+      "top10": {
+        "uwc_word": [
+          "תלתא",
+          "תלת",
+          "גברין תלתא",
+          "די תלתא",
+          "די אנחנא",
+          "אנא",
+          "אנחנא",
+          "אנא הוא די",
+          "כד אנחנא",
+          "די תלת מאה"
+        ],
+        "char_unknown": [
+          "לא",
+          "כא",
+          "לי",
+          "הא",
+          "בא",
+          "הוא",
+          "הוי",
+          "אא",
+          "אוא",
+          "המא"
+        ],
+        "embible_overlap_ensemble": [
+          "לא",
+          "כא",
+          "לי",
+          "הא",
+          "בא"
+        ],
+        "rank_ensemble": [
+          "תלתא",
+          "תלת",
+          "גברין תלתא",
+          "די תלתא",
+          "די אנחנא",
+          "אנא",
+          "אנחנא",
+          "אנא הוא די",
+          "כד אנחנא",
+          "די תלת מאה"
+        ],
+        "cwc_word_oracle": [
+          "גברין תלתא",
+          "גבריא תלתא"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_1:7739:11:2",
+      "scroll": "Kings_1:184",
+      "left_context": [
+        "את",
+        "כל",
+        "בית",
+        "ירבעם",
+        "לא",
+        "השאיר",
+        "כל",
+        "נשמה"
+      ],
+      "gold": [
+        "לירבעם",
+        "עד"
+      ],
+      "right_context": [
+        "השמדו",
+        "כדבר",
+        "יהוה",
+        "אשר",
+        "דבר",
+        "ביד",
+        "עבדו",
+        "אחיה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "עד",
+          "כי עד",
+          "עד יום",
+          "לו עד",
+          "כי אמר יהוה",
+          "לירבעם עד",
+          "אחריו עד",
+          "כי אם עד",
+          "מפניו עד",
+          "עד עולם עד"
+        ],
+        "char_unknown": [
+          "ולא",
+          "אלא",
+          "לא",
+          "לל",
+          "ולר",
+          "ושא",
+          "עא",
+          "וכא",
+          "אלר",
+          "וכר לא"
+        ],
+        "embible_overlap_ensemble": [
+          "ולא",
+          "אלא",
+          "לא",
+          "לל",
+          "ולר"
+        ],
+        "rank_ensemble": [
+          "עד",
+          "כי עד",
+          "עד יום",
+          "לו עד",
+          "כי אמר יהוה",
+          "לירבעם עד",
+          "אחריו עד",
+          "כי אם עד",
+          "מפניו עד",
+          "עד עולם עד"
+        ],
+        "cwc_word_oracle": [
+          "לירבעם עד"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Obadiah:6529:9:2",
+      "scroll": "Obadiah:148",
+      "left_context": [
+        "בית",
+        "יעקב",
+        "אש",
+        "ובית",
+        "יוסף",
+        "להבה",
+        "ובית",
+        "עשו"
+      ],
+      "gold": [
+        "לקש",
+        "ודלקו"
+      ],
+      "right_context": [
+        "בהם",
+        "ואכלום",
+        "ולא",
+        "יהיה",
+        "שריד",
+        "לבית",
+        "עשו",
+        "כי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לקש ודלקו",
+          "ודלקו",
+          "לקש ודלקו ודלקו",
+          "לקש בוא ודלקו",
+          "להבה",
+          "לקש ודלקו אש",
+          "לקש ודלקו ה",
+          "להבה ודלקו ודלקו",
+          "להבה ודלקו",
+          "לקש"
+        ],
+        "char_unknown": [
+          "אש",
+          "כש",
+          "אשו",
+          "אשר",
+          "והיו",
+          "אי",
+          "כי",
+          "השו",
+          "השר",
+          "איו"
+        ],
+        "embible_overlap_ensemble": [
+          "אש",
+          "כש",
+          "אשו",
+          "אשר",
+          "והיו"
+        ],
+        "rank_ensemble": [
+          "לקש ודלקו",
+          "ודלקו",
+          "לקש ודלקו ודלקו",
+          "לקש בוא ודלקו",
+          "להבה",
+          "לקש ודלקו אש",
+          "לקש ודלקו ה",
+          "להבה ודלקו ודלקו",
+          "להבה ודלקו",
+          "לקש"
+        ],
+        "cwc_word_oracle": [
+          "לקש ודלקו",
+          "עפר ודלקו",
+          "קלל ודלקו"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Lamentations:7064:10:2",
+      "scroll": "Lamentations:169",
+      "left_context": [
+        "אל",
+        "אדני",
+        "חומת",
+        "בת",
+        "ציון",
+        "הורידי",
+        "כנחל",
+        "דמעה"
+      ],
+      "gold": [
+        "יומם",
+        "ולילה"
+      ],
+      "right_context": [
+        "אל",
+        "תתני",
+        "פוגת",
+        "לך",
+        "אל",
+        "תדם",
+        "בת",
+        "עינך"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אל",
+          "עד עולם",
+          "על כל פנים",
+          "נאם יהוה",
+          "מעל כל פנים",
+          "אדני",
+          "על כן",
+          "אל תזכר",
+          "אל תזכר עון",
+          "יהוה"
+        ],
+        "char_unknown": [
+          "לך",
+          "כך",
+          "אך",
+          "לי",
+          "כי",
+          "אי",
+          "בך",
+          "זך",
+          "עך",
+          "וך"
+        ],
+        "embible_overlap_ensemble": [
+          "כי"
+        ],
+        "rank_ensemble": [
+          "אל",
+          "עד עולם",
+          "על כל פנים",
+          "נאם יהוה",
+          "מעל כל פנים",
+          "אדני",
+          "על כן",
+          "אל תזכר",
+          "אל תזכר עון",
+          "יהוה"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Joshua:21470:11:2",
+      "scroll": "Joshua:500",
+      "left_context": [
+        "את",
+        "הארץ",
+        "אמר",
+        "יהושע",
+        "באו",
+        "בית",
+        "האשה",
+        "הזונה"
+      ],
+      "gold": [
+        "והוציאו",
+        "משם"
+      ],
+      "right_context": [
+        "את",
+        "האשה",
+        "ואת",
+        "כל",
+        "אשר",
+        "לה",
+        "כאשר",
+        "נשבעתם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לקחו",
+          "ונתנו",
+          "ויוציאו",
+          "והוציאו",
+          "ודרשו",
+          "קניתי",
+          "עבדו",
+          "הבו",
+          "הבו לכם",
+          "ותנו"
+        ],
+        "char_unknown": [
+          "באו",
+          "בנו",
+          "ואו",
+          "בחו",
+          "ובנו",
+          "לאו",
+          "ובאו",
+          "והשביתם",
+          "קאו",
+          "ושבבתם"
+        ],
+        "embible_overlap_ensemble": [
+          "באו",
+          "בנו",
+          "ואו",
+          "בחו",
+          "ובנו"
+        ],
+        "rank_ensemble": [
+          "לקחו",
+          "ונתנו",
+          "ויוציאו",
+          "והוציאו",
+          "ודרשו",
+          "קניתי",
+          "עבדו",
+          "הבו",
+          "הבו לכם",
+          "ותנו"
+        ],
+        "cwc_word_oracle": []
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_2:3440:11:2",
+      "scroll": "Samuel_2:66",
+      "left_context": [
+        "העשיר",
+        "ויחמל",
+        "לקחת",
+        "מצאנו",
+        "ומבקרו",
+        "לעשות",
+        "לארח",
+        "הבא"
+      ],
+      "gold": [
+        "לו",
+        "ויקח"
+      ],
+      "right_context": [
+        "את",
+        "כבשת",
+        "האיש",
+        "הראש",
+        "ויעשה",
+        "לאיש",
+        "הבא",
+        "אליו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אליו",
+          "אליו ויקח",
+          "אליו וייקח",
+          "אליו וייקח דויד",
+          "אליו וייקח לו",
+          "אליו וייתן לו",
+          "אליו ויבא לו",
+          "אליו ויקח דויד",
+          "אליו ועשה לו",
+          "לו"
+        ],
+        "char_unknown": [
+          "אליו",
+          "עליו",
+          "לו",
+          "אלנו",
+          "עמו",
+          "ענו",
+          "לליו",
+          "אייו",
+          "עלו",
+          "אמו"
+        ],
+        "embible_overlap_ensemble": [
+          "אליו",
+          "לו",
+          "עליו",
+          "עמו"
+        ],
+        "rank_ensemble": [
+          "אליו",
+          "אליו ויקח",
+          "אליו וייקח",
+          "אליו וייקח דויד",
+          "אליו וייקח לו",
+          "אליו וייתן לו",
+          "אליו ויבא לו",
+          "אליו ויקח דויד",
+          "אליו ועשה לו",
+          "לו"
+        ],
+        "cwc_word_oracle": [
+          "לו ויקח",
+          "אל ביתו",
+          "אל ארצו",
+          "אל המלך",
+          "אל דויד"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Joshua:21546:8:2",
+      "scroll": "Joshua:494",
+      "left_context": [
+        "ואת",
+        "כל",
+        "אשר",
+        "עשה",
+        "לשני",
+        "מלכי",
+        "האמרי",
+        "אשר"
+      ],
+      "gold": [
+        "בעבר",
+        "הירדן"
+      ],
+      "right_context": [
+        "לסיחון",
+        "מלך",
+        "חשבון",
+        "ולעוג",
+        "מלך",
+        "הבשן",
+        "אשר",
+        "בעשתרות"
+      ],
+      "top10": {
+        "uwc_word": [
+          "השמיד יהוה",
+          "השמיד יהוה מפניהם",
+          "כבש",
+          "בעשתרות",
+          "עימו",
+          "השמיד",
+          "השמיד מפניהם",
+          "בעשתרות קרנים",
+          "כבש מלך כנען",
+          "כבש את אברהם"
+        ],
+        "char_unknown": [
+          "עשה",
+          "עשהו",
+          "עשו",
+          "השה",
+          "עשהה",
+          "נשה",
+          "שם",
+          "עשן",
+          "עעהו",
+          "שא"
+        ],
+        "embible_overlap_ensemble": [
+          "עשה"
+        ],
+        "rank_ensemble": [
+          "השמיד יהוה",
+          "השמיד יהוה מפניהם",
+          "כבש",
+          "בעשתרות",
+          "עימו",
+          "השמיד",
+          "השמיד מפניהם",
+          "בעשתרות קרנים",
+          "כבש מלך כנען",
+          "כבש את אברהם"
+        ],
+        "cwc_word_oracle": [
+          "בעבר הירדן"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Judges:1754:9:2",
+      "scroll": "Judges:27",
+      "left_context": [
+        "אתו",
+        "העם",
+        "ויהללו",
+        "את",
+        "אלהיהם",
+        "כי",
+        "אמרו",
+        "נתן"
+      ],
+      "gold": [
+        "אלהינו",
+        "בידנו"
+      ],
+      "right_context": [
+        "את",
+        "אויבנו",
+        "ואת",
+        "מחריב",
+        "ארצנו",
+        "ואשר",
+        "הרבה",
+        "את"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לנו",
+          "יהוה בידנו",
+          "יהוה",
+          "ייי בידנו",
+          "אלהינו בידנו",
+          "לנו מושיע",
+          "ייי",
+          "אלהינו",
+          "בידנו",
+          "לו"
+        ],
+        "char_unknown": [
+          "להו",
+          "אלהינו",
+          "אאהינו",
+          "להם",
+          "ללהינו",
+          "אלההנו",
+          "לאהינו",
+          "אלהינם",
+          "לנו",
+          "אלהיהו"
+        ],
+        "embible_overlap_ensemble": [
+          "אלהינו",
+          "להם"
+        ],
+        "rank_ensemble": [
+          "לנו",
+          "יהוה בידנו",
+          "יהוה",
+          "ייי בידנו",
+          "אלהינו בידנו",
+          "לנו מושיע",
+          "ייי",
+          "אלהינו",
+          "בידנו",
+          "לו"
+        ],
+        "cwc_word_oracle": [
+          "אלהינו בידנו",
+          "אלוהים בידנו",
+          "אלהינו מושיע"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Chronicles_2:20648:10:1",
+      "scroll": "Chronicles_2:485",
+      "left_context": [
+        "הנכרי",
+        "אשר",
+        "לא",
+        "מעמך",
+        "ישראל",
+        "הוא",
+        "ובא",
+        "מארץ"
+      ],
+      "gold": [
+        "רחוקה"
+      ],
+      "right_context": [
+        "למען",
+        "שמך",
+        "הגדול",
+        "וידך",
+        "החזקה",
+        "וזרועך",
+        "הנטויה",
+        "ובאו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "רחוקה",
+          "רחוקה כול",
+          "מצרים",
+          "רחוקה ועשה",
+          "רחוקה עשה",
+          "רחוקה ועשה עמנו",
+          "רחוקה יעשה",
+          "צפון",
+          "רחוקה נחם יהוה",
+          "רחוקה וסלחת"
+        ],
+        "char_unknown": [
+          "ישראל",
+          "משראל",
+          "ישריל",
+          "יצראל",
+          "השראל",
+          "ישראם",
+          "ישואל",
+          "יבראל",
+          "יהראל",
+          "יוראל"
+        ],
+        "embible_overlap_ensemble": [
+          "ישראל"
+        ],
+        "rank_ensemble": [
+          "רחוקה",
+          "רחוקה כול",
+          "מצרים",
+          "רחוקה ועשה",
+          "רחוקה עשה",
+          "רחוקה ועשה עמנו",
+          "רחוקה יעשה",
+          "צפון",
+          "רחוקה נחם יהוה",
+          "רחוקה וסלחת"
+        ],
+        "cwc_word_oracle": [
+          "רחוקה",
+          "מצרים",
+          "כשדים",
+          "גלותם",
+          "נכריה",
+          "העמים",
+          "ישראל"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Micah:6978:8:1",
+      "scroll": "Micah:164",
+      "left_context": [
+        "והיה",
+        "זה",
+        "שלום",
+        "אשור",
+        "כי",
+        "יבוא",
+        "בארצנו",
+        "וכי"
+      ],
+      "gold": [
+        "ידרך"
+      ],
+      "right_context": [
+        "בארמנתינו",
+        "והקמנו",
+        "עליו",
+        "שבעה",
+        "רעים",
+        "ושמנה",
+        "נסיכי",
+        "אדם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יבוא",
+          "יבוא יבוא",
+          "יבא",
+          "יהיה",
+          "יעלה",
+          "יפול",
+          "יימצא",
+          "יפל",
+          "יבוא שמה",
+          "בא"
+        ],
+        "char_unknown": [
+          "יבוא",
+          "יבוה",
+          "יבור",
+          "יבום",
+          "ישוא",
+          "יבוך",
+          "יבול",
+          "יהוא",
+          "יבוב",
+          "יבוד"
+        ],
+        "embible_overlap_ensemble": [
+          "יבוא"
+        ],
+        "rank_ensemble": [
+          "יבוא",
+          "יבוא יבוא",
+          "יבא",
+          "יהיה",
+          "יעלה",
+          "יפול",
+          "יימצא",
+          "יפל",
+          "יבוא שמה",
+          "בא"
+        ],
+        "cwc_word_oracle": [
+          "יבוא",
+          "יהיה",
+          "יעלה",
+          "יפול",
+          "תבוא",
+          "ימצא",
+          "תעלה",
+          "יגור",
+          "שודד",
+          "יגיע"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Genesis:10709:9:1",
+      "scroll": "Genesis:243",
+      "left_context": [
+        "את",
+        "דברי",
+        "בני",
+        "לבן",
+        "לאמר",
+        "לקח",
+        "יעקב",
+        "את"
+      ],
+      "gold": [
+        "כל"
+      ],
+      "right_context": [
+        "אשר",
+        "לאבינו",
+        "ומאשר",
+        "לאבינו",
+        "עשה",
+        "את",
+        "כל",
+        "הכבד"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כל",
+          "כל כל",
+          "כל אשר לו",
+          "כל אשר כל",
+          "כל את",
+          "כל אשר וכל",
+          "כל כול",
+          "כל הכסף",
+          "כל אשר",
+          "כל רכוש כל"
+        ],
+        "char_unknown": [
+          "כל",
+          "כל הכבל",
+          "כל הכבם",
+          "הכל",
+          "כל הככל",
+          "כל הככם",
+          "כל הכבד",
+          "הל הכבל",
+          "כל הכבת",
+          "כל הכול"
+        ],
+        "embible_overlap_ensemble": [
+          "כל",
+          "הכל"
+        ],
+        "rank_ensemble": [
+          "כל",
+          "כל כל",
+          "כל אשר לו",
+          "כל אשר כל",
+          "כל את",
+          "כל אשר וכל",
+          "כל כול",
+          "כל הכסף",
+          "כל אשר",
+          "כל רכוש כל"
+        ],
+        "cwc_word_oracle": [
+          "כל",
+          "את"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_1:4362:8:1",
+      "scroll": "Samuel_1:90",
+      "left_context": [
+        "והיה",
+        "כהפנתו",
+        "שכמו",
+        "ללכת",
+        "מעם",
+        "שמואל",
+        "ויהפך",
+        "לו"
+      ],
+      "gold": [
+        "אלהים"
+      ],
+      "right_context": [
+        "לב",
+        "אחר",
+        "ויבאו",
+        "כל",
+        "האתות",
+        "האלה",
+        "ביום",
+        "ההוא"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לב אל",
+          "יהוה",
+          "אלוהים",
+          "לב אחד אל",
+          "לב אחד ו",
+          "יהוה אלוהים",
+          "לב אחד ל",
+          "לב אחר אל",
+          "לב אחר על",
+          "לב אל ו"
+        ],
+        "char_unknown": [
+          "לל",
+          "כל",
+          "לב",
+          "לו",
+          "לם",
+          "כב",
+          "כו",
+          "כם",
+          "אל",
+          "על"
+        ],
+        "embible_overlap_ensemble": [
+          "לל",
+          "כל",
+          "לב",
+          "לו",
+          "לם"
+        ],
+        "rank_ensemble": [
+          "לב אל",
+          "יהוה",
+          "אלוהים",
+          "לב אחד אל",
+          "לב אחד ו",
+          "יהוה אלוהים",
+          "לב אחד ל",
+          "לב אחר אל",
+          "לב אחר על",
+          "לב אל ו"
+        ],
+        "cwc_word_oracle": [
+          "אלהים",
+          "רחבעם",
+          "המקום",
+          "ירבעם",
+          "ישראל"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Genesis:11236:8:1",
+      "scroll": "Genesis:250",
+      "left_context": [
+        "אלה",
+        "בני",
+        "לאה",
+        "אשר",
+        "ילדה",
+        "ליעקב",
+        "בפדן",
+        "ארם"
+      ],
+      "gold": [
+        "ואת"
+      ],
+      "right_context": [
+        "דינה",
+        "בתו",
+        "כל",
+        "נפש",
+        "בניו",
+        "ובנותיו",
+        "שלשים",
+        "ושלש"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ואת",
+          "את",
+          "אשר לקח את",
+          "את דינה ואת",
+          "ילדה את",
+          "וייקח את",
+          "את יעקוב ואת",
+          "אשר ילדה",
+          "את דינה",
+          "ותלד לו את"
+        ],
+        "char_unknown": [
+          "אשר",
+          "את",
+          "בשר",
+          "כת",
+          "ושר",
+          "אי",
+          "בת",
+          "אל",
+          "אאר",
+          "אשת"
+        ],
+        "embible_overlap_ensemble": [
+          "את"
+        ],
+        "rank_ensemble": [
+          "ואת",
+          "את",
+          "אשר לקח את",
+          "את דינה ואת",
+          "ילדה את",
+          "וייקח את",
+          "את יעקוב ואת",
+          "אשר ילדה",
+          "את דינה",
+          "ותלד לו את"
+        ],
+        "cwc_word_oracle": [
+          "ואת",
+          "אחי",
+          "היא",
+          "אבי",
+          "בני",
+          "ושם",
+          "לקח",
+          "בתו",
+          "ועל"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ezra:3879:8:1",
+      "scroll": "Ezra:80",
+      "left_context": [
+        "ואלה",
+        "בני",
+        "המדינה",
+        "העלים",
+        "משבי",
+        "הגולה",
+        "אשר",
+        "הגלה"
+      ],
+      "gold": [
+        "נבוכדנצור"
+      ],
+      "right_context": [
+        "נבוכדנצר",
+        "מלך",
+        "בבל",
+        "לבבל",
+        "וישובו",
+        "לירושלם",
+        "ויהודה",
+        "איש"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יהוה עם",
+          "המלך",
+          "נבוכדנצר",
+          "מלך יהודה עם",
+          "נבוכדנצר עם",
+          "נבוכד נצר עם",
+          "אלוהים עם",
+          "נבוכד נצר בן",
+          "אתם",
+          "יהוה את"
+        ],
+        "char_unknown": [
+          "אליהם",
+          "את",
+          "אלרהם",
+          "יליהם",
+          "הת",
+          "אביהם",
+          "הליהם",
+          "ילרהם",
+          "להם",
+          "אברהם"
+        ],
+        "embible_overlap_ensemble": [
+          "את"
+        ],
+        "rank_ensemble": [
+          "יהוה עם",
+          "המלך",
+          "נבוכדנצר",
+          "מלך יהודה עם",
+          "נבוכדנצר עם",
+          "נבוכד נצר עם",
+          "אלוהים עם",
+          "נבוכד נצר בן",
+          "אתם",
+          "יהוה את"
+        ],
+        "cwc_word_oracle": [
+          "נבוכדנאצר"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Hosea:6611:9:1",
+      "scroll": "Hosea:157",
+      "left_context": [
+        "עוד",
+        "ותלד",
+        "בת",
+        "ויאמר",
+        "לו",
+        "קרא",
+        "שמה",
+        "לא"
+      ],
+      "gold": [
+        "רחמה"
+      ],
+      "right_context": [
+        "כי",
+        "לא",
+        "אוסיף",
+        "עוד",
+        "ארחם",
+        "את",
+        "בית",
+        "ישראל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "רוחמה",
+          "אסף עוד ארחם",
+          "עמי",
+          "רוחמה לא עמי",
+          "אוסיף עוד ארחם",
+          "עמי אתה",
+          "אסף עוד",
+          "בן עמי",
+          "כן הוא",
+          "תזכרי עוד"
+        ],
+        "char_unknown": [
+          "אוסיף",
+          "ארסיף",
+          "יוסיף",
+          "אוסוף",
+          "אתסיף",
+          "אוחיף",
+          "אעסיף",
+          "אשסיף",
+          "אוריף",
+          "איסיף"
+        ],
+        "embible_overlap_ensemble": [
+          "אוסיף"
+        ],
+        "rank_ensemble": [
+          "רוחמה",
+          "אסף עוד ארחם",
+          "עמי",
+          "רוחמה לא עמי",
+          "אוסיף עוד ארחם",
+          "עמי אתה",
+          "אסף עוד",
+          "בן עמי",
+          "כן הוא",
+          "תזכרי עוד"
+        ],
+        "cwc_word_oracle": [
+          "ארחם",
+          "תחיה",
+          "תבוא",
+          "אדני",
+          "ידעו",
+          "רחמה",
+          "יבוא",
+          "ירחם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_1:4692:10:1",
+      "scroll": "Samuel_1:89",
+      "left_context": [
+        "החדש",
+        "השני",
+        "ויפקד",
+        "מקום",
+        "דוד",
+        "ויאמר",
+        "שאול",
+        "אל"
+      ],
+      "gold": [
+        "יהונתן"
+      ],
+      "right_context": [
+        "בנו",
+        "מדוע",
+        "לא",
+        "בא",
+        "בן",
+        "ישי",
+        "גם",
+        "תמול"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יהונתן",
+          "יהונתן בן",
+          "אבנר בן נר",
+          "יהונתן בן שאול",
+          "דוד יהונתן",
+          "הנער יהונתן",
+          "יהונתן בן נר",
+          "אבנר שמעת",
+          "ישי בן",
+          "מיכל בת שאול"
+        ],
+        "char_unknown": [
+          "בל",
+          "בר",
+          "בא",
+          "הל",
+          "בי",
+          "בן",
+          "הר",
+          "יוה",
+          "בם",
+          "אל"
+        ],
+        "embible_overlap_ensemble": [
+          "בל",
+          "בר",
+          "בא",
+          "הל",
+          "בי"
+        ],
+        "rank_ensemble": [
+          "יהונתן",
+          "יהונתן בן",
+          "אבנר בן נר",
+          "יהונתן בן שאול",
+          "דוד יהונתן",
+          "הנער יהונתן",
+          "יהונתן בן נר",
+          "אבנר שמעת",
+          "ישי בן",
+          "מיכל בת שאול"
+        ],
+        "cwc_word_oracle": [
+          "יהונתן",
+          "אחימעץ",
+          "אבשלום",
+          "אחימלך"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Malachi:20282:8:1",
+      "scroll": "Malachi:462",
+      "left_context": [
+        "הוגעתם",
+        "יהוה",
+        "בדבריכם",
+        "ואמרתם",
+        "במה",
+        "הוגענו",
+        "באמרכם",
+        "כל"
+      ],
+      "gold": [
+        "עשה"
+      ],
+      "right_context": [
+        "רע",
+        "טוב",
+        "בעיני",
+        "יהוה",
+        "ובהם",
+        "הוא",
+        "חפץ",
+        "או"
+      ],
+      "top10": {
+        "uwc_word": [
+          "עושה",
+          "עושה יהוה",
+          "מעשה יהוה",
+          "עושה דבר",
+          "עושה רק",
+          "עושה כל",
+          "מעשה ידי האדם",
+          "עושה טוב ועושה",
+          "דבר",
+          "עושה יעשה"
+        ],
+        "char_unknown": [
+          "דבר",
+          "דשר",
+          "אבר",
+          "כה",
+          "אשר",
+          "זה",
+          "מה",
+          "הבר",
+          "כל",
+          "רה"
+        ],
+        "embible_overlap_ensemble": [
+          "דבר"
+        ],
+        "rank_ensemble": [
+          "עושה",
+          "עושה יהוה",
+          "מעשה יהוה",
+          "עושה דבר",
+          "עושה רק",
+          "עושה כל",
+          "מעשה ידי האדם",
+          "עושה טוב ועושה",
+          "דבר",
+          "עושה יעשה"
+        ],
+        "cwc_word_oracle": [
+          "דבר",
+          "עשה",
+          "פעל",
+          "פגע"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_2:3657:11:1",
+      "scroll": "Samuel_2:70",
+      "left_context": [
+        "לנער",
+        "לאבשלום",
+        "ויאמר",
+        "אחימעץ",
+        "ראיתי",
+        "ההמון",
+        "הגדול",
+        "לשלח"
+      ],
+      "gold": [
+        "את"
+      ],
+      "right_context": [
+        "עבד",
+        "המלך",
+        "יואב",
+        "ואת",
+        "עבדך",
+        "ולא",
+        "ידעתי",
+        "מה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "את",
+          "את אבשלום",
+          "את אבשלום את",
+          "יואב את",
+          "את יואב",
+          "אבשלום את",
+          "את יואב את",
+          "את יואב ואת",
+          "את אבשלום ואת",
+          "אליך את"
+        ],
+        "char_unknown": [
+          "לך את",
+          "אליך את",
+          "לי את",
+          "אלתך את",
+          "אליי את",
+          "אויך את",
+          "ללך את",
+          "ללי את",
+          "אפיך את",
+          "אייך את"
+        ],
+        "embible_overlap_ensemble": [
+          "לך את",
+          "אליך את",
+          "לי את"
+        ],
+        "rank_ensemble": [
+          "את",
+          "את אבשלום",
+          "את אבשלום את",
+          "יואב את",
+          "את יואב",
+          "אבשלום את",
+          "את יואב את",
+          "את יואב ואת",
+          "את אבשלום ואת",
+          "אליך את"
+        ],
+        "cwc_word_oracle": [
+          "את",
+          "אל",
+          "לי",
+          "על",
+          "לך",
+          "עם",
+          "בן"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Numbers:13775:9:1",
+      "scroll": "Numbers:330",
+      "left_context": [
+        "שמעון",
+        "תולדתם",
+        "למשפחתם",
+        "לבית",
+        "אבתם",
+        "פקדיו",
+        "במספר",
+        "שמות"
+      ],
+      "gold": [
+        "לגלגלתם"
+      ],
+      "right_context": [
+        "כל",
+        "זכר",
+        "מבן",
+        "עשרים",
+        "שנה",
+        "ומעלה",
+        "כל",
+        "יצא"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כול",
+          "בני ישראל",
+          "כול בני ישראל",
+          "בני ישראל למשפחתם",
+          "כול בכר",
+          "שבטי ישראל",
+          "למשפחתם",
+          "כול בכר לוי",
+          "כול יצא צבא",
+          "כול שבט לוי"
+        ],
+        "char_unknown": [
+          "על",
+          "של",
+          "אל",
+          "ומוים",
+          "כל",
+          "עם",
+          "ומרים",
+          "ומנים",
+          "עי",
+          "שם"
+        ],
+        "embible_overlap_ensemble": [
+          "כל"
+        ],
+        "rank_ensemble": [
+          "כול",
+          "בני ישראל",
+          "כול בני ישראל",
+          "בני ישראל למשפחתם",
+          "כול בכר",
+          "שבטי ישראל",
+          "למשפחתם",
+          "כול בכר לוי",
+          "כול יצא צבא",
+          "כול שבט לוי"
+        ],
+        "cwc_word_oracle": [
+          "למשפחתם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Hosea:6659:8:1",
+      "scroll": "Hosea:155",
+      "left_context": [
+        "אם",
+        "זנה",
+        "אתה",
+        "ישראל",
+        "אל",
+        "יאשם",
+        "יהודה",
+        "ואל"
+      ],
+      "gold": [
+        "תבאו"
+      ],
+      "right_context": [
+        "הגלגל",
+        "ואל",
+        "תעלו",
+        "בית",
+        "און",
+        "ואל",
+        "תשבעו",
+        "חי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "תבאו",
+          "תבאו אל",
+          "תחטאו",
+          "תבואו",
+          "תבואו אל",
+          "תעלו",
+          "תעלו אל",
+          "תבאו אל פני",
+          "תשאו את",
+          "תשבו"
+        ],
+        "char_unknown": [
+          "תעלו את",
+          "תשבמו את",
+          "תשרמו את",
+          "תשלו את",
+          "תששמו את",
+          "תעשו את",
+          "תרלו את",
+          "תשברו את",
+          "תששו את",
+          "תשררו את"
+        ],
+        "embible_overlap_ensemble": [
+          "תעלו את"
+        ],
+        "rank_ensemble": [
+          "תבאו",
+          "תבאו אל",
+          "תחטאו",
+          "תבואו",
+          "תבואו אל",
+          "תעלו",
+          "תעלו אל",
+          "תבאו אל פני",
+          "תשאו את",
+          "תשבו"
+        ],
+        "cwc_word_oracle": [
+          "תבאו",
+          "תעלו",
+          "תשבו",
+          "יבוא",
+          "תשמע",
+          "תבוא",
+          "תשוב",
+          "תגעו",
+          "תזנה",
+          "תחטא"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_1:7925:9:1",
+      "scroll": "Kings_1:180",
+      "left_context": [
+        "שני",
+        "האנשים",
+        "בני",
+        "בליעל",
+        "וישבו",
+        "נגדו",
+        "ויעדהו",
+        "אנשי"
+      ],
+      "gold": [
+        "הבליעל"
+      ],
+      "right_context": [
+        "את",
+        "נבות",
+        "נגד",
+        "העם",
+        "לאמר",
+        "ברך",
+        "נבות",
+        "אלהים"
+      ],
+      "top10": {
+        "uwc_word": [
+          "בליעל",
+          "הרכב",
+          "ישראל",
+          "העיר",
+          "הבליעל",
+          "בליעל להדיח",
+          "בליעל לאמר קשר",
+          "בליעל לשפט",
+          "בליעל לאמר הקים",
+          "שקר"
+        ],
+        "char_unknown": [
+          "בליעל",
+          "בלרעל",
+          "בלייל",
+          "הליעל",
+          "בלועל",
+          "בליעה",
+          "בליעם",
+          "בליול",
+          "בלריל",
+          "הל"
+        ],
+        "embible_overlap_ensemble": [
+          "בליעל"
+        ],
+        "rank_ensemble": [
+          "בליעל",
+          "הרכב",
+          "ישראל",
+          "העיר",
+          "הבליעל",
+          "בליעל להדיח",
+          "בליעל לאמר קשר",
+          "בליעל לשפט",
+          "בליעל לאמר הקים",
+          "שקר"
+        ],
+        "cwc_word_oracle": [
+          "הבליעל",
+          "אלוהים",
+          "האלהים",
+          "המלחמה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Isaiah:1007:8:1",
+      "scroll": "Isaiah:26",
+      "left_context": [
+        "והאכלתי",
+        "את",
+        "מוניך",
+        "את",
+        "בשרם",
+        "וכעסיס",
+        "דמם",
+        "ישכרון"
+      ],
+      "gold": [
+        "וידעו"
+      ],
+      "right_context": [
+        "כל",
+        "בשר",
+        "כי",
+        "אני",
+        "יהוה",
+        "מושיעך",
+        "וגאלך",
+        "אביר"
+      ],
+      "top10": {
+        "uwc_word": [
+          "וידעו",
+          "וידעו כול",
+          "וידעו וידעו",
+          "וידעו כל בשר",
+          "נאם יהוה וידעו",
+          "וידעו כל ממלכות",
+          "וידעו כל",
+          "וידעו וידעו כול",
+          "וידעו בך",
+          "וידעו כל עמי"
+        ],
+        "char_unknown": [
+          "על",
+          "אל",
+          "עת",
+          "את",
+          "לל",
+          "לת",
+          "עי",
+          "ואת",
+          "עאת",
+          "לאת"
+        ],
+        "embible_overlap_ensemble": [
+          "על",
+          "אל",
+          "עת",
+          "את",
+          "לל"
+        ],
+        "rank_ensemble": [
+          "וידעו",
+          "וידעו כול",
+          "וידעו וידעו",
+          "וידעו כל בשר",
+          "נאם יהוה וידעו",
+          "וידעו כל ממלכות",
+          "וידעו כל",
+          "וידעו וידעו כול",
+          "וידעו בך",
+          "וידעו כל עמי"
+        ],
+        "cwc_word_oracle": [
+          "וידעו",
+          "לעיני",
+          "שידעו",
+          "וידעת",
+          "יכירו",
+          "ויראו",
+          "ואמרו"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_2:3275:9:1",
+      "scroll": "Samuel_2:77",
+      "left_context": [
+        "בני",
+        "רמון",
+        "הבארתי",
+        "רכב",
+        "ובענה",
+        "ויבאו",
+        "כחם",
+        "היום"
+      ],
+      "gold": [
+        "אל"
+      ],
+      "right_context": [
+        "בית",
+        "איש",
+        "בשת",
+        "והוא",
+        "שכב",
+        "את",
+        "משכב",
+        "הצהרים"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אל",
+          "עד",
+          "אל שער",
+          "אל רחבעם",
+          "ויבאו",
+          "על שער",
+          "על",
+          "אל בית אל",
+          "אל דוד",
+          "אל בית לחם"
+        ],
+        "char_unknown": [
+          "אל",
+          "על",
+          "את",
+          "אד",
+          "עת",
+          "אשר",
+          "אי",
+          "כל",
+          "ושר",
+          "ויבות"
+        ],
+        "embible_overlap_ensemble": [
+          "אל",
+          "על",
+          "את"
+        ],
+        "rank_ensemble": [
+          "אל",
+          "עד",
+          "אל שער",
+          "אל רחבעם",
+          "ויבאו",
+          "על שער",
+          "על",
+          "אל בית אל",
+          "אל דוד",
+          "אל בית לחם"
+        ],
+        "cwc_word_oracle": [
+          "אל",
+          "עד",
+          "על",
+          "את",
+          "כל",
+          "עם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_2:3746:8:1",
+      "scroll": "Samuel_2:68",
+      "left_context": [
+        "וישבו",
+        "וישבי",
+        "בנב",
+        "אשר",
+        "בילידי",
+        "הרפה",
+        "ומשקל",
+        "קינו"
+      ],
+      "gold": [
+        "שלש"
+      ],
+      "right_context": [
+        "מאות",
+        "משקל",
+        "נחשת",
+        "והוא",
+        "חגור",
+        "חדשה",
+        "ויאמר",
+        "להכות"
+      ],
+      "top10": {
+        "uwc_word": [
+          "שש",
+          "שבע",
+          "שלש",
+          "שש עשרה",
+          "ארבע",
+          "שלש עשרה",
+          "שש מאות שש",
+          "חמש עשרה",
+          "שלוש",
+          "ארבע עשרה"
+        ],
+        "char_unknown": [
+          "שש",
+          "ששש",
+          "ששע",
+          "חשש",
+          "ושש",
+          "ושלבש",
+          "שמש",
+          "חשע",
+          "ושרבש",
+          "ושע"
+        ],
+        "embible_overlap_ensemble": [
+          "שש"
+        ],
+        "rank_ensemble": [
+          "שש",
+          "שבע",
+          "שלש",
+          "שש עשרה",
+          "ארבע",
+          "שלש עשרה",
+          "שש מאות שש",
+          "חמש עשרה",
+          "שלוש",
+          "ארבע עשרה"
+        ],
+        "cwc_word_oracle": [
+          "שבע",
+          "שלש",
+          "חמש",
+          "תשע",
+          "שתי",
+          "כשש",
+          "עשר",
+          "בשש",
+          "ששה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Chronicles_2:20716:8:1",
+      "scroll": "Chronicles_2:473",
+      "left_context": [
+        "ושש",
+        "מעלות",
+        "לכסא",
+        "וכבש",
+        "בזהב",
+        "לכסא",
+        "מאחזים",
+        "וידות"
+      ],
+      "gold": [
+        "מזה"
+      ],
+      "right_context": [
+        "ומזה",
+        "על",
+        "מקום",
+        "השבת",
+        "ושנים",
+        "אריות",
+        "עמדים",
+        "אצל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "מזה",
+          "וידות מזה",
+          "זהב מזה",
+          "מבין שניהם מזה",
+          "מבין זה",
+          "מזה על זה",
+          "זהב אחוז מזה",
+          "זהב וידות מזה",
+          "וידות וידות מזה",
+          "מבין מזה"
+        ],
+        "char_unknown": [
+          "מזה",
+          "בזה",
+          "כזה",
+          "זזה",
+          "עזה",
+          "אזה",
+          "לזה",
+          "שזה",
+          "וזה",
+          "מזם"
+        ],
+        "embible_overlap_ensemble": [
+          "מזה",
+          "בזה",
+          "כזה"
+        ],
+        "rank_ensemble": [
+          "מזה",
+          "וידות מזה",
+          "זהב מזה",
+          "מבין שניהם מזה",
+          "מבין זה",
+          "מזה על זה",
+          "זהב אחוז מזה",
+          "זהב וידות מזה",
+          "וידות וידות מזה",
+          "מבין מזה"
+        ],
+        "cwc_word_oracle": [
+          "מזה",
+          "מזו",
+          "מכך",
+          "בזה",
+          "כזה",
+          "מכן",
+          "מפה",
+          "לזה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_1:4673:11:1",
+      "scroll": "Samuel_1:87",
+      "left_context": [
+        "עבדך",
+        "כי",
+        "בברית",
+        "יהוה",
+        "הבאת",
+        "את",
+        "עבדך",
+        "עמך"
+      ],
+      "gold": [
+        "ואם"
+      ],
+      "right_context": [
+        "יש",
+        "בי",
+        "עון",
+        "המיתני",
+        "אתה",
+        "ועד",
+        "אביך",
+        "למה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ואם",
+          "ועתה אם",
+          "אם",
+          "על כן אם",
+          "ו אם",
+          "לאמור אם",
+          "לאמר אם",
+          "כי",
+          "כי אם",
+          "אל תירא כי"
+        ],
+        "char_unknown": [
+          "כי",
+          "אמר",
+          "אשר",
+          "ומר",
+          "אכר",
+          "למר",
+          "ושר",
+          "המר",
+          "אמה",
+          "אלר"
+        ],
+        "embible_overlap_ensemble": [
+          "כי",
+          "אשר"
+        ],
+        "rank_ensemble": [
+          "ואם",
+          "ועתה אם",
+          "אם",
+          "על כן אם",
+          "ו אם",
+          "לאמור אם",
+          "לאמר אם",
+          "כי",
+          "כי אם",
+          "אל תירא כי"
+        ],
+        "cwc_word_oracle": [
+          "ואם",
+          "ולו",
+          "אשר",
+          "אבל",
+          "לוא"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ruth:5016:8:1",
+      "scroll": "Ruth:104",
+      "left_context": [
+        "ליני",
+        "הלילה",
+        "והיה",
+        "בבקר",
+        "אם",
+        "יגאלך",
+        "טוב",
+        "יגאל"
+      ],
+      "gold": [
+        "ואם"
+      ],
+      "right_context": [
+        "לא",
+        "יחפץ",
+        "לגאלך",
+        "וגאלתיך",
+        "אנכי",
+        "חי",
+        "יהוה",
+        "שכבי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ואם",
+          "לך ואם",
+          "את האישה ואם",
+          "ואם אתה",
+          "ואם אמר",
+          "טוב ואם",
+          "לא יגאל ואם",
+          "את אמתך ואם",
+          "יגאל לך ואם",
+          "אל האישה ואם"
+        ],
+        "char_unknown": [
+          "אם",
+          "אי",
+          "אך",
+          "ואב",
+          "וי אי",
+          "אאב",
+          "ואם",
+          "וא אי",
+          "ווב",
+          "והוי"
+        ],
+        "embible_overlap_ensemble": [
+          "אם"
+        ],
+        "rank_ensemble": [
+          "ואם",
+          "לך ואם",
+          "את האישה ואם",
+          "ואם אתה",
+          "ואם אמר",
+          "טוב ואם",
+          "לא יגאל ואם",
+          "את אמתך ואם",
+          "יגאל לך ואם",
+          "אל האישה ואם"
+        ],
+        "cwc_word_oracle": [
+          "ואם",
+          "אשר",
+          "שאם",
+          "ואי",
+          "ואת",
+          "ואו",
+          "ואן",
+          "ולו",
+          "דאם",
+          "אין"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Genesis:10221:9:1",
+      "scroll": "Genesis:261",
+      "left_context": [
+        "שרי",
+        "אל",
+        "אברם",
+        "חמסי",
+        "עליך",
+        "אנכי",
+        "נתתי",
+        "שפחתי"
+      ],
+      "gold": [
+        "בחיקך"
+      ],
+      "right_context": [
+        "ותרא",
+        "כי",
+        "הרתה",
+        "ואקל",
+        "בעיניה",
+        "ישפט",
+        "יהוה",
+        "ביני"
+      ],
+      "top10": {
+        "uwc_word": [
+          "בחיקך",
+          "בחיקך ו",
+          "בחיקך כול",
+          "לאישי",
+          "בחיקך חמסי עליך",
+          "בחיקך ו הרתה",
+          "אל שריי",
+          "לאישי חמסי עליך",
+          "בחיקך ותרא שרי",
+          "בחיקך ותקל גברתה"
+        ],
+        "char_unknown": [
+          "לך",
+          "בך",
+          "לי",
+          "שך",
+          "אך",
+          "לה",
+          "לליך",
+          "לם",
+          "אליך",
+          "בליך"
+        ],
+        "embible_overlap_ensemble": [
+          "לך"
+        ],
+        "rank_ensemble": [
+          "בחיקך",
+          "בחיקך ו",
+          "בחיקך כול",
+          "לאישי",
+          "בחיקך חמסי עליך",
+          "בחיקך ו הרתה",
+          "אל שריי",
+          "לאישי חמסי עליך",
+          "בחיקך ותרא שרי",
+          "בחיקך ותקל גברתה"
+        ],
+        "cwc_word_oracle": [
+          "בחיקך",
+          "לאישי",
+          "לפניך",
+          "לאישה",
+          "לאדני",
+          "ליהוה",
+          "לאברם",
+          "לאחיך"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_1:4377:8:1",
+      "scroll": "Samuel_1:96",
+      "left_context": [
+        "ויאמר",
+        "שמואל",
+        "אל",
+        "כל",
+        "העם",
+        "הראיתם",
+        "אשר",
+        "בחר"
+      ],
+      "gold": [
+        "בו"
+      ],
+      "right_context": [
+        "יהוה",
+        "כי",
+        "אין",
+        "כמהו",
+        "בכל",
+        "העם",
+        "וירעו",
+        "כל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "בו",
+          "בו אדוני",
+          "בו בו",
+          "בו יהוה",
+          "בו יהוה משחו",
+          "בו יהוה ברוך",
+          "בו יהוה בחיר",
+          "בו יהוה חי",
+          "יהוה בו משחו",
+          "יהוה בו בחר"
+        ],
+        "char_unknown": [
+          "בכם",
+          "בכם את",
+          "בכם אם",
+          "בהם",
+          "בו",
+          "בכם אי",
+          "לכם את",
+          "בכם נת",
+          "לכם",
+          "לכם אם"
+        ],
+        "embible_overlap_ensemble": [
+          "בכם",
+          "בו",
+          "בהם"
+        ],
+        "rank_ensemble": [
+          "בו",
+          "בו אדוני",
+          "בו בו",
+          "בו יהוה",
+          "בו יהוה משחו",
+          "בו יהוה ברוך",
+          "בו יהוה בחיר",
+          "בו יהוה חי",
+          "יהוה בו משחו",
+          "יהוה בו בחר"
+        ],
+        "cwc_word_oracle": [
+          "בו",
+          "לו",
+          "בי",
+          "בה",
+          "בך",
+          "את",
+          "בם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Genesis:11121:9:1",
+      "scroll": "Genesis:264",
+      "left_context": [
+        "את",
+        "אחיכם",
+        "הקטן",
+        "אלי",
+        "ואדעה",
+        "כי",
+        "לא",
+        "מרגלים"
+      ],
+      "gold": [
+        "אתם"
+      ],
+      "right_context": [
+        "כי",
+        "כנים",
+        "אתם",
+        "את",
+        "אחיכם",
+        "אתן",
+        "לכם",
+        "ואת"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אתם",
+          "אתם ידעתי",
+          "הם",
+          "אתם ואדע",
+          "אתם אף",
+          "אתם ואף",
+          "אתם וידעתם",
+          "אתם וידעו",
+          "אתם ואם",
+          "הם ידעתי"
+        ],
+        "char_unknown": [
+          "אתם",
+          "אתכם",
+          "אתיכם",
+          "אתתם",
+          "אליכם",
+          "אתכי",
+          "אתםם",
+          "אתים",
+          "אכם",
+          "הם"
+        ],
+        "embible_overlap_ensemble": [
+          "אתם"
+        ],
+        "rank_ensemble": [
+          "אתם",
+          "אתם ידעתי",
+          "הם",
+          "אתם ואדע",
+          "אתם אף",
+          "אתם ואף",
+          "אתם וידעתם",
+          "אתם וידעו",
+          "אתם ואם",
+          "הם ידעתי"
+        ],
+        "cwc_word_oracle": [
+          "אתם",
+          "המה",
+          "הוא",
+          "אתה",
+          "היו",
+          "אני",
+          "היא",
+          "הנה",
+          "דבר"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_1:7771:8:1",
+      "scroll": "Kings_1:189",
+      "left_context": [
+        "ויתר",
+        "דברי",
+        "עמרי",
+        "אשר",
+        "עשה",
+        "וגבורתו",
+        "אשר",
+        "עשה"
+      ],
+      "gold": [
+        "הלא"
+      ],
+      "right_context": [
+        "הם",
+        "כתובים",
+        "על",
+        "ספר",
+        "דברי",
+        "הימים",
+        "למלכי",
+        "ישראל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "הלוא",
+          "על ישראל הלוא",
+          "את ישראל הלוא",
+          "עם ישראל הלוא",
+          "ישראל הלוא",
+          "אחאב הלוא",
+          "אביה הלוא",
+          "בחיי אביו הלוא",
+          "לפני יהוה הלוא",
+          "מלך ישראל הלוא"
+        ],
+        "char_unknown": [
+          "גם",
+          "גף",
+          "גי",
+          "אם",
+          "גן",
+          "היר",
+          "כם",
+          "ההר",
+          "היי",
+          "היה"
+        ],
+        "embible_overlap_ensemble": [
+          "גם"
+        ],
+        "rank_ensemble": [
+          "הלוא",
+          "על ישראל הלוא",
+          "את ישראל הלוא",
+          "עם ישראל הלוא",
+          "ישראל הלוא",
+          "אחאב הלוא",
+          "אביה הלוא",
+          "בחיי אביו הלוא",
+          "לפני יהוה הלוא",
+          "מלך ישראל הלוא"
+        ],
+        "cwc_word_oracle": [
+          "הלא",
+          "הרי",
+          "הנה",
+          "אשר",
+          "עוד",
+          "הבל",
+          "עתה",
+          "כבר"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Exodus:22691:9:1",
+      "scroll": "Exodus:521",
+      "left_context": [
+        "הכרבים",
+        "פרשי",
+        "כנפים",
+        "למעלה",
+        "סככים",
+        "בכנפיהם",
+        "על",
+        "הכפרת"
+      ],
+      "gold": [
+        "ופניהם"
+      ],
+      "right_context": [
+        "איש",
+        "אל",
+        "אחיו",
+        "אל",
+        "הכפרת",
+        "יהיו",
+        "פני",
+        "הכרבים"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ופניהם",
+          "ופניהם איש",
+          "פניהם",
+          "סביב ופניהם",
+          "יהיו פני הכרבים",
+          "סביב ופניהם איש",
+          "מלמעלה ופניהם",
+          "אשר פניהם",
+          "אשר עליו ופניהם",
+          "יהיו פניהם"
+        ],
+        "char_unknown": [
+          "יביו",
+          "יהיו",
+          "אל",
+          "יבאו",
+          "יהאו",
+          "יברו",
+          "יבוו",
+          "יבנו",
+          "יהרו",
+          "יהוו"
+        ],
+        "embible_overlap_ensemble": [
+          "יביו",
+          "יהיו",
+          "אל",
+          "יבאו",
+          "יהאו"
+        ],
+        "rank_ensemble": [
+          "ופניהם",
+          "ופניהם איש",
+          "פניהם",
+          "סביב ופניהם",
+          "יהיו פני הכרבים",
+          "סביב ופניהם איש",
+          "מלמעלה ופניהם",
+          "אשר פניהם",
+          "אשר עליו ופניהם",
+          "יהיו פניהם"
+        ],
+        "cwc_word_oracle": [
+          "ופניהם",
+          "נוגעים",
+          "מלמעלה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Obadiah:6531:8:1",
+      "scroll": "Obadiah:147",
+      "left_context": [
+        "וגלת",
+        "החל",
+        "הזה",
+        "לבני",
+        "ישראל",
+        "אשר",
+        "כנענים",
+        "עד"
+      ],
+      "gold": [
+        "צרפת"
+      ],
+      "right_context": [
+        "וגלת",
+        "ירושלם",
+        "אשר",
+        "בספרד",
+        "ירשו",
+        "את",
+        "ערי",
+        "הנגב"
+      ],
+      "top10": {
+        "uwc_word": [
+          "היום הזה",
+          "צרפת",
+          "הנה",
+          "אפסי ארץ",
+          "היום",
+          "היום הזה כול",
+          "ים הערבה",
+          "ארץ מצרים",
+          "גבול כוש",
+          "היום הזה ו"
+        ],
+        "char_unknown": [
+          "היום",
+          "היוה",
+          "כה",
+          "הוום",
+          "היוב",
+          "הירם",
+          "עה",
+          "הווה",
+          "עוה",
+          "אה"
+        ],
+        "embible_overlap_ensemble": [
+          "היום",
+          "כה"
+        ],
+        "rank_ensemble": [
+          "היום הזה",
+          "צרפת",
+          "הנה",
+          "אפסי ארץ",
+          "היום",
+          "היום הזה כול",
+          "ים הערבה",
+          "ארץ מצרים",
+          "גבול כוש",
+          "היום הזה ו"
+        ],
+        "cwc_word_oracle": [
+          "צרפת",
+          "היום",
+          "שנער",
+          "אדום",
+          "עולם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Leviticus:3083:9:1",
+      "scroll": "Leviticus:53",
+      "left_context": [
+        "אתם",
+        "לבניכם",
+        "אחריכם",
+        "לרשת",
+        "אחזה",
+        "לעלם",
+        "בהם",
+        "תעבדו"
+      ],
+      "gold": [
+        "ובאחיכם"
+      ],
+      "right_context": [
+        "בני",
+        "ישראל",
+        "איש",
+        "באחיו",
+        "לא",
+        "תרדה",
+        "בו",
+        "בפרך"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ובאחיכם בני ישראל",
+          "ובאחיכם",
+          "ובאחיכם כול",
+          "ובאחיכם כל",
+          "ובאחיכם בני",
+          "ובאחיכם בני משפחת",
+          "ובאחיכם בני אהרון",
+          "את כל עבדת",
+          "ובאחיכם בו",
+          "ובאחיכם אתו"
+        ],
+        "char_unknown": [
+          "את",
+          "את כל",
+          "את כת",
+          "ות כל",
+          "את כם",
+          "כת",
+          "אל",
+          "את כי",
+          "ות כת",
+          "בת כל"
+        ],
+        "embible_overlap_ensemble": [
+          "את"
+        ],
+        "rank_ensemble": [
+          "ובאחיכם בני ישראל",
+          "ובאחיכם",
+          "ובאחיכם כול",
+          "ובאחיכם כל",
+          "ובאחיכם בני",
+          "ובאחיכם בני משפחת",
+          "ובאחיכם בני אהרון",
+          "את כל עבדת",
+          "ובאחיכם בו",
+          "ובאחיכם אתו"
+        ],
+        "cwc_word_oracle": [
+          "ובאחיכם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Leviticus:3039:9:1",
+      "scroll": "Leviticus:56",
+      "left_context": [
+        "אל",
+        "בני",
+        "ישראל",
+        "ואמרת",
+        "אלהם",
+        "כי",
+        "תבאו",
+        "אל"
+      ],
+      "gold": [
+        "הארץ"
+      ],
+      "right_context": [
+        "אשר",
+        "אני",
+        "נתן",
+        "לכם",
+        "ושבתה",
+        "הארץ",
+        "שבת",
+        "ליהוה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "הארץ",
+          "ארץ מושבתיכם",
+          "הארץ אל הארץ",
+          "הארץ כול",
+          "הארץ כנען",
+          "הארץ שבת הארץ",
+          "הארץ שבת ליהוה",
+          "הארץ אל ישביה",
+          "ארץ מושבתיכם כול",
+          "הארץ אשר אמרתי"
+        ],
+        "char_unknown": [
+          "כל",
+          "הארץ",
+          "השרץ",
+          "האבץ",
+          "השבץ",
+          "האוץ",
+          "השוץ",
+          "השת",
+          "השר",
+          "המריה"
+        ],
+        "embible_overlap_ensemble": [
+          "הארץ",
+          "כל"
+        ],
+        "rank_ensemble": [
+          "הארץ",
+          "ארץ מושבתיכם",
+          "הארץ אל הארץ",
+          "הארץ כול",
+          "הארץ כנען",
+          "הארץ שבת הארץ",
+          "הארץ שבת ליהוה",
+          "הארץ אל ישביה",
+          "ארץ מושבתיכם כול",
+          "הארץ אשר אמרתי"
+        ],
+        "cwc_word_oracle": [
+          "הארץ",
+          "מקדש",
+          "ארצי",
+          "הלחם",
+          "היבל",
+          "ארצך"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_2:8254:12:1",
+      "scroll": "Kings_2:196",
+      "left_context": [
+        "דבר",
+        "יהוה",
+        "הוא",
+        "אשר",
+        "דבר",
+        "ביד",
+        "עבדו",
+        "אליהו"
+      ],
+      "gold": [
+        "התשבי"
+      ],
+      "right_context": [
+        "לאמר",
+        "בחלק",
+        "יזרעאל",
+        "יאכלו",
+        "הכלבים",
+        "את",
+        "בשר",
+        "איזבל"
+      ],
+      "top10": {
+        "uwc_word": [
+          "התשבי",
+          "בן ברכאל הבוזי",
+          "בן שפט",
+          "הנביא",
+          "בן האלוהים",
+          "בן נבט",
+          "מלך ישראל",
+          "הנביא בן שפט",
+          "בן הדד",
+          "התשבי מתושבי גלעד"
+        ],
+        "char_unknown": [
+          "הנינו",
+          "הנמנו",
+          "הבינו",
+          "אנינו",
+          "הנבנו",
+          "הבמנו",
+          "הנינה",
+          "אנמנו",
+          "אבינו",
+          "הה"
+        ],
+        "embible_overlap_ensemble": [
+          "הנינו",
+          "הנמנו",
+          "הבינו",
+          "אנינו",
+          "הנבנו"
+        ],
+        "rank_ensemble": [
+          "התשבי",
+          "בן ברכאל הבוזי",
+          "בן שפט",
+          "הנביא",
+          "בן האלוהים",
+          "בן נבט",
+          "מלך ישראל",
+          "הנביא בן שפט",
+          "בן הדד",
+          "התשבי מתושבי גלעד"
+        ],
+        "cwc_word_oracle": [
+          "התשבי",
+          "הנביא",
+          "לאמור",
+          "ישראל",
+          "ויצום",
+          "הכוהן",
+          "ויאמר",
+          "בחורב",
+          "צבאות"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ezekiel:16849:8:1",
+      "scroll": "Ezekiel:380",
+      "left_context": [
+        "והוצאתים",
+        "מן",
+        "העמים",
+        "וקבצתים",
+        "מן",
+        "הארצות",
+        "והביאתים",
+        "אל"
+      ],
+      "gold": [
+        "אדמתם"
+      ],
+      "right_context": [
+        "ורעיתים",
+        "אל",
+        "הרי",
+        "ישראל",
+        "באפיקים",
+        "ובכל",
+        "מושבי",
+        "הארץ"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אדמתם",
+          "ארץ יהודה",
+          "ארץ ישראל",
+          "ארץ הכרמל",
+          "ארץ צפון",
+          "אדמת ישראל",
+          "ארץ אבותיכם",
+          "תוך בני ישראל",
+          "ארץ בית ישראל",
+          "תוך ארץ ישראל"
+        ],
+        "char_unknown": [
+          "הערים",
+          "העמים",
+          "הארץ",
+          "הרי העריל",
+          "הארים",
+          "הרי יעריל",
+          "הרי הערים",
+          "הרי יערים",
+          "האמים",
+          "הרי העויל"
+        ],
+        "embible_overlap_ensemble": [
+          "הארץ"
+        ],
+        "rank_ensemble": [
+          "אדמתם",
+          "ארץ יהודה",
+          "ארץ ישראל",
+          "ארץ הכרמל",
+          "ארץ צפון",
+          "אדמת ישראל",
+          "ארץ אבותיכם",
+          "תוך בני ישראל",
+          "ארץ בית ישראל",
+          "תוך ארץ ישראל"
+        ],
+        "cwc_word_oracle": [
+          "אדמתם",
+          "מקומם",
+          "עריכם",
+          "עריהם",
+          "הגוים",
+          "ישראל",
+          "יהודה",
+          "מצרים"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Chronicles_1:15715:8:1",
+      "scroll": "Chronicles_1:356",
+      "left_context": [
+        "ובני",
+        "עמון",
+        "ראו",
+        "כי",
+        "נס",
+        "ארם",
+        "וינוסו",
+        "גם"
+      ],
+      "gold": [
+        "הם"
+      ],
+      "right_context": [
+        "מפני",
+        "אבשי",
+        "אחיו",
+        "ויבאו",
+        "העירה",
+        "ויבא",
+        "יואב",
+        "ירושלם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "הם",
+          "בני עמון",
+          "המה",
+          "הם מפניו",
+          "בני עמון מפניו",
+          "המה מפניו",
+          "הם בני עמון",
+          "הוא",
+          "הם אל יואב",
+          "בני ישראל"
+        ],
+        "char_unknown": [
+          "הם",
+          "הן",
+          "כם",
+          "הם שים",
+          "ההם",
+          "החם",
+          "ההא",
+          "החא",
+          "כם שים",
+          "הםושים"
+        ],
+        "embible_overlap_ensemble": [
+          "הם"
+        ],
+        "rank_ensemble": [
+          "הם",
+          "בני עמון",
+          "המה",
+          "הם מפניו",
+          "בני עמון מפניו",
+          "המה מפניו",
+          "הם בני עמון",
+          "הוא",
+          "הם אל יואב",
+          "בני ישראל"
+        ],
+        "cwc_word_oracle": [
+          "הם",
+          "כן"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Numbers:14040:8:1",
+      "scroll": "Numbers:338",
+      "left_context": [
+        "ולזבח",
+        "השלמים",
+        "בקר",
+        "שנים",
+        "אילם",
+        "חמשה",
+        "עתדים",
+        "חמשה"
+      ],
+      "gold": [
+        "כבשים"
+      ],
+      "right_context": [
+        "בני",
+        "שנה",
+        "חמשה",
+        "זה",
+        "קרבן",
+        "שלמיאל",
+        "בן",
+        "צורישדי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "כבשים חמשה כבשים",
+          "כבשים",
+          "כבשים חמשה",
+          "כבשים שניים",
+          "כבשים חמישה כבשים",
+          "בני בקר",
+          "כבשים חמישה",
+          "כבשים בני שנה",
+          "כבשים ארבעה כבשים",
+          "כבשים חמשה תמימם"
+        ],
+        "char_unknown": [
+          "זה",
+          "עתדים",
+          "זה ים חמשה",
+          "עבדים",
+          "זהיים חמשה",
+          "זנ ים חמשה",
+          "זם",
+          "זניים חמשה",
+          "זהרים חמשה",
+          "זהוים חמשה"
+        ],
+        "embible_overlap_ensemble": [
+          "זה",
+          "עתדים",
+          "זה ים חמשה",
+          "עבדים",
+          "זהיים חמשה"
+        ],
+        "rank_ensemble": [
+          "כבשים חמשה כבשים",
+          "כבשים",
+          "כבשים חמשה",
+          "כבשים שניים",
+          "כבשים חמישה כבשים",
+          "בני בקר",
+          "כבשים חמישה",
+          "כבשים בני שנה",
+          "כבשים ארבעה כבשים",
+          "כבשים חמשה תמימם"
+        ],
+        "cwc_word_oracle": [
+          "כבשים",
+          "תמימם",
+          "אמרין",
+          "רגלים",
+          "ולזבח"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Kings_2:8334:8:1",
+      "scroll": "Kings_2:203",
+      "left_context": [
+        "בשנת",
+        "עשרים",
+        "ושלש",
+        "שנה",
+        "ליואש",
+        "בן",
+        "אחזיהו",
+        "מלך"
+      ],
+      "gold": [
+        "יהודה"
+      ],
+      "right_context": [
+        "מלך",
+        "יהואחז",
+        "בן",
+        "יהוא",
+        "על",
+        "ישראל",
+        "בשמרון",
+        "שבע"
+      ],
+      "top10": {
+        "uwc_word": [
+          "יהודה",
+          "יורם בן אחאב",
+          "יהודה אשר",
+          "יהורם בן אחאב",
+          "יהודה מלך ישראל",
+          "יהודה בשמרון",
+          "יואש בן אחזיהו",
+          "יורם מלך יהודה",
+          "יהודה מלך יהודה",
+          "יהודה אז"
+        ],
+        "char_unknown": [
+          "ישראל",
+          "ימראל",
+          "ששראל",
+          "ישראה",
+          "יהראל",
+          "ישרול",
+          "ישואל",
+          "ישריל",
+          "ישראן",
+          "ישראם"
+        ],
+        "embible_overlap_ensemble": [
+          "ישראל"
+        ],
+        "rank_ensemble": [
+          "יהודה",
+          "יורם בן אחאב",
+          "יהודה אשר",
+          "יהורם בן אחאב",
+          "יהודה מלך ישראל",
+          "יהודה בשמרון",
+          "יואש בן אחזיהו",
+          "יורם מלך יהודה",
+          "יהודה מלך יהודה",
+          "יהודה אז"
+        ],
+        "cwc_word_oracle": [
+          "יהודה",
+          "ישראל",
+          "יהואש",
+          "יהורם",
+          "אבתיו",
+          "ירבעם",
+          "יהודא"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Samuel_1:4794:8:1",
+      "scroll": "Samuel_1:99",
+      "left_context": [
+        "וכי",
+        "ימצא",
+        "איש",
+        "את",
+        "איבו",
+        "ושלחו",
+        "בדרך",
+        "טובה"
+      ],
+      "gold": [
+        "ויהוה"
+      ],
+      "right_context": [
+        "ישלמך",
+        "טובה",
+        "תחת",
+        "היום",
+        "הזה",
+        "אשר",
+        "עשיתה",
+        "לי"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ויהוה",
+          "יהוה",
+          "הנני",
+          "כי יהוה",
+          "לאמר יהוה",
+          "כי יהוה אלוהיך",
+          "והיה יהוה",
+          "כול אשר",
+          "לאמור יהוה",
+          "גם אנוכי"
+        ],
+        "char_unknown": [
+          "כי",
+          "וכר",
+          "ושר",
+          "אי",
+          "ולר",
+          "אכר",
+          "אשר",
+          "ואור",
+          "ואר",
+          "לי"
+        ],
+        "embible_overlap_ensemble": [
+          "כי"
+        ],
+        "rank_ensemble": [
+          "ויהוה",
+          "יהוה",
+          "הנני",
+          "כי יהוה",
+          "לאמר יהוה",
+          "כי יהוה אלוהיך",
+          "והיה יהוה",
+          "כול אשר",
+          "לאמור יהוה",
+          "גם אנוכי"
+        ],
+        "cwc_word_oracle": [
+          "ויהוה",
+          "אנוכי",
+          "יהווה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Exodus:22456:9:1",
+      "scroll": "Exodus:514",
+      "left_context": [
+        "משה",
+        "אל",
+        "אהרן",
+        "קח",
+        "צנצנת",
+        "אחת",
+        "ותן",
+        "שמה"
+      ],
+      "gold": [
+        "מלא"
+      ],
+      "right_context": [
+        "העמר",
+        "מן",
+        "והנח",
+        "אתו",
+        "לפני",
+        "יהוה",
+        "למשמרת",
+        "לדרתיכם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "מלא שני",
+          "מלא",
+          "מלא העמר מן",
+          "מלא העומר מן",
+          "מלא העמר מלא",
+          "מלא העמר",
+          "מלא העמר שני",
+          "לחם טהור מלא",
+          "לפני יהוה מלא",
+          "מלא העומר מלא"
+        ],
+        "char_unknown": [
+          "את",
+          "אל",
+          "אן",
+          "מת",
+          "מל",
+          "מן",
+          "את כל",
+          "את כת",
+          "לת כל",
+          "לת כת"
+        ],
+        "embible_overlap_ensemble": [
+          "את"
+        ],
+        "rank_ensemble": [
+          "מלא שני",
+          "מלא",
+          "מלא העמר מן",
+          "מלא העומר מן",
+          "מלא העמר מלא",
+          "מלא העמר",
+          "מלא העמר שני",
+          "לחם טהור מלא",
+          "לפני יהוה מלא",
+          "מלא העומר מלא"
+        ],
+        "cwc_word_oracle": [
+          "מלא",
+          "שני",
+          "שתי",
+          "חצי",
+          "לחם",
+          "שבע",
+          "לקח",
+          "מלג"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ezekiel:16704:9:1",
+      "scroll": "Ezekiel:372",
+      "left_context": [
+        "יהיה",
+        "עוד",
+        "לבית",
+        "ישראל",
+        "סלון",
+        "ממאיר",
+        "וקוץ",
+        "מכאב"
+      ],
+      "gold": [
+        "מכל"
+      ],
+      "right_context": [
+        "סביבתם",
+        "השאטים",
+        "אותם",
+        "וידעו",
+        "כי",
+        "אני",
+        "אדני",
+        "יהוה"
+      ],
+      "top10": {
+        "uwc_word": [
+          "על כל",
+          "לכל",
+          "כול",
+          "לכול",
+          "על",
+          "בכל",
+          "אל כל",
+          "מכול",
+          "כל",
+          "מכל"
+        ],
+        "char_unknown": [
+          "על",
+          "בכל",
+          "לבני",
+          "אל",
+          "לכל",
+          "כל",
+          "בכי",
+          "לבשי",
+          "לנני",
+          "לכי"
+        ],
+        "embible_overlap_ensemble": [
+          "על",
+          "בכל",
+          "לכל",
+          "אל"
+        ],
+        "rank_ensemble": [
+          "על כל",
+          "לכל",
+          "כול",
+          "לכול",
+          "על",
+          "בכל",
+          "אל כל",
+          "מכול",
+          "כל",
+          "מכל"
+        ],
+        "cwc_word_oracle": [
+          "לכל",
+          "כול",
+          "בכל",
+          "מכל",
+          "וכל",
+          "ערי",
+          "אשר"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Chronicles_2:20689:8:1",
+      "scroll": "Chronicles_2:483",
+      "left_context": [
+        "ומן",
+        "בני",
+        "ישראל",
+        "אשר",
+        "לא",
+        "נתן",
+        "שלמה",
+        "לעבדים"
+      ],
+      "gold": [
+        "למלאכתו"
+      ],
+      "right_context": [
+        "כי",
+        "המה",
+        "אנשי",
+        "מלחמה",
+        "ושרי",
+        "שלישיו",
+        "ושרי",
+        "רכבו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "לו",
+          "בירושלים",
+          "מבני ישראל",
+          "בירושלם",
+          "לדויד",
+          "כסף",
+          "לשלמה",
+          "ליהוה",
+          "לבני ישראל",
+          "במלחמה"
+        ],
+        "char_unknown": [
+          "הו",
+          "הם",
+          "לו",
+          "המה",
+          "אמה",
+          "הי",
+          "המו",
+          "לם",
+          "אמו",
+          "המע"
+        ],
+        "embible_overlap_ensemble": [
+          "לו"
+        ],
+        "rank_ensemble": [
+          "לו",
+          "בירושלים",
+          "מבני ישראל",
+          "בירושלם",
+          "לדויד",
+          "כסף",
+          "לשלמה",
+          "ליהוה",
+          "לבני ישראל",
+          "במלחמה"
+        ],
+        "cwc_word_oracle": [
+          "בירושלם"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Lamentations:7047:9:1",
+      "scroll": "Lamentations:171",
+      "left_context": [
+        "יעיב",
+        "באפו",
+        "אדני",
+        "את",
+        "בת",
+        "ציון",
+        "השליך",
+        "משמים"
+      ],
+      "gold": [
+        "ארץ"
+      ],
+      "right_context": [
+        "תפארת",
+        "ישראל",
+        "ולא",
+        "זכר",
+        "הדם",
+        "רגליו",
+        "ביום",
+        "אפו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "ארץ תפארת",
+          "ארץ",
+          "ארץ תפארת עם",
+          "ארץ תפארת ישראל",
+          "ארץ תפארת יהודה",
+          "ארץ תפארת עמו",
+          "ארץ תפארת צבי",
+          "ארץ תפארת ל",
+          "ארץ ו תפארת",
+          "ארץ ו השליך"
+        ],
+        "char_unknown": [
+          "את",
+          "אל",
+          "לכל",
+          "עת",
+          "על",
+          "ללל",
+          "כת",
+          "כל",
+          "להל",
+          "מכל"
+        ],
+        "embible_overlap_ensemble": [
+          "את"
+        ],
+        "rank_ensemble": [
+          "ארץ תפארת",
+          "ארץ",
+          "ארץ תפארת עם",
+          "ארץ תפארת ישראל",
+          "ארץ תפארת יהודה",
+          "ארץ תפארת עמו",
+          "ארץ תפארת צבי",
+          "ארץ תפארת ל",
+          "ארץ ו תפארת",
+          "ארץ ו השליך"
+        ],
+        "cwc_word_oracle": [
+          "ארץ",
+          "מטה",
+          "עמו",
+          "שמש",
+          "עול",
+          "כסא"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Lamentations:7056:8:1",
+      "scroll": "Lamentations:170",
+      "left_context": [
+        "ישבו",
+        "לארץ",
+        "ידמו",
+        "זקני",
+        "בת",
+        "ציון",
+        "העלו",
+        "עפר"
+      ],
+      "gold": [
+        "על"
+      ],
+      "right_context": [
+        "ראשם",
+        "חגרו",
+        "שקים",
+        "הורידו",
+        "לארץ",
+        "ראשן",
+        "בתולת",
+        "ירושלם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "על",
+          "על עפר",
+          "עולם על",
+          "על עפר על",
+          "מצאו על",
+          "ואדמה על",
+          "על ראשם על",
+          "ארץ על",
+          "בציון על",
+          "ירושלם על"
+        ],
+        "char_unknown": [
+          "על",
+          "לארץ",
+          "מארץ",
+          "מעל",
+          "ועל",
+          "בארץ",
+          "תעל",
+          "אל",
+          "וררו על",
+          "לתרץ"
+        ],
+        "embible_overlap_ensemble": [
+          "על",
+          "מעל"
+        ],
+        "rank_ensemble": [
+          "על",
+          "על עפר",
+          "עולם על",
+          "על עפר על",
+          "מצאו על",
+          "ואדמה על",
+          "על ראשם על",
+          "ארץ על",
+          "בציון על",
+          "ירושלם על"
+        ],
+        "cwc_word_oracle": [
+          "על",
+          "עד",
+          "אל",
+          "את",
+          "מן"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Ezra:3939:8:1",
+      "scroll": "Ezra:78",
+      "left_context": [
+        "ומבני",
+        "הכהנים",
+        "בני",
+        "חביה",
+        "בני",
+        "הקוץ",
+        "בני",
+        "ברזלי"
+      ],
+      "gold": [
+        "אשר"
+      ],
+      "right_context": [
+        "לקח",
+        "מבנות",
+        "ברזלי",
+        "הגלעדי",
+        "אשה",
+        "ויקרא",
+        "על",
+        "שמם"
+      ],
+      "top10": {
+        "uwc_word": [
+          "אשר",
+          "בני ברזלי אשר",
+          "בני יהודה",
+          "בני מיכל אשר",
+          "בני יהודה אשר",
+          "בני דוד אשר",
+          "אשר לקח",
+          "בני ברזלי",
+          "בן יהודה",
+          "הגלעדי אישה"
+        ],
+        "char_unknown": [
+          "אשר",
+          "הגלעדי",
+          "כי",
+          "אשה",
+          "הגלעיי",
+          "השר",
+          "אלר",
+          "הגהעדי",
+          "הגלידי",
+          "הגלודי"
+        ],
+        "embible_overlap_ensemble": [
+          "אשר",
+          "הגלעדי",
+          "אשה"
+        ],
+        "rank_ensemble": [
+          "אשר",
+          "בני ברזלי אשר",
+          "בני יהודה",
+          "בני מיכל אשר",
+          "בני יהודה אשר",
+          "בני דוד אשר",
+          "אשר לקח",
+          "בני ברזלי",
+          "בן יהודה",
+          "הגלעדי אישה"
+        ],
+        "cwc_word_oracle": [
+          "אשר",
+          "המה",
+          "הוא",
+          "בני",
+          "כול",
+          "אשה"
+        ]
+      }
+    },
+    {
+      "item_id": "embible-bible:test:Judges:1589:9:1",
+      "scroll": "Judges:35",
+      "left_context": [
+        "מהרה",
+        "אל",
+        "הנער",
+        "נשא",
+        "כליו",
+        "ויאמר",
+        "לו",
+        "שלף"
+      ],
+      "gold": [
+        "חרבך"
+      ],
+      "right_context": [
+        "ומותתני",
+        "פן",
+        "יאמרו",
+        "לי",
+        "אשה",
+        "הרגתהו",
+        "וידקרהו",
+        "נערו"
+      ],
+      "top10": {
+        "uwc_word": [
+          "נא",
+          "חרבך",
+          "חרבך על ירך",
+          "נא חרבך",
+          "נא ידך",
+          "ידיך",
+          "חרבך אל ירך",
+          "אתה",
+          "חרבך חרבך",
+          "נא ידיך"
+        ],
+        "char_unknown": [
+          "לי",
+          "ני",
+          "אני",
+          "נני",
+          "לני",
+          "הי",
+          "אלי",
+          "הני",
+          "לו",
+          "אלני"
+        ],
+        "embible_overlap_ensemble": [
+          "לי",
+          "ני",
+          "אני",
+          "נני",
+          "לני"
+        ],
+        "rank_ensemble": [
+          "נא",
+          "חרבך",
+          "חרבך על ירך",
+          "נא חרבך",
+          "נא ידך",
+          "ידיך",
+          "חרבך אל ירך",
+          "אתה",
+          "חרבך חרבך",
+          "נא ידיך"
+        ],
+        "cwc_word_oracle": [
+          "חרבך",
+          "ידיך",
+          "נפשך",
+          "ראשך",
+          "אותי",
+          "נפשי",
+          "צעדי",
+          "נעלך",
+          "עליך",
+          "ראשי"
+        ]
+      }
+    }
+  ]
+}

@@ -39,6 +39,7 @@ interchangeable and must not be collapsed into one accuracy headline.
 | RAG ablation on those targets | Same 74 targets | 63.5% to 63.5% Top-10 | No measured improvement |
 | Multiword RAG pilot | 100 held-out Text-Fabric spans | 7.0% to 9.0% exact-sequence Top-10 | Descriptive pilot; word-slot count is supplied and uncertainty is too large for a paper claim |
 | Embible-style synthetic-damage baseline | 30 artificially hidden spans from held-out DSS scrolls | UWC 16.7%, character 6.7%, Embible overlap ensemble 6.7%, rank ensemble 10.0% exact Top-10 | Known-answer pilot, not real-lacuna evaluation; neither ensemble improves UWC and all 2–3 word exact scores are 0% |
+| Bible domain-transfer diagnostic | 120 spans from Embible's held-out Biblical verses | UWC exact Top-10: 80.0%, 42.5%, 27.5% for 1/2/3 words | Same DSS-trained model and decoder; the large DSS-to-Bible gap identifies domain generalization as a major bottleneck |
 
 The physical-constraint ablation on the 74 Qumran Digital targets scores 9.5%
 Top-10 without visible-letter and approximate-length constraints versus 63.5%
@@ -98,6 +99,9 @@ and scholar-evaluation track, not an automatic accuracy test.
 
 # Run only the Embible-style character/word matrix
 .venv/bin/python eval/run_all_experiments.py --pilots --only embible
+
+# Run the fixed-decoder Bible transfer diagnostic
+.venv/bin/python eval/run_all_experiments.py --pilots --only bible-transfer
 ```
 
 The runner includes only the supported pipeline. Older experimental scripts may

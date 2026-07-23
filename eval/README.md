@@ -8,6 +8,7 @@ Only the following scripts feed the current evidence register:
 - `score_qd_researcher_benchmark.py`
 - `tf_preserved_rag_multiword_benchmark.py`
 - `tf_embible_dss_benchmark.py`
+- `embible_bible_transfer_benchmark.py`
 - `run_all_experiments.py`
 
 All other evaluation scripts are exploratory unless they are migrated into the

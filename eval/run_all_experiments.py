@@ -69,6 +69,15 @@ EXPERIMENTS = (
         ),
         "pilots",
     ),
+    Experiment(
+        "bible-transfer",
+        "Fixed-decoder transfer diagnostic on Embible Biblical verses",
+        (
+            "eval/embible_bible_transfer_benchmark.py",
+            "--local-files-only",
+        ),
+        "pilots",
+    ),
 )
 
 

@@ -171,6 +171,21 @@ penalties and ensemble weight are selected on development scrolls by exact-span
 performance, not perplexity. Gold length and boundaries are confined to
 explicitly labelled oracle diagnostics.
 
+### 3.5 Fixed-decoder Bible transfer diagnostic
+
+To distinguish a weak completion method from a DSS domain-generalization
+failure, run the identical DSS-trained models and unknown-length decoder on
+Embible's released Biblical validation/test split. Restore each masked row by
+matching it to the canonical unpointed verse at the pinned upstream commit,
+exclude ambiguous matches, and then create the same contiguous 1/2/3-word
+damage used in the DSS diagnostic. Tune penalties and ensemble weight only on
+Biblical validation verses and report the held-out test verses separately.
+
+This diagnostic changes the text domain while holding the task, decoder,
+candidate limits, and metrics fixed. Biblical text remains evaluation-only.
+It is not a reproduction of Embible's random masking and must not be compared
+directly to Embible's published WordHit tables.
+
 ## 4. Evaluation tracks
 
 ### Track A — synthetic preserved-ink recovery

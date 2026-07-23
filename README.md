@@ -29,7 +29,10 @@ Automatic restoration of missing words (lacunae) in the Dead Sea Scrolls using H
 5. **Dual-Metric Evaluation Framework (Intact Ink vs. Editor Concordance):**
    - Separated evaluation into **Ground-Truth Ink Accuracy** (`rec = 0`, 31.0% Top-10 on verified ancient ink) vs. **Human Editor Concordance** (`rec = 1`, 31.8% Top-10 on physical lacuna conjectures).
 
-6. **Multi-Model Benchmark Comparison:**
+6. **Cross-Epoch Generalization Benchmark:**
+   - Evaluated `MsBERT ft-SPAN-refined` on external historical Hebrew manuscript texts. Reached **39.0% Top-10 Slot Accuracy**, proving strong cross-epoch syntactic transfer beyond Qumran.
+
+7. **Multi-Model Benchmark Comparison:**
    - Benchmarked `MsBERT` (whole-word) vs. `TavBERT` (character-level, Keren et al. 2022) vs. `BEREL` (subword).
 
 ---

@@ -24,8 +24,8 @@ chunks, and 27,814 lacuna records.
 Text-Fabric attributes the source transcription to Martin G. Abegg Jr., James
 E. Bowley, and Edward M. Cook, based on Martin Abegg's data files. Its `rec`
 feature identifies a modern reconstruction but does **not** identify an editor
-or edition per reading. This repository therefore does not currently measure
-agreement against DJD, Qimron, or SQE as separate researchers.
+or edition per reading. Per-publication comparisons therefore use a separate,
+attributed Qumran Digital snapshot; they are not inferred from Text-Fabric.
 
 On 300 intact preserved targets from reconstruction-free held-out scrolls:
 
@@ -43,6 +43,47 @@ Reproduce the clean path with:
 .venv/bin/python training/finetune_span_preserved_nonbib.py
 .venv/bin/python eval/tf_preserved_nonbib_benchmark.py
 ```
+
+## Attributed researcher-reading comparison
+
+The stored Qumran Digital snapshot adds a real literature comparison without
+putting researcher restorations into training. It contains 1,811 explicit
+readings for 346 selected disputed words, attributed to 253 bibliographic
+sources. Model scoring is restricted further to 1,559 complete readings at
+267 targets from held-out scrolls with at least ten visible context words.
+
+| Publication | Readings | Top-1 | Top-10 | Distinct readings | Distinct Top-10 |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| García Martínez / Tigchelaar, *Study Edition* | 118 | 0.8% | 10.2% | 109 | 11.0% |
+| Qimron 2010 | 92 | 4.3% | 7.6% | 51 | 5.9% |
+| Qimron 2013 | 84 | 1.2% | 7.1% | 70 | 5.7% |
+| Parry / Tov, *PrCon I* | 61 | 3.3% | 9.8% | 45 | 6.7% |
+| Qimron 2020 | 58 | 3.4% | 5.2% | 31 | 6.5% |
+| Lohse 1971 | 55 | 3.6% | 9.1% | 48 | 6.2% |
+| Habermann 1959 | 49 | 4.1% | 8.2% | 46 | 6.5% |
+
+Overall Top-10 agreement is 8.0%; on readings that differ consonantally from
+Qumran Digital's initial reading it is 6.6%. This is much harder than the
+36.3% intact-word benchmark above: the targets were selected because their
+readings are disputed or fragmentary, and the metric asks for exact
+consonantal agreement with each publication.
+
+These are **literature-agreement** numbers, not manuscript-grounded accuracy.
+Qumran Digital describes the variant collection as working data that has not
+yet been checked extensively, and only a selected subset of variants is shown
+inline. See
+[`analysis/reports/QD_RESEARCHER_BENCHMARK.md`](analysis/reports/QD_RESEARCHER_BENCHMARK.md)
+for the protocol and limitations.
+
+The downloaded snapshot is reused by default, with no network call:
+
+```bash
+.venv/bin/python eval/build_qd_researcher_benchmark.py
+.venv/bin/python eval/score_qd_researcher_benchmark.py
+```
+
+Only an intentional
+`eval/build_qd_researcher_benchmark.py --refresh` contacts Qumran Digital.
 
 ## 🌟 Executive Summary & Master Empirical Benchmarks
 
@@ -86,6 +127,8 @@ dss-restoration/
 │   ├── tf_intact_vs_lacuna_eval.py     # Dual-metric evaluation script (Intact vs Lacunae)
 │   ├── tf_composition_split_eval.py    # Strict composition-level split script (26 compositions)
 │   ├── tf_tavbert_eval.py              # TavBERT character-level benchmark script
+│   ├── build_qd_researcher_benchmark.py # One-time attributed QD snapshot importer
+│   ├── score_qd_researcher_benchmark.py # Offline per-publication scorer
 │   └── tf_historical_hebrew_eval.py    # Cross-epoch historical Hebrew benchmark
 ├── training/                       # Fine-tuning & augmentation training scripts
 │   ├── finetune_span.py                # Base span-masking fine-tuning script
@@ -137,9 +180,12 @@ python eval/run_all_experiments.py
 
 ## 🏛️ Academic Integration & Ecosystem Architecture
 
-The repository contains exploratory connector scaffolding for SQE, the Leon
-Levy Digital Library, and Qimron QTD. It does not currently contain aligned
-edition readings or perform a real multi-editor comparison.
+The SQE and Leon Levy connectors remain exploratory. The Qumran Digital
+snapshot now provides real word-level readings with publication attribution,
+including Qimron, the *Study Edition*, DJD volumes, and many other sources.
+It should not be confused with direct digitizations of those copyrighted
+editions: the stored records are Qumran Digital's CC BY-SA variant data and
+bibliographic provenance.
 
 ---
 

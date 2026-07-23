@@ -1,0 +1,1292 @@
+{
+  "schema_version": 1,
+  "source": {
+    "name": "Qumran Digital: Text und Lexikon",
+    "api_base": "https://lexicon.qumran-digital.org/v1/qumran",
+    "snapshot": "2026-05-21",
+    "license": "CC BY-SA 4.0",
+    "faq": "https://lexicon.qumran-digital.org/faq/v1/en/index.html"
+  },
+  "scope": {
+    "non_biblical_only": true,
+    "local_split": "heldout",
+    "target_selection": "variants embedded inline by Qumran Digital",
+    "explicit_readings_only": true,
+    "assumed_readings_included": false,
+    "surrounding_square_bracket_reconstructions": "redacted as <GAP>",
+    "warning": "QD describes its variant collection as working data that has not yet been checked extensively. This is a selected literature-agreement benchmark, not verified ground truth."
+  },
+  "counts": {
+    "matched_heldout_scrolls": 212,
+    "inline_variant_targets": 378,
+    "attributed_reading_rows": 1811,
+    "bibliographic_sources": 253
+  },
+  "bibliography": [
+    {
+      "bibliographicAbbreviation": "",
+      "bibliographyId": 9667,
+      "formattedBibliographicString": "James Nati⁦, ‬New Readings in 11Q29⁦, in: ‬Journal for the Study of the Pseudepigrapha⁦ ‬33⁦ (‬2023⁦) ‬134–139"
+    },
+    {
+      "bibliographicAbbreviation": "Aadland 2016",
+      "bibliographyId": 8688,
+      "formattedBibliographicString": "Ingunn Aadland⁦, ‬Seek and Find. A Rereading of 4QSapiential Work (4Q185). PhD Thesis⁦,‬⁦ ‬MF Norwegian School of Theology⁦ ‬2016"
+    },
+    {
+      "bibliographicAbbreviation": "Allegro 1956b",
+      "bibliographyId": 3692,
+      "formattedBibliographicString": "John M. Allegro⁦, ‬Further Messianic References in Qumran Literature⁦, in: ‬Journal of Biblical Literature⁦ ‬75,3⁦ (‬1956⁦) ‬174-187"
+    },
+    {
+      "bibliographicAbbreviation": "Allegue 2006",
+      "bibliographyId": 3081,
+      "formattedBibliographicString": "Jaime Vázquez Allegue⁦ (Hg.), ‬La 'Regla de la comunidad' de Qumrán⁦ (‬Biblioteca de Estudios Bíblicos 8⁦)‬⁦,‬⁦ ‬Salamanca⁦ ‬2006"
+    },
+    {
+      "bibliographicAbbreviation": "Ariel 2017",
+      "bibliographyId": 8549,
+      "formattedBibliographicString": "Chanan Ariel⁦, ‬Semantic and Exegetical Observations on Metaphors for Sin in the Dead Sea Scrolls⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬13⁦ (‬2017⁦) ‬3–26"
+    },
+    {
+      "bibliographicAbbreviation": "Art Gallery of New South Wales 2000",
+      "bibliographyId": 4880,
+      "formattedBibliographicString": "  Art Gallery of New South Wales⁦ (Hg.), ‬Dead Sea Scrolls. An Exhibition of Scrolls and Archaeological Objects. From the Collection of the Israel Antiquities Authority⁦,‬⁦ ‬Sydney⁦ ‬2000"
+    },
+    {
+      "bibliographicAbbreviation": "Avishur 1993",
+      "bibliographyId": 4749,
+      "formattedBibliographicString": "Yitzhak Avishur⁦, ‬The Reversed  Construct Structure in the Bible, Qumran Scrolls and in Early Jewish Literatur⁦, in: ‬Lesonenu⁦ ‬57⁦ (‬1993⁦) ‬279-288"
+    },
+    {
+      "bibliographicAbbreviation": "Baer 1964",
+      "bibliographyId": 5050,
+      "formattedBibliographicString": "Itzhak Baer⁦, ‬The Manual of Discipline; A Jewish-Chrsitian Document of the Second Century C.E. (Including a Discussion of the Damascus Document). Zion 29[1964] 1-60⁦,‬⁦ ‬1964"
+    },
+    {
+      "bibliographicAbbreviation": "Baer 1969",
+      "bibliographyId": 5028,
+      "formattedBibliographicString": "Itzhak Baer⁦, ‬Pesher Habbakuk and Its Period. Zion 34[1969] 1-42⁦,‬⁦ ‬1969"
+    },
+    {
+      "bibliographicAbbreviation": "Bar-Asher 2007",
+      "bibliographyId": 3623,
+      "formattedBibliographicString": "Moshe Bar-Asher⁦, ‬The Expressions כיניי הצלמים / כיון הצלמים⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬5-6⁦ (‬2007⁦) ‬279-288"
+    },
+    {
+      "bibliographicAbbreviation": "Bardtke 1954",
+      "bibliographyId": 15,
+      "formattedBibliographicString": "Hans Bardtke⁦, ‬Hebräische Konsonantentexte, aus biblischem und außerbiblischem Schrifttum für Übungszwecke ausgewählt⁦,‬⁦ ‬Leipzig⁦ ‬1954"
+    },
+    {
+      "bibliographicAbbreviation": "Baumgarten 1985-86",
+      "bibliographyId": 3816,
+      "formattedBibliographicString": "Joseph M. Baumgarten⁦, ‬The Qumran Songs Against Demons⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬55⁦ (‬1985-86⁦) ‬442-445"
+    },
+    {
+      "bibliographicAbbreviation": "Baumgarten 1992d",
+      "bibliographyId": 8762,
+      "formattedBibliographicString": "Joseph M. Baumgarten⁦, ‬The Purification Rituals in DJD 7 in: Devorah Dimant/Uriel Rappaport⁦ (Hgg.), ‬The Dead Sea Scrolls. Forty Years of Research⁦ (‬Studies on the Texts of the Desert of Judah 10⁦)‬⁦,‬⁦ ‬Leiden - New York, NY - Köln - Jerusalem⁦ ‬1992, 199-209"
+    },
+    {
+      "bibliographicAbbreviation": "Baumgarten 2009",
+      "bibliographyId": 4846,
+      "formattedBibliographicString": "Joseph M. Baumgarten⁦, ‬Common Legal Exegesis in the Scrolls and Tannaitic Sources. מסורות 'הלכתיות' קדומות במגילות ים המלח in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 649-665"
+    },
+    {
+      "bibliographicAbbreviation": "Ben-Dov 2009",
+      "bibliographyId": 4836,
+      "formattedBibliographicString": "Jonathan Ben-Dov⁦, ‬The 364-day Year in the Dead Sea Scrolls and the Pseudepigrapha. השנה בת 364 יום בקומראן ובספרות החיצונית in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 435-476"
+    },
+    {
+      "bibliographicAbbreviation": "Ben-Dov 2011",
+      "bibliographyId": 5749,
+      "formattedBibliographicString": "Jonathan Ben-Dov⁦, ‬The Elohistic Psalter and the Writing of Divine Names at Qumran in: Adolfo Roitman/Lawrence H. Schiffman/Shani Tzoref⁦ (Hgg.), ‬The Dead Sea Scrolls and Contemporary Culture. Proceedings of the Interational Conference held at the Israel Museum, Jerusalem (July 6-8, 2008)⁦ (‬Studies on the Texts of the Desert of Judah 93⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2011, 79-104"
+    },
+    {
+      "bibliographicAbbreviation": "Benovitz 1994-95",
+      "bibliographyId": 3722,
+      "formattedBibliographicString": "Moshe Benovitz⁦, ‬The Prohibitive Vow in Second Temple and Tannaitic Literature: Its Origin and Meaning⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬64⁦ (‬1994-95⁦) ‬203-228"
+    },
+    {
+      "bibliographicAbbreviation": "Bernstein 2003",
+      "bibliographyId": 8669,
+      "formattedBibliographicString": "Moshe J. Bernstein⁦, ‬Poetry and Prose in 4Q371-373 Narrative and Poetic Composition a, b, c1 in: Esther G. Chazon⁦ (Hg.), ‬Liturgical Perspectives. Prayer and Poetry in Light of the Dead Sea Scrolls. Proceedings of the Fifth International Symposium of the Orion Center for the Study of the Dead Sea Scrolls and Associated Literature⁦ (‬Studies on the Texts of the Desert of Judah 48⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2003, 19-33"
+    },
+    {
+      "bibliographicAbbreviation": "Bernstein 2004",
+      "bibliographyId": 4753,
+      "formattedBibliographicString": "Moshe J. Bernstein⁦, ‬כלכל in the Meaning of יכל⁦, in: ‬לשוננו.\r\n\r\nכתב־עת לחקר הלשון העברית והתחומים הסמוכים לה\r\n\r\nLesonenu.\r\n\r\nA Journal for the Study of the Hebrew Language and Cognate Subjects⁦ ‬67⁦ (‬2004⁦) ‬45-48"
+    },
+    {
+      "bibliographicAbbreviation": "Berthelot/Langlois/Legrand 2017",
+      "bibliographyId": 8502,
+      "formattedBibliographicString": "Katell Berthelot/Michael Langlois/Thierry Legrand⁦ (Hgg.), ‬La Bibliothèque de Qumrȃn. Tome 3b. Torah - Deutéronome et Pentateuque dans son ensemble⁦ (‬La Bibliothèque de Qumrân 3b⁦)‬⁦,‬⁦ ‬Paris⁦ ‬2017"
+    },
+    {
+      "bibliographicAbbreviation": "Boccaccio/Berardi 1958a",
+      "bibliographyId": 25,
+      "formattedBibliographicString": "Petrus Boccaccio/Guido Berardi⁦, ‬סרך היחד. Regula unionis seu Manuale disciplinae (1QS). Transscriptio et versio Latina. Appendix: Specimen vocalisationis textus⁦,‬⁦ ‬Fano - Rom⁦ ‬<sup>3</sup>1958"
+    },
+    {
+      "bibliographicAbbreviation": "Boccaccio/Berardi 1958b",
+      "bibliographyId": 26,
+      "formattedBibliographicString": "Petrus Boccaccio/Guido Berardi⁦, ‬פשר חבקוק. Interpretatio Habacuc (1QpHab). Transcriptio et versio Latina. II. Editio, Appendix Interpretatio Nahum (2, 12b-14) 4QpNah ex Journal of Biblical Literature LXXV (1956) 90-91⁦,‬⁦ ‬Fano⁦ ‬1958"
+    },
+    {
+      "bibliographicAbbreviation": "Brin 1996",
+      "bibliographyId": 1840,
+      "formattedBibliographicString": "Gershon Brin⁦, ‬Studies in 4Q424, Fragment 3⁦, in: ‬Vetus Testamentum⁦ ‬46⁦ (‬1996⁦) ‬271-295"
+    },
+    {
+      "bibliographicAbbreviation": "Brin 2001",
+      "bibliographyId": 2337,
+      "formattedBibliographicString": "Gershon Brin⁦, ‬The Concept of Time in the Bible and the Dead Sea Scrolls⁦ (‬Studies on the Texts of the Desert of Judah 39⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2001"
+    },
+    {
+      "bibliographicAbbreviation": "Brooke 2003",
+      "bibliographyId": 1115,
+      "formattedBibliographicString": "George J. Brooke⁦, ‬Between Qumran and Corinth. Embroidered Allusions to Women's Authority in: James R. Davila⁦, ‬The Dead Sea Scrolls as Background to Postbiblical Judaism and Early Christianity. Papers from an International Conference at St. Andrews in 2001⁦ (‬Studies on the Texts of the Desert of Judah 46⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2003, 157-176"
+    },
+    {
+      "bibliographicAbbreviation": "Broshi 1992",
+      "bibliographyId": 28,
+      "formattedBibliographicString": "Magen Broshi⁦ (Hg.), ‬The Damascus Document Reconsidered⁦,‬⁦ ‬Jerusalem⁦ ‬1992"
+    },
+    {
+      "bibliographicAbbreviation": "Broshi 2004",
+      "bibliographyId": 1509,
+      "formattedBibliographicString": "Magen Broshi⁦, ‬Qumran and the Essenes. Six Categories of Purity and Impurity⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬2⁦ (‬2004⁦) ‬9-20"
+    },
+    {
+      "bibliographicAbbreviation": "Broshi 2006",
+      "bibliographyId": 3586,
+      "formattedBibliographicString": "Magen Broshi⁦, ‬The Essene Sect and Other Second Commonwealth Jewish Religious Movements. Sociological Aspects⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬4⁦ (‬2006⁦) ‬13-23"
+    },
+    {
+      "bibliographicAbbreviation": "Broshi 2009",
+      "bibliographyId": 4778,
+      "formattedBibliographicString": "Magen Broshi⁦, ‬Daily Life at Qumran. אורחות חיים בקומראן in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 25-48"
+    },
+    {
+      "bibliographicAbbreviation": "Broshi/Yardeni 1992-1993",
+      "bibliographyId": 3725,
+      "formattedBibliographicString": "Magen Broshi/Ada Yardeni⁦, ‬On Nethinim and False Prophets⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬62⁦ (‬1992-1993⁦) ‬45-54"
+    },
+    {
+      "bibliographicAbbreviation": "Brown-deVost 2019",
+      "bibliographyId": 8724,
+      "formattedBibliographicString": "Bronson Brown-deVost⁦, ‬Commentary and Authority in Mesopotamia and Qumran⁦ (‬Journal of Ancient Judaism. Supplements 29⁦)‬⁦,‬⁦ ‬Göttingen⁦ ‬2019"
+    },
+    {
+      "bibliographicAbbreviation": "Brownlee 1979",
+      "bibliographyId": 31,
+      "formattedBibliographicString": "William Hugh Brownlee⁦, ‬The Midrash Pesher of Habakkuk⁦ (‬Society of Biblical Literature. Monograph series 24⁦)‬⁦,‬⁦ ‬Missoula, MT⁦ ‬1979"
+    },
+    {
+      "bibliographicAbbreviation": "Burrows 1950",
+      "bibliographyId": 33,
+      "formattedBibliographicString": "Millar Burrows⁦ (Hg.), ‬The Dead Sea Scrolls of St. Mark's Monastery 1. The Isaiah Manuscript and the Habakkuk Commentary⁦,‬⁦ ‬New Haven, CT⁦ ‬1950"
+    },
+    {
+      "bibliographicAbbreviation": "Burrows 1951",
+      "bibliographyId": 596,
+      "formattedBibliographicString": "Millar Burrows⁦ (Hg.), ‬The Dead Sea Scrolls of St. Mark's Monastery 2. Fasc. 2: Plates and Transcription of the Manual of Discipline⁦,‬⁦ ‬New Heaven, CT⁦ ‬1951"
+    },
+    {
+      "bibliographicAbbreviation": "Carmignac 1959a",
+      "bibliographyId": 4541,
+      "formattedBibliographicString": "Jean Carmignac⁦, ‬Comparaison entre les manuscrits \"A\" et \"B\" du Document de Damas⁦, in: ‬Revue de Qumran⁦ ‬2⁦ (‬1959⁦) ‬53-67"
+    },
+    {
+      "bibliographicAbbreviation": "Carmignac 1962",
+      "bibliographyId": 4011,
+      "formattedBibliographicString": "Jean Carmignac⁦, ‬Notes sur les Peshârîm⁦, in: ‬Revue de Qumran⁦ ‬3⁦ (‬1962⁦) ‬505-538"
+    },
+    {
+      "bibliographicAbbreviation": "Carmignac 1964",
+      "bibliographyId": 4708,
+      "formattedBibliographicString": "Jean Carmignac⁦, ‬Le recueil de Prières liturgiques de la Grotte 1 (1 Q 34 et 34 bis)⁦, in: ‬Revue de Qumran⁦ ‬4⁦ (‬1964⁦) ‬271-276"
+    },
+    {
+      "bibliographicAbbreviation": "Chazon 2000",
+      "bibliographyId": 2200,
+      "formattedBibliographicString": "Esther G. Chazon⁦, ‬Liturgical Communion with the Angels at Qumran in: Daniel K. Falk/Florentino García Martínez/Eileen M. Schuller⁦ (Hgg.), ‬Sapiential, Liturgical and Poetical Texts from Qumran. Proceedings of the Third Meeting of the International Organization for Qumran Studies, Oslo 1998. Published in Memory of Maurice Baillet⁦ (‬Studies on the Texts of the Desert of Judah 35⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬2000, 95-105"
+    },
+    {
+      "bibliographicAbbreviation": "Clines 1993",
+      "bibliographyId": 881,
+      "formattedBibliographicString": "David J. A. Clines⁦ (Hg.), ‬The Dictionary of Classical Hebrew 1. א⁦,‬⁦ ‬Sheffield⁦ ‬1993"
+    },
+    {
+      "bibliographicAbbreviation": "Collins - Nati 2024",
+      "bibliographyId": 9620,
+      "formattedBibliographicString": "John J. Collins/James Nati⁦, ‬The Rule of the Association and Related Texts⁦,‬⁦ ‬Oxford⁦ ‬2024"
+    },
+    {
+      "bibliographicAbbreviation": "DJD I",
+      "bibliographyId": 17,
+      "formattedBibliographicString": "Dominique Barthélemy/Jozef T. Milik⁦ (Hgg.), ‬Qumran Cave I⁦ (‬Discoveries in the Judaean Desert 1⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1955"
+    },
+    {
+      "bibliographicAbbreviation": "DJD III",
+      "bibliographyId": 10,
+      "formattedBibliographicString": "Maurice Baillet/Jozef T. Milik/Roland de Vaux⁦ (Hgg.), ‬Les 'petites grottes' de Qumrân. Exploration de la falaise. Les grottes 2Q, 3Q, 5Q, 6Q, 7Q á 10Q. Le rouleau de cuivre. Textes⁦ (‬Discoveries in the Judaean Desert of Jordan 3/1⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1962"
+    },
+    {
+      "bibliographicAbbreviation": "DJD V",
+      "bibliographyId": 4,
+      "formattedBibliographicString": "John M. Allegro⁦ (Hg.), ‬Qumrân Cave 4. I: 4Q158-4Q186⁦ (‬Discoveries in the Judaean Desert of Jordan 5⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1968"
+    },
+    {
+      "bibliographicAbbreviation": "DJD VII",
+      "bibliographyId": 12,
+      "formattedBibliographicString": "Maurice Baillet⁦ (Hg.), ‬Qumrân grotte 4. III: 4Q482 - 4Q520⁦ (‬Discoveries in the Judaean Desert 7⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1982"
+    },
+    {
+      "bibliographicAbbreviation": "DJD X",
+      "bibliographyId": 102,
+      "formattedBibliographicString": "Elisha Qimron/John Strugnell⁦ (Hgg.), ‬Qumran Cave 4. V: Miqṣat Maʿaśe Ha-Torah⁦ (‬Discoveries in the Judaean Desert 10⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1994"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XI",
+      "bibliographyId": 49,
+      "formattedBibliographicString": "Esther Eshel/Hanan Eshel/Carol Newsom/Bilhah Nitzan/Eileen M. Schuller/Ada Yardeni⁦ (Hgg.), ‬Qumran Cave 4. VI. Poetical and Liturgical Texts. Part 1⁦ (‬Discoveries in the Judaean Desert 11⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1998"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XIII",
+      "bibliographyId": 8,
+      "formattedBibliographicString": "Harold Attridge/Torleif Elgvin/Jozef T. Milik/Saul Olyan/John Strugnell/Emanuel Tov/James C. VanderKam/Sidnie Ann White⁦ (Hgg.), ‬Qumran Cave 4. Parabiblical Texts. Part 1⁦ (‬Discoveries in the Judaean Desert 13⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1994"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XIX",
+      "bibliographyId": 27,
+      "formattedBibliographicString": "Magen Broshi/Esther Eshel/Joseph A. Fitzmyer/Erik Larson/Carol Newsom/Lawrence H. Schiffman/Michael E. Stone/John Strugnell/Ada Yardeni/Mark Stratton Smith⁦ (Hgg.), ‬Qumran Cave 4. XIV: Parabiblical Texts. Part 2⁦ (‬Discoveries in the Judaean Desert 19⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1995"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XVIII",
+      "bibliographyId": 18,
+      "formattedBibliographicString": "Joseph M. Baumgarten⁦ (Hg.), ‬Qumran Cave 4. XIII. The Damascus Document (4Q266-273)⁦ (‬Discoveries in the Judaean Desert 18⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1996"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XX",
+      "bibliographyId": 47,
+      "formattedBibliographicString": "Torleif Elgvin/Menachem Kister/Timothy Lim/Bilhah Nitzan/Stephen J. Pfann/Elisha Qimron/Lawrence H. Schiffman/Annette Steudel⁦ (Hgg.), ‬Qumran Cave 4. XV. Sapiential Texts. Part 1⁦ (‬Discoveries in the Judaean Desert 20⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1997"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XXII",
+      "bibliographyId": 30,
+      "formattedBibliographicString": "Carol Newsom/George J. Brooke/John J. Collins/Peter W. Flint/Torleif Elgvin/Erik Larson/Jonas C. Greenfield/Émile Puech/Lawrence H. Schiffman/Michael E. Stone/Julio Trebolle Barrera⁦ (Hgg.), ‬Qumran Cave 4. XVII: Parabiblical Texts. Part 3⁦ (‬Discoveries in the Judaean Desert 22⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1996"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XXIX",
+      "bibliographyId": 37,
+      "formattedBibliographicString": "Esther G. Chazon/Torleif Elgvin/Esther Eshel/Daniel K. Falk/Bilhah Nitzan/Elisha Qimron/Eileen M. Schuller/David Rolph Seely/Eibert J. C. Tigchelaar/Moshe Weinfeld⁦ (Hgg.), ‬Qumran Cave 4. XX. Poetical and Liturgical Texts. Part 2⁦ (‬Discoveries in the Judaean Desert 29⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1999"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XXV",
+      "bibliographyId": 100,
+      "formattedBibliographicString": "Émile Puech⁦ (Hg.), ‬Qumrân Grotte 4. XVIII: Textes hébreux (4Q521-4Q528, 4Q576-4Q579)⁦ (‬Discoveries in the Judaean Desert 25⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1998"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XXVIII",
+      "bibliographyId": 57,
+      "formattedBibliographicString": "Douglas M. Gropp/Moshe J. Bernstein/Monica Brady/Peter W. Flint/Haggai Misgav/Stephen J. Pfann/James H. Charlesworth/Eileen M. Schuller/Eibert J. C. Tigchelaar/James C. VanderKam⁦ (Hgg.), ‬Wadi Daliyeh II. The Samaria Papyri from Wadi Daliyeh. Qumran Cave 4. XXVIII. Miscellanea. Part 2⁦ (‬Discoveries in the Judaean Desert 28⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬2001"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XXX",
+      "bibliographyId": 42,
+      "formattedBibliographicString": "Devorah Dimant⁦ (Hg.), ‬Qumran Cave 4. XXI. Parabiblical Texts. Part 4. Pseudo-Prophetic Texts⁦ (‬Discoveries in the Judaean Desert 30⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬2001"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XXXIII",
+      "bibliographyId": 91,
+      "formattedBibliographicString": "Dana M. Pike/Andrew C. Skinner⁦ (Hgg.), ‬Qumran Cave 4. XXIII: Unidentified Fragments⁦ (‬Discoveries in the Judaean Desert 33⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬2001"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XXXIV",
+      "bibliographyId": 120,
+      "formattedBibliographicString": "John Strugnell/Daniel J. Harrington⁦ (Hgg.), ‬Qumran Cave 4. XXIV. Sapiential Texts. Part 2: 4QInstruction (Mûsar Le Mevîn): 4Q415ff. With a Re-Edition of 1Q26, and an Edition of 4Q423 by Torleif Elgvin⁦ (‬Discoveries in the Judaean Desert 34⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1999"
+    },
+    {
+      "bibliographicAbbreviation": "DJD XXXVI",
+      "bibliographyId": 90,
+      "formattedBibliographicString": "Stephen J. Pfann/Philip S. Alexander/Magen Broshi/Esther G. Chazon/Hannah M. Cotton/Frank Moore Cross/Torleif Elgvin/Dorothee Ernst/Esther Eshel/Hanan Eshel/Joseph A. Fitzmyer/Florentino García Martínez/Jonas C. Greenfield/Menachem Kister/Armin Lange/Erik Larson/André Lemaire/Timothy Lim/Joseph Naveh/Dana M. Pike/Michael Sokoloff/Hartmut Stegemann/Annette Steudel/Michael E. Stone/Loren T. Stuckenbruck/Shemaryahu Talmon/Sarah Tanzer/Eibert J. C. Tigchelaar/Emanuel Tov/Geza Vermes/Ada Yardeni⁦ (Hgg.), ‬Qumran Cave 4. XXVI: Cryptic Texts. Miscellanea. Part 1⁦ (‬Discoveries in the Judaean Desert 36⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬2000"
+    },
+    {
+      "bibliographicAbbreviation": "Davies 1993",
+      "bibliographyId": 165,
+      "formattedBibliographicString": "Philip R. Davies⁦, ‬The Damascus Covenant. An Interpretation of the \"Damascus Document\"⁦ (‬Journal for the Study of the Old Testament. Supplement Series 25⁦)‬⁦,‬⁦ ‬Sheffield⁦ ‬1983"
+    },
+    {
+      "bibliographicAbbreviation": "Davis 2014",
+      "bibliographyId": 7737,
+      "formattedBibliographicString": "Kipp Davis⁦, ‬The Cave 4 ++Apocryphon of Jeremiah++ and the Qumran Jeremianic Traditions. Prophetic Persona and the Construction of Community Identiy⁦ (‬Studies on the Texts of the Desert of Judah 111⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2014"
+    },
+    {
+      "bibliographicAbbreviation": "Dimant 1994",
+      "bibliographyId": 998,
+      "formattedBibliographicString": "Devorah Dimant⁦, ‬A Synoptic Comparison of Parallel Sections in 4Q427 7, 4Q491 11 and 4Q471B⁦, in: ‬Jewish Quarterly Review⁦ ‬85⁦ (‬1994⁦) ‬157-161"
+    },
+    {
+      "bibliographicAbbreviation": "Dimant 2003",
+      "bibliographyId": 1491,
+      "formattedBibliographicString": "Devorah Dimant⁦, ‬Egypt and Jerusalem in Light of the Dualistic Doctrine at Qumran (4Q462)⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬1⁦ (‬2003⁦) ‬27-58"
+    },
+    {
+      "bibliographicAbbreviation": "Dimant 2004a",
+      "bibliographyId": 1371,
+      "formattedBibliographicString": "Devorah Dimant⁦ (Hg.), ‬4Q462-נוספות ל⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬2⁦ (‬2004⁦) ‬187-189"
+    },
+    {
+      "bibliographicAbbreviation": "Dimant 2004b",
+      "bibliographyId": 1508,
+      "formattedBibliographicString": "Devorah Dimant⁦, ‬Not Exile in the Desert but Exile in Spirit. The Pesher of Isa. 40:3 in the <i>Rule of the Community</i>⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬2⁦ (‬2004⁦) ‬21-36"
+    },
+    {
+      "bibliographicAbbreviation": "Dimant 2010b",
+      "bibliographyId": 5753,
+      "formattedBibliographicString": "Devorah Dimant⁦, ‬The Inheritance of the Land of Israel according to the Ideology of the Qumran Community⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬8-9⁦ (‬2010⁦) ‬113-133"
+    },
+    {
+      "bibliographicAbbreviation": "Dimant 2010c",
+      "bibliographyId": 6024,
+      "formattedBibliographicString": "Devorah Dimant⁦, ‬כלים שלובים. מגילות מדבר יהודה וספרות ימי הבית השני. Connected Vessels. The Dead Sea Scrolls and the Literature of the Second Temple Period⁦ (‬אסופּות. Asuppot 3⁦)‬⁦,‬⁦ ‬Jerusalem⁦ ‬2010"
+    },
+    {
+      "bibliographicAbbreviation": "Dimant/Parry 2014",
+      "bibliographyId": 7713,
+      "formattedBibliographicString": "Devorah Dimant/Donald W. Parry⁦ (Hgg.), ‬Dead Sea Scrolls Handbook⁦,‬⁦ ‬Leiden⁦ ‬2014"
+    },
+    {
+      "bibliographicAbbreviation": "Doudna 2001",
+      "bibliographyId": 952,
+      "formattedBibliographicString": "Gregory L. Doudna⁦, ‬4Q Pesher Nahum. A Critical Edition⁦ (‬Journal for the Study of the Pseudepigrapha. Supplement Series 35⁦)‬⁦,‬⁦ ‬Sheffield⁦ ‬2001"
+    },
+    {
+      "bibliographicAbbreviation": "Efrat 1957",
+      "bibliographyId": 4766,
+      "formattedBibliographicString": "Israel Efrat⁦, ‬The Philosophy of the Dead Sea Scrolls⁦, in: ‬לשוננו.\r\n\r\nכתב־עת לחקר הלשון העברית והתחומים הסמוכים לה\r\n\r\nLesonenu.\r\n\r\nA Journal for the Study of the Hebrew Language and Cognate Subjects⁦ ‬21⁦ (‬1957⁦) ‬172-182"
+    },
+    {
+      "bibliographicAbbreviation": "Efrati 2023",
+      "bibliographyId": 9565,
+      "formattedBibliographicString": "Shlomi Efrati⁦, ‬מתנות כהונה, מצוות התורה ורז נהיה. צירופים חדשים וקריאות חדשות. Priestly Dues, Torah Commandments, and Raz Nihyeh. New Joins and Readings in Instruction⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬16⁦ (‬2023⁦) ‬51–83"
+    },
+    {
+      "bibliographicAbbreviation": "Elliger 1953",
+      "bibliographyId": 48,
+      "formattedBibliographicString": "Karl Elliger⁦, ‬Studien zum Habakuk-Kommentar vom Toten Meer⁦ (‬Beiträge zur historischen Theologie 15⁦)‬⁦,‬⁦ ‬Tübingen⁦ ‬1953"
+    },
+    {
+      "bibliographicAbbreviation": "Esh 1954-55",
+      "bibliographyId": 3873,
+      "formattedBibliographicString": "Saul Esh⁦, ‬Three Short Notes on Prof. Segal's \"On the History of the Yahad Sect\"⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬24⁦ (‬1954-55⁦) ‬110-111"
+    },
+    {
+      "bibliographicAbbreviation": "Eshel 1991",
+      "bibliographyId": 5563,
+      "formattedBibliographicString": "Hanan Eshel⁦, ‬The Prayer of Joseph, a Papyrus from Masada and the Samaritan Temple on APГАРIZIN⁦, in: ‬Zion⁦ ‬56⁦ (‬1991⁦) ‬125-136"
+    },
+    {
+      "bibliographicAbbreviation": "Eshel 1999a",
+      "bibliographyId": 1018,
+      "formattedBibliographicString": "Esther Eshel⁦, ‬The Identification of the \"Speaker\" of the Self-Glorification Hymn in: Donald W. Parry/Eugene Ulrich⁦ (Hgg.), ‬The Provo International Conference on the Dead Sea Scrolls. Technological Innovations, New Texts, and Reformulated Issues⁦ (‬Studies on the Texts of the Desert of Judah 30⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬1999, 619-635"
+    },
+    {
+      "bibliographicAbbreviation": "Eshel 1999b",
+      "bibliographyId": 2118,
+      "formattedBibliographicString": "Hanan Eshel⁦, ‬The Meaning of Significance of CD 20:13-15 in: Donald W. Parry/Eugene Ulrich⁦ (Hgg.), ‬The Provo International Conference on the Dead Sea Scrolls. Technological Innovations, New Texts, and Reformulated Issues⁦ (‬Studies on the Texts of the Desert of Judah 30⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬1999, 330-336"
+    },
+    {
+      "bibliographicAbbreviation": "Eshel 2001",
+      "bibliographyId": 2438,
+      "formattedBibliographicString": "Hanan Eshel⁦, ‬The Kittim in the War Scroll and in the Pesharim in: David Goodblatt/Avital Pinnick/Daniel R. Schwartz⁦ (Hgg.), ‬Historical Perspectives. From the Hasmoneans to Bar Kokhba in Light of the Dead Sea Scrolls. Proceedings of the Fourth International Symposium of the Orion Center for the Study of the Dead Sea Scrolls and Associated Literature, 27-31 January, 1999⁦ (‬Studies on the Texts of the Desert of Judah 37⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬2001, 29-44"
+    },
+    {
+      "bibliographicAbbreviation": "Eshel 2006",
+      "bibliographyId": 3585,
+      "formattedBibliographicString": "Hanan Eshel⁦, ‬When Were the Songs of the Sabbath Sacrifice Recited?⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬4⁦ (‬2006⁦) ‬3-12"
+    },
+    {
+      "bibliographicAbbreviation": "Eshel 2009c",
+      "bibliographyId": 4788,
+      "formattedBibliographicString": "Hanan Eshel⁦, ‬The History of the Qumran Community and Historical Aspects of the ++Pesharim++. ההיסטוריה של עדת קומראן וההיבט ההיסטורי של ספרות הפשרים in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 191-208"
+    },
+    {
+      "bibliographicAbbreviation": "Eshel u.a. 1990-1",
+      "bibliographyId": 3787,
+      "formattedBibliographicString": "Esther Eshel/Hanan Eshel/Ada Yardeni⁦, ‬A Scroll from Qumran Which Includes Part of Psalm 154 and a Prayer for King Jonathan and His Kingdom. Tarbiz 60 [1990-91] 295-323"
+    },
+    {
+      "bibliographicAbbreviation": "Falk 1998",
+      "bibliographyId": 1060,
+      "formattedBibliographicString": "Daniel K. Falk⁦, ‬Daily, Sabbath, and Festival Prayers in the Dead Sea Scrolls⁦ (‬Studies on the Texts of the Desert of Judah 27⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬1998"
+    },
+    {
+      "bibliographicAbbreviation": "Falk 2000a",
+      "bibliographyId": 8699,
+      "formattedBibliographicString": "Daniel K. Falk⁦, ‬Qumran Prayer Texts and the Temple in: Daniel K. Falk/Florentino García Martínez/Eileen M. Schuller⁦ (Hgg.), ‬Sapiential, Liturgical and Poetical Texts from Qumran. Proceedings of the Third Meeting of the International Organization for Qumran Studies, Oslo 1998. Published in Memory of Maurice Baillet⁦ (‬Studies on the Texts of the Desert of Judah 35⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬2000, 106-126"
+    },
+    {
+      "bibliographicAbbreviation": "Feldman 2007a",
+      "bibliographyId": 4769,
+      "formattedBibliographicString": "Ariel Feldman⁦, ‬1Q19, 4Q370, 4Q422, 4Q464, 4Q577 :פרשת המבול המקראית במגילות קומראן. (The Story of the Flood in the Texts from Qumran: 1Q19, 4Q370, 4Q422, and 4Q577)⁦,‬⁦ ‬Haifa⁦ ‬2007"
+    },
+    {
+      "bibliographicAbbreviation": "Feldman 2015",
+      "bibliographyId": 8089,
+      "formattedBibliographicString": "Ariel Feldman⁦, ‬The Dead Sea Scrolls Rewriting Samuel and Kings. Texts and Commentary⁦ (‬Beihefte zur Zeitschrift für die alttestamentliche Wissenschaft 469⁦)‬⁦,‬⁦ ‬Berlin⁦ ‬2015"
+    },
+    {
+      "bibliographicAbbreviation": "Ferber-Rotberg 2016",
+      "bibliographyId": 8623,
+      "formattedBibliographicString": "Ravit Ferber-Rotberg⁦, ‬Names and Self-Designation in Qumran: the Theology of Self-Identity⁦, in: ‬Bet Miqraʿ: ketav-‘et shel ha-Hevrah le-heker ha- Mikra be-Yisrַaʿel⁦ ‬61.1⁦ (‬2016⁦) ‬99-125"
+    },
+    {
+      "bibliographicAbbreviation": "Flusser 1954",
+      "bibliographyId": 5093,
+      "formattedBibliographicString": "David Flusser⁦, ‬The Religious Ideas of the Judean Desert Sect⁦, in: ‬Zion⁦ ‬19⁦ (‬1954⁦) ‬89-103"
+    },
+    {
+      "bibliographicAbbreviation": "Flusser 1967",
+      "bibliographyId": 6270,
+      "formattedBibliographicString": "David Flusser⁦, ‬The Pesher of Isaiah and the Twelve Apostles. Eretz-Israel 8[1967] 52-62⁦,‬⁦ ‬1967"
+    },
+    {
+      "bibliographicAbbreviation": "Flusser 1983",
+      "bibliographyId": 5009,
+      "formattedBibliographicString": "David Flusser⁦, ‬The Kingdom of Rome in the Eyes of the Hasmoneans and as Seen by the Essenes⁦, in: ‬Zion⁦ ‬48⁦ (‬1983⁦) ‬149-176"
+    },
+    {
+      "bibliographicAbbreviation": "Flusser 1991-1992b",
+      "bibliographyId": 3800,
+      "formattedBibliographicString": "David Flusser⁦, ‬Some of the Precepts of the Torah from Qumran (4QMMT) and the Benediction against the Heretics⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬61⁦ (‬1991-1992⁦) ‬333-374"
+    },
+    {
+      "bibliographicAbbreviation": "Fraade 2021",
+      "bibliographyId": 9217,
+      "formattedBibliographicString": "Steven D. Fraade⁦, ‬The Damascus Document⁦,‬⁦ ‬Oxford⁦ ‬2021"
+    },
+    {
+      "bibliographicAbbreviation": "García Martínez u.a. 1998",
+      "bibliographyId": 78,
+      "formattedBibliographicString": "Florentino García Martínez/Eibert J. C. Tigchelaar/Adam S. van der Woude⁦ (Hgg.), ‬Qumran Cave 11. II. 11Q2-18, 11Q20-31⁦ (‬Discoveries in the Judaean Desert 23⁦)‬⁦,‬⁦ ‬Oxford⁦ ‬1998"
+    },
+    {
+      "bibliographicAbbreviation": "Geiger 2009",
+      "bibliographyId": 5917,
+      "formattedBibliographicString": "Gregor Geiger⁦, ‬Einige Alternativlesungen der Qumranrollen⁦, in: ‬Liber annuus. Studium Biblicum Franciscanum⁦ ‬59⁦ (‬2009⁦) ‬191-215"
+    },
+    {
+      "bibliographicAbbreviation": "Goldman 2006",
+      "bibliographyId": 3598,
+      "formattedBibliographicString": "Liora Goldman⁦, ‬A Comparison of the Geniza Manuscripts A and B of the Damascus Document in Light of their Pesher Units⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬4⁦ (‬2006⁦) ‬169-189 "
+    },
+    {
+      "bibliographicAbbreviation": "Goldman 2007a",
+      "bibliographyId": 4850,
+      "formattedBibliographicString": "Liora Goldman⁦, ‬Biblical Exegesis and Pesher Interpretation in the Damascus Document. PhD diss., University of Haifa, Haifa 2007.⁦,‬⁦ ‬2007"
+    },
+    {
+      "bibliographicAbbreviation": "Habermann 1952",
+      "bibliographyId": 58,
+      "formattedBibliographicString": "Avraham Meir Habermann⁦ (Hg.), ‬ʿedah we-ʿeduth. Three Scrolls from the Judaean Desert. The Legacy of a Community. Edited with Vocalization, Introduction, Notes and Indices⁦,‬⁦ ‬Jerusalem⁦ ‬1952"
+    },
+    {
+      "bibliographicAbbreviation": "Habermann 1959",
+      "bibliographyId": 59,
+      "formattedBibliographicString": "Avraham Meir Habermann⁦ (Hg.), ‬Megilloth Midbar Yehuda. The Scrolls from the Judean Desert. edited with Vocalization, Introduction, Notes and Concordance⁦,‬⁦ ‬[Tel Aviv]⁦ ‬1959"
+    },
+    {
+      "bibliographicAbbreviation": "Hamidović 2011",
+      "bibliographyId": 6211,
+      "formattedBibliographicString": "David Hamidović⁦, ‬L'Écrit de Damas. Le manifeste essénien⁦ (‬Collection de la revue des études juives 51⁦)‬⁦,‬⁦ ‬Paris - Leuven⁦ ‬2011"
+    },
+    {
+      "bibliographicAbbreviation": "Hempel 1997",
+      "bibliographyId": 8719,
+      "formattedBibliographicString": "Charlotte Hempel⁦, ‬The Penal Code Reconsidered in: Moshe J. Bernstein/Florentino García Martínez/John Kampen⁦ (Hgg.), ‬Legal Texts and Legal Issues. Proceedings of the Second Meeting of the International Organization for Qumran Studies Cambridge 1995. Published in Honour of Joseph M. Baumgarten⁦ (‬Studies on the Texts of the Desert of Judah 23⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬1997, 337-348"
+    },
+    {
+      "bibliographicAbbreviation": "Hempel 1998",
+      "bibliographyId": 471,
+      "formattedBibliographicString": "Charlotte Hempel⁦, ‬The Laws of the Damascus Document. Sources, Tradition and Redaction⁦ (‬Studies on the Texts of the Desert of Judah 29⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬1998"
+    },
+    {
+      "bibliographicAbbreviation": "Hempel 1999",
+      "bibliographyId": 8710,
+      "formattedBibliographicString": "Charlotte Hempel⁦, ‬Community Origins in the Damascus Document in the Light of Recent Scholarship in: Donald W. Parry/Eugene Ulrich⁦ (Hgg.), ‬The Provo International Conference on the Dead Sea Scrolls. Technological Innovations, New Texts, and Reformulated Issues⁦ (‬Studies on the Texts of the Desert of Judah 30⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬1999, 316-329"
+    },
+    {
+      "bibliographicAbbreviation": "Hempel 2020",
+      "bibliographyId": 9218,
+      "formattedBibliographicString": "Charlotte Hempel⁦, ‬The Community Rules from Qumran. A Commentary⁦ (‬Texts and Studies in Ancient Judaism 183⁦)‬⁦,‬⁦ ‬Tübingen⁦ ‬2020"
+    },
+    {
+      "bibliographicAbbreviation": "Hoppe 2025",
+      "bibliographyId": 9723,
+      "formattedBibliographicString": "Isabell Christine Hoppe⁦, ‬Transforming Proverbs. Intertextuality in 4Q185⁦ (‬Studies on the Texts of the Desert of Judah 150⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2025"
+    },
+    {
+      "bibliographicAbbreviation": "Horgan 1979b",
+      "bibliographyId": 62,
+      "formattedBibliographicString": "Maurya P. Horgan⁦, ‬Pesharim. Qumran Interpretations of Biblical Books. Ergänzungsheft: Part 1. The Texts⁦ (‬Catholic Biblical Quarterly. Monograph Series 8,1⁦)‬⁦,‬⁦ ‬Washington, DC⁦ ‬1979"
+    },
+    {
+      "bibliographicAbbreviation": "Jassen 2011",
+      "bibliographyId": 5955,
+      "formattedBibliographicString": "Alex Jassen⁦, ‬Re-reading 4QPesher Isaiah A (4Q161). Forty Years After DJD V in: George J. Brooke/Jesper Høgenhaven⁦ (Hgg.), ‬The Mermaid and the Partridge. Essays from the Copenhagen Conference on Revising Texts from Cave Four⁦ (‬Studies on the Texts of the Desert of Judah 96⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2011, 57-90"
+    },
+    {
+      "bibliographicAbbreviation": "Joosten 2004",
+      "bibliographyId": 1518,
+      "formattedBibliographicString": "Jan Joosten⁦, ‬Linguistic Innovations in the Hebrew of the Hellenistic Period. Qumran and the Septuagint⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬2⁦ (‬2004⁦) ‬151-155"
+    },
+    {
+      "bibliographicAbbreviation": "Kaduri (Kugel) 2009",
+      "bibliographyId": 4815,
+      "formattedBibliographicString": "Yaʿacov (James) Kaduri (Kugel)⁦, ‬Biblical Interpretation at Qumran in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and Their World. מגילות קומראן. מבואות ומחקרים. כרך שני⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 387-408"
+    },
+    {
+      "bibliographicAbbreviation": "Kister 1992",
+      "bibliographyId": 8759,
+      "formattedBibliographicString": "Menahem Kister⁦, ‬Biblical Phrases and hidden Biblical Interpretations and Pesharim in: Devorah Dimant/Uriel Rappaport⁦ (Hgg.), ‬The Dead Sea Scrolls. Forty Years of Research⁦ (‬Studies on the Texts of the Desert of Judah 10⁦)‬⁦,‬⁦ ‬Leiden - New York, NY - Köln - Jerusalem⁦ ‬1992, 27-39"
+    },
+    {
+      "bibliographicAbbreviation": "Kister 1998-99",
+      "bibliographyId": 3679,
+      "formattedBibliographicString": "Menachem Kister⁦, ‬Studies in Miqṣat Ma‘aśe Ha-Torah and Related Texts: Law, Theology, Language and Calendar⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬68⁦ (‬198-99⁦) ‬317-371"
+    },
+    {
+      "bibliographicAbbreviation": "Kister 2004a",
+      "bibliographyId": 4752,
+      "formattedBibliographicString": "Menachem Kister⁦, ‬Lexical and Linguistic Gleanings from the Dead Sea Scrolls⁦, in: ‬לשוננו.\r\n\r\nכתב־עת לחקר הלשון העברית והתחומים הסמוכים לה\r\n\r\nLesonenu.\r\n\r\nA Journal for the Study of the Hebrew Language and Cognate Subjects⁦ ‬67⁦ (‬2004⁦) ‬27-44"
+    },
+    {
+      "bibliographicAbbreviation": "Kister 2007-2008",
+      "bibliographyId": 3929,
+      "formattedBibliographicString": "Menachem Kister⁦, ‬The Prayers of the Seventh Book of the Apostolic Constitutions and their Implications for the Formulation of the Synagogue Prayers⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬77⁦ (‬2007-2008⁦) ‬205-238"
+    },
+    {
+      "bibliographicAbbreviation": "Kister 2009a",
+      "bibliographyId": 4837,
+      "formattedBibliographicString": "Menachem Kister⁦, ‬Jerusalem and the Temple in the Writings from Qumran. ירושלים והמקדש בקומראּן in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009,  477-496"
+    },
+    {
+      "bibliographicAbbreviation": "Kister 2009b",
+      "bibliographyId": 4838,
+      "formattedBibliographicString": "Menachem Kister⁦, ‬On Good and Evil: The Theological Foundations of the Qumran Community. על הרע ועל הטוב׃ הבסיס התאולוגי של עדת קומראן in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 497-528"
+    },
+    {
+      "bibliographicAbbreviation": "Kister 2010",
+      "bibliographyId": 5764,
+      "formattedBibliographicString": "Menachem Kister⁦, ‬Body and Purification from Evil: Prayer Formulas and Concepts in Second Temple Literature and Their Relationship to Later Rabbinic Literature. Meghillot 8-9 [2010] 243-284⁦,‬⁦ ‬2010"
+    },
+    {
+      "bibliographicAbbreviation": "Kister 2018",
+      "bibliographyId": 8681,
+      "formattedBibliographicString": "Menahem Kister⁦, ‬Textual Growth, Midrash, and Anthropology in CD A 4,12 - 5,19⁦, in: ‬Revue de Qumran⁦ ‬112,30⁦ (‬2018⁦) ‬265-292"
+    },
+    {
+      "bibliographicAbbreviation": "Kratz 2011b",
+      "bibliographyId": 5891,
+      "formattedBibliographicString": "Reinhard G. Kratz⁦, ‬Hosea und Amos in den Schriften vom Toten Meer in: Reinhard G. Kratz⁦, ‬Prophetenstudien. Kleine Schriften II⁦ (‬Forschungen zum Alten Testament 74⁦)‬⁦,‬⁦ ‬Tübingen⁦ ‬2011, 359-379"
+    },
+    {
+      "bibliographicAbbreviation": "Kratz 2020",
+      "bibliographyId": 9014,
+      "formattedBibliographicString": "Reinhard G. Kratz⁦, ‬Miqśat Ma‘aśe Ha-Torah, Some of the Works of the Torah (Text, Translation and Notes) in: Reinhard G. Kratz⁦ (Hg.), ‬Interpreting and Living God`s Law at Qumran. Miqṣat Ma‛aśe Ha-Torah. Some of the Works of the Torah (4QMMT)⁦ (‬Sapere. Scripta antiquitatis posterioris ad ethicam religionemque pertinentia 37⁦)‬⁦,‬⁦ ‬Tübingen⁦ ‬2020, 32-53"
+    },
+    {
+      "bibliographicAbbreviation": "Lange 1995",
+      "bibliographyId": 757,
+      "formattedBibliographicString": "Armin Lange⁦, ‬Weisheit und Prädestination. Weisheitliche Urordnung und Prädestination in den Textfunden von Qumran⁦ (‬Studies on the Texts of the Desert of Judah 18⁦)‬⁦,‬⁦ ‬Leiden - New York, NY - Köln⁦ ‬1995"
+    },
+    {
+      "bibliographicAbbreviation": "Leibel 1957-1958",
+      "bibliographyId": 3882,
+      "formattedBibliographicString": "Daniel Leibel⁦, ‬Some Remarks on the Commentary on the Book of Nahum⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬27⁦ (‬1957-1958⁦) ‬12-16"
+    },
+    {
+      "bibliographicAbbreviation": "Lemaire 2000",
+      "bibliographyId": 2227,
+      "formattedBibliographicString": "André Lemaire⁦, ‬Attestation textuelle et critique littéraire. 4Q448 Col. A et Psalm 154 in: Lawrence H. Schiffman/Emanuel Tov/James C. VanderKam/Galen Marquis⁦ (Hgg.), ‬The Dead Sea Scrolls. Fifty Years after Their Discovery⁦,‬⁦ ‬Jerusalem⁦ ‬2000, 12-18"
+    },
+    {
+      "bibliographicAbbreviation": "Licht 1965",
+      "bibliographyId": 72,
+      "formattedBibliographicString": "Jacob Licht⁦, ‬The Rule Scroll. A Scroll from the Wilderness of Judaea. 1QS. 1QSa. 1QSb. Text, Introduction and Commentary⁦,‬⁦ ‬Jerusalem⁦ ‬1965"
+    },
+    {
+      "bibliographicAbbreviation": "Licht 1967",
+      "bibliographyId": 6272,
+      "formattedBibliographicString": "Jacob Licht⁦, ‬The Qumran Doctrine of Historical Epochs and Other Eschatological Speculations. Eretz-Israel 8[1967] 63-70⁦,‬⁦ ‬1967"
+    },
+    {
+      "bibliographicAbbreviation": "Lichtenberger 1978",
+      "bibliographyId": 8684,
+      "formattedBibliographicString": "Hermann Lichtenberger⁦, ‬Eine weisheitliche Mahnrede in den Qumranfunden (4Q185) in: Mathias Delcor⁦ (Hg.), ‬Qumrân. Sa piété, sa théologie et son milieu⁦ (‬Bibliotheca Ephemeridum Theologicarum Lovaniensium 46⁦)‬⁦,‬⁦ ‬Paris - Gembloux - Leuven⁦ ‬1978, 151-162"
+    },
+    {
+      "bibliographicAbbreviation": "Lichtenberger 2002",
+      "bibliographyId": 1099,
+      "formattedBibliographicString": "Hermann Lichtenberger⁦, ‬Der Weisheitstext 4Q185. Eine neue Edition in: Charlotte Hempel/Armin Lange/Hermann Lichtenberger⁦ (Hgg.), ‬The Wisdom Texts from Qumran and the Development of Sapiential Thought⁦ (‬Bibliotheca Ephemeridum Theologicarum Lovaniensium 159⁦)‬⁦,‬⁦ ‬Paris - Gembloux - Leuven⁦ ‬2002, 126-150"
+    },
+    {
+      "bibliographicAbbreviation": "Lim 2020",
+      "bibliographyId": 8943,
+      "formattedBibliographicString": "Timothy H. Lim⁦, ‬The Earliest Commentary on the Prophecy of Habakkuk⁦,‬⁦ ‬Oxford⁦ ‬2020"
+    },
+    {
+      "bibliographicAbbreviation": "Liver 1957b",
+      "bibliographyId": 5424,
+      "formattedBibliographicString": "J. Liver⁦, ‬The Davidic Messiah in the Dead Sea Scrolls in: J. Liver⁦ (Hg.), ‬עינים במגילות מדבר יהודה. הרצאות ביום העיון השלישי (תשי\"ז) לזכרו של א. ל. סוקניק. Studies in the Dead Sea Scrolls. Lectures delivered at the Third Annual Conference (1957) in Memory of E. L. Sukenik⁦,‬⁦ ‬Jerusalem⁦ ‬1957, 55-76"
+    },
+    {
+      "bibliographicAbbreviation": "Liver 1967",
+      "bibliographyId": 6273,
+      "formattedBibliographicString": "J. Liver⁦, ‬The Sons of Zadok the Priest in the Dead Sea Sect. Eretz-Israel 8[1967] 71-81⁦,‬⁦ ‬1967"
+    },
+    {
+      "bibliographicAbbreviation": "Lohse 1971",
+      "bibliographyId": 76,
+      "formattedBibliographicString": "Eduard Lohse⁦ (Hg.), ‬Die Texte aus Qumran. Hebräisch und Deutsch. Mit masoretischer Punktation. Übersetzung, Einführung und Anmerkungen⁦,‬⁦ ‬Darmstadt⁦ ‬<sup>2</sup>1971"
+    },
+    {
+      "bibliographicAbbreviation": "Luggassy [2004]",
+      "bibliographyId": 5061,
+      "formattedBibliographicString": "Shimon Luggassy⁦, ‬New Verbal Roots and New Verbal Patterns in the Dead Sea Scrolls. PhD diss., Ben-Gurion University 2004⁦,‬⁦ ‬2004"
+    },
+    {
+      "bibliographicAbbreviation": "Main 1997/98",
+      "bibliographyId": 2050,
+      "formattedBibliographicString": "Emmanuelle Main⁦, ‬הערה על מגילה 448ממערה 4 של קומראן⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬67⁦ (‬1997/98⁦) ‬103-119"
+    },
+    {
+      "bibliographicAbbreviation": "Main 1998",
+      "bibliographyId": 2074,
+      "formattedBibliographicString": "Emmanuelle Main⁦, ‬For King Jonathan or Against?. The Use of the Bible in 4Q448 in: Michael E. Stone/Esther G. Chazon⁦ (Hgg.), ‬Biblical Perspectives. Early Use and Interpretation of the Bible in Light of the Dead Sea Scrolls. Proceedings of the First International Symposium of the Orion Center for the Study of the Dead Sea Scrolls and Associated Literature, 12-14 May, 1996⁦ (‬Studies on the Texts of the Desert of Judah 28⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬1998, 113-135"
+    },
+    {
+      "bibliographicAbbreviation": "Martone 1995",
+      "bibliographyId": 918,
+      "formattedBibliographicString": "Corrado Martone⁦, ‬La \"Regola della Comunitá\". Edizione critica⁦ (‬Quaderni di Henoch 8⁦)‬⁦,‬⁦ ‬Torino⁦ ‬1995"
+    },
+    {
+      "bibliographicAbbreviation": "Martone 2018a",
+      "bibliographyId": 8682,
+      "formattedBibliographicString": "Corrado Martone⁦, ‬Textual Plurality and Textual Reconstructions. A Cautionary Tale⁦, in: ‬Revue de Qumran⁦ ‬112,30⁦ (‬2018⁦) ‬131-141"
+    },
+    {
+      "bibliographicAbbreviation": "Metso 2019",
+      "bibliographyId": 8895,
+      "formattedBibliographicString": "Sarianna Metso⁦, ‬The Community Rule. A Critical Edition with Translation⁦ (‬Early Judaism and its Literature 51⁦)‬⁦,‬⁦ ‬Atlanta, GA⁦ ‬2019"
+    },
+    {
+      "bibliographicAbbreviation": "Metzenthin 2010",
+      "bibliographyId": 5158,
+      "formattedBibliographicString": "Christian Metzenthin⁦, ‬Jesaja-Auslegung in Qumran⁦ (‬Abhandlungen zur Theologie des Alten und Neuen Testaments 98⁦)‬⁦,‬⁦ ‬Zürich⁦ ‬2010"
+    },
+    {
+      "bibliographicAbbreviation": "Meyer 1919",
+      "bibliographyId": 3981,
+      "formattedBibliographicString": "Eduard Meyer⁦, ‬Die Gemeinde des Neuen Bundes im Lande Damaskus. Eine jüdische Schrift aus der Seleukidenzeit⁦ (‬Abhandlungen der Preußischen Akademie der Wissenschaften, Philosophisch-historische Klasse 9⁦)‬⁦,‬⁦ ‬Berlin⁦ ‬1919"
+    },
+    {
+      "bibliographicAbbreviation": "Mizrahi 2008",
+      "bibliographyId": 4849,
+      "formattedBibliographicString": "Noam Mizrahi⁦, ‬The Lexicon and Phraseology of the ++Songs of the Sabbath Sacrifice++. PhD diss., Hebrew University, Jerusalem 2008⁦,‬⁦ ‬2008"
+    },
+    {
+      "bibliographicAbbreviation": "Mizrahi 2018",
+      "bibliographyId": 8849,
+      "formattedBibliographicString": "Noam Mizrahi⁦, ‬God, Gods, and Godhead in the Songs of the Sabbath Sacrifice in: Ruth A. Clements/Menahem Kister/Michael Segal⁦ (Hgg.), ‬The Religious Worldviews Reflected in the Dead Sea Scrolls. Proceedings of the Fourteenth International Symposium of the Orion Center for the Study of the Dead Sea Scrolls and Associated Literature, 28–30 May, 2013⁦ (‬Studies on the Texts of the Desert of Judah 127⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2018, 161-192"
+    },
+    {
+      "bibliographicAbbreviation": "Mor 2009",
+      "bibliographyId": 3902,
+      "formattedBibliographicString": "Uri Mor⁦, ‬Word Order in the Legal Documents and Letters from the Judean Desert. סדר המילים בשטרות ובאיגרות ממדבר יהודה⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬7⁦ (‬2009⁦) ‬237-261"
+    },
+    {
+      "bibliographicAbbreviation": "Murphy 2002",
+      "bibliographyId": 3441,
+      "formattedBibliographicString": "Catherine M. Murphy⁦, ‬Wealth In The Dead Sea Scrolls And In The Qumran Community⁦ (‬Studies on the Texts of the Desert of Judah 40⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬2002"
+    },
+    {
+      "bibliographicAbbreviation": "Nadav 2016",
+      "bibliographyId": 8601,
+      "formattedBibliographicString": "Nadav Sharon⁦, ‬זיהוי האויב בפשר ישעיה אקטעים  (4Q161) 6-5 . אפשרות היסטורית שלא נשקלה. The Identity of the Enemy in Pesher Isaiaha (4Q161) frgs. 5–6 – An Overlooked Identification⁦, in: ‬Cathedra: for the history of Eretz Israel and its Yishuy⁦ ‬159⁦ (‬2016⁦) ‬7-24"
+    },
+    {
+      "bibliographicAbbreviation": "Nati 2019",
+      "bibliographyId": 9136,
+      "formattedBibliographicString": "James Nati⁦, ‬On \"True\" Editions: Pluriformity and Authority between Psalms and Serekh in: John J. Collins/Ananda Geyser-Fouché⁦ (Hgg.), ‬Scribal Practice, Text and Canon in the Dead Sea Scrolls. Essays in Memory of Peter W. Flint⁦ (‬Studies on the Texts of the Desert of Judah 130⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2019, 90-107"
+    },
+    {
+      "bibliographicAbbreviation": "Newsom 1982",
+      "bibliographyId": 5680,
+      "formattedBibliographicString": "Carol Newsom⁦, ‬4Q Serek Sirot Olat Hassabbat (The Qumran Angelic Liturgy). Edition, Translation, and Commentary⁦,‬⁦ ‬Harvard University⁦ ‬1982"
+    },
+    {
+      "bibliographicAbbreviation": "Newsom 1985",
+      "bibliographyId": 87,
+      "formattedBibliographicString": "Carol Newsom⁦, ‬Songs of the Sabbath Sacrifice. A Critical Edition⁦ (‬Harvard Semitic Studies 27⁦)‬⁦,‬⁦ ‬Atlanta, GA⁦ ‬1985"
+    },
+    {
+      "bibliographicAbbreviation": "Nitzan 1985-1986b",
+      "bibliographyId": 3817,
+      "formattedBibliographicString": "Bilha Nitzan⁦, ‬Response⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬55⁦ (‬1985-1986⁦) ‬603-605"
+    },
+    {
+      "bibliographicAbbreviation": "Nitzan 1986",
+      "bibliographyId": 672,
+      "formattedBibliographicString": "Bilhah Nitzan⁦ (Hg.), ‬מגילת פשר חבקוק. Pesher Habakkuk. A Scroll from the Wilderness of Judaea (1QpHab)⁦,‬⁦ ‬Jerusalem⁦ ‬1986"
+    },
+    {
+      "bibliographicAbbreviation": "Nitzan 1996a",
+      "bibliographyId": 8578,
+      "formattedBibliographicString": "Bilha Nitzan⁦, ‬תפילת קומראן ושירתה. Qumran Prayer and Poetry⁦ (‬ספריית האנציקלופדיה המקראית [Encyclopaedia Miqrait (Encyclopaedia biblica)] 14⁦)‬⁦,‬⁦ ‬Jerusalem / Tel Aviv⁦ ‬1996"
+    },
+    {
+      "bibliographicAbbreviation": "Nitzan 1998",
+      "bibliographyId": 1324,
+      "formattedBibliographicString": "Bilhah Nitzan⁦, ‬Post-Biblical ++Rib++ Pattern Admonitions in 4Q302/302a and 4Q381 69, 76-77 in: Michael E. Stone/Esther G. Chazon⁦ (Hgg.), ‬Biblical Perspectives. Early Use and Interpretation of the Bible in Light of the Dead Sea Scrolls. Proceedings of the First International Symposium of the Orion Center for the Study of the Dead Sea Scrolls and Associated Literature, 12-14 May, 1996⁦ (‬Studies on the Texts of the Desert of Judah 28⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬1998, 159-174"
+    },
+    {
+      "bibliographicAbbreviation": "Nitzan 2003b",
+      "bibliographyId": 8673,
+      "formattedBibliographicString": "Bilhah Nitzan⁦, ‬Prayers for Peace in the Dead Sea Scrolls and the Traditional Jewish Liturgy in: Esther G. Chazon⁦ (Hg.), ‬Liturgical Perspectives. Prayer and Poetry in Light of the Dead Sea Scrolls. Proceedings of the Fifth International Symposium of the Orion Center for the Study of the Dead Sea Scrolls and Associated Literature⁦ (‬Studies on the Texts of the Desert of Judah 48⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2003, 113-132"
+    },
+    {
+      "bibliographicAbbreviation": "Nitzan 2003c",
+      "bibliographyId": 8676,
+      "formattedBibliographicString": "Bilhah Nitzan⁦, ‬The Dead Sea Scrolls and the Jewish Liturgy in: James R. Davila⁦, ‬The Dead Sea Scrolls as Background to Postbiblical Judaism and Early Christianity. Papers from an International Conference at St. Andrews in 2001⁦ (‬Studies on the Texts of the Desert of Judah 46⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2003, 195-219"
+    },
+    {
+      "bibliographicAbbreviation": "Nitzan 2005a",
+      "bibliographyId": 3558,
+      "formattedBibliographicString": "Bilhah Nitzan⁦, ‬Key Terms in 4QInstruction. Implications for its Ideological Unity⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬3⁦ (‬2005⁦) ‬101-124"
+    },
+    {
+      "bibliographicAbbreviation": "Nitzan 2009a",
+      "bibliographyId": 3891,
+      "formattedBibliographicString": "Bilhah Nitzan⁦, ‬Pesher and Midrash in the Qumran Scrolls. פשר ומדרש במגילות קומראן⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬7⁦ (‬2009⁦) ‬99-127"
+    },
+    {
+      "bibliographicAbbreviation": "Nitzan 2009d",
+      "bibliographyId": 4790,
+      "formattedBibliographicString": "Bilhah Nitzan⁦, ‬The Liturgy at Qumran: Statutory Prayers. ליטורגיה בקומראן׃ תפילות הקבע in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 225-260"
+    },
+    {
+      "bibliographicAbbreviation": "Noam 2009",
+      "bibliographyId": 3890,
+      "formattedBibliographicString": "Vered Noam⁦, ‬Qumranic Exegesis and Rabbinic Midrash. Common Interpretations and Implied Polemics. בין ספרות קומראן למדרש ההלכה׃ לשחזורו של פולמוס פרשני⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬7⁦ (‬2009⁦) ‬71-98"
+    },
+    {
+      "bibliographicAbbreviation": "Noam 2010",
+      "bibliographyId": 6025,
+      "formattedBibliographicString": "Vered Noam⁦, ‬מקומראן למהפכה התנאית. היבטים בתפיסת הטומאה. From Qumran to the Rabbinic Revolution. Conceptions of Impurity⁦,‬⁦ ‬Jerusalem⁦ ‬2010"
+    },
+    {
+      "bibliographicAbbreviation": "Noam/Qimron 2005",
+      "bibliographyId": 3629,
+      "formattedBibliographicString": "Vered Noam/Elisha Qimron⁦, ‬A Qumran Composition on the Laws of the Sabbath and its Contribution to Early Halachic History . Tarbiz 74 [2005] 511-546⁦,‬⁦ ‬2005"
+    },
+    {
+      "bibliographicAbbreviation": "PTSDSSP 1",
+      "bibliographyId": 622,
+      "formattedBibliographicString": "James H. Charlesworth⁦ (Hg.), ‬Rule of the Community and Related Documents⁦ (‬The Dead Sea Scrolls.\r\n\r\nHebrew, Aramaic, and Greek Texts with English Translations.\r\n\r\nThe Princeton Theological Seminary Dead Sea Scrolls Project 1⁦)‬⁦,‬⁦ ‬Tübingen - Louisville, KY⁦ ‬1994"
+    },
+    {
+      "bibliographicAbbreviation": "PTSDSSP 2",
+      "bibliographyId": 888,
+      "formattedBibliographicString": "James H. Charlesworth⁦ (Hg.), ‬Damascus Document, War Scroll, and Related Documents⁦ (‬The Dead Sea Scrolls.\r\n\r\nHebrew, Aramaic, and Greek Texts with English Translations.\r\n\r\nThe Princeton Theological Seminary Dead Sea Scrolls Project 2⁦)‬⁦,‬⁦ ‬Tübingen - Louisville, KY⁦ ‬1995"
+    },
+    {
+      "bibliographicAbbreviation": "PTSDSSP 3",
+      "bibliographyId": 2174,
+      "formattedBibliographicString": "James H. Charlesworth/Henry W. M. Rietz⁦ (Hgg.), ‬Damascus Document II, Fragments, Some Works of the Torah, and Related Documents⁦ (‬The Dead Sea Scrolls.\r\n\r\nHebrew, Aramaic, and Greek Texts with English Translations.\r\n\r\nThe Princeton Theological Seminary Dead Sea Scrolls Project 3⁦)‬⁦,‬⁦ ‬Tübingen - Louisville, KY⁦ ‬2006"
+    },
+    {
+      "bibliographicAbbreviation": "PTSDSSP 4A",
+      "bibliographyId": 619,
+      "formattedBibliographicString": "James H. Charlesworth/Henry W. L. Rietz⁦ (Hgg.), ‬Pseudepigraphic and Non-Masoretic Psalms and Prayers⁦ (‬The Dead Sea Scrolls.\r\n\r\nHebrew, Aramaic, and Greek Texts with English Translations.\r\n\r\nThe Princeton Theological Seminary Dead Sea Scrolls Project 4A⁦)‬⁦,‬⁦ ‬Tübingen - Louisville, KY⁦ ‬1997"
+    },
+    {
+      "bibliographicAbbreviation": "PTSDSSP 4B",
+      "bibliographyId": 618,
+      "formattedBibliographicString": "James H. Charlesworth/Carol Newsom⁦ (Hgg.), ‬Angelic Liturgy. Songs of the Sabbath Sacrifice⁦ (‬The Dead Sea Scrolls.\r\n\r\nHebrew, Aramaic, and Greek Texts with English Translations.\r\n\r\nThe Princeton Theological Seminary Dead Sea Scrolls Project 4B⁦)‬⁦,‬⁦ ‬Tübingen - Louisville, KY⁦ ‬1999"
+    },
+    {
+      "bibliographicAbbreviation": "PTSDSSP 5A",
+      "bibliographyId": 9542,
+      "formattedBibliographicString": "James H. Charlesworth⁦ (Hg.), ‬The Dead Sea Scrolls. Hebrew, Aramaic, and Greek Texts with English Translations. Thanksgiving Hymns and Related Documents⁦ (‬The Dead Sea Scrolls.\r\n\r\nHebrew, Aramaic, and Greek Texts with English Translations.\r\n\r\nThe Princeton Theological Seminary Dead Sea Scrolls Project 5A⁦)‬⁦,‬⁦ ‬Tübingen - Louisville, KY⁦ ‬2022"
+    },
+    {
+      "bibliographicAbbreviation": "PTSDSSP 6B",
+      "bibliographyId": 620,
+      "formattedBibliographicString": "James H. Charlesworth/Henry W. L. Rietz⁦ (Hgg.), ‬Pesharim, Other Commentaries, and Related Documents⁦ (‬The Dead Sea Scrolls.\r\n\r\nHebrew, Aramaic, and Greek Texts with English Translations.\r\n\r\nThe Princeton Theological Seminary Dead Sea Scrolls Project 6B⁦)‬⁦,‬⁦ ‬Tübingen - Louisville, KY⁦ ‬2002"
+    },
+    {
+      "bibliographicAbbreviation": "Pajunen 2011a",
+      "bibliographyId": 5963,
+      "formattedBibliographicString": "Mika S. Pajunen⁦, ‬4QSapiential Admonitions B (4Q185). Unsolved Challenges of the Hebrew Text in: George J. Brooke/Jesper Høgenhaven⁦ (Hgg.), ‬The Mermaid and the Partridge. Essays from the Copenhagen Conference on Revising Texts from Cave Four⁦ (‬Studies on the Texts of the Desert of Judah 96⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2011, 191-220"
+    },
+    {
+      "bibliographicAbbreviation": "Paul 1963",
+      "bibliographyId": 4709,
+      "formattedBibliographicString": "André Paul⁦, ‬$Rezension zu: Wieder, Naphtali: The Judean Scrolls and Karaism, London 1962⁦, in: ‬Revue de Qumran⁦ ‬4⁦ (‬1963⁦) ‬297-310"
+    },
+    {
+      "bibliographicAbbreviation": "Ploeg 1971",
+      "bibliographyId": 690,
+      "formattedBibliographicString": "Johannes Petrus Maria van der Ploeg⁦, ‬Un petit rouleau de psaumes apocryphes (11QPsApa) in: Gert Jeremias/Heinz-Wolfgang Kuhn/Hartmut Stegemann⁦ (Hgg.), ‬Tradition und Glaube. Das frühe Christentum in seiner Umwelt. Festgabe für Karl Georg Kuhn zum 65. Geburtstag⁦,‬⁦ ‬Göttingen⁦ ‬1971, 128-139"
+    },
+    {
+      "bibliographicAbbreviation": "PrCon I",
+      "bibliographyId": 270,
+      "formattedBibliographicString": "Hartmut Stegemann/John Strugnell⁦ (Hgg.), ‬A Preliminary Concordance to the Hebrew and Aramaic Fragments from Qumrân Caves II-X. Including Especially the Unpublished Material from Cave IV. Printed from a Card Index Prepared by Raymond E. Brown, Joseph A. Fitzmyer, W. G. Oxtoby, J. Teixidor. Prepared and Arranged for Printing by Hans-Peter Richter. I: א - ב⁦,‬⁦ ‬Göttingen⁦ ‬1988"
+    },
+    {
+      "bibliographicAbbreviation": "Puech 1979",
+      "bibliographyId": 9272,
+      "formattedBibliographicString": "Émile Puech⁦, ‬Remarques sur l'écriture de 1QS VII-VIII⁦, in: ‬Revue de Qumran⁦ ‬10⁦ (‬1979⁦) ‬35-43"
+    },
+    {
+      "bibliographicAbbreviation": "Puech 1993",
+      "bibliographyId": 490,
+      "formattedBibliographicString": "Émile Puech⁦, ‬La croyance des Esséniens en la vie future. Immortalité, résurrection, vie éternelle?. Histoire d'une croyance dans le Judaïsme ancien. II: Les données qumraniennes et classiques⁦ (‬Études bibliques. Nouvelle série 22⁦)‬⁦,‬⁦ ‬Paris⁦ ‬1993"
+    },
+    {
+      "bibliographicAbbreviation": "Puech 1996",
+      "bibliographyId": 1415,
+      "formattedBibliographicString": "Émile Puech⁦, ‬Jonathan le Prêtre et les débuts de la communauté de Qumrân, 4QJonathan (4Q523) et 4QPsAp (4Q448)⁦, in: ‬Revue de Qumran⁦ ‬17⁦ (‬1996⁦) ‬241-270"
+    },
+    {
+      "bibliographicAbbreviation": "Puech 2011a",
+      "bibliographyId": 6454,
+      "formattedBibliographicString": "Émile Puech⁦, ‬L'hymne de la glorification du Maître de 4Q431 in: Jeremy Penner/Ken M. Penner/Cecilia Wassen⁦ (Hgg.), ‬Prayer and Poetry in the Dead Sea Scrolls and Related Literature. Essays in Honor of Eileen Schuller on the Occasion of Her 65th Birthday⁦ (‬Studies on the Texts of the Desert of Judah 98⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2011, 377-407"
+    },
+    {
+      "bibliographicAbbreviation": "Puech 2014",
+      "bibliographyId": 9174,
+      "formattedBibliographicString": "Émile Puech⁦, ‬<<Les oevres de la loi>>: Mariage et divorce à Qumrân et dans les lettres de Paul in: Jean-Sébastien Rey⁦ (Hg.), ‬The Dead Sea Scrolls and Pauline Literature⁦ (‬Studies on the Texts of the Desert of Judah 102⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2014, 143-169"
+    },
+    {
+      "bibliographicAbbreviation": "Puech 2015a",
+      "bibliographyId": 8303,
+      "formattedBibliographicString": "Émile Puech⁦, ‬La lettre essénienne MMT dans le manuscrit 4Q397 et les parallèles⁦, in: ‬Revue de Qumran⁦ ‬27⁦ (‬2015⁦) ‬99-135"
+    },
+    {
+      "bibliographicAbbreviation": "Puech 2019a",
+      "bibliographyId": 9023,
+      "formattedBibliographicString": "Émile Puech⁦, ‬Chapter 10. Nouveaux menus fragments de la Grotte 11Q (P1344, P1345 et P1038B) in: Jean-Baptiste Humbert/Marcello Fidanzio⁦ (Hgg.), ‬Khirbet Qumrân et Ain Feshkha. IV A: L`archéologie de Qumrân. Cave 11Q. Archaeology and New Scroll Fragments⁦ (‬Novum Testamentum et Orbis Antiquus, Series Archaeologica 4a⁦)‬⁦,‬⁦ ‬Göttingen - Freiburg⁦ ‬2019, 203-229"
+    },
+    {
+      "bibliographicAbbreviation": "Puech 2019b",
+      "bibliographyId": 9022,
+      "formattedBibliographicString": "Émile Puech⁦, ‬Chapter Eleven, Appendix. Nouveaux menus fragments de la Grotte 11Q (boîte 1032A/1) in: Jean-Baptiste Humbert/Marcello Fidanzio⁦ (Hgg.), ‬Khirbet Qumrân et Ain Feshkha. IV A: L`archéologie de Qumrân. Cave 11Q. Archaeology and New Scroll Fragments⁦ (‬Novum Testamentum et Orbis Antiquus, Series Archaeologica 4a⁦)‬⁦,‬⁦ ‬Göttingen - Freiburg⁦ ‬2019"
+    },
+    {
+      "bibliographicAbbreviation": "Puech 2021a",
+      "bibliographyId": 9081,
+      "formattedBibliographicString": "Émile Puech⁦, ‬4Q340. Liste de ++Netînîm++ et les livres d'Esdras et de Néhémie⁦, in: ‬Revue de Qumran⁦ ‬33/1⁦ (‬2021⁦) ‬139-144"
+    },
+    {
+      "bibliographicAbbreviation": "Puech [k]",
+      "bibliographyId": 9462,
+      "formattedBibliographicString": "Émile Puech⁦, ‬4Q185 - 4QOuvrage de sagesse⁦, in: ‬Revue de Qumran⁦ ‬35⁦ (‬2023⁦) ‬17–36"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 1973a",
+      "bibliographyId": 7258,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬ההבחנה בין וי\"ו ליו\"ד בתעודות מדבר יהודה⁦, in: ‬Bet Miqraʿ: ketav-‘et shel ha-Hevrah le-heker ha- Mikra be-Yisrַaʿel⁦ ‬18⁦ (‬1973⁦) ‬102-112"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 1980",
+      "bibliographyId": 3926,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬The Vocabulary of the Temple Scroll⁦, in: ‬Shnaton. An Annual for Biblical and Ancient Near Eastern Studies⁦ ‬4⁦ (‬1980⁦) ‬239-262"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 1990",
+      "bibliographyId": 1310,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬The Need for a Comprehensive Critical Edition of the Dead Sea Scrolls in: Lawrence H. Schiffman⁦ (Hg.), ‬Archaeology and History in the Dead Sea Scrolls. The New York University Conference in Memory of Yigael Yadin⁦ (‬Journal for the Study of the Pseudepigrapha. Supplement Series 8⁦)‬⁦,‬⁦ ‬Sheffield⁦ ‬1990, 121-131"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 1991",
+      "bibliographyId": 1025,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬A Preliminary Publication of 4QSd VII-VIII⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬60⁦ (‬1991⁦) ‬435-437"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 1998",
+      "bibliographyId": 4759,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬A New Approach toward Interpreting the Imperfect Verbal Forms in Early Hebrew⁦, in: ‬לשוננו.\r\n\r\nכתב־עת לחקר הלשון העברית והתחומים הסמוכים לה\r\n\r\nLesonenu.\r\n\r\nA Journal for the Study of the Hebrew Language and Cognate Subjects⁦ ‬61⁦ (‬1998⁦) ‬31-43"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 1999a",
+      "bibliographyId": 6263,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬Improvements to the Editions of the Dead Sea Scrolls. Eretz-Israel 26[1999] 142-146"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 2003",
+      "bibliographyId": 1369,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬לתקנת המהדורות של מגילות מדבר יהודה א. Improving the Editions of the Dead Sea Scrolls (1)⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬1⁦ (‬2003⁦) ‬135-145"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 2004a",
+      "bibliographyId": 1370,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬לתקנת המהדורות של מגילות מדבר יהודה ב . Improving the Editions of the Dead Sea Scrolls (2)⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬2⁦ (‬2004⁦) ‬79-89"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 2009a",
+      "bibliographyId": 4783,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬Problems in Reading and Editing the Qumran Scrolls. בעיות פיענוח וההדרה במגילות קומראן in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 91-106"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 2010",
+      "bibliographyId": 4992,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬מגילות מדבר יהודה. החיבורים העבריים. כרך ראשון. The Dead Sea Scrolls. The Hebrew Writings. Volume One⁦,‬⁦ ‬Jerusalem⁦ ‬2010"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 2013",
+      "bibliographyId": 7575,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬מגילות מדבר יהודה. החיבורים העבריים. כרך שני. The Dead Sea Scrolls. The Hebrew Writings. Volume Two⁦,‬⁦ ‬Jerusalem⁦ ‬2013"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 2014",
+      "bibliographyId": 7724,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬מגילות מדבר יהודה. החיבורים העבריים. כרך שלישי. The Dead Sea Scrolls. The Hebrew Writings. Volume Three⁦,‬⁦ ‬Jerusalem⁦ ‬2014"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron 2020",
+      "bibliographyId": 9613,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬החיבורים העבריים מקומראן. מהדורה משולבת⁦,‬⁦ ‬Tel Aviv⁦ ‬2020"
+    },
+    {
+      "bibliographicAbbreviation": "Qimron [b]",
+      "bibliographyId": 9600,
+      "formattedBibliographicString": "Elisha Qimron⁦, ‬A Thanksgiving of a Leader (4Q491): A Revised Edition of the So-Called “Self-Glorification Hymn”⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬14⁦ (‬2018-2019⁦) ‬13-24"
+    },
+    {
+      "bibliographicAbbreviation": "Rabin 1957",
+      "bibliographyId": 5429,
+      "formattedBibliographicString": "Chaim Rabin⁦, ‬Yahad, Haburah, and Essenes in: J. Liver⁦ (Hg.), ‬עינים במגילות מדבר יהודה. הרצאות ביום העיון השלישי (תשי\"ז) לזכרו של א. ל. סוקניק. Studies in the Dead Sea Scrolls. Lectures delivered at the Third Annual Conference (1957) in Memory of E. L. Sukenik⁦,‬⁦ ‬Jerusalem⁦ ‬1957, 104-122"
+    },
+    {
+      "bibliographicAbbreviation": "Rabin 1958",
+      "bibliographyId": 103,
+      "formattedBibliographicString": "Chaim Rabin⁦ (Hg.), ‬The Zadokite Documents. I. The Admonition. II. The Laws. Edited with a Translation and Notes⁦,‬⁦ ‬Oxford⁦ ‬<sup>2</sup>1958"
+    },
+    {
+      "bibliographicAbbreviation": "Regev 1998",
+      "bibliographyId": 5571,
+      "formattedBibliographicString": "Eyal Regev⁦, ‬The Temple Impurity and Qumran's Foreign Affairs in the Early Hasmonean Period⁦, in: ‬Zion⁦ ‬64⁦ (‬1998⁦) ‬133-156"
+    },
+    {
+      "bibliographicAbbreviation": "Rendsburg 2015",
+      "bibliographyId": 9157,
+      "formattedBibliographicString": "Gary A. Rendsburg⁦, ‬The Nature of Qumran Hebrew as Revealed through ++Pesher Habakkuk++ in: Eibert J. C. Tigchelaar/Pierre Van Hecke⁦ (Hgg.), ‬Hebrew of the Late Second Temple Period. Proceedings of a Sixth International Symposium on the Hebrew of the Dead Sea Scrolls and Ben Sira⁦ (‬Studies on the Texts of the Desert of Judah 114⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2015"
+    },
+    {
+      "bibliographicAbbreviation": "Rey 2017a",
+      "bibliographyId": 9146,
+      "formattedBibliographicString": "Jean-Sébastien Rey⁦, ‬In the Garden of Good and Evil: Reimagining a Tradition (Sir 17:1-14, 4Q303, 4QInstruction, 1QS 4:25-26, and 1QSa 1:10-11) in: Ariel Feldman/Maria Cioata/Charlotte Hempel⁦ (Hgg.), ‬Is There a Text in This Cave?. Studies in the Textuality of the Dead Sea Scrolls in Honour of George J. Brooke⁦ (‬Studies on the Texts of the Desert of Judah 119⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2017, 473-492"
+    },
+    {
+      "bibliographicAbbreviation": "Rofé 2004b",
+      "bibliographyId": 8665,
+      "formattedBibliographicString": "Alexander Rofé⁦, ‬Revealed Wisdom. From the Bible to Qumran in: John J. Collins/Gregory E. Sterling/Ruth A. Clements⁦ (Hgg.), ‬Sapiential Perspectives. Wisdom Literature in Light of the Dead Sea Scrolls. Proceedings of the Sixth International Symposium of the Orion Center for the Study of the Dead Sea Scrolls and Associated Literature, 20-22 May, 2001⁦ (‬Studies on the Texts of the Desert of Judah 51⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2004, 1-11"
+    },
+    {
+      "bibliographicAbbreviation": "Rofé 2006",
+      "bibliographyId": 3603,
+      "formattedBibliographicString": "Alexander Rofé⁦, ‬Notes to the Damscus Document 5:15 and 6:14⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬4⁦ (‬2006⁦) ‬207-211"
+    },
+    {
+      "bibliographicAbbreviation": "Roitman u.a. 2011",
+      "bibliographyId": 5539,
+      "formattedBibliographicString": "Adolfo Roitman/Lawrence H. Schiffman/Shani Tzoref⁦ (Hgg.), ‬The Dead Sea Scrolls and Contemporary Culture. Proceedings of the Interational Conference held at the Israel Museum, Jerusalem (July 6-8, 2008)⁦ (‬Studies on the Texts of the Desert of Judah 93⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2011"
+    },
+    {
+      "bibliographicAbbreviation": "Rost 1933",
+      "bibliographyId": 106,
+      "formattedBibliographicString": "Leonhard Rost⁦, ‬Die Damaskusschrift. Neu bearbeitet⁦ (‬Kleine Texte für (theologische und philologische) Vorlesungen und Übungen 167⁦)‬⁦,‬⁦ ‬Berlin - New York, NY⁦ ‬1933"
+    },
+    {
+      "bibliographicAbbreviation": "Ruzer 2001-02",
+      "bibliographyId": 3649,
+      "formattedBibliographicString": "Serge Ruzer⁦, ‬The Double Love Precept in the New Testament and in the Rule of the Congregation. Tarbiz 71 [2001-02] 353-370⁦,‬⁦ ‬2001-02"
+    },
+    {
+      "bibliographicAbbreviation": "Schechter 1910",
+      "bibliographyId": 109,
+      "formattedBibliographicString": "Salomon Schechter⁦ (Hg.), ‬Documents of Jewish Sectaries. Two Volumes in One. Vol. I: Fragments of a Zadokite Work, ed. from Hebrew Manuscripts in the Cairo Genizah Collection, now in the Possession of the University Library, Cambridge, and Provided with an English Translation, Introduction and Notes, Prolegomenon by Joseph A. Fitzmyer, S. J. Vol. II: Fragments of the Book of the Commandments by Anan, ed. from Hebrew Manuscripts in the Cairo Genizah Collection now in the Possession of the University Library, Cambridge, and Provided with a Short Introduction and Notes⁦,‬⁦ ‬1910"
+    },
+    {
+      "bibliographicAbbreviation": "Schiffman 1975",
+      "bibliographyId": 497,
+      "formattedBibliographicString": "Lawrence H. Schiffman⁦, ‬The Halakhah at Qumran⁦ (‬Studies in Judaism in Late Antiquity 16⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬1975"
+    },
+    {
+      "bibliographicAbbreviation": "Schiffman 2009",
+      "bibliographyId": 4807,
+      "formattedBibliographicString": "Lawrence H. Schiffman⁦, ‬The ++Damascus Document++ and the ++Serakhim++. ספר ברית דמשק ומגילת הסרכים in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 275-298"
+    },
+    {
+      "bibliographicAbbreviation": "Schniedewind 1999",
+      "bibliographyId": 8712,
+      "formattedBibliographicString": "William M. Schniedewind⁦, ‬Structural Aspects of Qumran Messianism in the Damascus Document in: Donald W. Parry/Eugene Ulrich⁦ (Hgg.), ‬The Provo International Conference on the Dead Sea Scrolls. Technological Innovations, New Texts, and Reformulated Issues⁦ (‬Studies on the Texts of the Desert of Judah 30⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬1999, 523-536"
+    },
+    {
+      "bibliographicAbbreviation": "Schremer 2001",
+      "bibliographyId": 2186,
+      "formattedBibliographicString": "Adiel Schremer⁦, ‬'[T]he[y] Did Not Read in the Sealed Book': Qumran Halakhic Revolution and the Emergence of Torah Study in Second Temple Judaism in: David Goodblatt/Avital Pinnick/Daniel R. Schwartz⁦ (Hgg.), ‬Historical Perspectives. From the Hasmoneans to Bar Kokhba in Light of the Dead Sea Scrolls. Proceedings of the Fourth International Symposium of the Orion Center for the Study of the Dead Sea Scrolls and Associated Literature, 27-31 January, 1999⁦ (‬Studies on the Texts of the Desert of Judah 37⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬2001, 105-126"
+    },
+    {
+      "bibliographicAbbreviation": "Schuller 2000a",
+      "bibliographyId": 8703,
+      "formattedBibliographicString": "Eileen M. Schuller⁦, ‬The Classification Hodayot and Hodayot-like (with Particular Attention to 4Q433, 4Q433a and 4Q440) in: Daniel K. Falk⁦, ‬Qumran Prayer Texts and the Temple, 182-193"
+    },
+    {
+      "bibliographicAbbreviation": "Schwartz 1992",
+      "bibliographyId": 5745,
+      "formattedBibliographicString": "Daniel R. Schwartz⁦, ‬Qumran between Priestliness and Christianity in: Magen Broshi/Sara Japhet/Daniel R. Schwartz/Shemaryahu Talmon⁦ (Hgg.), ‬מגילות מדבר יהודה ארבעים שנות מחקר. The Scrolls of the Judaean Desert, Forty Years of Research⁦,‬⁦ ‬Jerusalem⁦ ‬1992, 176-181 "
+    },
+    {
+      "bibliographicAbbreviation": "Schwartz 2009a",
+      "bibliographyId": 4844,
+      "formattedBibliographicString": "Daniel R. Schwartz⁦, ‬Qumran and Early Christianity. קומראן והנצרות הקדומה in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 613-628"
+    },
+    {
+      "bibliographicAbbreviation": "Sefer 2003",
+      "bibliographyId": 3630,
+      "formattedBibliographicString": "Hagai Sefer⁦, ‬The Cronology of the Emergence of the Qumran Community in CD I, 1-II, 1 and its Reflection in the Crisis of the Fifth Syrian War. Tarbiz 73 [2003] 5-24⁦,‬⁦ ‬2003"
+    },
+    {
+      "bibliographicAbbreviation": "Segal 1950-1951",
+      "bibliographyId": 3876,
+      "formattedBibliographicString": "Mosche Zwi Segal⁦, ‬לתולדות כת היחד⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬22⁦ (‬1950-1951⁦) ‬136-152"
+    },
+    {
+      "bibliographicAbbreviation": "Segal 1951a",
+      "bibliographyId": 4687,
+      "formattedBibliographicString": "M. H. Segal⁦, ‬The Habakkuk \"Commentary\" and the Damascus Fragments. (A Historical Study)⁦, in: ‬Journal of Biblical Literature⁦ ‬70⁦ (‬1951⁦) ‬131-147"
+    },
+    {
+      "bibliographicAbbreviation": "Segal 2009",
+      "bibliographyId": 3892,
+      "formattedBibliographicString": "Michael Segal⁦, ‬Between Exegesis and Sectarianism. 'Light and Darkness' in Egypt and in Jerusalem according to 4Q462. בין פרשנות לכיתתיות׃ אור וחושך במצרים ובירושלים במגילה 4Q462⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬7⁦ (‬2009⁦) ‬129-143"
+    },
+    {
+      "bibliographicAbbreviation": "Shemesh 1996-97",
+      "bibliographyId": 3712,
+      "formattedBibliographicString": "Aharon Shemesh⁦, ‬Rebuning, Warning and the Obligation to Testify  - In Judean Desert Writings and Rabbinic Halakha. Tarb 66 [1996-97] 149-168⁦,‬⁦ ‬1996-97"
+    },
+    {
+      "bibliographicAbbreviation": "Shemesh 2000b",
+      "bibliographyId": 8695,
+      "formattedBibliographicString": "Aharon Shemesh⁦, ‬Scriptural Interpretations in the Damascus Document and Their Parallels in Rabbinic Midrash in: Joseph M. Baumgarten/Esther G. Chazon/Avital Pinnick⁦ (Hgg.), ‬The Damascus Document. A Centennial of Discovery. Proceedings of the International Symposium of the Orion Cnter for the Study of the Dead Sea Scrolls and Associated Literature, 4-8 February, 1998⁦ (‬Studies on the Texts of the Desert of Judah 34⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬2000, 161-175"
+    },
+    {
+      "bibliographicAbbreviation": "Shemesh 2007",
+      "bibliographyId": 3617,
+      "formattedBibliographicString": "Aharon Shemesh⁦, ‬The Penal Code from Qumran and Early Midrash⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬5-6⁦ (‬2007⁦) ‬245-268"
+    },
+    {
+      "bibliographicAbbreviation": "Silberman 1961",
+      "bibliographyId": 3386,
+      "formattedBibliographicString": "Lou H. Silberman⁦, ‬Unriddling the Riddle. A Study in the Structure and Language of the Habakkuk Pesher⁦, in: ‬Revue de Qumran⁦ ‬3⁦ (‬1961/62⁦) ‬323-364"
+    },
+    {
+      "bibliographicAbbreviation": "Solomon 1997",
+      "bibliographyId": 2058,
+      "formattedBibliographicString": "Avi Solomon⁦, ‬The Prohibition against Ṭevul Yom and Defilement of the Daily Whole Offering in the Jerusalem Temple in CD 11:21-12:1. A New Understanding⁦, in: ‬Dead Sea Discoveries⁦ ‬4⁦ (‬1997⁦) ‬1-20"
+    },
+    {
+      "bibliographicAbbreviation": "Staerk 1922",
+      "bibliographyId": 3346,
+      "formattedBibliographicString": "Wilhelm Staerk⁦, ‬Die jüdische Gemeinde des Neuen Bundes in Damaskus. Übersetzung der von Schechter veröffentlichten Geniza-Texte mit Noten⁦, in: ‬Beiträge zur Förderung christlicher Theologie⁦ ‬27,3⁦ (‬1922⁦) ‬4-96"
+    },
+    {
+      "bibliographicAbbreviation": "Stegemann 1996b",
+      "bibliographyId": 666,
+      "formattedBibliographicString": "Hartmut Stegemann⁦, ‬Some Remarks to 1QSa, to 1QSb, and to Qumran Messianism⁦, in: ‬Revue de Qumran⁦ ‬17⁦ (‬1996⁦) ‬479-505"
+    },
+    {
+      "bibliographicAbbreviation": "Steudel 1993",
+      "bibliographyId": 3256,
+      "formattedBibliographicString": "Annette Steudel⁦, ‬The House of Prostration CD XI, 21-XII,1. Duplicates of the Temple⁦, in: ‬Revue de Qumran⁦ ‬16⁦ (‬1993⁦) ‬49-68"
+    },
+    {
+      "bibliographicAbbreviation": "Steudel 2001",
+      "bibliographyId": 118,
+      "formattedBibliographicString": "Annette Steudel⁦ (Hg.), ‬Die Texte aus Qumran II. Hebräisch / Aramäisch und Deutsch. Mit masoretischer Punktation, Übersetzung, Einführung und Anmerkungen⁦,‬⁦ ‬Darmstadt⁦ ‬2001"
+    },
+    {
+      "bibliographicAbbreviation": "Stroup 2011",
+      "bibliographyId": 6041,
+      "formattedBibliographicString": "Christopher Stroup⁦, ‬A Reexamination of the 'Sons of the Pit' in CD 13:14⁦, in: ‬Dead Sea Discoveries⁦ ‬18,1⁦ (‬2011⁦) ‬45-53"
+    },
+    {
+      "bibliographicAbbreviation": "Strugnell 1960",
+      "bibliographyId": 3350,
+      "formattedBibliographicString": "John Strugnell⁦, ‬The Angelic Liturgy at Qumrân. 4Q Serek Sîrôt ʿÔlat Hassabbat in: G. W. Anderson/Pieter Arie Hendrik de Boer/Giorgio Raffaele Castellino/Henry Cazelles/Erling Hammershaimb/Herbert Gordon May/Walter Zimmerli⁦ (Hgg.), ‬Congress Volume Oxford 1959. Third Congress of the International Organization for the Study of the Old Testament⁦ (‬Vetus Testamentum. Supplements 7⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬1960, 318-345"
+    },
+    {
+      "bibliographicAbbreviation": "Strugnell 1970",
+      "bibliographyId": 119,
+      "formattedBibliographicString": "John Strugnell⁦, ‬Notes en Marge du Volume V des \"Discoveries in the Judaean Desert of Jordan\"⁦, in: ‬Revue de Qumran⁦ ‬7⁦ (‬1970⁦) ‬163-276"
+    },
+    {
+      "bibliographicAbbreviation": "Study Edition",
+      "bibliographyId": 623,
+      "formattedBibliographicString": "Florentino García Martínez/Eibert J. C. Tigchelaar⁦ (Hgg.), ‬The Dead Sea Scrolls. Study Edition. Volume 2 (4Q274-11Q31)⁦,‬⁦ ‬Leiden - Boston, MA - Köln - Grand Rapids, MI - Cambridge⁦ ‬<sup>Paperback Edition</sup>2000"
+    },
+    {
+      "bibliographicAbbreviation": "Study Edition",
+      "bibliographyId": 77,
+      "formattedBibliographicString": "Florentino García Martínez/Eibert J. C. Tigchelaar⁦ (Hgg.), ‬The Dead Sea Scrolls. Study Edition. Volume 1 (1Q1 - 4Q273)⁦,‬⁦ ‬Leiden - Boston, MA - Köln - Grand Rapids, MI - Cambridge⁦ ‬<sup>Paperback Edition</sup>2000"
+    },
+    {
+      "bibliographicAbbreviation": "Sussmann 1989-1990",
+      "bibliographyId": 3795,
+      "formattedBibliographicString": "Yaaqōv Sussmann⁦, ‬The History of the Halakha and the Dead Sea Scrolls. Preliminary Observations on Miqsat Ma’ase Ha-Torah (4QMMT)⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬59⁦ (‬1989-1990⁦) ‬11-76"
+    },
+    {
+      "bibliographicAbbreviation": "Talmon 1957",
+      "bibliographyId": 5287,
+      "formattedBibliographicString": "Shemaryahu Talmon⁦, ‬The Calendar of the Sect from the Judean Desert in: J. Liver⁦ (Hg.), ‬עינים במגילות מדבר יהודה. הרצאות ביום העיון השלישי (תשי\"ז) לזכרו של א. ל. סוקניק. Studies in the Dead Sea Scrolls. Lectures delivered at the Third Annual Conference (1957) in Memory of E. L. Sukenik⁦,‬⁦ ‬Jerusalem⁦ ‬1957, 24-39"
+    },
+    {
+      "bibliographicAbbreviation": "Talmon 1959-60",
+      "bibliographyId": 3846,
+      "formattedBibliographicString": "Shemaryahu Talmon⁦, ‬The Order of Prayers of the Sect from the Judaean Desert. Tarbiz 29 [1959-60] 1-20⁦,‬⁦ ‬1959-60"
+    },
+    {
+      "bibliographicAbbreviation": "Talmon 2003",
+      "bibliographyId": 1493,
+      "formattedBibliographicString": "Shemaryahu Talmon⁦, ‬Sabbath Observance According to the Damascus Fragments. Evening to Evening or Morning to Morning?⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬1⁦ (‬2003⁦) ‬71-93"
+    },
+    {
+      "bibliographicAbbreviation": "Talshir 2005",
+      "bibliographyId": 3575,
+      "formattedBibliographicString": "David Talshir⁦, ‬On the Use of אנס in Aramaic and in Hebrew⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬3⁦ (‬2005⁦) ‬205-229"
+    },
+    {
+      "bibliographicAbbreviation": "Talshir 2009",
+      "bibliographyId": 4784,
+      "formattedBibliographicString": "Zipora Talshir⁦, ‬Biblical Texts from the Judaean Desert. המגילות המקראיות ממדבר יהודה in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 109-141"
+    },
+    {
+      "bibliographicAbbreviation": "Tigchelaar 2000a",
+      "bibliographyId": 2308,
+      "formattedBibliographicString": "Eibert J. C. Tigchelaar⁦, ‬A Newly Identified 11QSerekh ha-Yahad Fragment (11Q29)? in: Lawrence H. Schiffman/Emanuel Tov/James C. VanderKam/Galen Marquis⁦ (Hgg.), ‬The Dead Sea Scrolls. Fifty Years after Their Discovery⁦,‬⁦ ‬Jerusalem⁦ ‬2000, 285-292"
+    },
+    {
+      "bibliographicAbbreviation": "Tigchelaar 2000b",
+      "bibliographyId": 2311,
+      "formattedBibliographicString": "Eibert J. C. Tigchelaar⁦, ‬More on 4Q264A (Halakha A or 4QWays of Righteousness^c^?)⁦, in: ‬Revue de Qumran⁦ ‬19⁦ (‬2000⁦) ‬453-456"
+    },
+    {
+      "bibliographicAbbreviation": "Tigchelaar 2001",
+      "bibliographyId": 126,
+      "formattedBibliographicString": "Eibert J. C. Tigchelaar⁦, ‬To Increase Learning for the Understanding Ones. Reading and Reconstructing the Fragmentary Early Jewish Sapiential Text 4QInstruction⁦ (‬Studies on the Texts of the Desert of Judah 44⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA - Köln⁦ ‬2001"
+    },
+    {
+      "bibliographicAbbreviation": "Tigchelaar 2017d",
+      "bibliographyId": 8650,
+      "formattedBibliographicString": "Eibert J. C. Tigchelaar⁦, ‬Thrice Nahum 3:8–10. mt, lxx, and 4Q385a 17 ii—New Proposals in: Joel S. Baden/Hindy Najman/Eibert J. C. Tigchelaar⁦ (Hgg.), ‬Sibyls, Scriptures, and Scrolls. John Collins at Seventy. Volume 2⁦ (‬Supplements to the Journal for the Study of Judaism 175,2⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2017, 1265-1277"
+    },
+    {
+      "bibliographicAbbreviation": "Vielhauer 2001",
+      "bibliographyId": 135,
+      "formattedBibliographicString": "Roman Vielhauer⁦, ‬Materielle Rekonstruktion und historische Einordnung der beiden Pescharim zum Hoseabuch (4QpHos^a^ und 4QpHos^b^)⁦, in: ‬Revue de Qumran⁦ ‬20⁦ (‬2001⁦) ‬39-91"
+    },
+    {
+      "bibliographicAbbreviation": "Vielhauer 2011",
+      "bibliographyId": 5965,
+      "formattedBibliographicString": "Roman Vielhauer⁦, ‬Reading Hosea at Qumran in: George J. Brooke/Jesper Høgenhaven⁦ (Hgg.), ‬The Mermaid and the Partridge. Essays from the Copenhagen Conference on Revising Texts from Cave Four⁦ (‬Studies on the Texts of the Desert of Judah 96⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2011, 91-108"
+    },
+    {
+      "bibliographicAbbreviation": "Wacholder 2007",
+      "bibliographyId": 2822,
+      "formattedBibliographicString": "Ben Zion Wacholder⁦, ‬The New Damascus Document. The Midrash on the Eschatological Torah of the Dead Sea Scrolls. Reconstruction, Translation and Commentary⁦ (‬Studies on the Texts of the Desert of Judah 56⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2007"
+    },
+    {
+      "bibliographicAbbreviation": "Wacholder/Abegg 1991a",
+      "bibliographyId": 3363,
+      "formattedBibliographicString": "Martin G. Abegg/Ben Zion Wacholder⁦, ‬ A Preliminiary Edition of the Unpublished Dead Sea Scrolls. The Hebrew and Aramaic Texts from Cave Four. Fascicle 1⁦,‬⁦ ‬Washington, DC⁦ ‬1991"
+    },
+    {
+      "bibliographicAbbreviation": "Wacholder/Abegg 1992",
+      "bibliographyId": 3364,
+      "formattedBibliographicString": "Martin G. Abegg/Ben Zion Wacholder⁦, ‬A Preliminary Edition of the Unpublished Dead Sea Scrolls. The Hebrew and Aramaic Texts From Cave Four. Fascicle 2⁦,‬⁦ ‬Washington, DC⁦ ‬1992"
+    },
+    {
+      "bibliographicAbbreviation": "Wacholder/Abegg 1995",
+      "bibliographyId": 3365,
+      "formattedBibliographicString": "Ben Zion Wacholder/Martin G. Abegg⁦, ‬ A Preliminary Edition of the Unpublished Dead Sea Scrolls. The Hebrew and Aramaic Texts From Cave Four. Fascicle 3⁦,‬⁦ ‬Washington, DC⁦ ‬1995"
+    },
+    {
+      "bibliographicAbbreviation": "Weinfeld 1975-1976",
+      "bibliographyId": 3832,
+      "formattedBibliographicString": "Moshe Weinfeld⁦, ‬Traces of Kedushat Yozer and Pesukey De-Zimra in the Qumran Literature and in Ben-Sira⁦, in: ‬Tarbiz. A Quarterly for Jewish Studies⁦ ‬45⁦ (‬1975-1976⁦) ‬15-26"
+    },
+    {
+      "bibliographicAbbreviation": "Weissenberg 2009",
+      "bibliographyId": 4865,
+      "formattedBibliographicString": "Hanne von Weissenberg⁦, ‬4QMMT: Reevaluating the Text, the Function, and the Meaning of the Epilogue⁦ (‬Studies on the Texts of the Desert of Judah 82⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2009"
+    },
+    {
+      "bibliographicAbbreviation": "Werman 2007",
+      "bibliographyId": 3608,
+      "formattedBibliographicString": "Cana Werman⁦, ‬The Price of Mediation. The Role of the Priests in Priestly Halakhah⁦, in: ‬Meghillot. Studies in the Dead Sea Scrolls\r\n\r\nמגילות. מחקרים במגילות מדבר יהודה⁦ ‬5-6⁦ (‬2007⁦) ‬85-108"
+    },
+    {
+      "bibliographicAbbreviation": "Werman/Shemesh 2009",
+      "bibliographyId": 4835,
+      "formattedBibliographicString": "Cana Werman/Aharon Shemesh⁦, ‬++Halakhah++ in the Dead Sea Scrolls. ההלכה במגילות מדבר יהודה in: Menachem Kister⁦ (Hg.), ‬The Qumran Scrolls and their World. מגילות קומראן. מבואות ומחקרים. כרך ראשון⁦,‬⁦ ‬Jerusalem⁦ ‬2009, 409-433"
+    },
+    {
+      "bibliographicAbbreviation": "Wernberg-Møller 1957",
+      "bibliographyId": 1951,
+      "formattedBibliographicString": "Preben Wernberg-Møller⁦, ‬The Manual of Discipline. Translated and Annotated with an Introduction⁦ (‬Studies on the Texts of the Desert of Judah 1⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬1957"
+    },
+    {
+      "bibliographicAbbreviation": "White Crawford 2003",
+      "bibliographyId": 8675,
+      "formattedBibliographicString": "Sidnie White Crawford⁦, ‬Mothers, Sisters, and Elders. Titles for Women in Second Temple Jewish and Early Christian Communities in: James R. Davila⁦, ‬The Dead Sea Scrolls as Background to Postbiblical Judaism and Early Christianity. Papers from an International Conference at St. Andrews in 2001⁦ (‬Studies on the Texts of the Desert of Judah 46⁦)‬⁦,‬⁦ ‬Leiden⁦ ‬2003, 177-191"
+    },
+    {
+      "bibliographicAbbreviation": "Woude 1982",
+      "bibliographyId": 3340,
+      "formattedBibliographicString": "Adam Simon van der Woude⁦, ‬Fragmente einer Rolle der Lieder für das Sabbatopfer aus Höhle XI von Qumran (11Q SirSabb) in: W.C. Delsman/Jan Thomas Nelis/J.R.T.M. Peters/Willem H. Ph. Römer/Adam Simon van der Woude⁦ (Hgg.), ‬Vom Kanaan bis Kerala. Festschrift für Prof. Mag. Dr. Dr. J[ohannes] P[etrus] M[aria] van der Ploeg O.P. zur Vollendung des 70. Lebensjahres am 4. Juli 1979. Überreicht von Kollegen, Freunden u. Schülern⁦ (‬Alter Orient und Altes Testament 211⁦)‬⁦,‬⁦ ‬Kevelaer - Neukirchen-Vluyn⁦ ‬1982, 311-37"
+    },
+    {
+      "bibliographicAbbreviation": "Xeravits 2003",
+      "bibliographyId": 915,
+      "formattedBibliographicString": "Géza G. Xeravits⁦, ‬King, Priest, Prophet. Positive Eschatological Protagonists of the Qumran Library⁦ (‬Studies on the Texts of the Desert of Judah 47⁦)‬⁦,‬⁦ ‬Leiden - Boston, MA⁦ ‬2003"
+    },
+    {
+      "bibliographicAbbreviation": "Yadin 1957a",
+      "bibliographyId": 5381,
+      "formattedBibliographicString": "Yigael Yadin⁦, ‬Recent Developments in Dead Sea Scrolls Research in: J. Liver⁦ (Hg.), ‬עינים במגילות מדבר יהודה. הרצאות ביום העיון השלישי (תשי\"ז) לזכרו של א. ל. סוקניק. Studies in the Dead Sea Scrolls. Lectures delivered at the Third Annual Conference (1957) in Memory of E. L. Sukenik⁦,‬⁦ ‬Jerusalem⁦ ‬1957, 40-54"
+    },
+    {
+      "bibliographicAbbreviation": "Yadin 1959b",
+      "bibliographyId": 4097,
+      "formattedBibliographicString": "Yigael Yadin⁦, ‬Some Notes on The Newly Published Pesharim of Isaiah⁦, in: ‬Israel Exploration Journal⁦ ‬9⁦ (‬1959⁦) ‬39-42"
+    },
+    {
+      "bibliographicAbbreviation": "Yalon 1967",
+      "bibliographyId": 4798,
+      "formattedBibliographicString": "Chanoch Yalon⁦, ‬מגילות מדבר יהודה. דברי לשון. מאמרים תש''ט - תשי''ב ונספחות⁦,‬⁦ ‬Jerusalem⁦ ‬1967"
+    },
+    {
+      "bibliographicAbbreviation": "Zimmermann 1998",
+      "bibliographyId": 772,
+      "formattedBibliographicString": "Johannes Zimmermann⁦, ‬Messianische Texte aus Qumran. Königliche, priesterliche und prophetische Messiasvorstellungen in den Schriftfunden von Qumran⁦ (‬Wissenschaftliche Untersuchungen zum Neuen Testament. Reihe 2 104⁦)‬⁦,‬⁦ ‬Tübingen⁦ ‬1998"
+    }
+  ]
+}

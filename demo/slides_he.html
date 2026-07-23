@@ -123,7 +123,19 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 15px;
+      gap: 12px;
+      overflow-y: auto;
+      min-height: 0;
+      padding-right: 4px;
+    }
+
+    .slide-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .slide-body::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
     }
 
     .slide-footer {
@@ -376,15 +388,15 @@
     /* Literature Grid Styling */
     .lit-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
     .lit-card {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 10px;
-      padding: 14px 18px;
+      padding: 10px 14px;
     }
 
     .lit-card h4 {

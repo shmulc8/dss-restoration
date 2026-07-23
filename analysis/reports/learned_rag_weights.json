@@ -1,0 +1,23 @@
+{
+  "feature_names": [
+    "mlm_log_prob",
+    "rag_ngram_len",
+    "log_rag_hits",
+    "rag_match_flag"
+  ],
+  "coefficients": [
+    0.3899528425270643,
+    0.9912551137093671,
+    1.606052559897092,
+    -2.908429116424684
+  ],
+  "intercept": 1.811565988174985,
+  "dev_size": 200,
+  "test_size": 300,
+  "dev_split": "dev-scrolls",
+  "test_split": "heldout-scrolls",
+  "candidate_topn": 50,
+  "baseline_top10": 25.333333333333336,
+  "learned_top10": 26.0,
+  "gain_top10": 0.6666666666666643
+}

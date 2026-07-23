@@ -33,7 +33,105 @@
         "unsupported_target_markup_targets": 4
       }
     },
-    "interpretation": "agreement with attributed literature under manuscript constraints; not verified physical ground truth"
+    "interpretation": "agreement with attributed literature under manuscript constraints; not verified physical ground truth",
+    "rag": {
+      "source_split": "preserved_nonbib train",
+      "train_chunks": 1002,
+      "indexed_targets": 36171,
+      "context_keys": 109224,
+      "max_context_words_per_side": 2,
+      "clitics_joined": true,
+      "weight_fit": {
+        "fit_split": "preserved_nonbib dev",
+        "sample_seed": 42,
+        "candidate_topn": 500,
+        "alpha": 0.5,
+        "baseline": {
+          "n": 300,
+          "top1": 8.666666666666666,
+          "top5": 19.333333333333332,
+          "top10": 24.666666666666668,
+          "top20": 30.333333333333332,
+          "gold_retrieval_support": 33
+        },
+        "selected": {
+          "n": 300,
+          "top1": 9.666666666666666,
+          "top5": 20.0,
+          "top10": 26.0,
+          "top20": 31.333333333333332,
+          "gold_retrieval_support": 33
+        },
+        "grid": {
+          "0.0": {
+            "n": 300,
+            "top1": 8.666666666666666,
+            "top5": 19.333333333333332,
+            "top10": 24.666666666666668,
+            "top20": 30.333333333333332,
+            "gold_retrieval_support": 33
+          },
+          "0.05": {
+            "n": 300,
+            "top1": 8.666666666666666,
+            "top5": 19.666666666666668,
+            "top10": 24.333333333333332,
+            "top20": 30.333333333333332,
+            "gold_retrieval_support": 33
+          },
+          "0.1": {
+            "n": 300,
+            "top1": 8.666666666666666,
+            "top5": 19.666666666666668,
+            "top10": 24.333333333333332,
+            "top20": 30.333333333333332,
+            "gold_retrieval_support": 33
+          },
+          "0.2": {
+            "n": 300,
+            "top1": 9.333333333333334,
+            "top5": 19.666666666666668,
+            "top10": 24.666666666666668,
+            "top20": 31.0,
+            "gold_retrieval_support": 33
+          },
+          "0.35": {
+            "n": 300,
+            "top1": 9.333333333333334,
+            "top5": 20.333333333333332,
+            "top10": 25.666666666666668,
+            "top20": 31.333333333333332,
+            "gold_retrieval_support": 33
+          },
+          "0.5": {
+            "n": 300,
+            "top1": 9.666666666666666,
+            "top5": 20.0,
+            "top10": 26.0,
+            "top20": 31.333333333333332,
+            "gold_retrieval_support": 33
+          },
+          "0.75": {
+            "n": 300,
+            "top1": 8.666666666666666,
+            "top5": 20.333333333333332,
+            "top10": 25.666666666666668,
+            "top20": 30.666666666666668,
+            "gold_retrieval_support": 33
+          },
+          "1.0": {
+            "n": 300,
+            "top1": 8.0,
+            "top5": 20.333333333333332,
+            "top10": 25.666666666666668,
+            "top20": 30.333333333333332,
+            "gold_retrieval_support": 33
+          }
+        }
+      },
+      "score": "MLM logit + alpha * exact-context retrieval score",
+      "heldout_used_for_tuning": false
+    }
   },
   "target_level_any_attributed_restoration": {
     "n": 74,
@@ -48,7 +146,29 @@
       74.32432432432432
     ]
   },
+  "rag_target_level_any_attributed_restoration": {
+    "n": 74,
+    "top1": 40.54054054054054,
+    "top5": 62.16216216216216,
+    "top10": 63.513513513513516,
+    "top20": 67.56756756756756,
+    "in_candidate_vocabulary": 55,
+    "median_rank_when_retrievable": 0,
+    "top10_cluster_bootstrap_95ci": [
+      51.351351351351354,
+      74.32432432432432
+    ]
+  },
   "unique_target_reading_level": {
+    "n": 99,
+    "top1": 30.303030303030305,
+    "top5": 59.5959595959596,
+    "top10": 60.60606060606061,
+    "top20": 64.64646464646465,
+    "in_candidate_vocabulary": 72,
+    "median_rank_when_retrievable": 1.0
+  },
+  "rag_unique_target_reading_level": {
     "n": 99,
     "top1": 30.303030303030305,
     "top5": 59.5959595959596,
@@ -104,7 +224,9 @@
       "top20": 10.81081081081081,
       "in_candidate_vocabulary": 55,
       "median_rank_when_retrievable": 585
-    }
+    },
+    "rag_top10_change_points": 0.0,
+    "rag_targets_with_any_candidate_support": 8
   },
   "by_bibliographic_source": {
     "PTSDSSP 4A": {
@@ -1012,12 +1134,24 @@
         "להרוג"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 615,
       "qd_initial_rank": 1,
       "top_predictions": [
         "להרוג",
         "ולהרוג"
-      ]
+      ],
+      "rag_top_predictions": [
+        "להרוג",
+        "ולהרוג"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "נפש"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "11Q11",
@@ -1039,6 +1173,7 @@
         "חושך"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 205,
       "qd_initial_rank": 1,
       "top_predictions": [
@@ -1047,7 +1182,19 @@
         "החושך",
         "וחושך",
         "לחושך"
-      ]
+      ],
+      "rag_top_predictions": [
+        "חושך",
+        "בחושך",
+        "החושך",
+        "וחושך",
+        "לחושך"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "11Q11",
@@ -1070,6 +1217,7 @@
         "האדם"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 32,
       "qd_initial_rank": 2,
       "top_predictions": [
@@ -1093,7 +1241,36 @@
         "והאדם",
         "וכאדם",
         "מבאדם"
-      ]
+      ],
+      "rag_top_predictions": [
+        "אדם",
+        "האדם",
+        "מאדם",
+        "באדם",
+        "לאדם",
+        "שאדם",
+        "שבאדם",
+        "מהאדם",
+        "ואדם",
+        "כאדם",
+        "כשאדם",
+        "ולאדם",
+        "שהאדם",
+        "שלאדם",
+        "יתאדם",
+        "ובאדם",
+        "דאדם",
+        "והאדם",
+        "וכאדם",
+        "מבאדם"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "ומזרע"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "11Q17",
@@ -1117,6 +1294,7 @@
         "שרו"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 3287,
       "qd_initial_rank": 3,
       "top_predictions": [
@@ -1140,7 +1318,34 @@
         "עישרו",
         "אשרו",
         "מבשרו"
-      ]
+      ],
+      "rag_top_predictions": [
+        "שרו",
+        "כשרו",
+        "בשרו",
+        "ישרו",
+        "קשרו",
+        "שכשרו",
+        "השרו",
+        "עשרו",
+        "נקשרו",
+        "ושרו",
+        "לשרו",
+        "עושרו",
+        "וקשרו",
+        "קושרו",
+        "ואשרו",
+        "בישרו",
+        "הכשרו",
+        "עישרו",
+        "אשרו",
+        "מבשרו"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1Q26",
@@ -1163,6 +1368,7 @@
         "ונכלמתה"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1173,7 +1379,27 @@
         "ונכרתה",
         "ונדוניתה",
         "ונפחתה"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ונטשתה",
+        "ונבנתה",
+        "ונראתה",
+        "ונמניתה",
+        "ונכרתה",
+        "ונדוניתה",
+        "ונפחתה"
+      ],
+      "rag_context": {
+        "left": [
+          "בכל",
+          "תבואתכה"
+        ],
+        "right": [
+          "בכל",
+          "מעשיכה"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1Q26",
@@ -1195,9 +1421,20 @@
         "גורלכה"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [
+          "לא"
+        ],
+        "right": [
+          "נגד"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1Q34bis",
@@ -1221,6 +1458,7 @@
         "להתדשן"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 6447,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1236,7 +1474,29 @@
         "מקדשן",
         "הקדשן",
         "לקדשן"
-      ]
+      ],
+      "rag_top_predictions": [
+        "בדשן",
+        "דשן",
+        "מדשן",
+        "תדשן",
+        "ודשן",
+        "הדשן",
+        "ומדשן",
+        "שדשן",
+        "קדשן",
+        "מקדשן",
+        "הקדשן",
+        "לקדשן"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "בעדי",
+          "שמימ"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1QS",
@@ -1258,6 +1518,7 @@
         "אשר"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 0,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -1270,7 +1531,26 @@
         "שאשר",
         "דאשר",
         "האשר"
-      ]
+      ],
+      "rag_top_predictions": [
+        "אשר",
+        "כאשר",
+        "באשר",
+        "ואשר",
+        "מאשר",
+        "לאשר",
+        "שאשר",
+        "דאשר",
+        "האשר"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "יתערב",
+          "עמו"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1QSb",
@@ -1293,9 +1573,16 @@
         "יחונכה"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1QSb",
@@ -1317,6 +1604,7 @@
         "ובמועד"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 38698,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1339,7 +1627,33 @@
         "ובמוכין",
         "ובמוציא",
         "ובמוכר"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ובמועד",
+        "ובמוסף",
+        "ובמורא",
+        "ובמותו",
+        "ובמותי",
+        "ובמותך",
+        "ובמושב",
+        "ובמורייס",
+        "ובמותיך",
+        "ובמועט",
+        "ובמוצאי",
+        "ובמופתים",
+        "ובמועדים",
+        "ובמורסן",
+        "ובמוקצה",
+        "ובמוספין",
+        "ובמוכין",
+        "ובמוציא",
+        "ובמוכר"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1QSb",
@@ -1362,6 +1676,7 @@
         "דויד"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 68,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1385,7 +1700,39 @@
         "דמזיד",
         "דטריד",
         "דקפיד"
-      ]
+      ],
+      "rag_top_predictions": [
+        "דויד",
+        "דתמיד",
+        "דיחיד",
+        "דנגיד",
+        "דיד",
+        "דמיד",
+        "דאמיד",
+        "דביד",
+        "דאגיד",
+        "דגיד",
+        "דעביד",
+        "דניד",
+        "דאיד",
+        "דעתיד",
+        "דחשיד",
+        "דמעיד",
+        "דסיד",
+        "דמזיד",
+        "דטריד",
+        "דקפיד"
+      ],
+      "rag_context": {
+        "left": [
+          "וברית"
+        ],
+        "right": [
+          "יחדש",
+          "לו"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1QpHab",
@@ -1410,6 +1757,7 @@
         "אשמתם"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 7218,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1433,7 +1781,37 @@
         "אשמש",
         "אשמעינ",
         "אשמעה"
-      ]
+      ],
+      "rag_top_predictions": [
+        "אשמות",
+        "אשמים",
+        "אשמה",
+        "אשמדאי",
+        "אשמר",
+        "אשמם",
+        "אשמע",
+        "אשמרה",
+        "אשמאי",
+        "אשמי",
+        "אשמו",
+        "אשמור",
+        "אשמנו",
+        "אשמתו",
+        "אשמן",
+        "אשמתא",
+        "אשמרנו",
+        "אשמש",
+        "אשמעינ",
+        "אשמעה"
+      ],
+      "rag_context": {
+        "left": [
+          "בעצת",
+          "בית"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1QpHab",
@@ -1456,6 +1834,7 @@
         "פתאום"
       ],
       "rank_any_attributed": 6,
+      "rag_rank_any_attributed": 6,
       "unconstrained_rank_any_attributed": 6206,
       "qd_initial_rank": 6,
       "top_predictions": [
@@ -1479,7 +1858,37 @@
         "פתו",
         "פתחי",
         "פתר"
-      ]
+      ],
+      "rag_top_predictions": [
+        "פתע",
+        "פתחה",
+        "פתח",
+        "פתאם",
+        "פתחו",
+        "פתרו",
+        "פת",
+        "פתחת",
+        "פתי",
+        "פתם",
+        "פתהן",
+        "פתוח",
+        "פתך",
+        "פתני",
+        "פתן",
+        "פתים",
+        "פתה",
+        "פתו",
+        "פתחי",
+        "פתר"
+      ],
+      "rag_context": {
+        "left": [
+          "טמאה",
+          "הלא"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "1QpHab",
@@ -1501,6 +1910,7 @@
         "אום"
       ],
       "rank_any_attributed": 3,
+      "rag_rank_any_attributed": 3,
       "unconstrained_rank_any_attributed": 42165,
       "qd_initial_rank": 3,
       "top_predictions": [
@@ -1509,7 +1919,21 @@
         "האום",
         "אום",
         "תאום"
-      ]
+      ],
+      "rag_top_predictions": [
+        "לאום",
+        "נאום",
+        "האום",
+        "אום",
+        "תאום"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "ויקומו"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "2Q22",
@@ -1531,6 +1955,7 @@
         "ידעתי"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 42,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -1542,7 +1967,24 @@
         "ידעתם",
         "ידעתים",
         "ידעתו"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ידעתי",
+        "ידעתיו",
+        "ידעת",
+        "ידעתיך",
+        "ידעתה",
+        "ידעתם",
+        "ידעתים",
+        "ידעתו"
+      ],
+      "rag_context": {
+        "left": [
+          "כי"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q161",
@@ -1566,6 +2008,7 @@
         "עלו"
       ],
       "rank_any_attributed": 12,
+      "rag_rank_any_attributed": 12,
       "unconstrained_rank_any_attributed": 698,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1589,7 +2032,37 @@
         "ויחלו",
         "חבלו",
         "ולו"
-      ]
+      ],
+      "rag_top_predictions": [
+        "חילו",
+        "יחלו",
+        "יכלו",
+        "נפלו",
+        "החלו",
+        "יפלו",
+        "יאכלו",
+        "אכלו",
+        "אבלו",
+        "יוכלו",
+        "גדלו",
+        "אפילו",
+        "עלו",
+        "יעלו",
+        "חללו",
+        "מלו",
+        "אלו",
+        "ויחלו",
+        "חבלו",
+        "ולו"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "אנשי",
+          "חילו"
+        ],
+        "candidate_support_count": 1
+      }
     },
     {
       "siglum": "4Q161",
@@ -1612,6 +2085,7 @@
         "לה"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 66,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1635,7 +2109,36 @@
         "זלה",
         "פלה",
         "ולה"
-      ]
+      ],
+      "rag_top_predictions": [
+        "כלה",
+        "סלה",
+        "אלה",
+        "לה",
+        "עלה",
+        "גלה",
+        "קלה",
+        "שלה",
+        "ילה",
+        "בלה",
+        "חלה",
+        "דלה",
+        "מלה",
+        "תלה",
+        "ללה",
+        "הלה",
+        "צלה",
+        "זלה",
+        "פלה",
+        "ולה"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "ורבימ"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q161",
@@ -1659,6 +2162,7 @@
         "למטעת"
       ],
       "rank_any_attributed": 4,
+      "rag_rank_any_attributed": 4,
       "unconstrained_rank_any_attributed": 86532,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1667,7 +2171,19 @@
         "למטע",
         "למטן",
         "למט"
-      ]
+      ],
+      "rag_top_predictions": [
+        "למטה",
+        "למטר",
+        "למטע",
+        "למטן",
+        "למט"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q161",
@@ -1689,6 +2205,7 @@
         "ינתנו"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 102,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1712,7 +2229,37 @@
         "שינתנו",
         "ישתנו",
         "היותנו"
-      ]
+      ],
+      "rag_top_predictions": [
+        "נתנו",
+        "ינתנו",
+        "יתנו",
+        "ניתנו",
+        "ונתנו",
+        "ויתנו",
+        "שנתנו",
+        "התנו",
+        "אתנו",
+        "נותנו",
+        "מתנו",
+        "וינתנו",
+        "יתחתנו",
+        "מותנו",
+        "וייתנו",
+        "אותנו",
+        "תתנו",
+        "שינתנו",
+        "ישתנו",
+        "היותנו"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "ביד",
+          "ישראל"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q161",
@@ -1734,12 +2281,24 @@
         "גדולו"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 26933,
       "qd_initial_rank": 1,
       "top_predictions": [
         "גדולות",
         "גדולו"
-      ]
+      ],
+      "rag_top_predictions": [
+        "גדולות",
+        "גדולו"
+      ],
+      "rag_context": {
+        "left": [
+          "ביד"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q163",
@@ -1761,6 +2320,7 @@
         "מבלעים"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -1783,7 +2343,36 @@
         "דסלעים",
         "וסלעים",
         "בלעים"
-      ]
+      ],
+      "rag_top_predictions": [
+        "הקלעים",
+        "קלעים",
+        "סלעים",
+        "הסלעים",
+        "תולעים",
+        "התולעים",
+        "ולעים",
+        "בולעים",
+        "בסלעים",
+        "ותולעים",
+        "לקלעים",
+        "ובסלעים",
+        "וקלעים",
+        "והסלעים",
+        "מובלעים",
+        "נבלעים",
+        "דסלעים",
+        "וסלעים",
+        "בלעים"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "על",
+          "כנ"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q163",
@@ -1805,9 +2394,18 @@
         "למועט"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [
+          "פשרו"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q167",
@@ -1829,13 +2427,27 @@
         "הכוהן"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 28,
       "qd_initial_rank": 1,
       "top_predictions": [
         "הכוהן",
         "כוהן",
         "לכוהן"
-      ]
+      ],
+      "rag_top_predictions": [
+        "הכוהן",
+        "כוהן",
+        "לכוהן"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "האחרונ",
+          "אשר"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q179",
@@ -1858,9 +2470,19 @@
         "עריריה"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "כעצובה",
+          "וכעזובת"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q179",
@@ -1882,9 +2504,22 @@
         "ורחובותיה"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [
+          "כל",
+          "ארמונתיה"
+        ],
+        "right": [
+          "כעקרה",
+          "וכמסככה"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q185",
@@ -1908,12 +2543,25 @@
         "ישפטו"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 477,
       "qd_initial_rank": 1,
       "top_predictions": [
         "ישפט",
         "ישפטו"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ישפט",
+        "ישפטו"
+      ],
+      "rag_context": {
+        "left": [
+          "באש",
+          "להבה"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q185",
@@ -1936,6 +2584,7 @@
         "מןגבורת"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 11,
       "qd_initial_rank": 1,
       "top_predictions": [
@@ -1954,7 +2603,35 @@
         "לחבורת",
         "וקבורת",
         "יבורת"
-      ]
+      ],
+      "rag_top_predictions": [
+        "גבורת",
+        "חבורת",
+        "קבורת",
+        "בגבורת",
+        "בורת",
+        "בחבורת",
+        "שבורת",
+        "מעבורת",
+        "תשבורת",
+        "בקבורת",
+        "לקבורת",
+        "קיבורת",
+        "לחבורת",
+        "וקבורת",
+        "יבורת"
+      ],
+      "rag_context": {
+        "left": [
+          "תמו",
+          "מנ"
+        ],
+        "right": [
+          "אלהימ",
+          "וזכרו"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q185",
@@ -1976,11 +2653,23 @@
         "יראתו"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 7141,
       "qd_initial_rank": 0,
       "top_predictions": [
         "יראתו"
-      ]
+      ],
+      "rag_top_predictions": [
+        "יראתו"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "ולא",
+          "לעתת"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q264a",
@@ -2002,12 +2691,25 @@
         "ולשתות"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 3,
       "qd_initial_rank": 0,
       "top_predictions": [
         "ולשתות",
         "ולשתותן"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ולשתות",
+        "ולשתותן"
+      ],
+      "rag_context": {
+        "left": [
+          "ידבר",
+          "לאכל"
+        ],
+        "right": [],
+        "candidate_support_count": 1
+      }
     },
     {
       "siglum": "4Q265",
@@ -2029,6 +2731,7 @@
         "יתכס"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -2052,7 +2755,40 @@
         "תחוס",
         "יתפוס",
         "יכעס"
-      ]
+      ],
+      "rag_top_predictions": [
+        "יכנס",
+        "יכבס",
+        "ייכנס",
+        "כבוס",
+        "ינוס",
+        "יכניס",
+        "תכבס",
+        "יהרוס",
+        "הכנס",
+        "תכנס",
+        "כיבוס",
+        "יכנוס",
+        "ימאס",
+        "שיכנס",
+        "נכנס",
+        "יחוס",
+        "מכבס",
+        "תחוס",
+        "יתפוס",
+        "יכעס"
+      ],
+      "rag_context": {
+        "left": [
+          "צואימ",
+          "אל"
+        ],
+        "right": [
+          "איש",
+          "בבגדימ"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q265",
@@ -2074,6 +2810,7 @@
         "היה"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 0,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -2097,7 +2834,37 @@
         "יה",
         "יחיה",
         "אליה"
-      ]
+      ],
+      "rag_top_predictions": [
+        "היה",
+        "יהיה",
+        "תהיה",
+        "והיה",
+        "נהיה",
+        "שהיה",
+        "הויה",
+        "אהיה",
+        "הייה",
+        "ליה",
+        "חיה",
+        "תיה",
+        "עליה",
+        "דהיה",
+        "אחיה",
+        "החיה",
+        "שיה",
+        "יה",
+        "יחיה",
+        "אליה"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "לה",
+          "עד"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q270",
@@ -2120,6 +2887,7 @@
         "האומן"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 1494,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -2132,7 +2900,25 @@
         "מאומן",
         "שהאומן",
         "דאומן"
-      ]
+      ],
+      "rag_top_predictions": [
+        "האומן",
+        "אומן",
+        "לאומן",
+        "ואומן",
+        "באומן",
+        "והאומן",
+        "מאומן",
+        "שהאומן",
+        "דאומן"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "את"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q272",
@@ -2154,6 +2940,7 @@
         "ושבעת"
       ],
       "rank_any_attributed": 4,
+      "rag_rank_any_attributed": 4,
       "unconstrained_rank_any_attributed": 3532,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -2168,7 +2955,25 @@
         "ששבעת",
         "ונשבעת",
         "שנשבעת"
-      ]
+      ],
+      "rag_top_predictions": [
+        "שבעת",
+        "בשבעת",
+        "השבעת",
+        "משבעת",
+        "ושבעת",
+        "נשבעת",
+        "דשבעת",
+        "לשבעת",
+        "ששבעת",
+        "ונשבעת",
+        "שנשבעת"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q287",
@@ -2191,6 +2996,7 @@
         "טוהר"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 42,
       "qd_initial_rank": 1,
       "top_predictions": [
@@ -2214,7 +3020,37 @@
         "צהר",
         "תדהר",
         "סהר"
-      ]
+      ],
+      "rag_top_predictions": [
+        "טוהר",
+        "זוהר",
+        "זהר",
+        "מהר",
+        "טהר",
+        "בהר",
+        "נהר",
+        "מוהר",
+        "יצהר",
+        "לטוהר",
+        "תטהר",
+        "ההר",
+        "כזוהר",
+        "להר",
+        "בטהר",
+        "לטהר",
+        "והר",
+        "צהר",
+        "תדהר",
+        "סהר"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "רוקמת",
+          "רוחי"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q287",
@@ -2236,9 +3072,21 @@
         "כולמה"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [
+          "בראתה",
+          "את"
+        ],
+        "right": [
+          "ומחדש"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q287",
@@ -2261,6 +3109,7 @@
         "מחדש"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 1092,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -2271,7 +3120,21 @@
         "מחדשי",
         "מחדשין",
         "שמחדש"
-      ]
+      ],
+      "rag_top_predictions": [
+        "מחדש",
+        "ומחדש",
+        "המחדש",
+        "מחדשים",
+        "מחדשי",
+        "מחדשין",
+        "שמחדש"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q302",
@@ -2293,9 +3156,19 @@
         "כהטיביך"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "על",
+          "כל"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q303",
@@ -2317,6 +3190,7 @@
         "כנגדו"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 8,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -2340,7 +3214,37 @@
         "כנגדך",
         "כמשפט",
         "כשדים"
-      ]
+      ],
+      "rag_top_predictions": [
+        "כנגדו",
+        "כנגדה",
+        "כמהו",
+        "כנגד",
+        "כאשר",
+        "כאדם",
+        "כמוהו",
+        "כדמות",
+        "כאילו",
+        "כאלו",
+        "כשהיה",
+        "כזכר",
+        "ככתוב",
+        "כאשה",
+        "כיום",
+        "כאיש",
+        "כגון",
+        "כנגדך",
+        "כמשפט",
+        "כשדים"
+      ],
+      "rag_context": {
+        "left": [
+          "לו",
+          "עזר"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q372",
@@ -2362,6 +3266,7 @@
         "ללוי"
       ],
       "rank_any_attributed": 16,
+      "rag_rank_any_attributed": 16,
       "unconstrained_rank_any_attributed": 17701,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -2385,7 +3290,37 @@
         "ללמדו",
         "ללבנה",
         "ללוך"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ללמדם",
+        "ללך",
+        "ללו",
+        "ללכת",
+        "ללמד",
+        "ללחם",
+        "ללב",
+        "ללים",
+        "ללבי",
+        "ללוים",
+        "ללא",
+        "ללמוד",
+        "ללבב",
+        "ללצים",
+        "ללון",
+        "ללה",
+        "ללוי",
+        "ללמדו",
+        "ללבנה",
+        "ללוך"
+      ],
+      "rag_context": {
+        "left": [
+          "יעקב",
+          "מכעסימ"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q372",
@@ -2409,6 +3344,7 @@
         "מלמד"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 413,
       "qd_initial_rank": 2,
       "top_predictions": [
@@ -2432,7 +3368,37 @@
         "במלמד",
         "שהלמד",
         "אלמד"
-      ]
+      ],
+      "rag_top_predictions": [
+        "מלמד",
+        "ילמד",
+        "המלמד",
+        "ללמד",
+        "תלמד",
+        "וילמד",
+        "ולמד",
+        "בלמד",
+        "נלמד",
+        "ומלמד",
+        "שלמד",
+        "שילמד",
+        "שתלמד",
+        "וללמד",
+        "שמלמד",
+        "והלמד",
+        "להתלמד",
+        "במלמד",
+        "שהלמד",
+        "אלמד"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "ידו",
+          "למלחמה"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q372",
@@ -2454,6 +3420,7 @@
         "לעשות"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 585,
       "qd_initial_rank": 1,
       "top_predictions": [
@@ -2477,7 +3444,37 @@
         "אשות",
         "עקשות",
         "דרישות"
-      ]
+      ],
+      "rag_top_predictions": [
+        "נפשות",
+        "לעשות",
+        "מעשות",
+        "עשות",
+        "רשות",
+        "ולעשות",
+        "ונפשות",
+        "ומרשות",
+        "הנפשות",
+        "ברשות",
+        "נשות",
+        "מרשות",
+        "שרשות",
+        "קשות",
+        "חדשות",
+        "קדושות",
+        "לשות",
+        "אשות",
+        "עקשות",
+        "דרישות"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "חמדו",
+          "לעוד"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q372",
@@ -2500,6 +3497,7 @@
         "המז"
       ],
       "rank_any_attributed": 14,
+      "rag_rank_any_attributed": 14,
       "unconstrained_rank_any_attributed": 972,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -2523,7 +3521,36 @@
         "המשכן",
         "המחנה",
         "המצרים"
-      ]
+      ],
+      "rag_top_predictions": [
+        "המון",
+        "המלך",
+        "המערבי",
+        "המשפט",
+        "המשחית",
+        "המנורה",
+        "המלחמה",
+        "המקדש",
+        "המונה",
+        "המערכה",
+        "המקרה",
+        "המיתו",
+        "המצור",
+        "המזבח",
+        "המות",
+        "המכה",
+        "המכשול",
+        "המשכן",
+        "המחנה",
+        "המצרים"
+      ],
+      "rag_context": {
+        "left": [
+          "באבנ"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q372",
@@ -2546,6 +3573,7 @@
         "ישכחו"
       ],
       "rank_any_attributed": 151,
+      "rag_rank_any_attributed": 151,
       "unconstrained_rank_any_attributed": 301,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -2569,7 +3597,40 @@
         "ישמעו",
         "יחטיא",
         "יפילו"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ישחיתו",
+        "יוסיפו",
+        "יחללו",
+        "יטמאו",
+        "יאמרו",
+        "יביעו",
+        "יבואו",
+        "ימירו",
+        "יסירו",
+        "יתערבו",
+        "ישחית",
+        "יכחישו",
+        "יחלקו",
+        "יעברו",
+        "יגדילו",
+        "יחזקו",
+        "יריעו",
+        "ידברו",
+        "יפרצו",
+        "יכזבו"
+      ],
+      "rag_context": {
+        "left": [
+          "מעדיהמ",
+          "ולא"
+        ],
+        "right": [
+          "מחלקותמ",
+          "כי"
+        ],
+        "candidate_support_count": 11
+      }
     },
     {
       "siglum": "4Q385a",
@@ -2593,6 +3654,7 @@
         "יון"
       ],
       "rank_any_attributed": 121,
+      "rag_rank_any_attributed": 121,
       "unconstrained_rank_any_attributed": 2348,
       "qd_initial_rank": 121,
       "top_predictions": [
@@ -2616,7 +3678,36 @@
         "ימה",
         "יכניה",
         "ייי"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ישראל",
+        "יהוה",
+        "ידו",
+        "ימי",
+        "ידי",
+        "יהודה",
+        "יום",
+        "יעקב",
+        "ידיו",
+        "יהושע",
+        "יוסף",
+        "יואב",
+        "יצחק",
+        "יושבי",
+        "ישבי",
+        "ימינו",
+        "יואש",
+        "יעקוב",
+        "ימה",
+        "יכניה"
+      ],
+      "rag_context": {
+        "left": [
+          "את"
+        ],
+        "right": [],
+        "candidate_support_count": 6
+      }
     },
     {
       "siglum": "4Q385a",
@@ -2638,6 +3729,7 @@
         "אהבתו"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 10607,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -2646,7 +3738,21 @@
         "באהבתו",
         "לאהבתו",
         "ואהבתו"
-      ]
+      ],
+      "rag_top_predictions": [
+        "אהבתו",
+        "מאהבתו",
+        "באהבתו",
+        "לאהבתו",
+        "ואהבתו"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "וא"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q385a",
@@ -2669,6 +3775,7 @@
         "מעבר"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 196,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -2692,7 +3799,38 @@
         "מעליה",
         "מעדה",
         "מערבים"
-      ]
+      ],
+      "rag_top_predictions": [
+        "מערב",
+        "מעבר",
+        "מעכה",
+        "מעלה",
+        "מעמדת",
+        "מעדן",
+        "מעטה",
+        "מעולם",
+        "מעיני",
+        "מעמל",
+        "מעוז",
+        "מעיר",
+        "מערכה",
+        "מעשה",
+        "מעריב",
+        "מעונך",
+        "מענה",
+        "מעליה",
+        "מעדה",
+        "מערבים"
+      ],
+      "rag_context": {
+        "left": [
+          "כוש"
+        ],
+        "right": [
+          "עצמה"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q397",
@@ -2714,11 +3852,23 @@
         "להרביעה"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
       "top_predictions": [
         "להרביע"
-      ]
+      ],
+      "rag_top_predictions": [
+        "להרביע"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "כלאימ",
+          "ועל"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q397",
@@ -2741,9 +3891,19 @@
         "מהתערב"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "בדברימ",
+          "האלה"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q397",
@@ -2766,12 +3926,25 @@
         "עלגב"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 21265,
       "qd_initial_rank": 1,
       "top_predictions": [
         "עלגב",
         "לגב"
-      ]
+      ],
+      "rag_top_predictions": [
+        "עלגב",
+        "לגב"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "אלה",
+          "ואתמ"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q405",
@@ -2793,6 +3966,7 @@
         "דממת"
       ],
       "rank_any_attributed": 254,
+      "rag_rank_any_attributed": 255,
       "unconstrained_rank_any_attributed": 1950,
       "qd_initial_rank": 254,
       "top_predictions": [
@@ -2816,7 +3990,37 @@
         "משרת",
         "בנות",
         "כראות"
-      ]
+      ],
+      "rag_top_predictions": [
+        "מראות",
+        "חיות",
+        "צבאות",
+        "בית",
+        "מחנות",
+        "תבנית",
+        "לקראת",
+        "נאות",
+        "דמות",
+        "דעת",
+        "ברית",
+        "לכת",
+        "תחת",
+        "מלכות",
+        "תהלות",
+        "עדת",
+        "בראות",
+        "משרת",
+        "בנות",
+        "כראות"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "אלוהימ",
+          "תבנית"
+        ],
+        "candidate_support_count": 3
+      }
     },
     {
       "siglum": "4Q410",
@@ -2838,6 +4042,7 @@
         "אלה"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 4,
       "qd_initial_rank": 12,
       "top_predictions": [
@@ -2861,7 +4066,37 @@
         "אהיה",
         "ארצי",
         "איבי"
-      ]
+      ],
+      "rag_top_predictions": [
+        "אשר",
+        "אלה",
+        "אדוני",
+        "איש",
+        "ארץ",
+        "אבי",
+        "אדני",
+        "אחי",
+        "אני",
+        "אדון",
+        "אלהי",
+        "אנשי",
+        "אהלי",
+        "אלוה",
+        "אנוש",
+        "אלוהי",
+        "אמתך",
+        "אלהיך",
+        "אוהבי",
+        "אשת"
+      ],
+      "rag_context": {
+        "left": [
+          "אני",
+          "את"
+        ],
+        "right": [],
+        "candidate_support_count": 20
+      }
     },
     {
       "siglum": "4Q410",
@@ -2883,6 +4118,7 @@
         "יחריש"
       ],
       "rank_any_attributed": 4,
+      "rag_rank_any_attributed": 4,
       "unconstrained_rank_any_attributed": 11861,
       "qd_initial_rank": 21,
       "top_predictions": [
@@ -2906,7 +4142,34 @@
         "לריש",
         "השריש",
         "להפריש"
-      ]
+      ],
+      "rag_top_predictions": [
+        "מחריש",
+        "אחריש",
+        "חריש",
+        "בחריש",
+        "יחריש",
+        "תוריש",
+        "הריש",
+        "אפריש",
+        "להוריש",
+        "והחריש",
+        "וריש",
+        "ותוריש",
+        "מריש",
+        "פריש",
+        "הוריש",
+        "הפריש",
+        "מוריש",
+        "לריש",
+        "השריש",
+        "להפריש"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q424",
@@ -2928,6 +4191,7 @@
         "יסתר"
       ],
       "rank_any_attributed": 2,
+      "rag_rank_any_attributed": 2,
       "unconstrained_rank_any_attributed": 293,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -2951,7 +4215,37 @@
         "בנסתר",
         "ומסתר",
         "שנסתר"
-      ]
+      ],
+      "rag_top_predictions": [
+        "תסתר",
+        "סתר",
+        "יסתר",
+        "נסתר",
+        "להסתר",
+        "בסתר",
+        "הסתר",
+        "ובסתר",
+        "וסתר",
+        "ויסתר",
+        "הנסתר",
+        "אסתר",
+        "לסתר",
+        "בהסתר",
+        "ליסתר",
+        "ונסתר",
+        "במסתר",
+        "בנסתר",
+        "ומסתר",
+        "שנסתר"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "מפני",
+          "זרמ"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q424",
@@ -2973,6 +4267,7 @@
         "תאמין"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 97,
       "qd_initial_rank": 1,
       "top_predictions": [
@@ -2986,7 +4281,27 @@
         "תאמרי",
         "תאמרון",
         "תאמרנה"
-      ]
+      ],
+      "rag_top_predictions": [
+        "תאמר",
+        "תאמין",
+        "תאמינו",
+        "תאמן",
+        "תאמץ",
+        "תאמרהו",
+        "תאמרו",
+        "תאמרי",
+        "תאמרון",
+        "תאמרנה"
+      ],
+      "rag_context": {
+        "left": [
+          "שפתימ",
+          "אל"
+        ],
+        "right": [],
+        "candidate_support_count": 1
+      }
     },
     {
       "siglum": "4Q427",
@@ -3008,6 +4323,7 @@
         "ולכבודי"
       ],
       "rank_any_attributed": 52,
+      "rag_rank_any_attributed": 52,
       "unconstrained_rank_any_attributed": 45968,
       "qd_initial_rank": 52,
       "top_predictions": [
@@ -3031,7 +4347,37 @@
         "בעובדי",
         "ביהודי",
         "ליהודי"
-      ]
+      ],
+      "rag_top_predictions": [
+        "מבלעדי",
+        "וכבודי",
+        "ומועדי",
+        "לימודי",
+        "לידידי",
+        "פיקודי",
+        "תלמידי",
+        "במועדי",
+        "מיורדי",
+        "לכבודי",
+        "לעובדי",
+        "בכבודי",
+        "תלמודי",
+        "ויורדי",
+        "שכנגדי",
+        "ולנכדי",
+        "ביורדי",
+        "בעובדי",
+        "ביהודי",
+        "ליהודי"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "לא",
+          "ידמה"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q427",
@@ -3054,6 +4400,7 @@
         "פלאות"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 2686,
       "qd_initial_rank": 4,
       "top_predictions": [
@@ -3073,7 +4420,33 @@
         "הבלאות",
         "צלאות",
         "ובלאות"
-      ]
+      ],
+      "rag_top_predictions": [
+        "לאות",
+        "נפלאות",
+        "מלאות",
+        "למלאות",
+        "פלאות",
+        "במלאות",
+        "בלאות",
+        "טבלאות",
+        "לולאות",
+        "בולאות",
+        "קטלאות",
+        "כלאות",
+        "בבלאות",
+        "הבלאות",
+        "צלאות",
+        "ובלאות"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "גאות",
+          "ומגדיל"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q427",
@@ -3096,6 +4469,7 @@
         "גבורתו"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 267,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -3104,7 +4478,22 @@
         "גבורתך",
         "גבורתי",
         "גבורתם"
-      ]
+      ],
+      "rag_top_predictions": [
+        "גבורת",
+        "גבורתו",
+        "גבורתך",
+        "גבורתי",
+        "גבורתם"
+      ],
+      "rag_context": {
+        "left": [
+          "ומגדיל",
+          "להופיע"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q432",
@@ -3127,6 +4516,7 @@
         "להמס"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -3137,7 +4527,25 @@
         "ולהס",
         "להמסס",
         "להדס"
-      ]
+      ],
+      "rag_top_predictions": [
+        "להרוס",
+        "להס",
+        "להכנס",
+        "להפיס",
+        "ולהס",
+        "להמסס",
+        "להדס"
+      ],
+      "rag_context": {
+        "left": [
+          "חזקימ"
+        ],
+        "right": [
+          "לבבי"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q433a",
@@ -3160,6 +4568,7 @@
         "באושים"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 2192,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -3167,7 +4576,21 @@
         "באושה",
         "באושא",
         "באושפי"
-      ]
+      ],
+      "rag_top_predictions": [
+        "באושים",
+        "באושה",
+        "באושא",
+        "באושפי"
+      ],
+      "rag_context": {
+        "left": [
+          "לא",
+          "יראה"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q433a",
@@ -3189,6 +4612,7 @@
         "צדי"
       ],
       "rank_any_attributed": 67,
+      "rag_rank_any_attributed": 67,
       "unconstrained_rank_any_attributed": 4362,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -3212,7 +4636,34 @@
         "צרים",
         "צלמות",
         "צנצנת"
-      ]
+      ],
+      "rag_top_predictions": [
+        "צרי",
+        "צור",
+        "צבאות",
+        "ציון",
+        "צעקת",
+        "צוה",
+        "צללו",
+        "צבא",
+        "צבי",
+        "צפון",
+        "צחה",
+        "צואר",
+        "צים",
+        "ציה",
+        "צדיק",
+        "צוררי",
+        "צבאם",
+        "צרים",
+        "צלמות",
+        "צנצנת"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q436",
@@ -3234,9 +4685,21 @@
         "גערתה"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [
+          "האבנ"
+        ],
+        "right": [
+          "ממני",
+          "ותשמ"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q443",
@@ -3258,6 +4721,7 @@
         "אנה"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 86,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -3268,7 +4732,23 @@
         "תאנה",
         "דאנה",
         "שאנה"
-      ]
+      ],
+      "rag_top_predictions": [
+        "אנה",
+        "ואנה",
+        "מאנה",
+        "צאנה",
+        "תאנה",
+        "דאנה",
+        "שאנה"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "תט"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q443",
@@ -3290,9 +4770,18 @@
         "כדני"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "ואינ"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q471b",
@@ -3315,6 +4804,7 @@
         "מי"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 2,
       "qd_initial_rank": 23,
       "top_predictions": [
@@ -3338,7 +4828,36 @@
         "מומי",
         "לחמי",
         "עימי"
-      ]
+      ],
+      "rag_top_predictions": [
+        "מי",
+        "עמי",
+        "שמי",
+        "למי",
+        "מימי",
+        "אמי",
+        "ימי",
+        "עצמי",
+        "אימי",
+        "ממי",
+        "דמי",
+        "בהמי",
+        "במי",
+        "חכמי",
+        "נעמי",
+        "שלמי",
+        "רחמי",
+        "מומי",
+        "לחמי",
+        "עימי"
+      ],
+      "rag_context": {
+        "left": [
+          "כי"
+        ],
+        "right": [],
+        "candidate_support_count": 1
+      }
     },
     {
       "siglum": "4Q471b",
@@ -3360,6 +4879,7 @@
         "ישוה"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 85,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -3383,7 +4903,36 @@
         "ישוח",
         "ישועת",
         "ישוד"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ישוה",
+        "ישוב",
+        "ישובו",
+        "ישווה",
+        "ישוו",
+        "ישועה",
+        "ישוע",
+        "ישולם",
+        "ישומו",
+        "ישור",
+        "ישו",
+        "ישוך",
+        "ישורו",
+        "ישום",
+        "ישועו",
+        "ישובב",
+        "ישונה",
+        "ישוח",
+        "ישועת",
+        "ישוד"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "לי"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q502",
@@ -3405,6 +4954,7 @@
         "ישראל"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 0,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -3428,7 +4978,37 @@
         "ישרפנו",
         "ישרטו",
         "ישרפנה"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ישראל",
+        "ישרים",
+        "ישרון",
+        "ישרא",
+        "ישרה",
+        "ישרי",
+        "ישראלי",
+        "ישרו",
+        "ישרתוך",
+        "ישרת",
+        "ישרתו",
+        "ישרות",
+        "ישרף",
+        "ישרוף",
+        "ישרש",
+        "ישרפו",
+        "ישרצו",
+        "ישרפנו",
+        "ישרטו",
+        "ישרפנה"
+      ],
+      "rag_context": {
+        "left": [
+          "בסוד",
+          "זקני"
+        ],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q509",
@@ -3450,6 +5030,7 @@
         "תכחיד"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -3466,7 +5047,29 @@
         "שיחיד",
         "כיחיד",
         "דיחיד"
-      ]
+      ],
+      "rag_top_predictions": [
+        "יחיד",
+        "מפחיד",
+        "אחיד",
+        "היחיד",
+        "חיד",
+        "ויחיד",
+        "ליחיד",
+        "שחיד",
+        "ביחיד",
+        "מיחיד",
+        "שיחיד",
+        "כיחיד",
+        "דיחיד"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "מלפניכה"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q509",
@@ -3489,6 +5092,7 @@
         "כור"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 4879,
       "qd_initial_rank": 3,
       "top_predictions": [
@@ -3512,7 +5116,37 @@
         "בבכור",
         "מזכור",
         "נזכור"
-      ]
+      ],
+      "rag_top_predictions": [
+        "בכור",
+        "זכור",
+        "עכור",
+        "תזכור",
+        "שכור",
+        "וכור",
+        "יזכור",
+        "אזכור",
+        "מכור",
+        "לכור",
+        "לזכור",
+        "שיכור",
+        "משכור",
+        "הבכור",
+        "ואזכור",
+        "ככור",
+        "כשכור",
+        "בבכור",
+        "מזכור",
+        "נזכור"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "יגונ",
+          "ובכי"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q514",
@@ -3534,6 +5168,7 @@
         "יתגאל"
       ],
       "rank_any_attributed": 1,
+      "rag_rank_any_attributed": 1,
       "unconstrained_rank_any_attributed": 255,
       "qd_initial_rank": null,
       "top_predictions": [
@@ -3557,7 +5192,39 @@
         "למואל",
         "נתנאל",
         "הואל"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ישאל",
+        "יתגאל",
+        "יגאל",
+        "ישראל",
+        "עזיאל",
+        "עוזיאל",
+        "מישאל",
+        "אשאל",
+        "איתיאל",
+        "דניאל",
+        "שמאל",
+        "יואל",
+        "מואל",
+        "יחזקאל",
+        "אוריאל",
+        "משאל",
+        "נשאל",
+        "למואל",
+        "נתנאל",
+        "הואל"
+      ],
+      "rag_context": {
+        "left": [
+          "ואל"
+        ],
+        "right": [
+          "איש",
+          "ואל"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q514",
@@ -3581,6 +5248,7 @@
         "יתה"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 153,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -3599,7 +5267,35 @@
         "יהבתה",
         "יבתה",
         "ילתה"
-      ]
+      ],
+      "rag_top_predictions": [
+        "ישתה",
+        "יפתה",
+        "ידעתה",
+        "יחתה",
+        "יצרתה",
+        "יאתה",
+        "יצאתה",
+        "יבמתה",
+        "ירתה",
+        "יצתה",
+        "יתה",
+        "יראתה",
+        "יהבתה",
+        "יבתה",
+        "ילתה"
+      ],
+      "rag_context": {
+        "left": [
+          "איש",
+          "ואל"
+        ],
+        "right": [
+          "עמ",
+          "כל"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q528",
@@ -3621,11 +5317,20 @@
         "חנפ"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
       "top_predictions": [
         "חנפה"
-      ]
+      ],
+      "rag_top_predictions": [
+        "חנפה"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "4Q528",
@@ -3649,11 +5354,25 @@
         "תואל"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
       "top_predictions": [
         "תשאל"
-      ]
+      ],
+      "rag_top_predictions": [
+        "תשאל"
+      ],
+      "rag_context": {
+        "left": [
+          "ותמימיכ"
+        ],
+        "right": [
+          "התמימ",
+          "בכל"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "CD",
@@ -3675,6 +5394,7 @@
         "אוהב"
       ],
       "rank_any_attributed": 0,
+      "rag_rank_any_attributed": 0,
       "unconstrained_rank_any_attributed": 999,
       "qd_initial_rank": 0,
       "top_predictions": [
@@ -3683,7 +5403,22 @@
         "ואוהב",
         "שאוהב",
         "באוהב"
-      ]
+      ],
+      "rag_top_predictions": [
+        "אוהב",
+        "האוהב",
+        "ואוהב",
+        "שאוהב",
+        "באוהב"
+      ],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "בשמרו",
+          "מצות"
+        ],
+        "candidate_support_count": 0
+      }
     },
     {
       "siglum": "CD",
@@ -3705,9 +5440,19 @@
         "יענוהו"
       ],
       "rank_any_attributed": null,
+      "rag_rank_any_attributed": null,
       "unconstrained_rank_any_attributed": null,
       "qd_initial_rank": null,
-      "top_predictions": []
+      "top_predictions": [],
+      "rag_top_predictions": [],
+      "rag_context": {
+        "left": [],
+        "right": [
+          "ובאהבת",
+          "חסד"
+        ],
+        "candidate_support_count": 0
+      }
     }
   ],
   "unique_target_readings": [
@@ -3716,6 +5461,7 @@
       "word_id": 185288,
       "reading": "להרוג",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 615,
       "sources": [
         "PTSDSSP 4A",
@@ -3727,6 +5473,7 @@
       "word_id": 185288,
       "reading": "ולהרוג",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 1635,
       "sources": [
         "García Martínez u.a. 1998"
@@ -3737,6 +5484,7 @@
       "word_id": 185380,
       "reading": "חושך",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 205,
       "sources": [
         "PTSDSSP 4A",
@@ -3748,6 +5496,7 @@
       "word_id": 185432,
       "reading": "אדם",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 32,
       "sources": [
         "PTSDSSP 4A"
@@ -3758,6 +5507,7 @@
       "word_id": 185432,
       "reading": "האדם",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 538,
       "sources": [
         "Qimron 2013"
@@ -3768,6 +5518,7 @@
       "word_id": 187240,
       "reading": "ישרו",
       "rank": 3,
+      "rag_rank": 3,
       "unconstrained_rank": 6532,
       "sources": [
         "García Martínez u.a. 1998"
@@ -3778,6 +5529,7 @@
       "word_id": 187240,
       "reading": "שרו",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 3287,
       "sources": [
         "Woude 1982"
@@ -3788,6 +5540,7 @@
       "word_id": 187240,
       "reading": "יישרו",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Qimron 2013"
@@ -3798,6 +5551,7 @@
       "word_id": 29380,
       "reading": "ונכלמתה",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "DJD XXXIV",
@@ -3812,6 +5566,7 @@
       "word_id": 29399,
       "reading": "גורלכה",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Efrati 2023",
@@ -3823,6 +5578,7 @@
       "word_id": 30326,
       "reading": "דשן",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 6447,
       "sources": [
         "Carmignac 1964",
@@ -3835,6 +5591,7 @@
       "word_id": 30326,
       "reading": "להדשן",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Qimron 2013",
@@ -3846,6 +5603,7 @@
       "word_id": 6480,
       "reading": "אשר",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 0,
       "sources": [
         "Bardtke 1954",
@@ -3866,6 +5624,7 @@
       "word_id": 8487,
       "reading": "ויחונכה",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Habermann 1959"
@@ -3876,6 +5635,7 @@
       "word_id": 8487,
       "reading": "יחונכה",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Study Edition"
@@ -3886,6 +5646,7 @@
       "word_id": 8552,
       "reading": "ובמועד",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 38698,
       "sources": [
         "Licht 1965"
@@ -3896,6 +5657,7 @@
       "word_id": 8919,
       "reading": "דויד",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 68,
       "sources": [
         "Qimron 2010",
@@ -3910,6 +5672,7 @@
       "word_id": 9470,
       "reading": "אשמה",
       "rank": 2,
+      "rag_rank": 2,
       "unconstrained_rank": 8071,
       "sources": [
         "Elliger 1953",
@@ -3923,6 +5686,7 @@
       "word_id": 9470,
       "reading": "אשמים",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 7218,
       "sources": [
         "Study Edition"
@@ -3933,6 +5697,7 @@
       "word_id": 9470,
       "reading": "אשמתם",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Baer 1969",
@@ -3949,6 +5714,7 @@
       "word_id": 9960,
       "reading": "פת",
       "rank": 6,
+      "rag_rank": 6,
       "unconstrained_rank": 6206,
       "sources": [
         "Burrows 1950",
@@ -3964,6 +5730,7 @@
       "word_id": 9961,
       "reading": "אום",
       "rank": 3,
+      "rag_rank": 3,
       "unconstrained_rank": 42165,
       "sources": [
         "Lohse 1971"
@@ -3974,6 +5741,7 @@
       "word_id": 31847,
       "reading": "ידעתי",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 42,
       "sources": [
         "DJD III"
@@ -3984,6 +5752,7 @@
       "word_id": 35318,
       "reading": "אילו",
       "rank": 26,
+      "rag_rank": 26,
       "unconstrained_rank": 1411,
       "sources": [
         "PrCon I"
@@ -3994,6 +5763,7 @@
       "word_id": 35318,
       "reading": "עלו",
       "rank": 12,
+      "rag_rank": 12,
       "unconstrained_rank": 698,
       "sources": [
         "Qimron 2013"
@@ -4004,6 +5774,7 @@
       "word_id": 35351,
       "reading": "כלה",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 66,
       "sources": [
         "Qimron 2013"
@@ -4014,6 +5785,7 @@
       "word_id": 35351,
       "reading": "לה",
       "rank": 3,
+      "rag_rank": 3,
       "unconstrained_rank": 240,
       "sources": [
         "Brown-deVost 2019"
@@ -4024,6 +5796,7 @@
       "word_id": 35358,
       "reading": "למט",
       "rank": 4,
+      "rag_rank": 4,
       "unconstrained_rank": 86532,
       "sources": [
         "Brown-deVost 2019",
@@ -4039,6 +5812,7 @@
       "word_id": 35534,
       "reading": "ינתנו",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 102,
       "sources": [
         "Study Edition"
@@ -4049,6 +5823,7 @@
       "word_id": 35576,
       "reading": "גדולו",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 26933,
       "sources": [
         "Allegro 1956b",
@@ -4062,6 +5837,7 @@
       "word_id": 35981,
       "reading": "מבלעים",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Brown-deVost 2019",
@@ -4073,6 +5849,7 @@
       "word_id": 36148,
       "reading": "למועט",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Brown-deVost 2019",
@@ -4087,6 +5864,7 @@
       "word_id": 37758,
       "reading": "הכוהן",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 28,
       "sources": [
         "Brown-deVost 2019",
@@ -4103,6 +5881,7 @@
       "word_id": 42978,
       "reading": "עריריה",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Strugnell 1970",
@@ -4114,6 +5893,7 @@
       "word_id": 42984,
       "reading": "ורחובותיה",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Strugnell 1970",
@@ -4125,6 +5905,7 @@
       "word_id": 43787,
       "reading": "ישפט",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 477,
       "sources": [
         "Aadland 2016",
@@ -4140,6 +5921,7 @@
       "word_id": 43787,
       "reading": "ישפטו",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 696,
       "sources": [
         "Bernstein 2004"
@@ -4150,6 +5932,7 @@
       "word_id": 43841,
       "reading": "גבורת",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 11,
       "sources": [
         "Aadland 2016",
@@ -4166,6 +5949,7 @@
       "word_id": 43898,
       "reading": "יראתו",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 7141,
       "sources": [
         "Lichtenberger 2002",
@@ -4177,6 +5961,7 @@
       "word_id": 69267,
       "reading": "ולשתות",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 3,
       "sources": [
         "PrCon I",
@@ -4189,6 +5974,7 @@
       "word_id": 69598,
       "reading": "יתכס",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Qimron 2014"
@@ -4199,6 +5985,7 @@
       "word_id": 69766,
       "reading": "היה",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 0,
       "sources": [
         "Kister 2004a",
@@ -4213,6 +6000,7 @@
       "word_id": 76770,
       "reading": "האומן",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 1494,
       "sources": [
         "Wacholder/Abegg 1991a"
@@ -4223,6 +6011,7 @@
       "word_id": 76770,
       "reading": "אומן",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 5589,
       "sources": [
         "Qimron 2010"
@@ -4233,6 +6022,7 @@
       "word_id": 78329,
       "reading": "ושבעת",
       "rank": 4,
+      "rag_rank": 4,
       "unconstrained_rank": 3532,
       "sources": [
         "Study Edition"
@@ -4243,6 +6033,7 @@
       "word_id": 81339,
       "reading": "זוהר",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 106,
       "sources": [
         "DJD XI"
@@ -4253,6 +6044,7 @@
       "word_id": 81339,
       "reading": "טוהר",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 42,
       "sources": [
         "Qimron 2013",
@@ -4264,6 +6056,7 @@
       "word_id": 81428,
       "reading": "כולמה",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "DJD XI",
@@ -4277,6 +6070,7 @@
       "word_id": 81429,
       "reading": "ומחדש",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 14515,
       "sources": [
         "Study Edition"
@@ -4287,6 +6081,7 @@
       "word_id": 81429,
       "reading": "מחדש",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 1092,
       "sources": [
         "PrCon I",
@@ -4298,6 +6093,7 @@
       "word_id": 84921,
       "reading": "כהטיביך",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Qimron 2014"
@@ -4308,6 +6104,7 @@
       "word_id": 85366,
       "reading": "כנגדו",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 8,
       "sources": [
         "Qimron 2014",
@@ -4319,6 +6116,7 @@
       "word_id": 100875,
       "reading": "ללוי",
       "rank": 16,
+      "rag_rank": 16,
       "unconstrained_rank": 17701,
       "sources": [
         "Qimron 2013",
@@ -4330,6 +6128,7 @@
       "word_id": 100964,
       "reading": "המלמד",
       "rank": 2,
+      "rag_rank": 2,
       "unconstrained_rank": 714,
       "sources": [
         "DJD XXVIII",
@@ -4341,6 +6140,7 @@
       "word_id": 100964,
       "reading": "מלמד",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 413,
       "sources": [
         "Study Edition"
@@ -4351,6 +6151,7 @@
       "word_id": 100978,
       "reading": "לעשות",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 585,
       "sources": [
         "DJD XXVIII",
@@ -4363,6 +6164,7 @@
       "word_id": 101027,
       "reading": "המות",
       "rank": 14,
+      "rag_rank": 14,
       "unconstrained_rank": 972,
       "sources": [
         "Study Edition"
@@ -4373,6 +6175,7 @@
       "word_id": 101092,
       "reading": "יובדו",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Bernstein 2003",
@@ -4385,6 +6188,7 @@
       "word_id": 101092,
       "reading": "ישכחו",
       "rank": 151,
+      "rag_rank": 151,
       "unconstrained_rank": 301,
       "sources": [
         "Qimron 2013"
@@ -4395,6 +6199,7 @@
       "word_id": 109164,
       "reading": "יון",
       "rank": 121,
+      "rag_rank": 121,
       "unconstrained_rank": 2348,
       "sources": [
         "DJD XXX"
@@ -4405,6 +6210,7 @@
       "word_id": 109164,
       "reading": "יהץ",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Qimron 2013"
@@ -4415,6 +6221,7 @@
       "word_id": 109164,
       "reading": "יוון",
       "rank": 182,
+      "rag_rank": 182,
       "unconstrained_rank": 3552,
       "sources": [
         "Davis 2014"
@@ -4425,6 +6232,7 @@
       "word_id": 109202,
       "reading": "אהבתו",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 10607,
       "sources": [
         "Study Edition"
@@ -4435,6 +6243,7 @@
       "word_id": 109227,
       "reading": "מעבר",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 196,
       "sources": [
         "Wacholder/Abegg 1995"
@@ -4445,6 +6254,7 @@
       "word_id": 114032,
       "reading": "להרביעה",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "DJD X",
@@ -4460,6 +6270,7 @@
       "word_id": 114117,
       "reading": "ומהתערב",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Broshi 2006",
@@ -4474,6 +6285,7 @@
       "word_id": 114117,
       "reading": "מהתערב",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Kratz 2020",
@@ -4485,6 +6297,7 @@
       "word_id": 114122,
       "reading": "לגב",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 28145,
       "sources": [
         "Broshi 2006",
@@ -4501,6 +6314,7 @@
       "word_id": 114122,
       "reading": "עלגב",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 21265,
       "sources": [
         "Wacholder/Abegg 1995"
@@ -4511,6 +6325,7 @@
       "word_id": 118135,
       "reading": "דממת",
       "rank": 254,
+      "rag_rank": 255,
       "unconstrained_rank": 1950,
       "sources": [
         "Chazon 2000",
@@ -4523,6 +6338,7 @@
       "word_id": 119669,
       "reading": "אלה",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 4,
       "sources": [
         "Qimron 2014",
@@ -4534,6 +6350,7 @@
       "word_id": 119679,
       "reading": "יחריש",
       "rank": 4,
+      "rag_rank": 4,
       "unconstrained_rank": 11861,
       "sources": [
         "Study Edition"
@@ -4544,6 +6361,7 @@
       "word_id": 130722,
       "reading": "יסתר",
       "rank": 2,
+      "rag_rank": 2,
       "unconstrained_rank": 293,
       "sources": [
         "Ariel 2017",
@@ -4556,6 +6374,7 @@
       "word_id": 130779,
       "reading": "תאמין",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 97,
       "sources": [
         "DJD XXXVI"
@@ -4566,6 +6385,7 @@
       "word_id": 131742,
       "reading": "ולכבודי",
       "rank": 52,
+      "rag_rank": 52,
       "unconstrained_rank": 45968,
       "sources": [
         "Dimant 1994",
@@ -4577,6 +6397,7 @@
       "word_id": 131956,
       "reading": "נפלאות",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 2686,
       "sources": [
         "Study Edition"
@@ -4587,6 +6408,7 @@
       "word_id": 131956,
       "reading": "פלאות",
       "rank": 4,
+      "rag_rank": 4,
       "unconstrained_rank": 6113,
       "sources": [
         "DJD XXIX",
@@ -4598,6 +6420,7 @@
       "word_id": 131960,
       "reading": "גבורתו",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 481,
       "sources": [
         "Study Edition"
@@ -4608,6 +6431,7 @@
       "word_id": 131960,
       "reading": "גבורת",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 267,
       "sources": [
         "PrCon I",
@@ -4619,6 +6443,7 @@
       "word_id": 134233,
       "reading": "להמס",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "DJD XXIX"
@@ -4629,6 +6454,7 @@
       "word_id": 134741,
       "reading": "באושים",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 2192,
       "sources": [
         "DJD XXIX",
@@ -4640,6 +6466,7 @@
       "word_id": 134805,
       "reading": "צדי",
       "rank": 67,
+      "rag_rank": 67,
       "unconstrained_rank": 4362,
       "sources": [
         "Study Edition"
@@ -4650,6 +6477,7 @@
       "word_id": 135592,
       "reading": "גערתה",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "DJD XXIX",
@@ -4661,6 +6489,7 @@
       "word_id": 136492,
       "reading": "אנה",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 86,
       "sources": [
         "DJD XXIX",
@@ -4672,6 +6501,7 @@
       "word_id": 136610,
       "reading": "כדני",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "DJD XXIX"
@@ -4682,6 +6512,7 @@
       "word_id": 134033,
       "reading": "ומי",
       "rank": 23,
+      "rag_rank": 23,
       "unconstrained_rank": 2935,
       "sources": [
         "DJD XXIX"
@@ -4692,6 +6523,7 @@
       "word_id": 134033,
       "reading": "מי",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 2,
       "sources": [
         "Qimron [b]"
@@ -4702,6 +6534,7 @@
       "word_id": 134034,
       "reading": "ישוה",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 85,
       "sources": [
         "DJD XXIX"
@@ -4712,6 +6545,7 @@
       "word_id": 146584,
       "reading": "ישראל",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 0,
       "sources": [
         "Qimron 2013",
@@ -4723,6 +6557,7 @@
       "word_id": 154586,
       "reading": "תכחיד",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Qimron 2013"
@@ -4733,6 +6568,7 @@
       "word_id": 154698,
       "reading": "זכור",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 4879,
       "sources": [
         "Falk 1998",
@@ -4745,6 +6581,7 @@
       "word_id": 162765,
       "reading": "יתגאל",
       "rank": 1,
+      "rag_rank": 1,
       "unconstrained_rank": 255,
       "sources": [
         "Qimron 2014"
@@ -4755,6 +6592,7 @@
       "word_id": 162768,
       "reading": "ישתה",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 153,
       "sources": [
         "PTSDSSP 1"
@@ -4765,6 +6603,7 @@
       "word_id": 162768,
       "reading": "יתה",
       "rank": 10,
+      "rag_rank": 10,
       "unconstrained_rank": 37216,
       "sources": [
         "PrCon I"
@@ -4775,6 +6614,7 @@
       "word_id": 167209,
       "reading": "חנפ",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "DJD XXV"
@@ -4785,6 +6625,7 @@
       "word_id": 167226,
       "reading": "תגאל",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Study Edition"
@@ -4795,6 +6636,7 @@
       "word_id": 167226,
       "reading": "תואל",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "DJD XXV"
@@ -4805,6 +6647,7 @@
       "word_id": 415,
       "reading": "אוהב",
       "rank": 0,
+      "rag_rank": 0,
       "unconstrained_rank": 999,
       "sources": [
         "Berthelot/Langlois/Legrand 2017",
@@ -4823,6 +6666,7 @@
       "word_id": 2748,
       "reading": "יענוהו",
       "rank": null,
+      "rag_rank": null,
       "unconstrained_rank": null,
       "sources": [
         "Lohse 1971",

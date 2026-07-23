@@ -746,13 +746,37 @@ function renderBenchmark() {
     return;
   }
   const sections = [];
+  sections.push(`
+    <div class="benchmark-subsection">
+      <h5>Validated Train-Only RAG Ablation</h5>
+      <p class="small">Preserved non-biblical training text only; α=0.5 selected on dev. Held-out editorial labels are used only for scoring.</p>
+      <table class="metric-table">
+        <thead>
+          <tr>
+            <th>Held-out unit</th>
+            <th>N</th>
+            <th>MLM Top-10</th>
+            <th>MLM + RAG Top-10</th>
+            <th>Delta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>QD single-word targets</td><td>74</td><td>63.5%</td><td>63.5%</td><td>0.0</td></tr>
+          <tr><td>TF single-word spans</td><td>25</td><td>60.0%</td><td>64.0%</td><td>+4.0</td></tr>
+          <tr><td>TF slots in multiword spans</td><td>440</td><td>41.4%</td><td>41.8%</td><td>+0.5</td></tr>
+          <tr><td>TF exact multiword sequences</td><td>100</td><td>7.0%</td><td>9.0%</td><td>+2.0</td></tr>
+        </tbody>
+      </table>
+      <p class="small">The exact-sequence score requires every word to match in order. These are modest ablation gains, not evidence that retrieval always helps.</p>
+    </div>
+  `);
   if (retrieval?.conditions) {
     const any = retrieval.conditions.fit_any_composition;
     const cross = retrieval.conditions.fit_cross_composition_only;
     sections.push(`
       <div class="benchmark-subsection">
-        <h5>Retrieval Rerank</h5>
-        <p class="small">Cross-composition is the cleaner benchmark. Any-composition includes same-composition witnesses.</p>
+        <h5>Legacy Exploratory Retrieval</h5>
+        <p class="small">Retained for transparency. This older experiment is not the recommended method: its fixed reranker reduced Top-1, motivating the clean dev-tuned ablation above.</p>
         <table class="metric-table">
           <thead>
             <tr>

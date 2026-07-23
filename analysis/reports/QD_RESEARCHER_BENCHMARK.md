@@ -10,11 +10,16 @@ and an approximate lacuna-derived word length
 
 | Unit | N | Top-1 | Top-5 | Top-10 | Top-20 |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| Target: any attributed compatible restoration | 74 | 40.5% | 62.2% | 63.5% | 67.6% |
-| Unique target-reading pair | 99 | 30.3% | 59.6% | 60.6% | 64.6% |
+| Target: constrained MLM | 74 | 40.5% | 62.2% | 63.5% | 67.6% |
+| Target: constrained MLM + train-only RAG | 74 | 40.5% | 62.2% | 63.5% | 67.6% |
+| Unique target-reading pair: constrained MLM | 99 | 30.3% | 59.6% | 60.6% | 64.6% |
+| Unique target-reading pair: MLM + RAG | 99 | 30.3% | 59.6% | 60.6% | 64.6% |
 | QD initial reading control | 74 | 20.3% | 41.9% | 43.2% | 44.6% |
 
-Target-level Top-10 95% cluster-bootstrap interval: **51.4%–74.3%**.
+Baseline target-level Top-10 95% cluster-bootstrap interval:
+**51.4%–74.3%**. The RAG weight
+(0.5) was selected on preserved
+non-biblical dev scrolls only; held-out targets were not used for tuning.
 Without manuscript constraints, the same target-level Top-10 is
 9.5%. The difference measures the value of physical
 evidence supplied to the decoder, not an improvement in the language model.

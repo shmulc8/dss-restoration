@@ -58,6 +58,7 @@ lacuna-derived word length while keeping the restored letters hidden.
 | Target: any compatible attributed restoration | 74 | 40.5% | **63.5%** | 67.6% |
 | Unique target-reading pair | 99 | 30.3% | **60.6%** | 64.6% |
 | Same targets without physical constraints | 74 | 4.1% | 9.5% | 10.8% |
+| Target with train-only RAG reranking | 74 | 40.5% | **63.5%** | 67.6% |
 
 The previous 8.0% result is superseded. It masked the entire disputed word,
 discarded preserved letters, concatenated some multiword/editorial
@@ -82,12 +83,35 @@ The downloaded snapshot is reused by default, with no network call:
 Only an intentional
 `eval/build_qd_researcher_benchmark.py --refresh` contacts Qumran Digital.
 
+## Train-only RAG and lacuna length
+
+The clean RAG ablation indexes exact contexts from preserved, non-biblical
+training scrolls only. Its weight (`alpha = 0.5`) is selected on dev scrolls.
+On Qumran Digital it leaves the 63.5% single-word Top-10 unchanged. A separate
+held-out Text-Fabric evaluation reports individual word slots and exact
+multi-word sequences rather than combining them into one headline number:
+
+| Held-out evaluation | N | MLM Top-10 | MLM + RAG Top-10 |
+| :--- | ---: | ---: | ---: |
+| Single-word spans | 25 spans | 60.0% | **64.0%** |
+| Slots inside multi-word lacunae | 440 slots / 100 spans | 41.4% | **41.8%** |
+| Exact multi-word sequence | 100 spans | 7.0% | **9.0%** |
+
+The Text-Fabric reconstructions are anonymous editorial evaluation labels, not
+physical truth. No gold word length is supplied; the decoder knows only the
+number of word slots. The fixed sample contains 25 spans in each of five length
+buckets. Reproduce it offline with:
+
+```bash
+.venv/bin/python eval/tf_preserved_rag_multiword_benchmark.py --per-bucket 25
+```
+
 ## 🌟 Executive Summary & Master Empirical Benchmarks
 
 | Benchmark / Research Experiment | Key Metric Outcome | Scientific Significance |
 | :--- | :---: | :--- |
-| **Single-Word RAG Restoration** | **48.0% Top-10 Accuracy** | Parallel witness retrieval boosts single-word Top-10 accuracy from 30.2% to 48.0% (+17.8% direct gain). |
-| **Overall Multi-Word RAG Pipeline** | **36.8% Top-10 Accuracy** | Evaluated across 600 multi-word test lacunae with dynamic beam search and physical layout filters. |
+| **QD Single-Word RAG Ablation** | **63.5% → 63.5% Top-10** | Train-only, dev-tuned RAG does not improve the 74-target constrained researcher-agreement benchmark. |
+| **Held-Out Multi-Word RAG Ablation** | **7.0% → 9.0% exact-sequence Top-10** | Paired evaluation on 100 multi-word spans; per-slot Top-10 moves from 41.4% to 41.8%. |
 | **Cross-Epoch Historical Transfer** | **39.0% Top-10 Accuracy** | Evaluated on external medieval & rabbinic Hebrew manuscripts; proves strong cross-era syntactic transfer. |
 | **Legacy Dual-Metric Framework** | **31.0% vs. 31.8% Top-10** | Compares intact targets with the corpus's anonymous modern reconstructions; it does not establish absence of editor bias. |
 | **Strict Composition-Level Split** | **30.2% Top-10 Accuracy** | Evaluated across 26 completely unseen literary works (*CD*, *4QS*, *Hodayot*); zero memorization leakage. |

@@ -231,6 +231,42 @@
               <div class="source-comparison">
                 <div class="source-comparison-head">
                   <div>
+                    <h5>Train-only RAG ablation</h5>
+                    <p class="small">
+                      Exact-context retrieval uses only preserved words from non-biblical training
+                      scrolls. Its weight (α=0.5) was selected on dev scrolls, never on held-out targets.
+                    </p>
+                  </div>
+                  <span class="source-count-badge">No network calls</span>
+                </div>
+                <div class="source-table-wrap">
+                  <table class="metric-table source-table">
+                    <thead>
+                      <tr>
+                        <th>Held-out evaluation</th>
+                        <th>Unit</th>
+                        <th>MLM Top-10</th>
+                        <th>MLM + RAG Top-10</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Qumran Digital attributed readings</td><td>74 single-word targets</td><td>63.5%</td><td>63.5%</td></tr>
+                      <tr><td>Text-Fabric editorial labels</td><td>25 single-word spans</td><td>60.0%</td><td>64.0%</td></tr>
+                      <tr><td>Text-Fabric editorial labels</td><td>440 slots in 100 multiword spans</td><td>41.4%</td><td>41.8%</td></tr>
+                      <tr><td>Text-Fabric exact sequence</td><td>100 multiword spans</td><td>7.0%</td><td>9.0%</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p class="source-note">
+                  The Text-Fabric reconstructions are anonymous editorial evaluation labels, not
+                  physical truth. The balanced sample contains 25 spans in each length bucket;
+                  whole-sequence recovery requires every word to match in order. These modest gains
+                  are reported as an ablation, not as a universal RAG improvement.
+                </p>
+              </div>
+              <div class="source-comparison">
+                <div class="source-comparison-head">
+                  <div>
                     <h5>Agreement by bibliographic source</h5>
                     <p class="small">Each source contributes at most one observation per manuscript target.</p>
                   </div>

@@ -818,56 +818,57 @@
           <ul>
             <li>
               <strong>אילוץ רוחב פיזי (Physical Constraint):</strong>
-              <span class="bullet-desc">מסננים מועמדים שקצרים מהרווח הפיזי המשוער (למשל `len(w) >= len(gold) - 1`).</span>
-              <span class="bullet-desc" style="color:var(--accent-emerald);">תוצאה: שיפור של 19% בדיוק ניחוש מילות תוכן (שמות עצם ופעלים).</span>
+              <span class="bullet-desc">ב־74 האתרים של Qumran Digital נשמרות האותיות הגלויות ואומדן אורך הלקונה (±1). המפענח אינו מקבל את אותיות השחזור.</span>
+              <span class="bullet-desc" style="color:var(--accent-emerald);">תוצאה: 63.5% Top-10 ברמת האתר, לעומת 9.5% ללא האילוצים — זהו ערך האותות הפיזיים למפענח, לא שיפור במודל השפה.</span>
             </li>
             <li>
-              <strong>Parallel Witness (RAG) - עוצמת העד המקביל:</strong>
-              <span class="bullet-desc">שליפת ביטויים זהים מקורפוס קומראן (ללא המגילה הנבדקת). כאשר מזוהה ביטוי מקביל בקורפוס, הדיוק מזנק מ-~12% ל:</span>
-              <span class="bullet-desc" style="color:var(--accent-emerald);"><strong>77.2% Top-1</strong> בחיפוש Cross-Composition (החרגת כל עותקי אותו חיבור, למשל החרגת 1QS בבדיקת 4Q258).</span>
-              <span class="bullet-desc" style="color:var(--accent-emerald);"><strong>81.1% Top-1</strong> בחיפוש בערבוב כלל המגילות הלא-מקראיות.</span>
+              <strong>RAG נקי מדליפה:</strong>
+              <span class="bullet-desc">האינדקס נבנה רק ממילים שמורות במגילות לא־מקראיות של קבוצת האימון. המשקל α=0.5 נבחר רק על קבוצת הפיתוח.</span>
+              <span class="bullet-desc">אין הורדה חדשה מהרשת, אין שחזורי חוקרים באינדקס, ואין שימוש בתוצאות ה־held-out לכיול.</span>
             </li>
           </ul>
         </div>
         <div>
           <div class="highlight-card">
-            <h4>שחזור לקונה באורך לא-ידוע (300 לקונות)</h4>
-            <p>בהערכה על 300 פערים באורך לא-ידוע, שילוב RAG מעלה את דיוק הרצף הכללי מ-<strong>6.0% ל-8.3% Top-1</strong> (+38.9% שיפור יחסי):</p>
+            <h4>תוצאות RAG לפי מילה בודדת ורצף רב־מילי</h4>
+            <p>מדגם held-out מאוזן: 25 לקונות בכל דלי אורך. בשחזור הרב־מילי נבדקו 100 רצפים ובהם 440 משבצות מילים:</p>
             <table style="font-size:0.82rem; margin:8px 0;">
               <thead>
                 <tr>
-                  <th>מנגנון</th>
-                  <th>1 מילה</th>
-                  <th>2 מילים</th>
-                  <th>3 מילים</th>
-                  <th>משוקלל</th>
+                  <th>מדד Top-10</th>
+                  <th>ללא RAG</th>
+                  <th>עם RAG</th>
+                  <th>שינוי</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>ללא RAG (MsBERT Top-1)</td>
-                  <td>12.0%</td>
-                  <td>3.0%</td>
-                  <td>3.0%</td>
-                  <td>6.0%</td>
+                  <td>QD: מילה בודדת, ברמת אתר (N=74)</td>
+                  <td>63.5%</td>
+                  <td>63.5%</td>
+                  <td>0.0</td>
                 </tr>
                 <tr>
-                  <td>עם RAG (Top-1)</td>
-                  <td>14.0%</td>
-                  <td>7.0% (+133%)</td>
-                  <td>4.0%</td>
-                  <td>8.3% (+38.9%)</td>
+                  <td>TF: מילה בודדת (N=25)</td>
+                  <td>60.0%</td>
+                  <td>64.0%</td>
+                  <td>+4.0</td>
                 </tr>
                 <tr>
-                  <td class="best-score">RAG + פענוח מועצם (Top-10)</td>
-                  <td class="best-score">48.0%</td>
-                  <td class="best-score">35.0%</td>
-                  <td class="best-score">34.3%</td>
-                  <td class="best-score">36.8%</td>
+                  <td>TF: משבצות בתוך רצף רב־מילי (N=440)</td>
+                  <td>41.4%</td>
+                  <td>41.8%</td>
+                  <td>+0.5</td>
+                </tr>
+                <tr>
+                  <td class="best-score">TF: רצף רב־מילי מדויק (N=100)</td>
+                  <td>7.0%</td>
+                  <td class="best-score">9.0%</td>
+                  <td class="best-score">+2.0</td>
                 </tr>
               </tbody>
             </table>
-            <p class="small" style="font-size: 0.78rem;">שילוב RAG עם אילוץ אורך פיזי ואיחוד למות מעלה את דיוק ה-Top-10 למילה בודדת ל-48.0% ול-36.8% בממוצע כללי.</p>
+            <p class="small" style="font-size: 0.78rem;">השחזורים של Text-Fabric הם תוויות עריכה אנונימיות להערכה בלבד, לא אמת פיזית. אין שימוש באורך הזהב של המילים; המפענח יודע רק את מספר משבצות המילים.</p>
           </div>
         </div>
       </div>

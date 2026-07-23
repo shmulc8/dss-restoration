@@ -571,7 +571,7 @@
             </li>
             <li>
               <strong>קנה המידה של השחזור:</strong>
-              <span class="bullet-desc">כ-<strong>38% מהמילים במגילות הלא-מקראיות</strong> הן שחזורים משוערים שהוצעו על ידי מהדירים (רשומות בסוגריים `[ ]`).</span>
+              <span class="bullet-desc">הקורפוס הנקי שלנו מתעד <strong>27,814 אתרי לקונה</strong> ב־736 מגילות לא־מקראיות. אותיות ששוחזרו בסוגריים מרובעים אינן נשמרות כטקסט אימון.</span>
             </li>
             <li>
               <strong>מטרת המערכת:</strong>
@@ -605,7 +605,7 @@
             <ul>
               <li>
                 <strong>נטרול "הטיית המקרא" (The Canon Effect):</strong>
-                <span class="bullet-desc">מודלים מגיעים ל-~60% דיוק במגילות מקראיות כי הם משננים את התנ"ך. כדי למדוד יכולת הבנה לשונית אמיתית, <strong>החרגנו את המקרא</strong> והערכנו על טקסטים כיתתיים מקוריים בלבד.</span>
+                <span class="bullet-desc">מודלים מגיעים לתוצאות גבוהות במגילות מקראיות בין היתר בזכות חשיפה לטקסט הקנוני. כדי למדוד הכללה לשונית נקייה יותר, <strong>החרגנו את המקרא</strong> ואימנו והערכנו על מגילות לא־מקראיות בלבד.</span>
               </li>
               <li>
                 <strong>חלוקת נתונים נקייה (No-Leak Scroll Split):</strong>
@@ -1018,27 +1018,26 @@
         <div>
           <ul>
             <li>
-              <strong>הפרדה בין דיוק טקסט שמור (דיו מקורי) להסכמת מהדירים (לקונות):</strong>
-              <span class="bullet-desc">מכיוון ששחזור לקונה הוא השערת אנוש משוערת, הלחנו הפרדה בין:
-              <br>1. <strong>דיוק טקסט שמור (Intact Ink): 31.0% Top-10</strong> על דיו מקורי 100% ודאי.
-              <br>2. <strong>הסכמת מהדירים (Editor Concordance): 31.8% Top-10</strong> על לקונות פיזיות (`rec = 1`).</span>
+              <strong>אימון נקי משחזורי חוקרים:</strong>
+              <span class="bullet-desc">המודל אומן על טקסט לא־מקראי שמור בלבד. כל טקסט בתוך סוגריים מרובעים הוחלף ב־<code>&lt;GAP&gt;</code>, והחלוקה בין אימון למבחן נעשתה ברמת המגילה.</span>
             </li>
             <li>
-              <strong>פילוח אמפירי של סיבות השגיאה (Error Typology):</strong>
-              <span class="bullet-desc">ניתוח 179 טעויות בדירוג Top-10 מראה: <strong>38.0%</strong> עמימות סמנטית (מספר מילים מתאימות להקשר), <strong>30.2%</strong> הבדלי כתיב/נטייה קרובים, <strong>17.3%</strong> הטיות אורך קצר, ורק <strong>2.2%</strong> חסר באוצר המילים!</span>
+              <strong>השוואה אמיתית לקריאות חוקרים:</strong>
+              <span class="bullet-desc">מתוך 346 אתרים שנאספו מ־Qumran Digital, הסינון הסמנטי השאיר <strong>74 לקונות חד־מילתיות</strong> ו־<strong>99 קריאות ייחודיות</strong>. וריאנטים כתיביים, תיקוני סופר, קריאות רב־מילתיות וקריאות שסותרות אותיות שמורות דווחו כהחרגות.</span>
             </li>
             <li>
-              <strong>אתגר השמות הפרטיים (Proper Nouns):</strong>
-              <span class="bullet-desc">שמות של אנשים, מקומות או מונחים ספציפיים (כמו משמרות כהונה) לא ניתנים לחיזוי מתוך הקשר סמנטי רגיל.</span>
+              <strong>יחידת המדידה:</strong>
+              <span class="bullet-desc">כל אתר כתב־יד נספר פעם אחת. הצלחה פירושה שלפחות קריאה מיוחסת אחת, התואמת לאותיות השמורות ולאומדן אורך הלקונה, נמצאת ב־Top-K.</span>
             </li>
           </ul>
         </div>
         <div>
           <div class="highlight-card">
-            <h4>מקרה בוחן לכישלון: 1QS</h4>
-            <p><strong>הקשר במקור:</strong> `משמרת יכין` (יכין הוא שם של משמרת כהונה).</p>
-            <p style="margin-top: 5px;"><strong>הצעות המודל:</strong> `עשירי` / `שמיני` / `רביעי` / `חמישי` / `שישי`</p>
-            <p style="margin-top: 8px; color: var(--accent-red);"><strong>ניתוח שגיאה:</strong> המודל מזהה נכונה את התבנית התחבירית של רשימה סדרתית, אך מנבא מספרים סידוריים נפוצים במקום השם הפרטי הספציפי. זוהי מגבלה מבנית של שחזור מבוסס הקשר.</p>
+            <h4>מה השתנה בניסוי המתוקן?</h4>
+            <p><strong>ללא אילוצים פיזיים:</strong> 9.5% Top-10 על אותם 74 אתרים.</p>
+            <p style="margin-top: 5px;"><strong>עם אותיות שמורות ואורך ±1:</strong> 63.5% Top-10 ברמת האתר, עם רווח סמך של 51.4%–74.3%.</p>
+            <p style="margin-top: 8px; color: var(--accent-emerald);"><strong>בדיקת רגישות:</strong> 69.5% באורך מדויק, 63.5% ב־±1 ו־62.7% ב־±2.</p>
+            <p style="margin-top: 8px;"><strong>חשוב:</strong> זהו שיפור במפענח המלא בזכות מידע פיזי, לא קפיצה של 54 נקודות במודל השפה עצמו.</p>
           </div>
         </div>
       </div>
@@ -1128,10 +1127,10 @@
           </div>
 
           <div class="lit-card" style="border-top:3px solid var(--accent-purple);">
-            <h4>מאגר טקסט קומראן (QTD - פרופ' אלישע קימרון)</h4>
-            <div class="lit-venue">אוניברסיטת בן-גוריון בנגב</div>
-            <p>מהדורת 4 הכרכים הביקורתית "מגילות מדבר יהודה: החיבורים העבריים". מציגה קריאות אפוגרפיות והצעות שחזור חלופיות ל-DJD.</p>
-            <div class="lit-diff">✦ <strong>הסכמת מהדירים (Multi-Editor Concordance):</strong> מדידת הסכמת המודל מול מהדורות קימרון במקביל ל-DJD.</div>
+            <h4>Qumran Digital: Text und Lexikon</h4>
+            <div class="lit-venue">מאגר קריאות מיוחסות ביבליוגרפית</div>
+            <p>צילום מצב שמור מ־21 במאי 2026 כולל 1,811 קריאות מפורשות ב־346 אתרים ו־253 מקורות ביבליוגרפיים. המאגר משמש להערכה בלבד ולעולם אינו נכנס לאימון.</p>
+            <div class="lit-diff">✦ <strong>השוואה ניתנת לשחזור:</strong> הניתוח רץ מקומית מן העותק השמור, ללא סריקה חוזרת של הרשת, ומפריד בין קריאות קימרון, Study Edition, DJD ומקורות נוספים.</div>
           </div>
         </div>
       </div>
@@ -1160,7 +1159,7 @@
             </li>
             <li>
               <strong>ממצאי האמפיריקה המרכזיים:</strong>
-              <span class="bullet-desc">ביסוס מסגרת ה-Dual-Metric, הוכחת הכללה בין-תקופתית, ומידול דירוג מועמדים מוסבר (Saliency).</span>
+              <span class="bullet-desc">אימון ללא שחזורי חוקרים, השוואה מיוחסת מול Qumran Digital, שילוב אותיות שמורות ואומדן אורך פיזי, ודירוג מועמדים מוסבר (Saliency).</span>
             </li>
           </ul>
         </div>
@@ -1169,24 +1168,24 @@
             <h4 style="color: var(--accent-indigo); margin-bottom: 10px;">📊 תוצאות הניסויים המרכזיות (Empirical Highlights)</h4>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem;">
               <div style="background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; border-right: 3px solid var(--accent-emerald);">
-                <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-emerald);">48.0% Top-10</div>
-                <div style="color: var(--text-muted); font-size: 0.78rem;">שחזור מילה בודדת (RAG)</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-emerald);">63.5% Top-10</div>
+                <div style="color: var(--text-muted); font-size: 0.78rem;">הסכמה ברמת אתר מול חוקרים (N=74)</div>
               </div>
               <div style="background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; border-right: 3px solid var(--accent-indigo);">
-                <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-indigo);">36.8% Top-10</div>
-                <div style="color: var(--text-muted); font-size: 0.78rem;">צינור RAG משוקלל לכל הלקונות</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-indigo);">60.6% Top-10</div>
+                <div style="color: var(--text-muted); font-size: 0.78rem;">99 זוגות ייחודיים של אתר–קריאה</div>
               </div>
               <div style="background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; border-right: 3px solid var(--accent-purple);">
-                <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-purple);">39.0% Top-10</div>
-                <div style="color: var(--text-muted); font-size: 0.78rem;">הכללה לכתבי יד היסטוריים</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-purple);">36.3% Top-10</div>
+                <div style="color: var(--text-muted); font-size: 0.78rem;">בקרת מילים שמורות, מודל ללא שחזורים</div>
               </div>
               <div style="background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; border-right: 3px solid var(--accent-blue);">
-                <div style="font-size: 1.1rem; font-weight: 700; color: #fff;">31.0% vs 31.8%</div>
-                <div style="color: var(--text-muted); font-size: 0.78rem;">דיו מקורי vs הסכמת מהדירים</div>
+                <div style="font-size: 1.1rem; font-weight: 700; color: #fff;">51.4%–74.3%</div>
+                <div style="color: var(--text-muted); font-size: 0.78rem;">רווח סמך 95% ל־Top-10</div>
               </div>
             </div>
             <p style="margin-top: 10px; font-size: 0.78rem; color: var(--text-muted); text-align: center;">
-              עמימות סמנטית בין מהדירים: <strong>22.8%–38.0%</strong> מכלל הלקונות | שיפור של <strong>38,700x</strong> מול ניחוש אקראי.
+              התוצאה 63.5% מודדת מפענח עם אילוצים פיזיים; ללא האילוצים, אותם אתרים משיגים <strong>9.5% Top-10</strong>.
             </p>
           </div>
         </div>

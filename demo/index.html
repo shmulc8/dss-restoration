@@ -13,9 +13,10 @@
     <div class="page-shell">
       <aside class="sidebar">
         <div class="brand">
-          <div class="brand-kicker">Local Demo</div>
+          <div class="brand-kicker">Live Research Demo</div>
           <h1>DSS Restoration Explorer</h1>
           <p>Researcher-facing restoration preview and oracle-known error triage.</p>
+          <a class="deck-link" href="./slides_he.html">Open Hebrew presentation →</a>
         </div>
 
         <section class="panel">
@@ -196,6 +197,39 @@
             <p>Held-out Hebrew-only benchmark comparing decoding architectures and researcher-assist signals.</p>
           </div>
           <div class="benchmark-panels">
+            <div class="panel wide researcher-benchmark-panel">
+              <div class="panel-header-badge">Corrected July 2026 Benchmark</div>
+              <h4>Agreement With Attributed Researcher Restorations</h4>
+              <p class="small">
+                Reconstruction-free MsBERT, evaluated on 74 genuine single-word lacunae from held-out,
+                non-biblical scrolls. The decoder keeps visible manuscript letters and approximate
+                lacuna-derived word length (±1), but never receives the restored letters.
+              </p>
+              <div class="researcher-metrics" aria-label="Researcher restoration benchmark results">
+                <div class="researcher-metric primary-metric">
+                  <span class="metric-value">63.5%</span>
+                  <span class="metric-label">Target-level Top-10</span>
+                  <span class="metric-detail">Any compatible attributed restoration · N=74</span>
+                </div>
+                <div class="researcher-metric">
+                  <span class="metric-value">60.6%</span>
+                  <span class="metric-label">Unique-reading Top-10</span>
+                  <span class="metric-detail">99 distinct target-reading pairs</span>
+                </div>
+                <div class="researcher-metric diagnostic-metric">
+                  <span class="metric-value">9.5%</span>
+                  <span class="metric-label">Without physical constraints</span>
+                  <span class="metric-detail">Same targets; diagnostic comparison</span>
+                </div>
+              </div>
+              <p class="benchmark-caveat">
+                The 63.5% result measures the complete constrained decoder—not a 54-point improvement
+                in the language model. The former 8.0% row-weighted result is superseded because it
+                discarded preserved letters, malformed some editorial alternatives, and overweighted
+                repeatedly published targets. Target-level Top-10 95% CI: 51.4%–74.3%.
+              </p>
+            </div>
+
             <!-- Key Breakthrough Panel -->
             <div class="panel wide highlight-panel">
               <div class="panel-header-badge">Key Breakthrough</div>

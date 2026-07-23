@@ -90,6 +90,18 @@ body {
   margin: 4px 0 0 0;
 }
 
+.deck-link {
+  color: var(--primary-hover);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.deck-link:hover {
+  text-decoration: underline;
+}
+
 .panel {
   display: flex;
   flex-direction: column;
@@ -707,6 +719,67 @@ details.advanced-filters .field {
   border: 1.5px solid rgba(13, 148, 136, 0.25) !important;
 }
 
+.researcher-benchmark-panel {
+  background:
+    radial-gradient(circle at 92% 10%, rgba(13, 148, 136, 0.13), transparent 35%),
+    var(--panel-strong);
+  border: 1.5px solid rgba(13, 148, 136, 0.28);
+}
+
+.researcher-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.researcher-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.researcher-metric.primary-metric {
+  border-color: rgba(13, 148, 136, 0.35);
+  background: var(--primary-soft);
+}
+
+.researcher-metric.diagnostic-metric {
+  background: var(--neutral-bg);
+}
+
+.metric-value {
+  color: var(--primary-hover);
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.metric-label {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.metric-detail,
+.benchmark-caveat {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.benchmark-caveat {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--primary);
+  background: rgba(13, 148, 136, 0.05);
+  border-radius: 0 8px 8px 0;
+}
+
 .panel-header-badge {
   background: var(--primary);
   color: white;
@@ -747,6 +820,10 @@ details.advanced-filters .field {
 
   .hero-stats {
     width: 100%;
+  }
+
+  .researcher-metrics {
+    grid-template-columns: 1fr;
   }
 }
 

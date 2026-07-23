@@ -7,6 +7,43 @@ Automatic restoration of missing words (lacunae) in the Dead Sea Scrolls using H
 
 ---
 
+## Reconstruction-free dataset and provenance
+
+The current clean-data path is built directly from `ETCBC/dss` Text-Fabric
+2.0. It enforces three rules before training:
+
+1. only non-biblical scrolls (`biblical == 0`);
+2. no modern editorial reconstruction text (`rec == 1`);
+3. lacuna size retained where the source structure supports an estimate.
+
+Reconstructed or explicitly unknown words become anonymous `<GAP>` slots.
+During fine-tuning these are unlabelled `[MASK]` inputs; only preserved words
+can become prediction targets. The derived corpus contains 736 scrolls, 1,647
+chunks, and 27,814 lacuna records.
+
+Text-Fabric attributes the source transcription to Martin G. Abegg Jr., James
+E. Bowley, and Edward M. Cook, based on Martin Abegg's data files. Its `rec`
+feature identifies a modern reconstruction but does **not** identify an editor
+or edition per reading. This repository therefore does not currently measure
+agreement against DJD, Qimron, or SQE as separate researchers.
+
+On 300 intact preserved targets from reconstruction-free held-out scrolls:
+
+| Model | Top-1 | Top-5 | Top-10 | Top-20 |
+| :--- | ---: | ---: | ---: | ---: |
+| MsBERT base | 12.0% | 19.3% | 24.7% | 29.3% |
+| Legacy DSS span-refined | 15.7% | 25.3% | 32.0% | 35.3% |
+| **Preserved-only DSS span** | **13.7%** | **30.7%** | **36.3%** | **43.7%** |
+
+Reproduce the clean path with:
+
+```bash
+.venv/bin/python data/build_preserved_nonbib_corpus.py
+.venv/bin/python data/validate_preserved_nonbib_corpus.py
+.venv/bin/python training/finetune_span_preserved_nonbib.py
+.venv/bin/python eval/tf_preserved_nonbib_benchmark.py
+```
+
 ## 🌟 Executive Summary & Master Empirical Benchmarks
 
 | Benchmark / Research Experiment | Key Metric Outcome | Scientific Significance |
@@ -14,9 +51,9 @@ Automatic restoration of missing words (lacunae) in the Dead Sea Scrolls using H
 | **Single-Word RAG Restoration** | **48.0% Top-10 Accuracy** | Parallel witness retrieval boosts single-word Top-10 accuracy from 30.2% to 48.0% (+17.8% direct gain). |
 | **Overall Multi-Word RAG Pipeline** | **36.8% Top-10 Accuracy** | Evaluated across 600 multi-word test lacunae with dynamic beam search and physical layout filters. |
 | **Cross-Epoch Historical Transfer** | **39.0% Top-10 Accuracy** | Evaluated on external medieval & rabbinic Hebrew manuscripts; proves strong cross-era syntactic transfer. |
-| **Dual-Metric Framework** | **31.0% vs. 31.8% Top-10** | Intact Ink Accuracy (`rec = 0`) matches Real Lacunae Editor Concordance (`rec = 1`), proving no editor bias. |
+| **Legacy Dual-Metric Framework** | **31.0% vs. 31.8% Top-10** | Compares intact targets with the corpus's anonymous modern reconstructions; it does not establish absence of editor bias. |
 | **Strict Composition-Level Split** | **30.2% Top-10 Accuracy** | Evaluated across 26 completely unseen literary works (*CD*, *4QS*, *Hodayot*); zero memorization leakage. |
-| **Inter-Editor Disagreement Rate** | **22.8% – 38.0% Ambiguity** | Analyzed across 25,155 lacuna words; proves Second Temple Hebrew routinely allows multiple valid synonyms. |
+| **Legacy Ambiguity Heuristic** | **22.8% – 38.0% claimed range** | Not backed by aligned per-editor readings and should not be cited as a measured inter-editor disagreement rate. |
 | **Synthetic Clitic Augmentation** | **+0.7% Top-10 Net Gain** | Retraining with prefix joins (`ו-`, `ב-`, `ל-`, `ה-`) makes the model immune to scribal orthographic shifts. |
 | **POS Grammatical Filtering** | **+0.3% Top-1 Gain** | Contextual Part-of-Speech constraints suppress prepositions in content noun/verb slots. |
 | **TavBERT Character Benchmark** | **30.0% (1w) / 26.3% (6+w)** | TavBERT handles long gaps better than BEREL (26.3% vs 6.9%), but `MsBERT` whole-word modeling leads (37.3%). |
@@ -29,8 +66,8 @@ Automatic restoration of missing words (lacunae) in the Dead Sea Scrolls using H
 ```
 dss-restoration/
 ├── analysis/                       # Empirical research & failure analysis tools
-│   ├── compare_scholar_conjectures.py  # Automated Comparative Epigraphic Scorer (DJD vs Qimron)
-│   ├── estimate_editor_disagreement.py # Inter-editor disagreement & ambiguity estimator (25k words)
+│   ├── compare_scholar_conjectures.py  # Scores supplied alternatives; no edition data included
+│   ├── estimate_editor_disagreement.py # Legacy fixed heuristic; not an editor comparison
 │   ├── context_noise_stress_test.py    # Context degradation ablation runner (10%, 25%, 40% noise)
 │   └── reports/                         # Full benchmark reports & markdown logs
 │       ├── FULL_CORPUS_BENCHMARK_REPORT.md  # 100% full dataset benchmark report (7,809 spans)
@@ -65,8 +102,9 @@ dss-restoration/
 
 ## 🚀 Quickstart & Execution Commands
 
-### 1. Score Competing Scholar Conjectures
-To run the Automated Comparative Epigraphic Scorer on competing reconstructions (e.g., DJD vs. Qimron QTD vs. SQE):
+### 1. Score User-Supplied Conjectures
+This scorer ranks manually supplied alternatives. It does not fetch or align
+DJD, Qimron QTD, or SQE readings:
 ```bash
 python analysis/compare_scholar_conjectures.py
 ```
@@ -99,9 +137,9 @@ python eval/run_all_experiments.py
 
 ## 🏛️ Academic Integration & Ecosystem Architecture
 
-* **Scripta Qumranica Electronica (SQE):** Connects to SQE TEI-XML digital scholarly editions (Prof. Eshbal Ratzon / Göttingen / IAA) to output candidate completions directly into digital scroll editors.
-* **Leon Levy Digital Library (IAA):** Maps scroll plate numbers to high-resolution multispectral infrared (IR) imagery for physical line-width constraints.
-* **Qumran Text Database (QTD):** Compares predictions against Elisha Qimron's 4-volume critical Hebrew edition (Ben-Gurion University Press).
+The repository contains exploratory connector scaffolding for SQE, the Leon
+Levy Digital Library, and Qimron QTD. It does not currently contain aligned
+edition readings or perform a real multi-editor comparison.
 
 ---
 

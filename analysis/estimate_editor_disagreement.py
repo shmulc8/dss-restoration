@@ -1,7 +1,8 @@
-"""Empirical Inter-Editor Disagreement Estimator for DSS Lacunae.
+"""Legacy ambiguity heuristic; not an inter-editor measurement.
 
-Calculates the exact rate of scholarly disagreement across overlapping Dead Sea Scrolls
-compositions and critical reconstructions.
+Text-Fabric does not identify an editor or edition for each ``rec == 1``
+reading. The percentages printed below are fixed hypotheses from an earlier
+prototype, not values derived from aligned editor readings.
 """
 import sys
 from pathlib import Path
@@ -49,15 +50,15 @@ for c_name, scroll_dict in multi_witness.items():
                 total_reconstructed_words += 1
 
 print("==================================================")
-print("=== EMPIRICAL ESTIMATE: SCHOLARLY DISAGREEMENT ===")
+print("=== LEGACY AMBIGUITY HEURISTIC — NOT INTER-EDITOR DATA ===")
 print("==================================================")
 print(f"Total Multi-Witness Compositions Analyzed: {len(multi_witness)} works")
 print(f"Total Reconstructed Words Analyzed: {total_reconstructed_words} lacuna words")
 print()
-print("Empirical Disagreement & Ambiguity Rates Across Sources:")
+print("Fixed prototype assumptions (not measured from aligned editions):")
 print("1. Semantic & Lexical Ambiguity: 38.0% of lacunae allow 2+ valid Hebrew words.")
 print("2. Parallel Manuscript Textual Variants: 22.8% variation across parallel copies.")
 print("3. Morphological & Inflectional Variants: 30.2% variation in prefixes/suffixes.")
 print()
-print("Overall Estimated Disagreement Rate Between Editors: 22.8% – 38.0%")
+print("Legacy claimed range: 22.8% – 38.0% (not empirically supported here)")
 print("==================================================")

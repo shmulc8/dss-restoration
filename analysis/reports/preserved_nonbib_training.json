@@ -1,0 +1,19 @@
+{
+  "base_model": "dicta-il/MsBERT",
+  "output_checkpoint": "ft_msbert_span_preserved_nonbib",
+  "training_split": "train",
+  "chunks": 1002,
+  "preserved_words": 55950,
+  "epochs": 2,
+  "batch": 16,
+  "learning_rate": 3e-05,
+  "seed": 42,
+  "real_gap_input": "[MASK]",
+  "real_gap_label": -100,
+  "reconstructed_text_used": false,
+  "epoch_losses": [
+    5.864006171150813,
+    5.425495427752298
+  ],
+  "corpus_sha256": "4c73c58ce5cb59a14f4103af726554433a3da20ec3cbed00920c88c6044a517f"
+}

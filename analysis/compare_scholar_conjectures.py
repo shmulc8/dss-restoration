@@ -1,7 +1,7 @@
-"""Automated Comparative Epigraphic Scorer.
+"""Score user-supplied epigraphic conjectures.
 
-Scoring and ranking competing human scholar conjectures (e.g. DJD vs. Qimron QTD vs. SQE)
-using pseudo-log-likelihood scores from MsBERT ft-SPAN-refined.
+This module does not fetch or align DJD, Qimron QTD, or SQE readings. The
+bundled command-line example uses illustrative alternatives only.
 """
 import sys
 from pathlib import Path
@@ -85,13 +85,13 @@ if __name__ == "__main__":
     print("=== AUTOMATED COMPARATIVE EPIGRAPHIC SCORER ===")
     print("==================================================")
     
-    # Real 1QS Case Study: Competing Scholar Reconstructions
+    # Illustrative context and alternatives; not edition-sourced readings.
     left_ctx = ["לעשות", "אמת", "ו"]
     right_ctx = ["ו", "משפט", "ב", "ארץ"]
     
-    conjecture_A = ["צדקה"]          # DJD Standard Edition
-    conjecture_B = ["חורב"]          # Alternative Epigraphic Conjecture
-    conjecture_C = ["חסד"]           # Synonymous Biblical Conjecture
+    conjecture_A = ["צדקה"]
+    conjecture_B = ["חורב"]
+    conjecture_C = ["חסד"]
     
     res_A = score_conjecture(left_ctx, conjecture_A, right_ctx)
     res_B = score_conjecture(left_ctx, conjecture_B, right_ctx)

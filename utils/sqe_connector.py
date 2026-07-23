@@ -1,6 +1,9 @@
-"""Scripta Qumranica Electronica (SQE), Leon Levy IAA, and Qimron QTD Integration Connector.
+"""Exploratory SQE, Leon Levy IAA, and Qimron QTD connector scaffolding.
 
-Provides structured data interfaces for:
+The module does not currently fetch or align per-lacuna readings from multiple
+editions. ``get_editor_concordance_schema`` returns a proposed schema only.
+
+Potential interfaces:
 1. SQE (Scripta Qumranica Electronica) TEI-XML/JSON editions (Prof. Eshbal Ratzon et al.).
 2. Leon Levy Digital Library (IAA) multispectral fragment metadata.
 3. Qimron QTD (Ben-Gurion University) alternative epigraphic reconstructions.
@@ -34,7 +37,7 @@ class SQEConnector:
             return content
 
     def get_editor_concordance_schema(self):
-        """Returns standard schema for comparing DJD, Qimron QTD, and SQE editor readings."""
+        """Return a proposed schema; no aligned editor readings are loaded."""
         return {
             "source_edition": ["DJD (Discoveries in Judaean Desert)", "Qimron QTD (BGU)", "SQE (Qumranica)"],
             "features": [

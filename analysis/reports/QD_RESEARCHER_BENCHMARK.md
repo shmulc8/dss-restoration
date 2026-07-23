@@ -1,90 +1,84 @@
-# Qumran Digital attributed-reading benchmark
+# Qumran Digital constrained restoration benchmark
 
 ## Result
 
-The preserved-only DSS model was compared with 1,559 explicit readings from
-240 bibliographic sources at 267 selected disputed words in held-out,
-non-biblical scrolls.
+This experiment evaluates the reconstruction-free preserved-only model on
+single-word lacunae from the stored Qumran Digital snapshot. Unlike the
+superseded whole-word-mask experiment, it retains visibly preserved letters
+and an approximate lacuna-derived word length
+(±1 character).
 
-| Scope | N | Top-1 | Top-5 | Top-10 | Top-20 |
+| Unit | N | Top-1 | Top-5 | Top-10 | Top-20 |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| All scorable attributed readings | 1,559 | 2.6% | 5.7% | 8.0% | 9.1% |
-| Consonantally distinct from QD initial reading | 1,155 | 1.2% | 3.7% | 6.6% | 7.7% |
+| Target: any attributed compatible restoration | 74 | 40.5% | 62.2% | 63.5% | 67.6% |
+| Unique target-reading pair | 99 | 30.3% | 59.6% | 60.6% | 64.6% |
+| QD initial reading control | 74 | 20.3% | 41.9% | 43.2% | 44.6% |
 
-The largest publication-level samples are:
+Target-level Top-10 95% cluster-bootstrap interval: **51.4%–74.3%**.
+Without manuscript constraints, the same target-level Top-10 is
+9.5%. The difference measures the value of physical
+evidence supplied to the decoder, not an improvement in the language model.
 
-| Publication | N | Top-1 | Top-10 | Distinct N | Distinct Top-10 |
-| :--- | ---: | ---: | ---: | ---: | ---: |
-| García Martínez / Tigchelaar, *Study Edition* | 118 | 0.8% | 10.2% | 109 | 11.0% |
-| Qimron 2010 | 92 | 4.3% | 7.6% | 51 | 5.9% |
-| Qimron 2013 | 84 | 1.2% | 7.1% | 70 | 5.7% |
-| Parry / Tov, *PrCon I* | 61 | 3.3% | 9.8% | 45 | 6.7% |
-| Qimron 2020 | 58 | 3.4% | 5.2% | 31 | 6.5% |
-| Lohse 1971 | 55 | 3.6% | 9.1% | 48 | 6.2% |
-| Habermann 1959 | 49 | 4.1% | 8.2% | 46 | 6.5% |
-| Broshi 1992 | 39 | 2.6% | 10.3% | 34 | 11.8% |
-| Rabin 1958 | 33 | 3.0% | 9.1% | 31 | 9.7% |
-| Wacholder / Abegg 1995 | 29 | 3.4% | 10.3% | 21 | 9.5% |
+### Length-tolerance sensitivity
 
-Do not compare the overall 8.0% directly with the 36.3% preserved intact-word
-benchmark as if they measured the same task. Qumran Digital selected these
-targets because the readings are disputed or otherwise notable. They are
-substantially harder, and a single target often has several incompatible
-published readings.
+| Allowed difference | Eligible targets | Top-1 | Top-10 | Top-20 |
+| :--- | ---: | ---: | ---: | ---: |
+| ±0 | 59 | 52.5% | 69.5% | 71.2% |
+| ±1 | 74 | 40.5% | 63.5% | 67.6% |
+| ±2 | 75 | 40.0% | 62.7% | 66.7% |
 
-## Protocol
+The conclusion is stable across exact-length, ±1, and ±2 decoding. The number
+of eligible targets changes because a published proposal outside a tolerance
+is not treated as physically compatible at that setting.
 
-- Source snapshot: Qumran Digital, 2026-05-21.
-- Corpus: non-biblical DSS manuscripts only.
-- Split: the pre-existing reconstruction-free held-out scroll split. None of
-  these scrolls was used to fine-tune the preserved-only model.
-- Selection: words for which Qumran Digital displays an alternative reading
-  inline in its transcription.
-- Attribution: only API records with a bibliography and an explicit reading;
-  readings that Qumran Digital inferred because a checked edition recorded no
-  difference were excluded.
-- Context: the full target word was masked. Surrounding words containing
-  square-bracket researcher reconstructions were replaced with `<GAP>`.
-- Quality filter: at least ten visible context words; incomplete proposed
-  readings containing `○`, `--`, or `.` were not scored.
-- Match: exact Hebrew consonants after removing editorial punctuation and
-  combining marks.
-- Unit: one publication's reading at one target. Publication-level results
-  with very small N should not be interpreted as rankings of researchers.
+## Largest publication samples
 
-## Interpretation and limitations
+Each publication contributes at most one observation per target; duplicate
+publication rows and duplicate readings do not receive extra weight.
 
-This measures whether the model assigns a high contextual rank to readings
-reported in scholarly literature. It does not establish which reading is
-physically correct. Qumran Digital explicitly warns that much of its variant
-collection is working data that has not yet been checked extensively.
+| Publication | Targets | Top-1 | Top-10 |
+| :--- | ---: | ---: | ---: |
+| Study Edition | 24 | 20.8% | 62.5% |
+| Qimron 2013 | 23 | 30.4% | 52.2% |
+| PrCon I | 10 | 40.0% | 50.0% |
+| Qimron 2020 | 9 | 44.4% | 66.7% |
+| Wacholder/Abegg 1995 | 9 | 33.3% | 55.6% |
+| DJD XXIX | 8 | 37.5% | 50.0% |
+| Qimron 2014 | 8 | 50.0% | 75.0% |
+| Brown-deVost 2019 | 6 | 16.7% | 50.0% |
+| Qimron 2010 | 6 | 50.0% | 83.3% |
+| Lohse 1971 | 5 | 20.0% | 80.0% |
 
-The sample is not a complete census of Qumran Digital's variants. Its public
-API exposes full variants one word at a time, while only a selected subset is
-marked inline. To avoid a large crawl, the importer queries only those inline
-targets and stores the result once.
+## Scope and exclusions
 
-SQE 0.33.0 was also audited. Although its schema supports multiple editions,
-the public database snapshot has one non-archived edition per manuscript and
-all sanitized character assignments belong to its system user. It therefore
-cannot supply an independent per-editor comparison in its current public
-form.
+- Cached source snapshot: Qumran Digital 2026-05-21;
+  the scorer performs no network requests.
+- Corpus: held-out non-biblical DSS scrolls only.
+- Training: preserved letters only; square-bracket scholarly restorations are
+  absent from fine-tuning data.
+- Primary unit: one manuscript target. Success means any distinct,
+  bibliographically attributed restoration compatible with the physical
+  pattern is in Top-K.
+- Input rows: 1811; eligible targets:
+  74; unique compatible target-reading pairs:
+  99.
+- Multiword readings, scribal corrections, modern alternatives, incomplete
+  readings, non-lacuna variants, and readings contradicting visible letters
+  are reported as exclusions rather than concatenated into fake words.
 
-## Stored artifacts and reproduction
+This is still a literature-agreement benchmark, not physical ground truth.
+QD selected these locations because they are disputed, and its variant
+collection is working data. Publication-level samples are descriptive and
+must not be treated as a ranking of researchers.
 
-- `data/derived/qd_researcher_variants.jsonl`: 1,811 explicit attributed
-  readings at 346 targets before scoring-quality filters.
-- `data/derived/qd_researcher_variants_manifest.json`: snapshot metadata,
-  scope, counts, and 253-source bibliography.
-- `analysis/reports/qd_researcher_comparison.json`: aggregate metrics and
-  scored records.
+## Reproduction
 
-The following is offline when the stored snapshot exists:
+Both commands below are offline when the stored snapshot exists:
 
 ```bash
 .venv/bin/python eval/build_qd_researcher_benchmark.py
 .venv/bin/python eval/score_qd_researcher_benchmark.py
 ```
 
-The first command prints that it is reusing the stored snapshot. Network
-collection occurs only when `--refresh` is explicitly supplied.
+Only an explicit `eval/build_qd_researcher_benchmark.py --refresh` contacts
+Qumran Digital.

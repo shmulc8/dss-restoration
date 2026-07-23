@@ -35,6 +35,12 @@ comparisons. The separately sourced Qumran Digital files below do.
 - `qd_researcher_variants_manifest.json`: source, scope, warning, counts, and
   bibliography for the attributed snapshot.
 
+`eval/score_qd_researcher_benchmark.py` interprets the cached QD editorial
+notation offline. Its primary metric is one target (not one publication row),
+keeps only single-word lacuna restorations, preserves visible-letter and
+approximate-length constraints, and reports other editorial variants as
+exclusions instead of concatenating them into model candidates.
+
 The source transcription is based on Martin Abegg's data files and is
 attributed in Text-Fabric to Martin G. Abegg Jr., James E. Bowley, and Edward
 M. Cook. The derived data follows the source corpus's CC BY-NC 4.0 license; it

@@ -49,24 +49,21 @@ Reproduce the clean path with:
 The stored Qumran Digital snapshot adds a real literature comparison without
 putting researcher restorations into training. It contains 1,811 explicit
 readings for 346 selected disputed words, attributed to 253 bibliographic
-sources. Model scoring is restricted further to 1,559 complete readings at
-267 targets from held-out scrolls with at least ten visible context words.
+sources. The corrected experiment isolates 74 genuine single-word lacunae in
+held-out scrolls, retains visible manuscript letters, and uses approximate
+lacuna-derived word length while keeping the restored letters hidden.
 
-| Publication | Readings | Top-1 | Top-10 | Distinct readings | Distinct Top-10 |
-| :--- | ---: | ---: | ---: | ---: | ---: |
-| García Martínez / Tigchelaar, *Study Edition* | 118 | 0.8% | 10.2% | 109 | 11.0% |
-| Qimron 2010 | 92 | 4.3% | 7.6% | 51 | 5.9% |
-| Qimron 2013 | 84 | 1.2% | 7.1% | 70 | 5.7% |
-| Parry / Tov, *PrCon I* | 61 | 3.3% | 9.8% | 45 | 6.7% |
-| Qimron 2020 | 58 | 3.4% | 5.2% | 31 | 6.5% |
-| Lohse 1971 | 55 | 3.6% | 9.1% | 48 | 6.2% |
-| Habermann 1959 | 49 | 4.1% | 8.2% | 46 | 6.5% |
+| Scope | N | Top-1 | Top-10 | Top-20 |
+| :--- | ---: | ---: | ---: | ---: |
+| Target: any compatible attributed restoration | 74 | 40.5% | **63.5%** | 67.6% |
+| Unique target-reading pair | 99 | 30.3% | **60.6%** | 64.6% |
+| Same targets without physical constraints | 74 | 4.1% | 9.5% | 10.8% |
 
-Overall Top-10 agreement is 8.0%; on readings that differ consonantally from
-Qumran Digital's initial reading it is 6.6%. This is much harder than the
-36.3% intact-word benchmark above: the targets were selected because their
-readings are disputed or fragmentary, and the metric asks for exact
-consonantal agreement with each publication.
+The previous 8.0% result is superseded. It masked the entire disputed word,
+discarded preserved letters, concatenated some multiword/editorial
+alternatives into impossible tokens, and counted repeated publication rows as
+independent cases. The 63.5% result is not a language-model-only gain: it
+measures the complete decoder after restoring manuscript constraints.
 
 These are **literature-agreement** numbers, not manuscript-grounded accuracy.
 Qumran Digital describes the variant collection as working data that has not

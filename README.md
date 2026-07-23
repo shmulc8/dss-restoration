@@ -3,9 +3,7 @@
 Automatic restoration of missing words (lacunae) in the Dead Sea Scrolls using Hebrew masked language models, retrieval-augmented generation (RAG), and physical layout constraints.
 
 🔗 **GitHub Repository:** [https://github.com/shmulc8/dss-restoration](https://github.com/shmulc8/dss-restoration)  
-🌐 **Live Cloudflare Public Slides (Hebrew):** [https://dss-restoration-demo.pages.dev/slides_he.html](https://dss-restoration-demo.pages.dev/slides_he.html)  
-🖥️ **Live Cloudflare Interactive Web Demo:** [https://dss-restoration-demo.pages.dev/](https://dss-restoration-demo.pages.dev/)  
-🐙 **GitHub Pages Mirror:** [https://shmulc8.github.io/dss-restoration/demo/slides_he.html](https://shmulc8.github.io/dss-restoration/demo/slides_he.html)
+🌐 **Live Public Presentation (Hebrew):** [https://dss-restoration-demo.pages.dev/slides_he.html](https://dss-restoration-demo.pages.dev/slides_he.html)
 
 ---
 

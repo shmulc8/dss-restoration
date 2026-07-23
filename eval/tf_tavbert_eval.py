@@ -113,9 +113,10 @@ for it in items:
 
 sample = []
 for b, v in sorted(by_b.items()):
-    take = min(len(v), PER_BUCKET)
-    idx = rng.choice(len(v), size=take, replace=False)
-    sample += [v[i] for i in idx]
+    take = len(v) if PER_BUCKET <= 0 else min(len(v), PER_BUCKET)
+    if take > 0:
+        idx = rng.choice(len(v), size=take, replace=False)
+        sample += [v[i] for i in idx]
 
 print(f"Evaluating TavBERT ({MODEL_ID}) on heldout split ({split_label})")
 print(f"Sample size: {len(sample)} test spans (PER_BUCKET={PER_BUCKET})\n")

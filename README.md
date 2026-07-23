@@ -74,7 +74,10 @@ Fine-tune the current preserved-only baseline with:
 
 This checkpoint is a baseline, not the final paper model. The paper protocol
 requires multiple seeds, dev-only model selection, composition-level stress
-tests, realistic damage generation, and an unknown-length decoder.
+tests, realistic damage generation, and an unknown-length decoder. The baseline
+matrix also adopts Embible's Hebrew character/word comparison: word-only,
+TavBERT-style character-only, constrained word completion, and a calibrated
+character-word ensemble under known, predicted, and unknown whitespace.
 
 ## Current evaluation entry points
 

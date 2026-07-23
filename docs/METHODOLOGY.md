@@ -92,6 +92,54 @@ rankings helps with partial words and whitespace uncertainty.
 - Report all seeds, mean and dispersion; do not report only the best run.
 - Freeze the final checkpoint and decoder before scoring the test set.
 
+### 3.4 Embible-derived character/word experiment
+
+Embible contributes a particularly relevant Hebrew experimental design. It
+compares word models with TavBERT character predictions and distinguishes
+unknown from known whitespace and word-length information. We will reproduce
+that logic as a controlled DSS ablation with stronger splits and span metrics.
+
+Required systems:
+
+1. **word-only unconstrained:** MsBERT ranks words without a gold character
+   length;
+2. **character-only:** TavBERT or an equivalent character model predicts
+   letters and whitespace;
+3. **word-only constrained:** the word model is filtered by a physically
+   observable character budget and/or word boundaries;
+4. **character-word ensemble:** combine calibrated character and word scores,
+   reject candidates that contradict visible letters, and let predicted
+   whitespace propose multiple word segmentations;
+5. **oracle boundary diagnostic:** supply gold boundaries only to measure the
+   ceiling created by boundary information.
+
+Required information regimes:
+
+| Regime | Character budget | Word boundaries | Role |
+| :--- | :---: | :---: | :--- |
+| U0 | unknown | unknown | Primary real-world condition |
+| U1 | unknown | predicted | Character-model segmentation ablation |
+| P0 | approximate physical estimate | unknown | Realistic layout condition |
+| P1 | approximate physical estimate | predicted | Full character-word ensemble |
+| O1 | exact | exact | Oracle ceiling only |
+
+Embible's unconstrained condition assumes a single missing word when whitespace
+is unknown. We will not make that assumption for multiword DSS lacunae: U0 must
+search over both content and the number of words, and decoding failure counts as
+a miss.
+
+For comparability, add Embible-style 5%, 10%, and 15% random-mask stress tests
+using both of its masking strategies: word-first partial masking, and masking
+that also affects whitespace. These are secondary robustness tests. The primary
+Track A benchmark still samples contiguous damage from the empirical DSS
+distribution rather than uniformly masking Biblical-style text.
+
+Report CharHit@1/5 and WordHit@1/5 for direct comparison with Embible, but do
+not use them as the DSS headline. Add exact-span Top-K, CER, whitespace
+boundary F1, generated word-count error, and decoder failure rate. Tune ensemble
+weights and stopping rules on development scrolls by exact-span performance,
+not perplexity alone.
+
 ## 4. Evaluation tracks
 
 ### Track A — preserved-ink recovery
@@ -256,8 +304,9 @@ This protocol combines the strongest evaluation practices from:
   multiple acceptable readings, and known/approximate/unknown-length regimes.
 - [Embible (Findings of EACL 2024)](https://aclanthology.org/2024.findings-eacl.56/):
   Hebrew character/word ensembles, separate CharHit@K and WordHit@K, and
-  explicit known- versus unknown-whitespace conditions. Its 536-verse test set
-  uses randomly masked Biblical text, so it is a useful model baseline rather
+  explicit known- versus unknown-whitespace conditions. It fine-tunes on 22,144
+  Biblical verses, tunes on 535, and tests on 536 under 5%, 10%, and 15% random
+  masking. This makes it a useful Hebrew model and robustness baseline rather
   than evidence for real DSS lacunae.
 - [Aeneas (Nature 2025)](https://www.nature.com/articles/s41586-025-09292-5):
   unknown-length restoration, retrieved parallels, and paired expert studies.

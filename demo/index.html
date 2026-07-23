@@ -15,17 +15,17 @@
         <div class="brand">
           <div class="brand-kicker">Live Research Demo</div>
           <h1>DSS Restoration Explorer</h1>
-          <p>Researcher-facing restoration preview and oracle-known error triage.</p>
+          <p>Leakage-controlled research protocol, pilot evidence, and exploratory interfaces.</p>
           <a class="deck-link" href="./slides_he.html">Open Hebrew presentation →</a>
         </div>
 
         <section class="panel">
           <h2>Mode</h2>
           <div class="segmented" id="mode-switch">
-            <button data-mode="spans" class="active">Researcher</button>
+            <button data-mode="benchmark" class="active">Evidence</button>
+            <button data-mode="spans">Interface preview</button>
             <button data-mode="unknown">Unknown</button>
             <button data-mode="triage">Error Triage</button>
-            <button data-mode="benchmark">Benchmark</button>
           </div>
         </section>
 
@@ -123,6 +123,10 @@
             Similar passages are retrieved from the `fit` corpus, not from the held-out scrolls.
           </p>
           <p class="small">
+            The candidate cards use an earlier exploratory checkpoint and are not paper results.
+            Current numerical evidence appears only in the Evidence view.
+          </p>
+          <p class="small">
             The benchmark view separates cross-composition evidence from same-composition parallel witnesses.
           </p>
           <p class="small">
@@ -134,19 +138,19 @@
       <main class="main">
         <section class="hero">
           <div>
-            <div class="hero-kicker">Model</div>
-            <h2 id="hero-title">MsBERT + span-ft-refined</h2>
+            <div class="hero-kicker">Research status</div>
+            <h2 id="hero-title">Protocol locked; final benchmark pending</h2>
             <p id="hero-subtitle">
-              Real held-out lacuna spans for researcher-facing review, plus benchmark probes for diagnosis.
+              Preserved-only training, separated evidence tracks, and train-only retrieval.
             </p>
           </div>
           <div class="hero-stats" id="hero-stats"></div>
         </section>
 
-        <section class="content-mode active" id="mode-spans">
+        <section class="content-mode" id="mode-spans">
           <div class="section-head">
-            <h3>Researcher View</h3>
-            <p>Real held-out lacuna spans with per-slot predictions under the span benchmark regime. <strong>Hover a prediction slot</strong> to highlight the context words the model attended to when filling it — final-layer attention saliency, in the spirit of DeepMind's Ithaca.</p>
+            <h3>Exploratory interface preview</h3>
+            <p>These cards demonstrate a possible scholar-facing workflow using an earlier checkpoint. They are retained for interface research and error analysis, not as current paper evidence. <strong>Hover a prediction slot</strong> to inspect final-layer attention.</p>
           </div>
           <div class="result-toolbar">
             <span id="spans-count"></span>
@@ -191,15 +195,15 @@
           <div id="triage-cards" class="card-grid"></div>
         </section>
 
-        <section class="content-mode" id="mode-benchmark">
+        <section class="content-mode active" id="mode-benchmark">
           <div class="section-head">
-            <h3>Benchmark Snapshot & Model Achievements</h3>
-            <p>Held-out Hebrew-only benchmark comparing decoding architectures and researcher-assist signals.</p>
+            <h3>Current evidence and paper protocol</h3>
+            <p>The retained numbers answer different questions and are deliberately not collapsed into one restoration-accuracy headline.</p>
           </div>
           <div class="benchmark-panels">
             <div class="panel wide researcher-benchmark-panel">
-              <div class="panel-header-badge">Corrected July 2026 Benchmark</div>
-              <h4>Agreement With Attributed Researcher Restorations</h4>
+              <div class="panel-header-badge">Literature-agreement pilot</div>
+              <h4>Agreement with attributed researcher restorations</h4>
               <p class="small">
                 Reconstruction-free MsBERT, evaluated on 74 genuine single-word lacunae from held-out,
                 non-biblical scrolls. The decoder keeps visible manuscript letters and approximate
@@ -223,10 +227,9 @@
                 </div>
               </div>
               <p class="benchmark-caveat">
-                The 63.5% result measures the complete constrained decoder—not a 54-point improvement
-                in the language model. The former 8.0% row-weighted result is superseded because it
-                discarded preserved letters, malformed some editorial alternatives, and overweighted
-                repeatedly published targets. Target-level Top-10 95% CI: 51.4%–74.3%.
+                The 63.5% result measures the complete constrained decoder, not improvement in the
+                language model and not recovery of manuscript truth. Target-level Top-10 95% CI:
+                51.4%–74.3%.
               </p>
               <div class="source-comparison">
                 <div class="source-comparison-head">
@@ -260,8 +263,8 @@
                 <p class="source-note">
                   The Text-Fabric reconstructions are anonymous editorial evaluation labels, not
                   physical truth. The balanced sample contains 25 spans in each length bucket;
-                  whole-sequence recovery requires every word to match in order. These modest gains
-                  are reported as an ablation, not as a universal RAG improvement.
+                  whole-sequence recovery requires every word to match in order. The observed deltas
+                  are descriptive pilots, not evidence that retrieval improves restoration.
                 </p>
               </div>
               <div class="source-comparison">
@@ -302,34 +305,34 @@
               </div>
             </div>
 
-            <!-- Key Breakthrough Panel -->
             <div class="panel wide highlight-panel">
-              <div class="panel-header-badge">Key Breakthrough</div>
-              <h4>Autoregressive Sequence-Level Restoration (Sequence Accuracy)</h4>
+              <div class="panel-header-badge">Primary next experiment</div>
+              <h4>Exact complete-span recovery under unknown length</h4>
               <p class="small">
-                Traditional MLMs predict slots independently (Parallel Decoding), which ignores syntax constraints and causes duplicates like <code>אשר אשר</code>. 
-                Our <strong>Autoregressive Beam Search</strong> decodes tokens left-to-right, conditioning each step on previous predictions. 
-                This results in dramatic relative accuracy improvements for full, grammatically coherent sequence restoration (Sequence Top-1).
+                The frozen paper benchmark will hide genuinely preserved text using the empirical
+                DSS damage distribution. It will not supply character count or word-slot count.
+                The primary metric is exact-sequence Top-10; CER, MRR, calibration, failure rate,
+                and known-length regimes are secondary diagnostics.
               </p>
-              <div id="benchmark-sequence-comparison"></div>
+              <p class="source-note">
+                Results will be reported both on the natural distribution and equally weighted
+                1, 2, 3, 4–5, and 6+ word buckets, with scroll- and composition-clustered uncertainty.
+              </p>
             </div>
 
             <div class="panel wide">
-              <h4>Top-10 Slot-Level Accuracy by Gap Length</h4>
-              <p class="small">Independent slot recovery accuracy (percentage of individual gap words correct in place).</p>
-              <div id="benchmark-top10"></div>
-            </div>
-            <!-- Biblical Contrast Panel -->
-            <div class="panel wide">
-              <h4>Biblical Contrast Set (Control Group)</h4>
+              <h4>Promotion gate for any headline</h4>
               <p class="small">
-                Evaluated on 60 biblical scroll fragments. Since biblical texts share high similarity with known canonical manuscripts, this serves as an upper-bound sanity check on the models' classical Hebrew language proficiency.
+                Frozen manifests and hashes; scroll- and composition-disjoint tests; near-duplicate
+                audit; at least three training seeds; dev-only selection; paired RAG ablations;
+                95% confidence intervals; exact multiword scoring; and explicit separation of
+                preserved recovery, literature agreement, and scholar utility.
               </p>
-              <div id="benchmark-biblical"></div>
-            </div>
-            <div class="panel wide">
-              <h4>Retrieval And Parallel Witnesses</h4>
-              <div id="benchmark-retrieval" class="benchmark-retrieval"></div>
+              <p class="source-note">
+                <a href="https://github.com/shmulc8/dss-restoration/blob/main/docs/METHODOLOGY.md">Read the full methodology</a>
+                ·
+                <a href="https://github.com/shmulc8/dss-restoration/blob/main/docs/RESULTS.md">Inspect the evidence register</a>
+              </p>
             </div>
           </div>
         </section>

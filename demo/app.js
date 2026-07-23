@@ -4,9 +4,8 @@ const state = {
   failures: [],
   spans: [],
   unknowns: [],
-  benchmark: null,
   guide: null,
-  mode: "spans",
+  mode: "benchmark",
   triage: {},
   page: {
     spans: 1,
@@ -26,8 +25,6 @@ const els = {
   triageCards: document.getElementById("triage-cards"),
   spansCards: document.getElementById("spans-cards"),
   unknownCards: document.getElementById("unknown-cards"),
-  benchmarkTop10: document.getElementById("benchmark-top10"),
-  benchmarkRetrieval: document.getElementById("benchmark-retrieval"),
   spansCount: document.getElementById("spans-count"),
   spansPage: document.getElementById("spans-page"),
   spansPrev: document.getElementById("spans-prev"),
@@ -59,17 +56,15 @@ const spanTemplate = document.getElementById("span-card-template");
 const unknownTemplate = document.getElementById("unknown-card-template");
 
 async function loadData() {
-  const [failures, spans, unknowns, benchmark, guide] = await Promise.all([
+  const [failures, spans, unknowns, guide] = await Promise.all([
     fetch("./data/failures.json").then((r) => r.json()),
     fetch("./data/spans.json").then((r) => r.json()),
     fetch("./data/unknowns.json").then((r) => r.json()),
-    fetch("./data/benchmark.json").then((r) => r.json()),
     fetch("./data/guide.json").then((r) => r.json()),
   ]);
   state.failures = failures;
   state.spans = spans;
   state.unknowns = unknowns;
-  state.benchmark = benchmark;
   state.guide = guide;
   state.triage = JSON.parse(localStorage.getItem(TRIAGE_KEY) || "{}");
 }
@@ -584,282 +579,11 @@ function renderTriage() {
   });
 }
 
-function renderBenchmark() {
-  // Render sequence accuracy comparison
-  const seqComparisonDiv = document.getElementById("benchmark-sequence-comparison");
-  if (seqComparisonDiv) {
-    const seqTable = document.createElement("table");
-    seqTable.className = "metric-table";
-    seqTable.innerHTML = `
-      <thead>
-        <tr>
-          <th>Metric Type (MsBERT + span-ft-refined)</th>
-          <th>1 Word</th>
-          <th>2 Words</th>
-          <th>3 Words</th>
-          <th>4-5 Words</th>
-          <th>6+ Words</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Slot-Level Accuracy (Individual Words)</strong></td>
-          <td>22.1%</td>
-          <td>14.3%</td>
-          <td>12.9%</td>
-          <td>11.2%</td>
-          <td>8.2%</td>
-        </tr>
-        <tr>
-          <td><strong>Sequence Accuracy (Parallel MLM Baseline)</strong></td>
-          <td>22.1%</td>
-          <td>5.0%</td>
-          <td>2.1%</td>
-          <td>0.7%</td>
-          <td>0.0%</td>
-        </tr>
-        <tr style="background: rgba(13, 148, 136, 0.04); font-weight: 600; color: var(--primary-hover);">
-          <td><strong>Sequence Accuracy (Autoregressive Beam Search) 🏆</strong></td>
-          <td><strong>22.1%</strong></td>
-          <td><strong>7.9% <span style="color:#047857; font-size:11px;">(+58% rel)</span></strong></td>
-          <td><strong>4.3% <span style="color:#047857; font-size:11px;">(+105% rel)</span></strong></td>
-          <td><strong>2.1% <span style="color:#047857; font-size:11px;">(+200% rel)</span></strong></td>
-          <td><strong>0.7% <span style="color:#047857; font-size:11px;">(recovered)</span></strong></td>
-        </tr>
-      </tbody>
-    `;
-    seqComparisonDiv.innerHTML = "";
-    seqComparisonDiv.appendChild(seqTable);
-  }
-
-  const rows = state.benchmark.top_10;
-  const table = document.createElement("table");
-  table.className = "metric-table";
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th>Model</th>
-        <th>1</th>
-        <th>2</th>
-        <th>3</th>
-        <th>4-5</th>
-        <th>6+</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  `;
-  const tbody = table.querySelector("tbody");
-  Object.entries(rows).forEach(([label, metrics]) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${label}</td>
-      <td>${metrics["1"].toFixed(1)}%</td>
-      <td>${metrics["2"].toFixed(1)}%</td>
-      <td>${metrics["3"].toFixed(1)}%</td>
-      <td>${metrics["4-5"].toFixed(1)}%</td>
-      <td>${metrics["6+"].toFixed(1)}%</td>
-    `;
-    tbody.appendChild(tr);
-  });
-  els.benchmarkTop10.innerHTML = "";
-  els.benchmarkTop10.appendChild(table);
-
-  // Render biblical contrast results
-  const bibDiv = document.getElementById("benchmark-biblical");
-  if (bibDiv) {
-    const bibTable = document.createElement("table");
-    bibTable.className = "metric-table";
-    bibTable.innerHTML = `
-      <thead>
-        <tr>
-          <th rowspan="2">Model</th>
-          <th colspan="2" style="text-align:center;">1 Word</th>
-          <th colspan="2" style="text-align:center;">2 Words</th>
-          <th colspan="2" style="text-align:center;">3 Words</th>
-          <th colspan="2" style="text-align:center;">4-5 Words</th>
-          <th colspan="2" style="text-align:center;">6+ Words</th>
-        </tr>
-        <tr>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-1</th>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-10</th>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-1</th>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-10</th>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-1</th>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-10</th>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-1</th>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-10</th>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-1</th>
-          <th style="text-align:center; font-size:11px; font-weight:normal;">Top-10</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>MsBERT base (Baseline)</strong></td>
-          <td style="text-align:center;">32.5%</td>
-          <td style="text-align:center;">57.5%</td>
-          <td style="text-align:center;">20.0%</td>
-          <td style="text-align:center;">48.8%</td>
-          <td style="text-align:center;">10.8%</td>
-          <td style="text-align:center;">37.5%</td>
-          <td style="text-align:center;">14.9%</td>
-          <td style="text-align:center;">36.2%</td>
-          <td style="text-align:center;">12.9%</td>
-          <td style="text-align:center;">33.2%</td>
-        </tr>
-        <tr>
-          <td><strong>MsBERT ft-SPAN-refined</strong></td>
-          <td style="text-align:center;">30.0%</td>
-          <td style="text-align:center;">52.5%</td>
-          <td style="text-align:center;">22.5%</td>
-          <td style="text-align:center;">45.0%</td>
-          <td style="text-align:center;">8.3%</td>
-          <td style="text-align:center;">35.0%</td>
-          <td style="text-align:center;">13.2%</td>
-          <td style="text-align:center;">34.5%</td>
-          <td style="text-align:center;">11.2%</td>
-          <td style="text-align:center;">30.5%</td>
-        </tr>
-        <tr>
-          <td><strong>BEREL base</strong></td>
-          <td style="text-align:center;">27.5%</td>
-          <td style="text-align:center;">50.0%</td>
-          <td style="text-align:center;">17.5%</td>
-          <td style="text-align:center;">40.0%</td>
-          <td style="text-align:center;">5.8%</td>
-          <td style="text-align:center;">23.3%</td>
-          <td style="text-align:center;">10.3%</td>
-          <td style="text-align:center;">27.0%</td>
-          <td style="text-align:center;">7.8%</td>
-          <td style="text-align:center;">26.1%</td>
-        </tr>
-      </tbody>
-    `;
-    bibDiv.innerHTML = "";
-    bibDiv.appendChild(bibTable);
-  }
-
-  const retrieval = state.benchmark.retrieval;
-  const parallel = state.benchmark.parallel_lookup;
-  els.benchmarkRetrieval.innerHTML = "";
-  if (!retrieval && !parallel) {
-    els.benchmarkRetrieval.textContent = "No retrieval benchmark loaded.";
-    return;
-  }
-  const sections = [];
-  sections.push(`
-    <div class="benchmark-subsection">
-      <h5>Validated Train-Only RAG Ablation</h5>
-      <p class="small">Preserved non-biblical training text only; α=0.5 selected on dev. Held-out editorial labels are used only for scoring.</p>
-      <table class="metric-table">
-        <thead>
-          <tr>
-            <th>Held-out unit</th>
-            <th>N</th>
-            <th>MLM Top-10</th>
-            <th>MLM + RAG Top-10</th>
-            <th>Delta</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>QD single-word targets</td><td>74</td><td>63.5%</td><td>63.5%</td><td>0.0</td></tr>
-          <tr><td>TF single-word spans</td><td>25</td><td>60.0%</td><td>64.0%</td><td>+4.0</td></tr>
-          <tr><td>TF slots in multiword spans</td><td>440</td><td>41.4%</td><td>41.8%</td><td>+0.5</td></tr>
-          <tr><td>TF exact multiword sequences</td><td>100</td><td>7.0%</td><td>9.0%</td><td>+2.0</td></tr>
-        </tbody>
-      </table>
-      <p class="small">The exact-sequence score requires every word to match in order. These are modest ablation gains, not evidence that retrieval always helps.</p>
-    </div>
-  `);
-  if (retrieval?.conditions) {
-    const any = retrieval.conditions.fit_any_composition;
-    const cross = retrieval.conditions.fit_cross_composition_only;
-    sections.push(`
-      <div class="benchmark-subsection">
-        <h5>Legacy Exploratory Retrieval</h5>
-        <p class="small">Retained for transparency. This older experiment is not the recommended method: its fixed reranker reduced Top-1, motivating the clean dev-tuned ablation above.</p>
-        <table class="metric-table">
-          <thead>
-            <tr>
-              <th>Condition</th>
-              <th>Passages</th>
-              <th>Gold In Retrieved</th>
-              <th>Top-1 Before</th>
-              <th>Top-1 After</th>
-              <th>Delta</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Any composition</td>
-              <td>${any.coverage.cases_with_passages_pct}%</td>
-              <td>${any.coverage.gold_present_all_pct}%</td>
-              <td>${any.rerank.baseline_top1_pct}%</td>
-              <td>${any.rerank.reranked_top1_pct}%</td>
-              <td>${any.rerank.delta_pts > 0 ? "+" : ""}${any.rerank.delta_pts}</td>
-            </tr>
-            <tr>
-              <td>Cross composition only</td>
-              <td>${cross.coverage.cases_with_passages_pct}%</td>
-              <td>${cross.coverage.gold_present_all_pct}%</td>
-              <td>${cross.rerank.baseline_top1_pct}%</td>
-              <td>${cross.rerank.reranked_top1_pct}%</td>
-              <td>${cross.rerank.delta_pts > 0 ? "+" : ""}${cross.rerank.delta_pts}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    `);
-  }
-  if (parallel) {
-    const strictAny = parallel.strict_preserved_any_composition;
-    const strictCross = parallel.strict_preserved_cross_composition;
-    const relaxedAny = parallel.relaxed_preserved_target_any_composition;
-    sections.push(`
-      <div class="benchmark-subsection">
-        <h5>Exact Parallel Lookup</h5>
-        <p class="small">This is a researcher-assist signal, not a pure language-model benchmark. The strict setting uses only preserved witness text.</p>
-        <table class="metric-table">
-          <thead>
-            <tr>
-              <th>Condition</th>
-              <th>Matched Cases</th>
-              <th>Correct / All</th>
-              <th>Correct / Matched</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Strict preserved, any composition</td>
-              <td>${strictAny.matched_pct}%</td>
-              <td>${strictAny.correct_pct_over_all}%</td>
-              <td>${strictAny.correct_pct_over_matched}%</td>
-            </tr>
-            <tr>
-              <td>Strict preserved, cross composition</td>
-              <td>${strictCross.matched_pct}%</td>
-              <td>${strictCross.correct_pct_over_all}%</td>
-              <td>${strictCross.correct_pct_over_matched}%</td>
-            </tr>
-            <tr>
-              <td>Relaxed target preserved, any composition</td>
-              <td>${relaxedAny.matched_pct}%</td>
-              <td>${relaxedAny.correct_pct_over_all}%</td>
-              <td>${relaxedAny.correct_pct_over_matched}%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    `);
-  }
-  els.benchmarkRetrieval.innerHTML = sections.join("");
-}
-
 function renderAll() {
   renderHeroStats();
   renderSpans();
   renderUnknowns();
   renderTriage();
-  renderBenchmark();
 }
 
 function resetPages() {
@@ -926,7 +650,7 @@ async function main() {
   populateScrollFilter();
   bindEvents();
   renderAll();
-  switchMode("spans");
+  switchMode("benchmark");
 }
 
 main();

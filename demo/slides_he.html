@@ -1,1384 +1,485 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>שחזור מגילות מדבר יהודה באמצעות AI</title>
-  <!-- Google Fonts: Rubik for headings, Heebo for body -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>שחזור לקונות במגילות מדבר יהודה — מתודולוגיית המחקר</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Reset & CSS variables */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
     :root {
-      --bg-gradient: radial-gradient(circle at center, #18142c 0%, #090710 100%);
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --accent-indigo: #6366f1;
-      --accent-purple: #a855f7;
-      --accent-emerald: #10b981;
-      --accent-red: #ef4444;
-      --card-bg: rgba(22, 19, 39, 0.7);
-      --card-border: rgba(99, 102, 241, 0.15);
-      --glow-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
-      --transition-speed: 0.5s;
+      --ink: #17212b;
+      --muted: #607080;
+      --paper: #fbfaf6;
+      --card: #ffffff;
+      --line: #dce2e5;
+      --teal: #0f766e;
+      --teal-soft: #e7f4f1;
+      --amber: #a16207;
+      --amber-soft: #fff4d6;
+      --red: #b42318;
+      --red-soft: #feeceb;
+      --blue: #1d4ed8;
     }
+
+    * { box-sizing: border-box; }
 
     body {
-      font-family: 'Heebo', sans-serif;
-      background: var(--bg-gradient);
-      color: var(--text-main);
-      height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(15, 118, 110, .10), transparent 32%),
+        radial-gradient(circle at 88% 88%, rgba(161, 98, 7, .08), transparent 28%),
+        #edf1ef;
+      color: var(--ink);
+      font-family: "Heebo", sans-serif;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      user-select: text;
     }
 
-    h1, h2, h3, h4 {
-      font-family: 'Rubik', sans-serif;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    /* Slides Container & Slides */
-    .slides-wrapper {
+    .deck {
+      width: 100vw;
+      height: 100vh;
       position: relative;
-      flex-grow: 1;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .slide {
+      display: none;
       position: absolute;
-      width: 90%;
-      max-width: 1100px;
-      height: 80vh;
-      max-height: 700px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 45px 50px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      opacity: 0;
-      transform: translateX(100px) scale(0.95);
-      pointer-events: none;
-      transition: opacity var(--transition-speed) ease,
-                  transform var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
-      backdrop-filter: blur(15px);
-      box-shadow: var(--glow-shadow);
+      inset: 0;
+      padding: clamp(28px, 5vw, 76px);
+      background: rgba(251, 250, 246, .96);
+      overflow-y: auto;
     }
 
     .slide.active {
-      opacity: 1;
-      transform: translateX(0) scale(1);
-      pointer-events: auto;
-      z-index: 10;
-    }
-
-    .slide.exit {
-      opacity: 0;
-      transform: translateX(-100px) scale(0.95);
-      pointer-events: none;
-    }
-
-    /* Slide Components */
-    .slide-header {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 15px;
-      margin-bottom: 15px;
-    }
-
-    .slide-header h2 {
-      font-size: 2.1rem;
-      background: linear-gradient(135deg, #fff 30%, var(--accent-indigo) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .slide-header .kicker {
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--accent-purple);
-      margin-bottom: 5px;
-      letter-spacing: 0.05em;
-    }
-
-    .slide-body {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 12px;
-      overflow-y: auto;
-      min-height: 0;
-      padding-right: 4px;
-    }
-
-    .slide-body::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .slide-body::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
-    }
-
-    .slide-footer {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding-top: 12px;
-    }
-
-    /* Custom Layout Grid */
-    .grid-2 {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 30px;
-      align-items: center;
+      grid-template-rows: auto 1fr auto;
+      animation: enter .22s ease-out;
     }
 
-    /* Lists and Cards styling */
-    ul {
-      list-style: none;
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    li {
-      position: relative;
-      padding-right: 25px;
-      margin-bottom: 12px;
-      font-size: 1.1rem;
-      line-height: 1.5;
-      color: var(--text-main);
+    .kicker {
+      color: var(--teal);
+      font-size: .86rem;
+      font-weight: 800;
+      letter-spacing: .11em;
+      text-transform: uppercase;
     }
 
-    li::before {
-      content: "✦";
-      position: absolute;
-      right: 0;
-      color: var(--accent-indigo);
-      font-weight: bold;
+    h1, h2, h3, h4, p { margin-top: 0; }
+
+    h1 {
+      max-width: 980px;
+      margin-bottom: 24px;
+      font-size: clamp(2.8rem, 6vw, 6.4rem);
+      line-height: .98;
+      letter-spacing: -.04em;
     }
 
-    .bullet-desc {
+    h2 {
+      max-width: 1100px;
+      margin: 7px 0 24px;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: -.025em;
+    }
+
+    h3 { font-size: 1.34rem; margin-bottom: 8px; }
+    p, li { font-size: clamp(1rem, 1.45vw, 1.3rem); line-height: 1.55; }
+    .lead { max-width: 970px; color: var(--muted); font-size: clamp(1.3rem, 2.1vw, 2rem); }
+    .body { align-self: center; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-content: center;
+    }
+
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--card);
+      box-shadow: 0 12px 34px rgba(23, 33, 43, .05);
+    }
+
+    .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+    .good { border-top: 5px solid var(--teal); }
+    .pilot { border-top: 5px solid var(--amber); }
+    .blocked { border-top: 5px solid var(--red); }
+    .soft { background: var(--teal-soft); }
+
+    .number {
       display: block;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 3px;
+      margin: 6px 0 2px;
+      color: var(--teal);
+      font-family: Inter, sans-serif;
+      font-size: clamp(2.1rem, 4vw, 4.2rem);
+      font-weight: 700;
+      direction: ltr;
+      text-align: right;
     }
 
-    /* Highlight Card */
-    .highlight-card {
-      background: rgba(99, 102, 241, 0.04);
-      border: 1px dashed rgba(99, 102, 241, 0.25);
-      padding: 18px;
-      border-radius: 12px;
-      margin-top: 5px;
+    .label { color: var(--muted); font-size: 1rem; }
+    .tag {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      color: var(--teal);
+      background: var(--teal-soft);
+      font-size: .78rem;
+      font-weight: 800;
     }
 
-    .highlight-card h4 {
-      color: var(--accent-purple);
-      margin-bottom: 6px;
-      font-size: 1.05rem;
+    .tag.pilot { color: var(--amber); background: var(--amber-soft); border: 0; }
+    .tag.no { color: var(--red); background: var(--red-soft); }
+
+    ul { margin: 0; padding-right: 1.25em; }
+    li + li { margin-top: 8px; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      direction: rtl;
     }
 
-    .highlight-card p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.5;
+    .step {
+      position: relative;
+      min-height: 160px;
+      padding: 20px;
+      border-radius: 14px;
+      background: white;
+      border: 1px solid var(--line);
     }
 
-    /* Tables styling */
+    .step b {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--teal);
+      font-family: Inter, sans-serif;
+      font-size: 1.8rem;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 10px;
+      background: white;
+      border-radius: 14px;
       overflow: hidden;
-      margin: 10px 0;
+      box-shadow: 0 12px 34px rgba(23, 33, 43, .05);
     }
 
     th, td {
-      padding: 10px 12px;
-      text-align: center;
-      font-size: 0.9rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 13px 15px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      font-size: clamp(.86rem, 1.15vw, 1.05rem);
+      vertical-align: top;
     }
 
-    th {
-      background: rgba(99, 102, 241, 0.1);
-      color: var(--text-main);
-      font-weight: 700;
+    th { color: var(--muted); background: #f4f6f5; font-weight: 700; }
+    tr:last-child td { border-bottom: 0; }
+
+    .callout {
+      max-width: 1100px;
+      padding: 20px 24px;
+      border-right: 6px solid var(--teal);
+      background: var(--teal-soft);
+      font-size: clamp(1.15rem, 1.8vw, 1.55rem);
+      line-height: 1.5;
     }
 
-    tr:hover td {
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .best-score {
-      color: var(--accent-emerald);
-      font-weight: 700;
-    }
-
-    .drop-score {
-      color: var(--accent-red);
-      font-weight: 700;
-    }
-
-    /* Interactive Saliency Slide Styling */
-    .saliency-container {
-      background: rgba(0, 0, 0, 0.2);
-      padding: 22px;
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .saliency-sentence {
-      font-size: 1.5rem;
-      line-height: 2.2;
-      text-align: center;
-      margin-bottom: 20px;
+    .footer {
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      color: var(--muted);
+      font-size: .84rem;
     }
 
-    .saliency-word {
-      padding: 2px 6px;
-      border-radius: 6px;
-      transition: background 0.3s, color 0.3s, transform 0.2s;
-      cursor: pointer;
-    }
-
-    .saliency-word.mask {
-      border: 2px dashed var(--accent-purple);
-      color: var(--accent-purple);
-      font-weight: 700;
-      position: relative;
-    }
-
-    .saliency-word.mask:hover {
-      background: rgba(168, 85, 247, 0.15);
-      transform: scale(1.05);
-    }
-
-    .saliency-word.att-high {
-      background: rgba(99, 102, 241, 0.7);
-      color: #fff;
-      font-weight: 700;
-      box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
-    }
-
-    .saliency-word.att-mid {
-      background: rgba(99, 102, 241, 0.35);
-      color: #fff;
-    }
-
-    .saliency-word.att-low {
-      background: rgba(99, 102, 241, 0.12);
-      color: var(--text-muted);
-    }
-
-    .saliency-legend {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 10px;
-      font-size: 0.85rem;
-    }
-
-    .legend-item {
+    .controls {
+      position: fixed;
+      left: 22px;
+      bottom: 20px;
+      z-index: 10;
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .legend-box {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-    }
-
-    /* Case Studies Interactive Switcher Styling */
-    .case-tab-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .case-tab-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-muted);
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-    }
-
-    .case-tab-btn.active {
-      background: var(--accent-indigo);
-      color: #fff;
-      border-color: var(--accent-indigo);
-      font-weight: 600;
-    }
-
-    .case-display-card {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .case-passage {
-      font-size: 1.3rem;
-      line-height: 1.8;
-      text-align: center;
-      margin-bottom: 15px;
-      background: rgba(255,255,255,0.02);
-      padding: 12px;
-      border-radius: 8px;
-    }
-
-    .case-predictions-list {
-      display: flex;
       gap: 8px;
-      justify-content: center;
-      margin-top: 10px;
-      flex-wrap: wrap;
+      direction: ltr;
+      padding: 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 8px 28px rgba(23, 33, 43, .12);
     }
 
-    .pred-pill {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.95rem;
-    }
-
-    .pred-pill.correct {
-      background: rgba(16, 185, 129, 0.2);
-      border-color: var(--accent-emerald);
-      color: var(--accent-emerald);
-      font-weight: 700;
-    }
-
-    /* Literature Grid Styling */
-    .lit-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .lit-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 10px 14px;
-    }
-
-    .lit-card h4 {
-      font-size: 1.05rem;
-      color: var(--accent-purple);
-      margin-bottom: 4px;
-    }
-
-    .lit-card .lit-venue {
-      font-size: 0.8rem;
-      color: var(--accent-indigo);
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .lit-card p {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .lit-card .lit-diff {
-      margin-top: 6px;
-      font-size: 0.85rem;
-      color: var(--accent-emerald);
-      font-weight: 500;
-    }
-
-    /* Slide Title Card specific styling */
-    .title-slide-content {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      gap: 20px;
-    }
-
-    .title-slide-content h1 {
-      font-size: 3rem;
-      background: linear-gradient(135deg, #ffffff 0%, var(--accent-indigo) 50%, var(--accent-purple) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1.2;
-    }
-
-    .title-slide-content p {
-      font-size: 1.3rem;
-      color: var(--text-muted);
-      max-width: 800px;
-    }
-
-    .title-slide-content .author {
-      margin-top: 30px;
-      font-size: 1.1rem;
-      color: var(--accent-indigo);
-      font-weight: 500;
-    }
-
-    /* Navigation HUD */
-    .controls-hud {
-      position: fixed;
-      bottom: 25px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 25px;
-      background: rgba(15, 12, 30, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 10px 25px;
-      border-radius: 30px;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .hud-btn {
-      background: none;
-      border: none;
-      color: var(--text-main);
-      cursor: pointer;
-      font-size: 1.4rem;
-      width: 40px;
-      height: 40px;
+    button {
+      width: 38px;
+      height: 38px;
+      border: 0;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.3s, color 0.3s;
+      color: white;
+      background: var(--teal);
+      cursor: pointer;
+      font-size: 1rem;
     }
 
-    .hud-btn:hover {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--accent-indigo);
-    }
-
-    .hud-progress {
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      min-width: 60px;
+    #counter {
+      min-width: 50px;
+      color: var(--muted);
+      font-family: Inter, sans-serif;
+      font-size: .82rem;
       text-align: center;
     }
 
-    /* Progress Bar */
-    .top-progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      background: linear-gradient(to left, var(--accent-indigo), var(--accent-purple));
-      width: 0%;
-      z-index: 1000;
-      transition: width 0.3s ease;
-    }
+    a { color: var(--blue); }
+    code { direction: ltr; unicode-bidi: embed; }
 
-    /* Keyboard hint helper */
-    .keyboard-hint {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 5px 12px;
-      border-radius: 6px;
-    }
-
-    .keyboard-hint kbd {
-      background: rgba(255,255,255,0.1);
-      padding: 1px 5px;
-      border-radius: 3px;
-      font-family: inherit;
+    @media (max-width: 850px) {
+      body { overflow: auto; }
+      .slide { padding: 28px 22px 90px; }
+      .slide.active { position: relative; min-height: 100vh; }
+      .grid, .grid.three, .flow { grid-template-columns: 1fr; }
+      .body { align-self: start; }
+      .step { min-height: 0; }
     }
   </style>
 </head>
 <body>
-
-  <div class="top-progress-bar" id="topProgress"></div>
-
-  <div class="slides-wrapper">
-
-    <!-- SLIDE 1: שער -->
-    <div class="slide active" id="slide-1">
-      <div class="title-slide-content">
-        <div class="kicker" style="font-size: 1.1rem;">מפגש מחקר — מדעי הרוח הדיגיטליים</div>
-        <h1>שחזור מגילות מדבר יהודה באמצעות AI</h1>
-        <p>מודלים לשוניים בעברית לפענוח לקונות בקומראן וכלי עזר מוסבר לחוקרים</p>
-        <div class="author">שמוליק כהן</div>
+  <main class="deck">
+    <section class="slide active">
+      <header><span class="kicker">Dead Sea Scrolls · Research protocol</span></header>
+      <div class="body">
+        <h1>שחזור לקונות בלי לאמן על השחזורים</h1>
+        <p class="lead">מסגרת מחקרית להפרדה בין שחזור טקסט שמור, הסכמה עם הצעות חוקרים, תרומת מקבילות טקסטואליות ותועלת אמיתית לחוקר.</p>
       </div>
-      <div class="slide-footer">
-        <span>יולי 2026</span>
-        <span>שקופית 1</span>
-      </div>
-    </div>
+      <footer class="footer"><span>גרסת מתודולוגיה · 23.7.2026</span><span>1</span></footer>
+    </section>
 
-    <!-- SLIDE 2: האתגר והמטרה -->
-    <div class="slide" id="slide-2">
-      <div class="slide-header">
-        <span class="kicker">הרקע והמוטיבציה</span>
-        <h2>האתגר: שחזור פערים פיזיים (לקונות)</h2>
+    <section class="slide">
+      <header><span class="kicker">הטענה המדעית</span><h2>לא “המחשב גילה את הטקסט המקורי”</h2></header>
+      <div class="body grid">
+        <article class="card good">
+          <span class="tag">מה כן</span>
+          <h3>מערכת סיוע מדורגת</h3>
+          <p>המודל מציע מועמדים ומקבילות, מסנן לפי אותיות שרדו ומגבלות פיזיות, ומציג אי־ודאות לחוקר.</p>
+        </article>
+        <article class="card blocked">
+          <span class="tag no">מה לא</span>
+          <h3>אמת יחידה על הלקונה</h3>
+          <p>בלקונה אמיתית אין לרוב gold פיזי. התאמה להצעת מהדיר היא הסכמה עם הספרות, לא הוכחה לנוסח המקורי.</p>
+        </article>
       </div>
-      <div class="slide-body grid-2">
-        <div>
+      <footer class="footer"><span>גבול אפיסטמי מפורש</span><span>2</span></footer>
+    </section>
+
+    <section class="slide">
+      <header><span class="kicker">ארבע שאלות מחקר</span><h2>כל שאלה מקבלת ניסוי ומדד משלה</h2></header>
+      <div class="body flow">
+        <article class="step"><b>01</b><h3>שחזור שפה</h3><p>האם המודל משחזר טקסט שהיה שמור והוסתר רק לצורך הבדיקה?</p></article>
+        <article class="step"><b>02</b><h3>הסכמה מחקרית</h3><p>האם הצעה מיוחסת ומתאימה פיזית מופיעה גבוה בדירוג?</p></article>
+        <article class="step"><b>03</b><h3>תרומת RAG</h3><p>האם מקבילות מתוך train בלבד משפרות את אותם מקרי test?</p></article>
+        <article class="step"><b>04</b><h3>תועלת לחוקר</h3><p>האם חוקרים מגיעים לתוצאה טובה או מהירה יותר בעזרת המערכת?</p></article>
+      </div>
+      <footer class="footer"><span>אין מאחדים את ארבעתן לדיוק אחד</span><span>3</span></footer>
+    </section>
+
+    <section class="slide">
+      <header><span class="kicker">נתונים ואימון</span><h2>מסלול Reconstruction‑free</h2></header>
+      <div class="body grid">
+        <article class="card soft">
+          <h3>מה נכנס לאימון</h3>
           <ul>
-            <li>
-              <strong>היקף הפגיעה במקורות:</strong>
-              <span class="bullet-desc">מגילות קומראן סבלו מנזקי זמן, לחות וריקבון. מילים שלמות ואף פסקאות חסרות מהקלף.</span>
-            </li>
-            <li>
-              <strong>קנה המידה של השחזור:</strong>
-              <span class="bullet-desc">הקורפוס הנקי שלנו מתעד <strong>27,814 אתרי לקונה</strong> ב־736 מגילות לא־מקראיות. אותיות ששוחזרו בסוגריים מרובעים אינן נשמרות כטקסט אימון.</span>
-            </li>
-            <li>
-              <strong>מטרת המערכת:</strong>
-              <span class="bullet-desc">פיתוח כלי עזר מסייע (Assistive Tool) המציע רשימה מדורגת (Top-K) של מועמדים לשוניים, ולא מנחש אוטומטי עיוור.</span>
-            </li>
+            <li>מגילות לא־מקראיות בלבד במסלול הראשי</li>
+            <li>מילים שנשמרו פיזית כמטרות</li>
+            <li>מקטעים רציפים באורכים התואמים לנזק האמיתי</li>
+            <li>פיצול לפי מגילה לפני אימון, tuning ו־retrieval</li>
           </ul>
-        </div>
-        <div>
-          <div class="highlight-card">
-            <h4>שחזור ידני מול ממוחשב</h4>
-            <p>שחזור ידני מבוסס על היכרות רחבה של החוקר עם אוצר המילים וסגנון המגילה, ועל מדידה פיזית של חלל הפער על גבי הקלף.</p>
-            <p style="margin-top: 10px;">מודל שפה מתקדם מסוגל להציע עדות סמנטית ותחבירית מקיפה מכלל הטקסטים ששרדו, ולשפר את איכות ההצעות משמעותית.</p>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 2</span>
-      </div>
-    </div>
-
-    <!-- SLIDE 3: מתודולוגיה -->
-    <div class="slide" id="slide-3">
-      <div class="slide-header">
-        <span class="kicker">שיטות מחקר</span>
-        <h2>בניית מתודולוגיה קשיחה ללא "דליפות"</h2>
-      </div>
-      <div class="slide-body">
-        <div class="grid-2">
-          <div>
-            <ul>
-              <li>
-                <strong>נטרול "הטיית המקרא" (The Canon Effect):</strong>
-                <span class="bullet-desc">מודלים מגיעים לתוצאות גבוהות במגילות מקראיות בין היתר בזכות חשיפה לטקסט הקנוני. כדי למדוד הכללה לשונית נקייה יותר, <strong>החרגנו את המקרא</strong> ואימנו והערכנו על מגילות לא־מקראיות בלבד.</span>
-              </li>
-              <li>
-                <strong>חלוקת נתונים נקייה (No-Leak Scroll Split):</strong>
-                <span class="bullet-desc">אימון ומבחן מופרדים ברמת המגילה השלמה (Scroll-Level). אין מצב שקטע מאותה מגילה נכנס גם לאימון וגם למבחן (מניעת זליגה לא מכוונת של טקסטים).</span>
-              </li>
-              <li>
-                <strong>חלון הקשר מורחב (Context Window):</strong>
-                <span class="bullet-desc">הגדרת חלון ההקשר ל-40 מילים מכל צד של הלקונה (במקום 20), מה ששיפר באופן עקבי את דיוק השחזור בלקונות בינוניות וארוכות.</span>
-              </li>
-            </ul>
-          </div>
-          <div class="highlight-card" style="margin-top:0;">
-            <h4>למה חלוקה ברמת המגילה היא קריטית?</h4>
-            <p>מכיוון שהמגילות מכילות כפילויות רבות וקטעים חופפים, חלוקת משפטים אקראית רגילה (Sentence-level Split) גורמת לדליפת טקסט ישירה בין סט האימון לסט המבחן.</p>
-            <p style="margin-top:10px;">חלוקה ברמת Scroll-level מבטיחה הערכת הכללה יציבה ואמיתית על מגילות שלא נראו מעולם.</p>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 3</span>
-      </div>
-    </div>
-
-    <!-- SLIDE 4: בדיקות תקינות ואימות מורפולוגי -->
-    <div class="slide" id="slide-4">
-      <div class="slide-header">
-        <span class="kicker">יושרה מדעית ובקרה</span>
-        <h2>בדיקות תקינות ואימות מורפולוגי</h2>
-      </div>
-      <div class="slide-body grid-2">
-        <div>
+        </article>
+        <article class="card">
+          <h3>מה לא נכנס לאימון</h3>
           <ul>
-            <li>
-              <strong>בדיקת זליגה (Split Leakage):</strong>
-              <span class="bullet-desc">הרצת סקריפט ולידציה המאשר כי סט האימון והמבחן מופרדים לחלוטין ברמת הספר והמגילה (מפגש קבוצות = 0).</span>
-            </li>
-            <li>
-              <strong>איטום מסיכה (Masking Integrity):</strong>
-              <span class="bullet-desc">וידוא שהמילים המשוחזרות מוסתרות במלואן בטנזור הקלט ולא דולפות דרך מפות הטוקנייזר.</span>
-            </li>
-            <li>
-              <strong>אימות ברמת חיבור ספרותי (Composition Split):</strong>
-              <span class="bullet-desc">החרגנו 26 חיבורים ספרותיים שלמים מאימון (כולל CD, 4QS, Hodayot). הדיוק נשאר יציב על <strong>~30% בכל אורכי הלקונות</strong> (32.0% מילה 1, 30.2% 6+ מילים), מה שמוכיח הכללה תחבירית אמיתית מעבר לשינון עדים מקבילים.</span>
-            </li>
-            <li>
-              <strong>נירמול מורפולוגי (Morphological Normalization):</strong>
-              <span class="bullet-desc">שימוש בלמות (Lemmas) בעזרת <code>DictaBERT-lex</code>. המדידה מתעלמת מהבדלי כתיב מלא/חסר (כול/כל, כיא/כי, לוא/לא), אותיות סופיות וגרסאות שם השם (יי/יהוה).</span>
-            </li>
+            <li>שחזורים מודרניים המסומנים <code>rec == 1</code></li>
+            <li>אותיות משוחזרות בתוך אינדקס המקבילות</li>
+            <li>מגילות dev או test</li>
+            <li>אורך gold או מספר מילים במצב unknown-length</li>
           </ul>
-        </div>
-        <div>
-          <div class="highlight-card">
-            <h4>אימות היעדר דליפת אורך סאב-טוקנים</h4>
-            <p>מודל <code>MsBERT</code> שנבחר כמקודד הליבה הוא מודל של מילים שלמות (Whole-Word). הראינו שהוא מקודד מילים עבריות מורכבות (כולל קידומות ויחס) כטוקן בודד.</p>
-            <p style="margin-top: 8px;">זה מבטיח שהמודל מקבל סיגנל מסיכה בודד לכל מילה חסרה, ללא כל רמז (Leakage) לגבי מספר האותיות או הטוקנים המרכיבים אותה.</p>
-          </div>
-        </div>
+        </article>
       </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 4</span>
-      </div>
-    </div>
+      <footer class="footer"><span>manifest, hashes, seeds וגרסאות נשמרים</span><span>4</span></footer>
+    </section>
 
-    <!-- SLIDE 5: מלכודת הסאב-וורד וקריסת BEREL -->
-    <div class="slide" id="slide-5">
-      <div class="slide-header">
-        <span class="kicker">חשיפת הטיות מודלים</span>
-        <h2>מלכודת הטוקניזציה וקריסת BEREL</h2>
+    <section class="slide">
+      <header><span class="kicker">הערכת אמת מבוקרת</span><h2>Track A: נזק סינתטי ריאליסטי לטקסט שמור</h2></header>
+      <div class="body">
+        <div class="callout">המדד הראשי: <strong>Exact complete-span Top‑10 באורך לא ידוע</strong>. הצלחה דורשת שכל הרצף יופיע בסדר הנכון.</div>
+        <div class="grid three" style="margin-top:18px">
+          <article class="card good"><h3>ראשי</h3><p>ללא מספר תווים וללא מספר משבצות מילים.</p></article>
+          <article class="card"><h3>פיזי משוער</h3><p>רק מידע שניתן להפיק מהכתב והמרווח, בטולרנס קבוע מראש.</p></article>
+          <article class="card"><h3>דיאגנוסטי</h3><p>מספר משבצות ידוע, להשוואה הוגנת למחקרי MLM קודמים.</p></article>
+        </div>
       </div>
-      <div class="slide-body">
-        <p style="font-size:1.05rem; line-height:1.4; color:var(--text-muted);">
-          מודלים מבוססי חלקי מילים (Subwords) כמו BEREL קיבלו בעבר תוצאות מעולות. גילינו שהקוד "הדליף" להם את אורך חלקי המילה מראש (כמו לדעת את מספר האותיות באיש תלוי). 
-          פיתחנו <strong>פענוח דינמי ללא דליפה</strong>. ברגע שחסמנו את ההדלפה, ביצועי BEREL קרסו.
-        </p>
-        
+      <footer class="footer"><span>Top‑1/5/20, CER, MRR וכשל פענוח הם מדדים משניים</span><span>5</span></footer>
+    </section>
+
+    <section class="slide">
+      <header><span class="kicker">לקונות אמיתיות</span><h2>Track B: הסכמה עם הצעות חוקרים</h2></header>
+      <div class="body grid">
+        <article class="card">
+          <h3>יחידת הניתוח</h3>
+          <p>אתר אחד בכתב היד הוא תצפית אחת — גם אם אותה הצעה מופיעה בפרסומים רבים.</p>
+        </article>
+        <article class="card">
+          <h3>ריבוי תשובות</h3>
+          <p>כל הצעה מיוחסת שמתאימה לאותיות ולמגבלה הפיזית היא תשובה קבילה; מדווח גם minimum CER.</p>
+        </article>
+        <article class="card">
+          <h3>דיווח</h3>
+          <p>מילה בודדת ורצף רב־מילי בנפרד; exact sequence ולא סכום משבצות.</p>
+        </article>
+        <article class="card pilot">
+          <h3>שם המדד</h3>
+          <p><strong>Literature agreement</strong> — לעולם לא “דיוק מול האמת”.</p>
+        </article>
+      </div>
+      <footer class="footer"><span>כל החרגה מקבלת סיבה ונספרת</span><span>6</span></footer>
+    </section>
+
+    <section class="slide">
+      <header><span class="kicker">תוצאות קיימות</span><h2>מה מותר לומר כרגע</h2></header>
+      <div class="body">
         <table>
-          <thead>
-            <tr>
-              <th>מודל / סוג הערכה</th>
-              <th>מילה 1 חסרה</th>
-              <th>2 מילים</th>
-              <th>3 מילים</th>
-              <th>4-5 מילים</th>
-              <th>6+ מילים</th>
-            </tr>
-          </thead>
+          <thead><tr><th>מסלול</th><th>יחידה</th><th>תוצאה</th><th>סטטוס</th></tr></thead>
           <tbody>
-            <tr>
-              <td style="text-align:right;"><strong>MsBERT ft-SPAN-refined (שלנו - מילים שלמות)</strong></td>
-              <td class="best-score">37.3%</td>
-              <td class="best-score">34.7%</td>
-              <td class="best-score">31.1%</td>
-              <td class="best-score">29.4%</td>
-              <td class="best-score">31.0%</td>
-            </tr>
-            <tr>
-              <td style="text-align:right;">TavBERT (tau/tavbert-he - ברמת האות)</td>
-              <td>30.0%</td>
-              <td>23.0%</td>
-              <td>23.3%</td>
-              <td>21.5%</td>
-              <td>26.3%</td>
-            </tr>
-            <tr>
-              <td style="text-align:right;">BEREL ft-SPAN (סאב-טוקנים - הערכה אופטימית)</td>
-              <td>36.0%</td>
-              <td>30.7%</td>
-              <td>28.4%</td>
-              <td>25.4%</td>
-              <td>26.8%</td>
-            </tr>
-            <tr>
-              <td style="text-align:right;">BEREL (סאב-טוקנים - פענוח דינמי ריאליסטי)</td>
-              <td class="drop-score">26.0%</td>
-              <td class="drop-score">21.0%</td>
-              <td class="drop-score">20.7%</td>
-              <td class="drop-score">14.9%</td>
-              <td class="drop-score">6.9%</td>
-            </tr>
+            <tr><td>שחזור מילה שמורה</td><td>300 מטרות held-out</td><td dir="ltr">43.7% Top‑20</td><td>בדיקת שפה מבוססת, לא לקונה אמיתית</td></tr>
+            <tr><td>Qumran Digital</td><td>74 אתרים חד־מיליים</td><td dir="ltr">63.5% Top‑10</td><td>פיילוט הסכמה עם הספרות</td></tr>
+            <tr><td>RAG באותם אתרים</td><td>אותן 74 מטרות</td><td dir="ltr">63.5% → 63.5%</td><td>לא נמדד שיפור</td></tr>
+            <tr><td>רצף רב־מילי עם RAG</td><td>100 רצפים, slot count ידוע</td><td dir="ltr">7.0% → 9.0%</td><td>פיילוט תיאורי קטן</td></tr>
           </tbody>
         </table>
-        
-        <p style="font-size:0.95rem; color:var(--accent-purple); font-weight:500; text-align:center;">
-          קריסה דרמטית של BEREL בלקונות ארוכות (מ-23.6% ל-6.9%) מוכיחה את נחיצות מודל המילים השלמות (MsBERT) שאינו דורש מידע מוקדם על אורך.
-        </p>
+        <p style="margin-top:16px;color:var(--muted)">אין עדיין תוצאה שעברה את כל שערי הפרוטוקול ונחשבת לתוצאת מאמר סופית.</p>
       </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 5</span>
-      </div>
-    </div>
+      <footer class="footer"><span>כל מספר קשור לשאלה וליחידת הערכה מוגדרת</span><span>7</span></footer>
+    </section>
 
-    <!-- SLIDE 6: פענוח סדרתי ומניעת אותיות יחס -->
-    <div class="slide" id="slide-6">
-      <div class="slide-header">
-        <span class="kicker">אלגוריתמי פענוח</span>
-        <h2>פענוח סדרתי מונע כפילויות ותחביר שגוי</h2>
+    <section class="slide">
+      <header><span class="kicker">RAG</span><h2>בדיקה מזווגת, לא השוואת כותרות</h2></header>
+      <div class="body grid">
+        <article class="card good">
+          <h3>אותו test קפוא</h3>
+          <p>Base, fine-tuned, אילוצים, BM25/ngram, dense, reranker והשילוב הסופי נבדקים על אותן מטרות.</p>
+        </article>
+        <article class="card">
+          <h3>מקור retrieval נקי</h3>
+          <p>רק טקסט שמור ממגילות train. משקל ופרמטרים נבחרים על dev.</p>
+        </article>
+        <article class="card">
+          <h3>מדדי retrieval</h3>
+          <p>Recall@K, MRR, nDCG, כיסוי, גיוון ורלוונטיות שנשפטת בידי מומחים.</p>
+        </article>
+        <article class="card pilot">
+          <h3>מבחן ללא התשובה</h3>
+          <p>מסירים מקבילות שמכילות את מחרוזת ה־gold ובודקים אם מבנה מקביל עדיין עוזר.</p>
+        </article>
       </div>
-      <div class="slide-body grid-2">
-        <div>
+      <footer class="footer"><span>מדווחים גם מתי retrieval מזיק</span><span>8</span></footer>
+    </section>
+
+    <section class="slide">
+      <header><span class="kicker">ניסוי אנושי</span><h2>Track C: האם זה באמת עוזר לחוקר?</h2></header>
+      <div class="body">
+        <div class="flow">
+          <article class="step"><b>A</b><h3>הקשר בלבד</h3></article>
+          <article class="step"><b>B</b><h3>מועמדי מודל</h3></article>
+          <article class="step"><b>C</b><h3>מקבילות</h3></article>
+          <article class="step"><b>D</b><h3>מועמדים + מקבילות</h3></article>
+        </div>
+        <p style="margin-top:22px">ניסוי סמוי ומאוזן בתוך־נבדק על כ־60–100 מטרות: נוסח סופי, זמן, ביטחון, אימוץ מועמד, רלוונטיות המקבילה והסכמה בין שופטים.</p>
+      </div>
+      <footer class="footer"><span>מבחנים מזווגים וסדר תנאים אקראי</span><span>9</span></footer>
+    </section>
+
+    <section class="slide">
+      <header><span class="kicker">מיקום בספרות</span><h2>הפרוטוקול בנוי משיטות שכבר עמדו בביקורת</h2></header>
+      <div class="body grid three">
+        <article class="card">
+          <h3>Pythia · Ithaca · Aeneas</h3>
+          <p>Top‑K ו־CER, פענוח באורך לא ידוע, מקבילות טקסטואליות וניסויי מומחים מדורגים.</p>
+        </article>
+        <article class="card good">
+          <h3>Embible · Findings of EACL 2024</h3>
+          <p>שילוב מודלי תווים ומילים לעברית, CharHit@K ו־WordHit@K, ותנאי whitespace ידוע/לא ידוע. הבדיקה על 536 פסוקי מקרא עם מסכות אקראיות — baseline חשוב, לא לקונות DSS אמיתיות.</p>
+        </article>
+        <article class="card">
+          <h3>MAAT · ARI</h3>
+          <p>לקונות אמיתיות, ריבוי קריאות קבילות, סימולציית נזק ריאליסטית, dedup וניסוי RAG סמוי.</p>
+        </article>
+      </div>
+      <footer class="footer"><span>הקישורים וההשוואה המלאה במסמך המתודולוגיה</span><span>10</span></footer>
+    </section>
+
+    <section class="slide">
+      <header><span class="kicker">שער לפרסום</span><h2>מה חייב לקרות לפני כותרת חדשה</h2></header>
+      <div class="body grid">
+        <article class="card">
           <ul>
-            <li>
-              <strong>פענוח סדרתי (Left-to-Right Beam Search):</strong>
-              <span class="bullet-desc">במקום לנחש את כל המילים במקביל (שיוצר חזרות מביכות כמו "אשר אשר"), המודל מנחש מילה, נועל אותה, ומנחש את הבאה אחריה.</span>
-            </li>
-            <li>
-              <strong>ההישג:</strong>
-              <span class="bullet-desc">הכפלת הדיוק בפענוח רצפים שלמים של 3 מילים, ושלשול הדיוק (פי 3) בלקונות של 4-5 מילים.</span>
-            </li>
-            <li>
-              <strong>דיכוי אותיות יחס (Particle Domination):</strong>
-              <span class="bullet-desc">העברית במגילות מפרקת אותיות יחס (ב, ל, ו) כמילים עצמאיות. מודל ה-Span המכוונן נטה להציע רק אותן. פתרנו זאת באמצעות refined span-ft המנטרל אותיות אלו כמטרות מסיכה באימון.</span>
-            </li>
+            <li>benchmark ומניפסט קפואים עם hashes</li>
+            <li>פיצול לפי מגילה וחיבור + בדיקת near-duplicates</li>
+            <li>לפחות שלושה seeds ובחירה על dev בלבד</li>
+            <li>רווחי סמך באשכולות לפי מגילה</li>
           </ul>
-        </div>
-        <div>
-          <div class="highlight-card">
-            <h4>פענוח מועצם (Enhanced Decoding Top-10)</h4>
-            <p>שילוב נירמול למות בדירוג, אילוץ אורך פיזי וחלון הקשר 40 מילים:</p>
-            <table style="font-size:0.85rem; margin:10px 0;">
-              <thead>
-                <tr>
-                  <th>מנגנון פענוח</th>
-                  <th>1 מילה</th>
-                  <th>2 מילים</th>
-                  <th>3 מילים</th>
-                  <th>4-5 מילים</th>
-                  <th>6+ מילים</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>סטנדרטי (Beam Search)</td>
-                  <td>32.0%</td>
-                  <td>34.0%</td>
-                  <td>34.0%</td>
-                  <td>28.4%</td>
-                  <td>35.7%</td>
-                </tr>
-                <tr>
-                  <td class="best-score">מועצם (Enhanced)</td>
-                  <td class="best-score">36.0%</td>
-                  <td class="best-score">36.0%</td>
-                  <td class="best-score">36.7%</td>
-                  <td class="best-score">32.0%</td>
-                  <td class="best-score">39.8%</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="small" style="font-size: 0.8rem;">האופטימיזציה המאוחדת מעלה את דיוק השחזור ב-2.0% עד 4.1% בכל דלי, ומביאה לקונות ארוכות מאוד ל-39.8% דיוק.</p>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 6</span>
-      </div>
-    </div>
-
-    <!-- SLIDE 7: אילוצים פיזיים ו-RAG -->
-    <div class="slide" id="slide-7">
-      <div class="slide-header">
-        <span class="kicker">סימנים מהעולם האמיתי</span>
-        <h2>אילוץ פיזי וחיפוש מקבילות (RAG)</h2>
-      </div>
-      <div class="slide-body grid-2">
-        <div>
+        </article>
+        <article class="card">
           <ul>
-            <li>
-              <strong>אילוץ רוחב פיזי (Physical Constraint):</strong>
-              <span class="bullet-desc">ב־74 האתרים של Qumran Digital נשמרות האותיות הגלויות ואומדן אורך הלקונה (±1). המפענח אינו מקבל את אותיות השחזור.</span>
-              <span class="bullet-desc" style="color:var(--accent-emerald);">תוצאה: 63.5% Top-10 ברמת האתר, לעומת 9.5% ללא האילוצים — זהו ערך האותות הפיזיים למפענח, לא שיפור במודל השפה.</span>
-            </li>
-            <li>
-              <strong>RAG נקי מדליפה:</strong>
-              <span class="bullet-desc">האינדקס נבנה רק ממילים שמורות במגילות לא־מקראיות של קבוצת האימון. המשקל α=0.5 נבחר רק על קבוצת הפיתוח.</span>
-              <span class="bullet-desc">אין הורדה חדשה מהרשת, אין שחזורי חוקרים באינדקס, ואין שימוש בתוצאות ה־held-out לכיול.</span>
-            </li>
+            <li>unknown-length כמדד הראשי</li>
+            <li>exact sequence לכל תוצאה רב־מילית</li>
+            <li>RAG ablation מזווג ובדיקת דליפה</li>
+            <li>הפרדה מפורשת בין אמת שמורה, ספרות ותועלת לחוקר</li>
           </ul>
-        </div>
-        <div>
-          <div class="highlight-card">
-            <h4>תוצאות RAG לפי מילה בודדת ורצף רב־מילי</h4>
-            <p>מדגם held-out מאוזן: 25 לקונות בכל דלי אורך. בשחזור הרב־מילי נבדקו 100 רצפים ובהם 440 משבצות מילים:</p>
-            <table style="font-size:0.82rem; margin:8px 0;">
-              <thead>
-                <tr>
-                  <th>מדד Top-10</th>
-                  <th>ללא RAG</th>
-                  <th>עם RAG</th>
-                  <th>שינוי</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>QD: מילה בודדת, ברמת אתר (N=74)</td>
-                  <td>63.5%</td>
-                  <td>63.5%</td>
-                  <td>0.0</td>
-                </tr>
-                <tr>
-                  <td>TF: מילה בודדת (N=25)</td>
-                  <td>60.0%</td>
-                  <td>64.0%</td>
-                  <td>+4.0</td>
-                </tr>
-                <tr>
-                  <td>TF: משבצות בתוך רצף רב־מילי (N=440)</td>
-                  <td>41.4%</td>
-                  <td>41.8%</td>
-                  <td>+0.5</td>
-                </tr>
-                <tr>
-                  <td class="best-score">TF: רצף רב־מילי מדויק (N=100)</td>
-                  <td>7.0%</td>
-                  <td class="best-score">9.0%</td>
-                  <td class="best-score">+2.0</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="small" style="font-size: 0.78rem;">השחזורים של Text-Fabric הם תוויות עריכה אנונימיות להערכה בלבד, לא אמת פיזית. אין שימוש באורך הזהב של המילים; המפענח יודע רק את מספר משבצות המילים.</p>
-          </div>
-        </div>
+        </article>
       </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 7</span>
-      </div>
-    </div>
+      <footer class="footer">
+        <span><a href="https://github.com/shmulc8/dss-restoration/blob/main/docs/METHODOLOGY.md">הפרוטוקול המלא ב־GitHub</a></span>
+        <span>11</span>
+      </footer>
+    </section>
+  </main>
 
-    <!-- SLIDE 8: מקרי בוחן אינטראקטיביים מתוך המגילות -->
-    <div class="slide" id="slide-8">
-      <div class="slide-header">
-        <span class="kicker">תוצאות איכותיות</span>
-        <h2>מקרי בוחן אמיתיים ממגילת סרך היחד (1QS)</h2>
-      </div>
-      <div class="slide-body">
-        <div class="case-tab-buttons">
-          <button class="case-tab-btn active" onclick="showCase(1)">מקרה 1: "צדקה" (1QS 1:5)</button>
-          <button class="case-tab-btn" onclick="showCase(2)">מקרה 2: "משפט" (1QS 1:5)</button>
-          <button class="case-tab-btn" onclick="showCase(3)">מקרה 3: סדרה סדרתית (1 Enoch)</button>
-        </div>
-
-        <div class="case-display-card" id="caseCardDisplay">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 8</span>
-      </div>
-    </div>
-
-    <!-- SLIDE 9: מודל מוסבר - מפות קשב -->
-    <div class="slide" id="slide-9">
-      <div class="slide-header">
-        <span class="kicker">אלמנט אינטראקטיבי</span>
-        <h2>מודל מוסבר: מפות קשב (Attention Saliency)</h2>
-      </div>
-      <div class="slide-body">
-        <p style="font-size:1.05rem; color:var(--text-muted); margin-bottom: 10px;">
-          כדי שהכלי לא יהיה "קופסה שחורה", אנו מציגים לחוקר באילו מילים המודל השתמש.
-          ניתוח של 9,000+ מילים מראה ש-<strong>32% ממשקל הקשב</strong> מרוכז ב-3 המילים הסמוכות ללקונה, ושמילות תוכן מקבלות פי 2 קשב מאותיות חיבור.
-        </p>
-        
-        <div class="saliency-container">
-          <h4 style="margin-bottom: 15px; font-size:1.1rem; color:var(--accent-indigo);">הדגמה אינטראקטיבית (העבירו את העכבר מעל המילים לקבלת רמת הקשב):</h4>
-          
-          <div class="saliency-sentence">
-            <span class="saliency-word" data-weight="0.10">לעשות</span>
-            <span class="saliency-word" data-weight="0.12">אמת</span>
-            <span class="saliency-word" data-weight="0.05">ו</span>
-            <span class="saliency-word mask" data-weight="target" id="maskWord"> [ צדקה ] </span>
-            <span class="saliency-word" data-weight="0.08">ו</span>
-            <span class="saliency-word" data-weight="0.28">משפט</span>
-            <span class="saliency-word" data-weight="0.22">ב</span>
-            <span class="saliency-word" data-weight="0.15">ארץ</span>
-          </div>
-          
-          <div class="saliency-legend">
-            <div class="legend-item">
-              <div class="legend-box" style="background: rgba(99, 102, 241, 0.75);"></div>
-              <span>קשב גבוה (&gt;0.20)</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-box" style="background: rgba(99, 102, 241, 0.35);"></div>
-              <span>קשב בינוני (0.08 - 0.20)</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-box" style="background: rgba(99, 102, 241, 0.12);"></div>
-              <span>קשב נמוך (&lt;0.08)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 9</span>
-      </div>
-    </div>
-
-    <!-- SLIDE 10: קבוצת הביקורת המקראית -->
-    <div class="slide" id="slide-10">
-      <div class="slide-header">
-        <span class="kicker">נטרול הטיית השינון</span>
-        <h2>קבוצת הביקורת המקראית (Biblical Contrast Set)</h2>
-      </div>
-      <div class="slide-body grid-2">
-        <div>
-          <ul>
-            <li>
-              <strong>התנ"ך כמקור שינון:</strong>
-              <span class="bullet-desc">מכיוון שמודלי שפה עבריים מאומנים על מיליוני מילים הכוללים את התנ"ך, הם לומדים אותו בעל פה ומציגים רמת דיוק מלאכותית ומופרזת.</span>
-            </li>
-            <li>
-              <strong>הוכחת ה-Domain Shift:</strong>
-              <span class="bullet-desc">במגילות מקראיות, מודל הבסיס (MsBERT base) השיג תוצאות טובות יותר מאשר המודל המכוונן שלנו (57.5% מול 52.5% Top-10 למילה בודדת).</span>
-              <span class="bullet-desc">הפיינטיונינג התאים את המודל ללשון הכיתתית של קומראן על חשבון המקרא הסטנדרטי, מה שמוכיח את נחיצות ההפרדה במאמר.</span>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <div class="highlight-card">
-            <h4>ביצועים במגילות מקראיות (MsBERT base)</h4>
-            <p>רמת דיוק Slot-Level Top-10 לקבוצת הביקורת:</p>
-            <table style="font-size:0.9rem; margin:10px 0;">
-              <thead>
-                <tr>
-                  <th>אורך הלקונה</th>
-                  <th>דיוק מקראי</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>מילה 1 חסרה</td>
-                  <td class="best-score">57.5%</td>
-                </tr>
-                <tr>
-                  <td>2 מילים חסרות</td>
-                  <td class="best-score">48.8%</td>
-                </tr>
-                <tr>
-                  <td>3 מילים חסרות</td>
-                  <td class="best-score">37.5%</td>
-                </tr>
-                <tr>
-                  <td>4-5 מילים חסרות</td>
-                  <td class="best-score">36.2%</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="small">ביצועים אלו משמשים כרף היכולת העליון (Performance Ceiling) של המודלים בעברית קלאסית.</p>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 10</span>
-      </div>
-    </div>
-
-    <!-- SLIDE 11: ניתוח שגיאות ומגבלות מובנות -->
-    <div class="slide" id="slide-11">
-      <div class="slide-header">
-        <span class="kicker">מבט ריאליסטי על הביצועים</span>
-        <h2>ניתוח שגיאות ומגבלות מובנות</h2>
-      </div>
-      <div class="slide-body grid-2">
-        <div>
-          <ul>
-            <li>
-              <strong>אימון נקי משחזורי חוקרים:</strong>
-              <span class="bullet-desc">המודל אומן על טקסט לא־מקראי שמור בלבד. כל טקסט בתוך סוגריים מרובעים הוחלף ב־<code>&lt;GAP&gt;</code>, והחלוקה בין אימון למבחן נעשתה ברמת המגילה.</span>
-            </li>
-            <li>
-              <strong>השוואה אמיתית לקריאות חוקרים:</strong>
-              <span class="bullet-desc">מתוך 346 אתרים שנאספו מ־Qumran Digital, הסינון הסמנטי השאיר <strong>74 לקונות חד־מילתיות</strong> ו־<strong>99 קריאות ייחודיות</strong>. וריאנטים כתיביים, תיקוני סופר, קריאות רב־מילתיות וקריאות שסותרות אותיות שמורות דווחו כהחרגות.</span>
-            </li>
-            <li>
-              <strong>יחידת המדידה:</strong>
-              <span class="bullet-desc">כל אתר כתב־יד נספר פעם אחת. הצלחה פירושה שלפחות קריאה מיוחסת אחת, התואמת לאותיות השמורות ולאומדן אורך הלקונה, נמצאת ב־Top-K.</span>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <div class="highlight-card">
-            <h4>מה השתנה בניסוי המתוקן?</h4>
-            <p><strong>ללא אילוצים פיזיים:</strong> 9.5% Top-10 על אותם 74 אתרים.</p>
-            <p style="margin-top: 5px;"><strong>עם אותיות שמורות ואורך ±1:</strong> 63.5% Top-10 ברמת האתר, עם רווח סמך של 51.4%–74.3%.</p>
-            <p style="margin-top: 8px; color: var(--accent-emerald);"><strong>בדיקת רגישות:</strong> 69.5% באורך מדויק, 63.5% ב־±1 ו־62.7% ב־±2.</p>
-            <p style="margin-top: 8px;"><strong>חשוב:</strong> זהו שיפור במפענח המלא בזכות מידע פיזי, לא קפיצה של 54 נקודות במודל השפה עצמו.</p>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 11</span>
-      </div>
-    </div>
-
-    <!-- SLIDE 12: ספרות מקצועית ומחקרים קרובים בעולם -->
-    <div class="slide" id="slide-12">
-      <div class="slide-header">
-        <span class="kicker">מיקום המחקר בספרות העולמית</span>
-        <h2>ספרות מקצועית ומחקרים קרובים בעולם</h2>
-      </div>
-      <div class="slide-body">
-        <div class="lit-grid">
-          <div class="lit-card">
-            <h4>Ithaca / Aeneas (Nature 2022 / 2025)</h4>
-            <div class="lit-venue">Google DeepMind & Oxford</div>
-            <p>שחזור כתובות ביוונית ולטינית בעזרת Transformers, הצעת רשימות Top-K, מפות קשב וחיפוש מקבילות (RAG) לאורכים לא ידועים.</p>
-            <div class="lit-diff">✦ התאמנו לעברית של בית שני, מילים שלמות, וסינון RAG קשיח למניעת דליפה.</div>
-          </div>
-
-          <div class="lit-card">
-            <h4>MsBERT (ACL 2024)</h4>
-            <div class="lit-venue">Dicta & Bar-Ilan University (Shmidman et al.)</div>
-            <p>מודל מילים שלמות (Whole-word MLM) לשחזור לקונות בכתבי יד עבריים מתקופת ימי הביניים (טקסטים רבניים וליטורגיים).</p>
-            <div class="lit-diff">✦ מודל הבסיס שלנו! ביצענו פיינטיונינג ללשון קומראן, refined span-ft ואילוצי layout.</div>
-          </div>
-
-          <div class="lit-card">
-            <h4>Akkadian MLM (EMNLP 2021 / PNAS 2020)</h4>
-            <div class="lit-venue">Bar-Ilan & Tel Aviv (Lazar et al. / Fetaya et al.)</div>
-            <p>שחזור לוחות יתדות באכדית/בבלית בעזרת מודלי שפה ופענוח דינמי מבוסס תוויות המשך (##).</p>
-            <div class="lit-diff">✦ אימצנו את הפענוח הדינמי שלהם להוכחת קריסת BEREL בשל דליפת subtoken.</div>
-          </div>
-
-          <div class="lit-card">
-            <h4>Embible (EACL 2024)</h4>
-            <div class="lit-venue">Andrew Fono et al.</div>
-            <p>שחזור לקונות בטקסטים מקראיים בעברית וארמית.</p>
-            <div class="lit-diff">✦ אנחנו התמקדנו במגילות כיתתיות לא-מקראיות בלבד כדי למנוע הטיית שינון התנ"ך.</div>
-          </div>
-
-          <div class="lit-card">
-            <h4>TavBERT (2022)</h4>
-            <div class="lit-venue">Omri Keren et al. (Tel Aviv University)</div>
-            <p>מודל מבוסס תווים (Character-level BERT) בעברית המיועד לניקוד, ניתוח מורפולוגי וזיהוי ישויות.</p>
-            <div class="lit-diff">✦ בחנו אותו על לקונות קומראן (Top-10: 30.0% למילה 1, 26.3% ל-6+ מילים). MsBERT גובר עליו בזכות ייצוג מילים שלמות.</div>
-          </div>
-
-          <div class="lit-card">
-            <h4>הכללה בין-תקופתית (Cross-Epoch)</h4>
-            <div class="lit-venue">ניסוי הכללה לכתבי יד היסטוריים</div>
-            <p>בחינת המודל המכוונן שלנו (MsBERT ft-SPAN) על קורפוס טקסטים עבריים היסטוריים חיצוניים (קהיר/רבניים).</p>
-            <div class="lit-diff">✦ תוצאה: <strong>39.0% Top-10 Slot Accuracy</strong>, המוכיחה יכולת הכללה תחבירית חוצה תקופות מעבר לקומראן.</div>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 12</span>
-      </div>
-    </div>
-
-    <!-- SLIDE 13: אקוסיסטם הנתונים הדיגיטלי של קומראן (SQE, Leon Levy, QTD) -->
-    <div class="slide" id="slide-13">
-      <div class="slide-header">
-        <span class="kicker">אינטגרציה עם תשתיות המחקר באקדמיה</span>
-        <h2>אקוסיסטם הנתונים של מגילות קומראן</h2>
-      </div>
-      <div class="slide-body">
-        <div class="lit-grid">
-          <div class="lit-card" style="border-top:3px solid var(--accent-blue);">
-            <h4>Scripta Qumranica Electronica (SQE)</h4>
-            <div class="lit-venue">פרופ' אשבל רצון, אוניברסיטת גטינגן ורשות העתיקות</div>
-            <p>פלטפורמת מחקר דיגיטלית (TEI-XML/JSON) המשלבת קואורדינטות פיקסל של קטעי המגילות, יישור טקסטולוגי והצעות שחזור מהדירים.</p>
-            <div class="lit-diff">✦ <strong>גשר לשיתוף פעולה:</strong> חיבור מודל ה-AI שלנו למבני הנתונים של SQE לצורך הצגת מועמדי שחזור ישירות בסביבת העבודה של SQE.</div>
-          </div>
-
-          <div class="lit-card" style="border-top:3px solid var(--accent-emerald);">
-            <h4>ספריית המגילות ע"ש ליאון לוי (רשות העתיקות)</h4>
-            <div class="lit-venue">The Leon Levy Digital Library (IAA)</div>
-            <p>ארכיון צילומים מולטי-ספקטראליים (Infrared) ברזולוציה גבוהה של כל 25,000+ קטעי המגילות, ממופה לפי לוחות ומספרי קטע.</p>
-            <div class="lit-diff">✦ <strong>אילוצים פיזיים:</strong> חילוץ אורך השורה הפיזי (במילימטרים/פיקסלים) ישירות מתמונות ה-IR לסינון מועמדים.</div>
-          </div>
-
-          <div class="lit-card" style="border-top:3px solid var(--accent-purple);">
-            <h4>Qumran Digital: Text und Lexikon</h4>
-            <div class="lit-venue">מאגר קריאות מיוחסות ביבליוגרפית</div>
-            <p>צילום מצב שמור מ־21 במאי 2026 כולל 1,811 קריאות מפורשות ב־346 אתרים ו־253 מקורות ביבליוגרפיים. המאגר משמש להערכה בלבד ולעולם אינו נכנס לאימון.</p>
-            <div class="lit-diff">✦ <strong>השוואה ניתנת לשחזור:</strong> הניתוח רץ מקומית מן העותק השמור, ללא סריקה חוזרת של הרשת, ומפריד בין קריאות קימרון, Study Edition, DJD ומקורות נוספים.</div>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 13</span>
-      </div>
-    </div>
-
-    <!-- SLIDE 14: סיכום ושלבים הבאים -->
-    <div class="slide" id="slide-14">
-      <div class="slide-header">
-        <span class="kicker">סיכום ומבט קדימה</span>
-        <h2>הצעדים הבאים לקראת מאמר</h2>
-      </div>
-      <div class="slide-body grid-2">
-        <div>
-          <ul>
-            <li>
-              <strong>קוד ומצגת זמינים לחוקרים:</strong>
-              <span class="bullet-desc">מצגת ודמו חי ב-<code>https://dss-restoration-demo.pages.dev/slides_he.html</code> ובקוד פתוח ב-GitHub.</span>
-            </li>
-            <li>
-              <strong>מניעת כפל מאמצים באקדמיה:</strong>
-              <span class="bullet-desc">שיח פתוח ושיתוף פעולה עם פרופ' אשבל רצון (SQE) וקבוצת אוניברסיטת בן-גוריון (QTD).</span>
-            </li>
-            <li>
-              <strong>ממצאי האמפיריקה המרכזיים:</strong>
-              <span class="bullet-desc">אימון ללא שחזורי חוקרים, השוואה מיוחסת מול Qumran Digital, שילוב אותיות שמורות ואומדן אורך פיזי, ודירוג מועמדים מוסבר (Saliency).</span>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <div class="highlight-card" style="border-color: var(--accent-indigo); background: rgba(99, 102, 241, 0.04); padding: 14px 18px;">
-            <h4 style="color: var(--accent-indigo); margin-bottom: 10px;">📊 תוצאות הניסויים המרכזיות (Empirical Highlights)</h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem;">
-              <div style="background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; border-right: 3px solid var(--accent-emerald);">
-                <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-emerald);">63.5% Top-10</div>
-                <div style="color: var(--text-muted); font-size: 0.78rem;">הסכמה ברמת אתר מול חוקרים (N=74)</div>
-              </div>
-              <div style="background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; border-right: 3px solid var(--accent-indigo);">
-                <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-indigo);">60.6% Top-10</div>
-                <div style="color: var(--text-muted); font-size: 0.78rem;">99 זוגות ייחודיים של אתר–קריאה</div>
-              </div>
-              <div style="background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; border-right: 3px solid var(--accent-purple);">
-                <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent-purple);">36.3% Top-10</div>
-                <div style="color: var(--text-muted); font-size: 0.78rem;">בקרת מילים שמורות, מודל ללא שחזורים</div>
-              </div>
-              <div style="background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; border-right: 3px solid var(--accent-blue);">
-                <div style="font-size: 1.1rem; font-weight: 700; color: #fff;">51.4%–74.3%</div>
-                <div style="color: var(--text-muted); font-size: 0.78rem;">רווח סמך 95% ל־Top-10</div>
-              </div>
-            </div>
-            <p style="margin-top: 10px; font-size: 0.78rem; color: var(--text-muted); text-align: center;">
-              התוצאה 63.5% מודדת מפענח עם אילוצים פיזיים; ללא האילוצים, אותם אתרים משיגים <strong>9.5% Top-10</strong>.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer">
-        <span>שחזור מגילות באמצעות AI</span>
-        <span>שקופית 14</span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- HUD Controls -->
-  <div class="controls-hud">
-    <button class="hud-btn" id="prevBtn" title="שקופית קודמת">◀</button>
-    <div class="hud-progress" id="slideProgress">1 / 14</div>
-    <button class="hud-btn" id="nextBtn" title="שקופית הבאה">▶</button>
-  </div>
-
-  <div class="keyboard-hint">
-    ניווט באמצעות מקשי החצים <kbd>→</kbd> ו-<kbd>←</kbd> במקלדת
-  </div>
+  <nav class="controls" aria-label="ניווט בין שקופיות">
+    <button id="prev" aria-label="הקודם">←</button>
+    <span id="counter">1 / 11</span>
+    <button id="next" aria-label="הבא">→</button>
+  </nav>
 
   <script>
-    // Slides Navigation Logic
-    const slides = document.querySelectorAll('.slide');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const progress = document.getElementById('slideProgress');
-    const progressBar = document.getElementById('topProgress');
-    
-    let currentSlide = 0;
+    const slides = [...document.querySelectorAll(".slide")];
+    const counter = document.getElementById("counter");
+    let index = 0;
 
-    function updateSlides(direction) {
-      const prevSlide = currentSlide;
-      
-      if (direction === 'next' && currentSlide < slides.length - 1) {
-        currentSlide++;
-      } else if (direction === 'prev' && currentSlide > 0) {
-        currentSlide--;
-      } else {
-        return;
-      }
-
-      slides[prevSlide].classList.remove('active');
-      slides[prevSlide].classList.add('exit');
-      
-      slides[currentSlide].classList.remove('exit');
-      slides[currentSlide].classList.add('active');
-
-      // Reset any slide states after transitions complete
-      setTimeout(() => {
-        slides.forEach((slide, idx) => {
-          if (idx !== currentSlide) {
-            slide.classList.remove('exit');
-          }
-        });
-      }, 500);
-
-      updateHUD();
+    function show(nextIndex) {
+      index = (nextIndex + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
+      counter.textContent = `${index + 1} / ${slides.length}`;
     }
 
-    // Fix Slide progress totals in HTML footers dynamically
-    slides.forEach((slide, idx) => {
-      const footerSpan = slide.querySelector('.slide-footer span:last-child');
-      if (footerSpan) {
-        footerSpan.textContent = `שקופית ${idx + 1} מתוך ${slides.length}`;
-      }
+    document.getElementById("prev").addEventListener("click", () => show(index - 1));
+    document.getElementById("next").addEventListener("click", () => show(index + 1));
+    document.addEventListener("keydown", (event) => {
+      if (["ArrowLeft", "PageDown", " "].includes(event.key)) show(index + 1);
+      if (["ArrowRight", "PageUp"].includes(event.key)) show(index - 1);
+      if (event.key === "Home") show(0);
+      if (event.key === "End") show(slides.length - 1);
     });
-
-    function updateHUD() {
-      progress.textContent = `${currentSlide + 1} / ${slides.length}`;
-      const percentage = ((currentSlide + 1) / slides.length) * 100;
-      progressBar.style.width = `${percentage}%`;
-      
-      prevBtn.style.opacity = currentSlide === 0 ? '0.3' : '1';
-      prevBtn.style.cursor = currentSlide === 0 ? 'default' : 'pointer';
-      
-      nextBtn.style.opacity = currentSlide === slides.length - 1 ? '0.3' : '1';
-      nextBtn.style.cursor = currentSlide === slides.length - 1 ? 'default' : 'pointer';
-    }
-
-    // Handlers
-    nextBtn.addEventListener('click', () => updateSlides('next'));
-    prevBtn.addEventListener('click', () => updateSlides('prev'));
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') {
-        updateSlides('next'); // Since LTR/RTL is reversed, Left key goes forward in Hebrew layout
-      } else if (e.key === 'ArrowRight') {
-        updateSlides('prev'); // Right key goes backward
-      }
-    });
-
-    // Saliency Demonstration Interaction
-    document.querySelectorAll('.mask').forEach(maskEl => {
-      const parentContainer = maskEl.closest('.saliency-container');
-      if (!parentContainer) return;
-      const siblingWords = parentContainer.querySelectorAll('.saliency-word:not(.mask)');
-      
-      maskEl.addEventListener('mouseenter', () => {
-        siblingWords.forEach(word => {
-          const weight = parseFloat(word.getAttribute('data-weight'));
-          if (weight >= 0.20) {
-            word.classList.add('att-high');
-          } else if (weight >= 0.08) {
-            word.classList.add('att-mid');
-          } else {
-            word.classList.add('att-low');
-          }
-        });
-      });
-
-      maskEl.addEventListener('mouseleave', () => {
-        siblingWords.forEach(word => {
-          word.classList.remove('att-high', 'att-mid', 'att-low');
-        });
-      });
-    });
-
-    // Case Studies Data & Interactive Switcher
-    const caseData = {
-      1: {
-        title: 'שחזור המילה "צדקה" (1QS 1:5)',
-        passage: '... טוב ׃ ו ל עשות אמת ו <span style="color:var(--accent-purple); font-weight:700;">[ צדקה ]</span> ו משפט ב ארץ ׃ ו לוא ...',
-        gold: 'צדקה',
-        preds: [
-          { word: 'חסד', isCorrect: false },
-          { word: 'צדקה', isCorrect: true },
-          { word: 'אמונה', isCorrect: false },
-          { word: 'שלום', isCorrect: false },
-          { word: 'אמת', isCorrect: false }
-        ],
-        insight: 'המודל מציע חמש מילות מוסר ומידות טובות סמנטיות מתוך מיכה ו\':ח\' ("עשות משפט ואהבת חסד"). תחת אילוץ אורך פיזי (4 אותיות), המילה "צדקה" מקפצת למקום ה-1!'
-      },
-      2: {
-        title: 'שחזור המילה "משפט" (1QS 1:5)',
-        passage: '... ו ל עשות אמת ו צדקה ו <span style="color:var(--accent-purple); font-weight:700;">[ משפט ]</span> ב ארץ ׃ ו לוא ל לכת ...',
-        gold: 'משפט',
-        preds: [
-          { word: 'משפט', isCorrect: true },
-          { word: 'לכת', isCorrect: false },
-          { word: 'אמונה', isCorrect: false },
-          { word: 'צדקה', isCorrect: false },
-          { word: 'דרך', isCorrect: false }
-        ],
-        insight: 'המילה הנכונה "משפט" נחזית במקום ה-1 בדיוק רב מתוך ההקשר התחבירי והסמנטי של המשפט.'
-      },
-      3: {
-        title: 'שחזור סדרה סדרתית (ספר חנוך / 1QS)',
-        passage: '... כוכבאל רביעי <span style="color:var(--accent-purple); font-weight:700;">[ חמישי ]</span> רעמאל שתיתי דניאל שביעי ...',
-        gold: 'חמישי',
-        preds: [
-          { word: 'חמישי', isCorrect: true },
-          { word: 'שישי', isCorrect: false },
-          { word: 'רביעי', isCorrect: false }
-        ],
-        insight: 'המודל מזהה את הרצף הסדרתי של שמות המלאכים והמספרים הסידוריים (רביעי -> חמישי -> שתיתי/שישי -> שביעי) ומנחש את המספר הנכון במקום ה-1.'
-      }
-    };
-
-    function showCase(caseNum) {
-      document.querySelectorAll('.case-tab-btn').forEach((btn, idx) => {
-        btn.classList.toggle('active', idx + 1 === caseNum);
-      });
-      const data = caseData[caseNum];
-      const display = document.getElementById('caseCardDisplay');
-      
-      let pillsHtml = data.preds.map(p => 
-        `<span class="pred-pill ${p.isCorrect ? 'correct' : ''}">${p.word} ${p.isCorrect ? '✓' : ''}</span>`
-      ).join('');
-
-      display.innerHTML = `
-        <h4 style="color:var(--accent-indigo); margin-bottom:10px;">${data.title}</h4>
-        <div class="case-passage">${data.passage}</div>
-        <div style="text-align:center; font-size:0.9rem; color:var(--text-muted);">
-          מילת היעד (המהדיר): <strong style="color:#fff;">${data.gold}</strong>
-        </div>
-        <div class="case-predictions-list">
-          ${pillsHtml}
-        </div>
-        <p style="margin-top:15px; font-size:0.9rem; color:var(--text-muted); line-height:1.5; background:rgba(99,102,241,0.05); padding:10px; border-radius:8px;">
-          💡 <strong>תובנת מודל:</strong> ${data.insight}
-        </p>
-      `;
-    }
-
-    // Init Case 1
-    showCase(1);
-
-    // Initialize progress bar
-    updateHUD();
   </script>
 </body>
 </html>

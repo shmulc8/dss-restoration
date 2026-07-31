@@ -1,0 +1,54 @@
+{
+  "run_id": "models--tavbert_full_ppp_nonbib_local__8681e9a2__d61b4e59__20260731T111456Z",
+  "protocol_id": "8681e9a2",
+  "decode_id": "d61b4e59",
+  "created_utc": "2026-07-31T11:14:56Z",
+  "model": {
+    "id": "models/tavbert_full_ppp_nonbib_local",
+    "revision": null,
+    "source": "local",
+    "tokenizer_family": "char",
+    "vocab_size": 345,
+    "n_params": 87489714
+  },
+  "dataset": {
+    "path": "sample_todo_tavbert-finetuned.xlsx",
+    "fingerprint": "44e495594daa",
+    "split": "test",
+    "n_sentences": 40,
+    "limit": null
+  },
+  "masking": {
+    "policy": "PercentageContentMaskingPolicy",
+    "mask_ratio": 0.3,
+    "span_concentration": 0.5,
+    "seed": 42,
+    "per_sentence_seed": true
+  },
+  "decoding": {
+    "policy": "MultiSpanPredictionPolicy",
+    "top_k": 10,
+    "beam_width": 10,
+    "beam_depth": 6
+  },
+  "env": {
+    "device": "mps",
+    "torch": "2.12.1",
+    "transformers": "5.13.0",
+    "python": "3.14.6"
+  },
+  "scorer_version": 1,
+  "counts": {
+    "sentences": 40,
+    "spans": 205,
+    "masked_words": 205,
+    "aligned_words": 205,
+    "unaligned_words": 0,
+    "unaligned_spans": 0
+  },
+  "duration_sec": 167.1,
+  "paired_sample": {
+    "n_sentences": 100,
+    "source": "sample_uids.json"
+  }
+}

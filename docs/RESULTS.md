@@ -1,6 +1,6 @@
 # Current evidence register
 
-Status: 23 July 2026.
+Status: 25 July 2026.
 
 This file is the sole index of paper-facing numerical evidence. Results not
 listed here are exploratory, superseded, or awaiting a frozen protocol.
@@ -12,6 +12,7 @@ listed here are exploratory, superseded, or awaiting a frozen protocol.
 | Synthetic-damage diagnostic | The reference is preserved text hidden artificially; the task is not a real lacuna |
 | Literature-agreement pilot | The reference is one or more modern attributed proposals at a real lacuna |
 | Editorial-label pilot | The reference is an anonymous Text-Fabric reconstruction used only for evaluation |
+| Known-source method validation | The expected external source book is independently known |
 | Paper result | Frozen protocol, full leakage audit, uncertainty, and predeclared analysis complete |
 
 No result currently qualifies as a final paper result.
@@ -122,6 +123,59 @@ No result currently qualifies as a final paper result.
   and
   [`analysis/reports/embible_bible_transfer.json`](../analysis/reports/embible_bible_transfer.json).
 
+### F. Expanded DSS model-selection diagnostic
+
+- Unit: one contiguous span of physically preserved DSS text hidden
+  artificially.
+- Scope: 60 development and 300 held-out spans, balanced across one, two, and
+  three words.
+- Preserved-only word model exact Top-10: 15.0%.
+- Preserved-only TavBERT exact Top-10: 6.0%.
+- Embible paper-style overlap exact Top-10: 4.7%.
+- Dev-fitted rank fusion exact Top-10: 15.0%.
+- Word-only exact Top-10 by length: 40.0%, 5.0%, and 0.0%.
+- Tokenizer coverage: 92.3% of target words and 86.3% of complete spans are
+  representable by the one-token-per-word decoder; three-word complete-span
+  coverage is 77.0%. All targets remain in the metric denominator.
+- Decision: retain word-only as the best implemented baseline under the locked
+  simplicity tie-break; do not promote TavBERT, overlap fusion, rank fusion, or
+  RAG into the final system.
+- Status: expanded model-selection pilot, not an independent or frozen test.
+  It extends the deterministic sample stream used by the earlier 30-span run
+  and lacks clustered uncertainty.
+- Artifacts:
+  [`analysis/reports/EMBIBLE_DSS_EXPANDED_PILOT.md`](../analysis/reports/EMBIBLE_DSS_EXPANDED_PILOT.md)
+  and
+  [`analysis/reports/embible_dss_expanded_pilot_summary.json`](../analysis/reports/embible_dss_expanded_pilot_summary.json).
+
+### G. Quote-aware cross-corpus source recovery
+
+- Unit: preserved non-biblical DSS passage; recovery is macro-averaged by
+  Pesher manuscript.
+- External shelf: BHSA Hebrew Bible plus non-Qumran ETCBC comparators.
+- Known-source control: 35 passages from eight mapped Pesharim.
+- Literal source-book recovery: 86.6% Top-1 and 99.1% Top-3.
+- Exact-trigram ablation: 27.0% of words masked on average, zero matching runs
+  survive, and nested leave-one-manuscript-out residual recovery is 52.4%
+  Top-1 and 83.6% Top-3 (permutation p=0.0008).
+- Exact-bigram sensitivity: 58.4% of words masked, zero matching runs survive,
+  and nested residual recovery is 45.3% Top-1 and 82.2% Top-3
+  (p=0.0012).
+- In every nested residual fold, character n-grams are selected using only the
+  other manuscripts.
+- No unknown composition/source pair survives scroll-cluster permutation with
+  Benjamini-Hochberg correction at q <= 0.05.
+- Status: known-source method validation. The source-control result is
+  paper-facing; unknown historical connections remain exploratory.
+- Interpretation: the method detects residual surface affinity after literal
+  phrase removal. It does not establish semantic paraphrase, authorship,
+  borrowing, a lost source, or direction of influence.
+- Artifacts:
+  [`docs/QUOTE_AWARE_SOURCE_CONNECTION_METHOD.md`](QUOTE_AWARE_SOURCE_CONNECTION_METHOD.md),
+  [`analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md`](../analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md),
+  and
+  [`analysis/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md`](../analysis/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md).
+
 ## Claims that are not supported
 
 The repository does not currently claim:
@@ -133,6 +187,8 @@ The repository does not currently claim:
 - recovery of the manuscript's original wording at real lacunae;
 - demonstrated scholar productivity or accuracy gains;
 - cross-period generalization;
+- a statistically confirmed new source relationship for an unmapped
+  composition;
 - editor-specific accuracy rankings.
 
 The earlier master reports and gold-length RAG pipeline were removed because

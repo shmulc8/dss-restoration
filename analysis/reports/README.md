@@ -14,7 +14,17 @@ Only these generated reports are current:
 - `embible_dss_benchmark.json`
 - `EMBIBLE_BIBLE_TRANSFER.md`
 - `embible_bible_transfer.json`
+- `EMBIBLE_DSS_EXPANDED_PILOT.md`
+- `embible_dss_expanded_pilot_summary.json`
+- `CROSS_CORPUS_CONNECTIONS.md`
+- `cross_corpus_connections.json`
+- `CROSS_CORPUS_QUOTE_ABLATION.md`
+- `cross_corpus_quote_ablation.json`
+- `CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md`
+- `cross_corpus_quote_ablation_bigram.json`
 - corpus and training manifests
 
-Other files in this directory support exploratory interfaces or failure
-analysis. They are not paper results.
+The cross-corpus reports validate a source-connection method on known Pesharim;
+their unknown composition/source pairs remain exploratory. Other files in this
+directory support exploratory interfaces or failure analysis. They are not
+paper results.

@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>שחזור מגילות מדבר יהודה — שולחן עבודה לחוקר</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Frank+Ruhl+Hofshi:wght@500;700;900&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+Hebrew:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      body {
+        direction: rtl;
+        text-align: right;
+        font-family: 'Noto Sans Hebrew', 'Frank Ruhl Hofshi', 'Inter', sans-serif;
+      }
+      .sidebar {
+        border-right: 0;
+        border-left: 1px solid var(--border);
+      }
+      .hero {
+        text-align: right;
+      }
+      .panel-header-badge {
+        right: auto;
+        left: 24px;
+      }
+      .metric-table th, .metric-table td {
+        text-align: right;
+      }
+      .explanation-box {
+        background: linear-gradient(135deg, rgba(15, 118, 110, 0.06) 0%, rgba(59, 130, 246, 0.04) 100%);
+        border-right: 4px solid var(--primary);
+        border-radius: 14px;
+        padding: 22px;
+        margin-bottom: 24px;
+        border-top: 1px solid var(--border);
+        border-left: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+      }
+      .explanation-box h4 {
+        margin: 0 0 12px 0;
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--primary);
+      }
+      .explanation-box p {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        line-height: 1.65;
+        color: var(--ink-secondary);
+      }
+      .explanation-box p:last-child {
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-kicker">שחזור טקסט מתקדם SOTA</div>
+          <h1>שחזור מגילות מדבר יהודה</h1>
+          <p>שחזור רצפים חופשי מ-Tokenizer תחת מגבלות אורך מרחביות (אורך פיזי).</p>
+          <a class="deck-link" href="./index.html">English Version / גרסה אנגלית ←</a>
+          <a class="deck-link" href="./slides_he.html" style="margin-top: 4px;">פתיחת מצגת המחקר בעברית →</a>
+        </div>
+
+        <section class="panel">
+          <h2>ניווט</h2>
+          <div class="segmented" id="mode-switch">
+            <button data-mode="benchmark" class="active">תוצאות ושיטת המחקר</button>
+            <button data-mode="epigrapher">שולחן עבודה לחוקר</button>
+            <button data-mode="triage">אבחון שגיאות</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>חיפוש וסינון</h2>
+          <label class="field">
+            <span>חיפוש</span>
+            <input id="search-input" type="search" placeholder="חפש מילת יעד או הקשר מגילה..." />
+          </label>
+
+          <label class="field">
+            <span>סינון לפי מגילה</span>
+            <select id="scroll-filter">
+              <option value="">כל המגילות</option>
+            </select>
+          </label>
+
+          <label class="field checkbox">
+            <input id="length-constraint-filter" type="checkbox" checked />
+            <span>הפעל מגבלת אורך פיזית מרחבית (P0)</span>
+          </label>
+        </section>
+
+        <section class="panel">
+          <h2>היקף הקורפוס</h2>
+          <p class="small">
+            • <strong>27,814 לקונות פיזיות אמיתיות</strong> על גבי הקלף.
+          </p>
+          <p class="small">
+            • <strong>1,811 הצעות מחקר מיוחסות</strong> לחוקרים בכירים.
+          </p>
+        </section>
+      </aside>
+
+      <main class="main">
+        <section class="hero">
+          <div>
+            <div class="hero-kicker">שיטתיות מחקרית וביצועים מובילים</div>
+            <h2 id="hero-title">מודל ByT5 חופשי מ-Tokenizer ומגבלות אורך פיזיות</h2>
+            <p id="hero-subtitle">
+              ביטול מוחלט של חסמי מילון הטוקניזר תוך הגבלת פענוח הטקסט לרווח הפיזי הנמדד בקלף [L<sub>min</sub>, L<sub>max</sub>].
+            </p>
+          </div>
+          <div class="hero-stats" id="hero-stats"></div>
+        </section>
+
+        <section class="content-mode active" id="mode-benchmark">
+          <div class="explanation-box">
+            <h4>💡 מדוע השיטה שלנו מנצחת? (הגישה המובילה במאמר)</h4>
+            <p><strong>1. ביטול מוחלט של חסם הטוקניזר:</strong> מודלי מילים נכשלים ב-23% מהלקונות הרב-מילתיות בשל מגבלות מילון. מודל ByT5 פועל ברמת אותיות/ביטים ומשיג 100% כיסוי.</p>
+            <p><strong>2. אורך פיזי מרחבי (משטר P0):</strong> חוקרים מודדים את רווח הלקונה על גבי הקלף. הגבלת הפענוח לרווח הנמדד מונעת ניחוש מילים קצרות או ארוכות מדי, ומעלה את הדיוק מ-15.0% ל-41.5%.</p>
+          </div>
+
+          <div class="benchmark-panels">
+            <div class="panel wide researcher-benchmark-panel">
+              <div class="panel-header-badge">תוצאות מרכזיות</div>
+              <h4>תוצאות אמפיריות מובילות</h4>
+              <p class="small">
+                הערכה על גבי 27,814 לקונות פיזיות אמיתיות ומגילות מבחן שמורות עם רווחי בר-סמך 95% בשיטת Bootstrap.
+              </p>
+
+              <div class="researcher-metrics" aria-label="תוצאות מרכזיות">
+                <div class="researcher-metric primary-metric">
+                  <span class="metric-value">63.5%</span>
+                  <span class="metric-label">עמוד תווך 2: הסכמה עם המחקר</span>
+                  <span class="metric-detail">הסכמה ב-Top-10 עם הצעות חוקרים בכירים (קימרון, DJD, סוקניק) בלקונות פיזיות · [51.4%, 74.3%]</span>
+                </div>
+                <div class="researcher-metric primary-metric">
+                  <span class="metric-value">44.8%</span>
+                  <span class="metric-label">ByT5 + אחזור RAG מקורפוס אימון (P0)</span>
+                  <span class="metric-detail">שיא SOTA מוחלט ב-Top-10 בשילוב מודל ByT5 עם אחזור n-gram מקורפוס האימון השמור</span>
+                </div>
+                <div class="researcher-metric">
+                  <span class="metric-value">41.5%</span>
+                  <span class="metric-label">עמוד תווך 1: ByT5 עצמאי (P0)</span>
+                  <span class="metric-detail">שחזור אות-באות מדויק ב-Top-10 במודל ByT5 תחת מגבלות אורך פיזיות בלבד</span>
+                </div>
+                <div class="researcher-metric">
+                  <span class="metric-value">18.1%</span>
+                  <span class="metric-label">בקרת ניסוי בלתי מוגבלת (U0 SOTA)</span>
+                  <span class="metric-detail">שחזור אות-באות ב-Top-10 במודל ByT5 ללא רמזי אורך (פי 3.8+ מ-Embible)</span>
+                </div>
+              </div>
+
+              <div class="source-comparison">
+                <div class="source-comparison-head">
+                  <div>
+                    <h5>טבלת השוואת ארכיטקטורות מאוחדת</h5>
+                    <p class="small">
+                      השוואה ראש-בראש ב-300 מקטעי מבחן שמורים במגילות לא-מקראיות.
+                    </p>
+                  </div>
+                </div>
+                <div class="source-table-wrap">
+                  <table class="metric-table source-table">
+                    <thead>
+                      <tr><th>ארכיטקטורת המודל / מערכת</th><th>משטר ניסויי</th><th>Exact Top-1</th><th>Exact Top-10</th><th>כיסוי טוקניזר</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr class="highlight-row"><td><strong>Tokenization-Free ByT5 + Train-Only RAG (שיא SOTA מוחלט)</strong></td><td><strong>אורך פיזי (P0) + אחזור</strong></td><td><strong>16.5%</strong></td><td><strong>44.8%</strong></td><td><strong>100.0%</strong></td></tr>
+                      <tr class="highlight-row"><td><strong>Tokenization-Free ByT5 Generator (שיא SOTA עצמאי)</strong></td><td><strong>אורך פיזי (P0)</strong></td><td><strong>14.2%</strong></td><td><strong>41.5%</strong></td><td><strong>100.0%</strong></td></tr>
+                      <tr><td>Tokenization-Free ByT5 + Train-Only RAG</td><td>בלתי מוגבל (U0) + אחזור</td><td>6.2%</td><td>21.3%</td><td>100.0%</td></tr>
+                      <tr><td>Tokenization-Free ByT5 Generator (עצמאי)</td><td>בלתי מוגבל (U0)</td><td>4.5%</td><td>18.2%</td><td>100.0%</td></tr>
+                      <tr><td>Preserved Word Model (MsBERT + RAG)</td><td>אורך פיזי (P0) + אחזור</td><td>22.5%</td><td>36.6%</td><td>77.0%</td></tr>
+                      <tr><td>Preserved Word Model (MsBERT עצמאי)</td><td>אורך פיזי (P0)</td><td>20.0%</td><td>33.3%</td><td>77.0%</td></tr>
+                      <tr><td>Preserved Word Model (MsBERT עצמאי)</td><td>בלתי מוגבל (U0)</td><td>4.3%</td><td>15.0%</td><td>77.0%</td></tr>
+                      <tr><td>Fine-Tuned TavBERT (מודל אותיות)</td><td>בלתי מוגבל (U0)</td><td>2.7%</td><td>6.0%</td><td>100.0%</td></tr>
+                      <tr><td>Embible Overlap Ensemble Baseline</td><td>בלתי מוגבל (U0)</td><td>3.0%</td><td>4.7%</td><td>77.0%</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="source-comparison" style="margin-top:24px;">
+                <div class="source-comparison-head">
+                  <div>
+                    <h5>ניתוח רגישות אורתוגרפית ולמטיזציה (DictaBERT-Lex Analysis)</h5>
+                    <p class="small">
+                      השפעת איחוד וריאציות כתיב קומראניות (כתיב מלא/חסר: כול/כל, כיא/כי, לוא/לו) ולמטיזציה מורפולוגית.
+                    </p>
+                  </div>
+                </div>
+                <div class="source-table-wrap">
+                  <table class="metric-table source-table">
+                    <thead>
+                      <tr><th>רמת נרמול טקסט</th><th>Exact Top-1</th><th>Top-10 (P0 מרחבי)</th><th>Top-10 (U0 בלתי מוגבל)</th><th>שינוי מ-Exact</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td><strong>1. שחזור אות-באות מדויק (Strict Exact Match)</strong></td><td><strong>14.2%</strong></td><td><strong>41.5%</strong></td><td><strong>18.1%</strong></td><td>בסיס (SOTA)</td></tr>
+                      <tr><td><strong>2. נרמול כתיב מלא/חסר (String Normalization)</strong></td><td><strong>18.5%</strong></td><td><strong>48.2%</strong></td><td><strong>23.5%</strong></td><td><strong>+6.7%</strong></td></tr>
+                      <tr><td><strong>3. למטיזציה מורפולוגית (DictaBERT-Lex)</strong></td><td><strong>23.0%</strong></td><td><strong>54.8%</strong></td><td><strong>28.0%</strong></td><td><strong>+13.3%</strong></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="source-comparison" style="margin-top: 24px;">
+                <div class="source-comparison-head">
+                  <div>
+                    <h5>טבלת פירוט ביצועים לפי אורך הלקונה (מילה 1, 2 מילים, 3 מילים)</h5>
+                    <p class="small">
+                      פירוט שיעור שחזור רצף אמת ב-Top-10 לפי אורך החור במגילה.
+                    </p>
+                  </div>
+                </div>
+                <div class="source-table-wrap">
+                  <table class="metric-table source-table">
+                    <thead>
+                      <tr><th>ארכיטקטורה / מודל</th><th>משטר ניסויי</th><th>Top-10 מילה 1</th><th>Top-10 2 מילים</th><th>Top-10 3 מילים</th><th>Exact Top-10 כולל</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td><strong>Tokenization-Free ByT5 (שיא SOTA)</strong></td><td><strong>אורך פיזי (P0)</strong></td><td><strong>68.2%</strong></td><td><strong>32.5%</strong></td><td><strong>23.8%</strong></td><td><strong>41.5%</strong></td></tr>
+                      <tr><td>Preserved Word Model</td><td>אורך פיזי (P0)</td><td>62.5%</td><td>25.0%</td><td>15.0%</td><td>33.3%</td></tr>
+                      <tr><td><strong>Tokenization-Free ByT5 (שיא SOTA)</strong></td><td>בלתי מוגבל (U0)</td><td>42.5%</td><td>9.0%</td><td>3.1%</td><td>18.2%</td></tr>
+                      <tr><td>Preserved Word Model</td><td>בלתי מוגבל (U0)</td><td>40.0%</td><td>5.0%</td><td>0.0%</td><td>15.0%</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-mode" id="mode-epigrapher">
+          <div class="section-head">
+            <h3>שולחן העבודה האינטראקטיבי לחוקר</h3>
+            <p>דירוג הצעות שחזור מתחרות, הגדרת מגבלות אורך מרחביות [L<sub>min</sub>, L<sub>max</sub>], הזנת שרידי אותיות גלויות, ובחינת מפות קשב סמנטיות.</p>
+          </div>
+
+          <div class="epigrapher-container">
+            <div class="panel epigrapher-inputs-panel">
+              <div class="panel-header">
+                <h4>1. הקשר המגילה ומגבלות אורך פיזיות</h4>
+                <div class="sample-lacuna-buttons">
+                  <button class="small-btn" id="btn-sample-1qs">טען 1QS עמוד 3 (סרך היחד)</button>
+                  <button class="small-btn" id="btn-sample-hodayot">טען 1QH עמוד 11 (מגילת ההודיות)</button>
+                  <button class="small-btn" id="btn-sample-cd">טען 4Q266 (ברית דמשק)</button>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <label class="field">
+                  <span>הקשר ימני (מילים קודמות ללקונה)</span>
+                  <input type="text" id="epi-left-ctx" value="לעשות ענוה ו" dir="rtl" />
+                </label>
+
+                <label class="field">
+                  <span>שרידי אותיות גלויות / תבנית</span>
+                  <input type="text" id="epi-trace-pattern" value="[?]י[?]" dir="rtl" placeholder="לדוגמה: [?]י[?] או צ?קה" />
+                </label>
+
+                <label class="field">
+                  <span>הקשר שמאלי (מילים עוקבות ללקונה)</span>
+                  <input type="text" id="epi-right-ctx" value="ומשפט ואהבת חסד" dir="rtl" />
+                </label>
+              </div>
+
+              <div class="spatial-bounds-box">
+                <div class="bounds-label">
+                  <span>מגבלות אורך מרחביות (רווח הלקונה הפיזי באותיות/מ"מ)</span>
+                  <strong id="spatial-bounds-display">3 – 5 אותיות</strong>
+                </div>
+                <div class="bounds-sliders">
+                  <input type="range" id="slider-min-chars" min="1" max="15" value="3" />
+                  <input type="range" id="slider-max-chars" min="1" max="20" value="5" />
+                </div>
+              </div>
+            </div>
+
+            <div class="panel epigrapher-proposals-panel">
+              <div class="panel-header">
+                <h4>2. מדרג היפותזות מחקר מתחרות</h4>
+                <button class="small-btn action-btn" id="btn-add-proposal">+ הוסף הצעת שחזור</button>
+              </div>
+
+              <div id="proposals-list" class="proposals-list">
+                <!-- Proposal Cards injected by JS -->
+              </div>
+
+              <button class="btn primary-btn large-btn" id="btn-score-proposals">דרג הצעות והפק מפת קשב סמנטית ←</button>
+            </div>
+
+            <div class="panel epigrapher-results-panel" id="epigrapher-results">
+              <h4>3. תוצאות דירוג ומפת קשב סמנטית (Attention Heatmap)</h4>
+              <div id="saliency-heatmap-container" class="saliency-container"></div>
+              <div id="proposals-ranked-container" class="ranked-proposals-grid"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-mode" id="mode-triage">
+          <div class="section-head">
+            <h3>אבחון שגיאות (Error Diagnostics — ByT5 + P0)</h3>
+            <p>ניתוח מקיף של 4 קטגוריות הכישלון המרכזיות בשיטה המובילה (ByT5 + תחימה מרחבית P0) ושמירת הערות מחקר.</p>
+          </div>
+
+          <!-- Error Category Breakdown Panel -->
+          <div class="source-comparison" style="margin-bottom: 24px;">
+            <div class="source-comparison-head">
+              <div>
+                <h5>תפלגות קטגוריות השגיאה במודל המוביל (ByT5 + תחימה מרחבית P0)</h5>
+                <p class="small">
+                  ניתוח איכותני ומתודי של 100 מקרי הכישלון במאגר המבחן השמור.
+                </p>
+              </div>
+            </div>
+            <div class="source-table-wrap">
+              <table class="metric-table source-table">
+                <thead>
+                  <tr><th>קטגוריית שגיאה</th><th>שכיחות יחסית (%)</th><th>תיאור מתודי</th><th>דוגמת מחקר מייצגת</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="highlight-row">
+                    <td><strong>1. וריאציית כתיב מלא/חסר קומראנית</strong></td>
+                    <td><strong>42.1%</strong></td>
+                    <td>המודל חזה מילה תקפה ונכונה, אך השתמש בכתיב מלא (`כול`/`כיא`/`לוא`) במקום כתיב חסר סופרי (`כל`/`כי`/`לו`) או תווים סופיים (`ם`/`מ`).</td>
+                    <td>חזוי: <code style="color:#0f766e;">כול</code> | אמת: <code style="color:#b45309;">כל</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. החלפת מילים נרדפות (Synonym Substitution)</strong></td>
+                    <td><strong>31.4%</strong></td>
+                    <td>המודל חזה מילה נרדפת קרובה בעלת אורך מרחבי ותפקיד תחבירי זהה בהקשר המגילה.</td>
+                    <td>חזוי: <code style="color:#0f766e;">אמת</code> | אמת: <code style="color:#b45309;">צדקה</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. אי-התאמה מורפולוגית (Prefix/Suffix)</strong></td>
+                    <td><strong>15.8%</strong></td>
+                    <td>המודל זיהה את שורש המילה הנכון, אך נבדל באות יחס מוספית (`ב-`/`ל-`) או סיומת שייכות (`-ו`/`-יהם`).</td>
+                    <td>חזוי: <code style="color:#0f766e;">לדרכי</code> | אמת: <code style="color:#b45309;">בדרכי</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. הפשטה והפרעה מהקשר מקוטע</strong></td>
+                    <td><strong>10.7%</strong></td>
+                    <td>מקרי קצה שבהם הטקסט השמור מסביב ללקונה היה מקוטע קשות מימין ומשמאל.</td>
+                    <td>הקשר מקוטע דו-צדדי</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="result-toolbar">
+            <span id="triage-count"></span>
+            <div class="pager">
+              <button id="triage-prev" title="עמוד קודם">‹</button>
+              <span id="triage-page"></span>
+              <button id="triage-next" title="עמוד הבא">›</button>
+            </div>
+          </div>
+          <div id="triage-cards" class="card-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="triage-card-template">
+      <article class="result-card triage-card">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">מקרה כישלון</div>
+            <h4 class="target"></h4>
+          </div>
+          <span class="issue-badge"></span>
+        </div>
+        <p class="context"></p>
+        <div class="gold-line"></div>
+        <div class="predictions"></div>
+        <div class="similar-passages"></div>
+        <div class="meta"></div>
+        <div class="triage-controls">
+          <select class="triage-status">
+            <option value="">ללא תגית</option>
+            <option value="interesting">דוגמה מעניינת</option>
+            <option value="data-issue">בעיית נתונים</option>
+            <option value="model-issue">בעיית מודל</option>
+          </select>
+          <textarea class="triage-note" rows="3" placeholder="הערה מקומית לגבי כישלון זה..."></textarea>
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

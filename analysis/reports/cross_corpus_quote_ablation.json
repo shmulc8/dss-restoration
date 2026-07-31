@@ -1,0 +1,2901 @@
+{
+  "status": "paper_method_candidate_quote_aware_connection_screen",
+  "warning": "Residual enrichment is evidence of a reproducible corpus affinity, not proof of authorship, direct borrowing, a lost source, or direction of influence. Genre, date, dialect, shared tradition, and formulaic language require philological adjudication.",
+  "masking": {
+    "ngram_words": 3,
+    "passages_before": 290,
+    "passages_after": 289,
+    "residual_min_words": 20,
+    "mean_masked_fraction": 0.27048894150892777,
+    "median_masked_fraction": 0.24691358024691357,
+    "total_matching_windows": 3080,
+    "surviving_matching_runs": 0
+  },
+  "positive_controls": {
+    "literal": {
+      "status": "known_source_positive_control",
+      "unit": "DSS manuscript",
+      "manuscripts": 8,
+      "passages": 35,
+      "macro_top1_recovery": 0.8661,
+      "macro_top3_recovery": 0.9911,
+      "permutation_iterations": 10000,
+      "top1_permutation_p": 0.0005,
+      "top3_permutation_p": 0.0005,
+      "mapping_scope": "Standard Pesher source-book mappings only; ambiguous or unmapped Pesharim are excluded.",
+      "per_manuscript": {
+        "1QpHab": {
+          "expected_bhsa_book": "Habakuk",
+          "passages": 14,
+          "top1_recovery": 0.9286,
+          "top3_recovery": 0.9286
+        },
+        "4Q161": {
+          "expected_bhsa_book": "Jesaia",
+          "passages": 2,
+          "top1_recovery": 1.0,
+          "top3_recovery": 1.0
+        },
+        "4Q162": {
+          "expected_bhsa_book": "Jesaia",
+          "passages": 2,
+          "top1_recovery": 1.0,
+          "top3_recovery": 1.0
+        },
+        "4Q163": {
+          "expected_bhsa_book": "Jesaia",
+          "passages": 2,
+          "top1_recovery": 1.0,
+          "top3_recovery": 1.0
+        },
+        "4Q164": {
+          "expected_bhsa_book": "Jesaia",
+          "passages": 1,
+          "top1_recovery": 0.0,
+          "top3_recovery": 1.0
+        },
+        "4Q166": {
+          "expected_bhsa_book": "Hosea",
+          "passages": 2,
+          "top1_recovery": 1.0,
+          "top3_recovery": 1.0
+        },
+        "4Q169": {
+          "expected_bhsa_book": "Nahum",
+          "passages": 6,
+          "top1_recovery": 1.0,
+          "top3_recovery": 1.0
+        },
+        "4Q171": {
+          "expected_bhsa_book": "Psalmi",
+          "passages": 6,
+          "top1_recovery": 1.0,
+          "top3_recovery": 1.0
+        }
+      }
+    },
+    "residual": {
+      "status": "known_source_positive_control",
+      "unit": "DSS manuscript",
+      "manuscripts": 8,
+      "passages": 35,
+      "macro_top1_recovery": 0.4107,
+      "macro_top3_recovery": 0.7649,
+      "permutation_iterations": 10000,
+      "top1_permutation_p": 0.001,
+      "top3_permutation_p": 0.0005,
+      "mapping_scope": "Standard Pesher source-book mappings only; ambiguous or unmapped Pesharim are excluded.",
+      "per_manuscript": {
+        "1QpHab": {
+          "expected_bhsa_book": "Habakuk",
+          "passages": 14,
+          "top1_recovery": 0.7857,
+          "top3_recovery": 0.7857
+        },
+        "4Q161": {
+          "expected_bhsa_book": "Jesaia",
+          "passages": 2,
+          "top1_recovery": 0.5,
+          "top3_recovery": 0.5
+        },
+        "4Q162": {
+          "expected_bhsa_book": "Jesaia",
+          "passages": 2,
+          "top1_recovery": 0.5,
+          "top3_recovery": 1.0
+        },
+        "4Q163": {
+          "expected_bhsa_book": "Jesaia",
+          "passages": 2,
+          "top1_recovery": 0.5,
+          "top3_recovery": 0.5
+        },
+        "4Q164": {
+          "expected_bhsa_book": "Jesaia",
+          "passages": 1,
+          "top1_recovery": 0.0,
+          "top3_recovery": 1.0
+        },
+        "4Q166": {
+          "expected_bhsa_book": "Hosea",
+          "passages": 2,
+          "top1_recovery": 0.5,
+          "top3_recovery": 1.0
+        },
+        "4Q169": {
+          "expected_bhsa_book": "Nahum",
+          "passages": 6,
+          "top1_recovery": 0.5,
+          "top3_recovery": 0.5
+        },
+        "4Q171": {
+          "expected_bhsa_book": "Psalmi",
+          "passages": 6,
+          "top1_recovery": 0.0,
+          "top3_recovery": 0.8333
+        }
+      }
+    }
+  },
+  "feature_family_sensitivity": {
+    "word_only": {
+      "literal": {
+        "status": "known_source_positive_control",
+        "unit": "DSS manuscript",
+        "manuscripts": 8,
+        "passages": 35,
+        "macro_top1_recovery": 0.8452,
+        "macro_top3_recovery": 0.9911,
+        "permutation_iterations": 10000,
+        "top1_permutation_p": 0.0005,
+        "top3_permutation_p": 0.0005,
+        "mapping_scope": "Standard Pesher source-book mappings only; ambiguous or unmapped Pesharim are excluded.",
+        "per_manuscript": {
+          "1QpHab": {
+            "expected_bhsa_book": "Habakuk",
+            "passages": 14,
+            "top1_recovery": 0.9286,
+            "top3_recovery": 0.9286
+          },
+          "4Q161": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q162": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q163": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q164": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 1,
+            "top1_recovery": 0.0,
+            "top3_recovery": 1.0
+          },
+          "4Q166": {
+            "expected_bhsa_book": "Hosea",
+            "passages": 2,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q169": {
+            "expected_bhsa_book": "Nahum",
+            "passages": 6,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q171": {
+            "expected_bhsa_book": "Psalmi",
+            "passages": 6,
+            "top1_recovery": 0.8333,
+            "top3_recovery": 1.0
+          }
+        }
+      },
+      "residual": {
+        "status": "known_source_positive_control",
+        "unit": "DSS manuscript",
+        "manuscripts": 8,
+        "passages": 35,
+        "macro_top1_recovery": 0.3393,
+        "macro_top3_recovery": 0.744,
+        "permutation_iterations": 10000,
+        "top1_permutation_p": 0.0031,
+        "top3_permutation_p": 0.0005,
+        "mapping_scope": "Standard Pesher source-book mappings only; ambiguous or unmapped Pesharim are excluded.",
+        "per_manuscript": {
+          "1QpHab": {
+            "expected_bhsa_book": "Habakuk",
+            "passages": 14,
+            "top1_recovery": 0.7143,
+            "top3_recovery": 0.7857
+          },
+          "4Q161": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 0.5,
+            "top3_recovery": 0.5
+          },
+          "4Q162": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 0.5,
+            "top3_recovery": 1.0
+          },
+          "4Q163": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 0.5,
+            "top3_recovery": 1.0
+          },
+          "4Q164": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 1,
+            "top1_recovery": 0.0,
+            "top3_recovery": 1.0
+          },
+          "4Q166": {
+            "expected_bhsa_book": "Hosea",
+            "passages": 2,
+            "top1_recovery": 0.0,
+            "top3_recovery": 0.5
+          },
+          "4Q169": {
+            "expected_bhsa_book": "Nahum",
+            "passages": 6,
+            "top1_recovery": 0.5,
+            "top3_recovery": 0.5
+          },
+          "4Q171": {
+            "expected_bhsa_book": "Psalmi",
+            "passages": 6,
+            "top1_recovery": 0.0,
+            "top3_recovery": 0.6667
+          }
+        }
+      }
+    },
+    "character_only": {
+      "literal": {
+        "status": "known_source_positive_control",
+        "unit": "DSS manuscript",
+        "manuscripts": 8,
+        "passages": 35,
+        "macro_top1_recovery": 0.8661,
+        "macro_top3_recovery": 0.9911,
+        "permutation_iterations": 10000,
+        "top1_permutation_p": 0.0005,
+        "top3_permutation_p": 0.0005,
+        "mapping_scope": "Standard Pesher source-book mappings only; ambiguous or unmapped Pesharim are excluded.",
+        "per_manuscript": {
+          "1QpHab": {
+            "expected_bhsa_book": "Habakuk",
+            "passages": 14,
+            "top1_recovery": 0.9286,
+            "top3_recovery": 0.9286
+          },
+          "4Q161": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q162": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q163": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q164": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 1,
+            "top1_recovery": 0.0,
+            "top3_recovery": 1.0
+          },
+          "4Q166": {
+            "expected_bhsa_book": "Hosea",
+            "passages": 2,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q169": {
+            "expected_bhsa_book": "Nahum",
+            "passages": 6,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q171": {
+            "expected_bhsa_book": "Psalmi",
+            "passages": 6,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          }
+        }
+      },
+      "residual": {
+        "status": "known_source_positive_control",
+        "unit": "DSS manuscript",
+        "manuscripts": 8,
+        "passages": 35,
+        "macro_top1_recovery": 0.5238,
+        "macro_top3_recovery": 0.8363,
+        "permutation_iterations": 10000,
+        "top1_permutation_p": 0.0005,
+        "top3_permutation_p": 0.0005,
+        "mapping_scope": "Standard Pesher source-book mappings only; ambiguous or unmapped Pesharim are excluded.",
+        "per_manuscript": {
+          "1QpHab": {
+            "expected_bhsa_book": "Habakuk",
+            "passages": 14,
+            "top1_recovery": 0.8571,
+            "top3_recovery": 0.8571
+          },
+          "4Q161": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 0.5,
+            "top3_recovery": 0.5
+          },
+          "4Q162": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 1.0,
+            "top3_recovery": 1.0
+          },
+          "4Q163": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 2,
+            "top1_recovery": 0.5,
+            "top3_recovery": 0.5
+          },
+          "4Q164": {
+            "expected_bhsa_book": "Jesaia",
+            "passages": 1,
+            "top1_recovery": 0.0,
+            "top3_recovery": 1.0
+          },
+          "4Q166": {
+            "expected_bhsa_book": "Hosea",
+            "passages": 2,
+            "top1_recovery": 0.5,
+            "top3_recovery": 1.0
+          },
+          "4Q169": {
+            "expected_bhsa_book": "Nahum",
+            "passages": 6,
+            "top1_recovery": 0.5,
+            "top3_recovery": 1.0
+          },
+          "4Q171": {
+            "expected_bhsa_book": "Psalmi",
+            "passages": 6,
+            "top1_recovery": 0.3333,
+            "top3_recovery": 0.8333
+          }
+        }
+      }
+    }
+  },
+  "nested_feature_validation": {
+    "literal": {
+      "status": "nested_leave_one_manuscript_out",
+      "selection_unit": "Pesher manuscript",
+      "feature_candidates": [
+        "combined",
+        "word_only",
+        "character_only"
+      ],
+      "manuscripts": 8,
+      "macro_top1_recovery": 0.8660714285714286,
+      "macro_top3_recovery": 0.9910714285714286,
+      "permutation_iterations": 10000,
+      "top1_permutation_p": 0.0007999200079992001,
+      "top3_permutation_p": 0.0007999200079992001,
+      "folds": [
+        {
+          "heldout_manuscript": "1QpHab",
+          "selected_feature": "combined",
+          "training_macro_top1": 0.8571428571428571,
+          "training_macro_top3": 1.0,
+          "heldout_top1": 0.9285714285714286,
+          "heldout_top3": 0.9285714285714286
+        },
+        {
+          "heldout_manuscript": "4Q161",
+          "selected_feature": "combined",
+          "training_macro_top1": 0.8469387755102041,
+          "training_macro_top3": 0.9897959183673469,
+          "heldout_top1": 1.0,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q162",
+          "selected_feature": "combined",
+          "training_macro_top1": 0.8469387755102041,
+          "training_macro_top3": 0.9897959183673469,
+          "heldout_top1": 1.0,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q163",
+          "selected_feature": "combined",
+          "training_macro_top1": 0.8469387755102041,
+          "training_macro_top3": 0.9897959183673469,
+          "heldout_top1": 1.0,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q164",
+          "selected_feature": "combined",
+          "training_macro_top1": 0.9897959183673469,
+          "training_macro_top3": 0.9897959183673469,
+          "heldout_top1": 0.0,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q166",
+          "selected_feature": "combined",
+          "training_macro_top1": 0.8469387755102041,
+          "training_macro_top3": 0.9897959183673469,
+          "heldout_top1": 1.0,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q169",
+          "selected_feature": "combined",
+          "training_macro_top1": 0.8469387755102041,
+          "training_macro_top3": 0.9897959183673469,
+          "heldout_top1": 1.0,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q171",
+          "selected_feature": "combined",
+          "training_macro_top1": 0.8469387755102041,
+          "training_macro_top3": 0.9897959183673469,
+          "heldout_top1": 1.0,
+          "heldout_top3": 1.0
+        }
+      ]
+    },
+    "residual": {
+      "status": "nested_leave_one_manuscript_out",
+      "selection_unit": "Pesher manuscript",
+      "feature_candidates": [
+        "combined",
+        "word_only",
+        "character_only"
+      ],
+      "manuscripts": 8,
+      "macro_top1_recovery": 0.5238095238095238,
+      "macro_top3_recovery": 0.8363095238095238,
+      "permutation_iterations": 10000,
+      "top1_permutation_p": 0.0007999200079992001,
+      "top3_permutation_p": 0.0007999200079992001,
+      "folds": [
+        {
+          "heldout_manuscript": "1QpHab",
+          "selected_feature": "character_only",
+          "training_macro_top1": 0.4761904761904762,
+          "training_macro_top3": 0.8333333333333333,
+          "heldout_top1": 0.8571428571428571,
+          "heldout_top3": 0.8571428571428571
+        },
+        {
+          "heldout_manuscript": "4Q161",
+          "selected_feature": "character_only",
+          "training_macro_top1": 0.5272108843537415,
+          "training_macro_top3": 0.8843537414965986,
+          "heldout_top1": 0.5,
+          "heldout_top3": 0.5
+        },
+        {
+          "heldout_manuscript": "4Q162",
+          "selected_feature": "character_only",
+          "training_macro_top1": 0.4557823129251701,
+          "training_macro_top3": 0.8129251700680272,
+          "heldout_top1": 1.0,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q163",
+          "selected_feature": "character_only",
+          "training_macro_top1": 0.5272108843537415,
+          "training_macro_top3": 0.8843537414965986,
+          "heldout_top1": 0.5,
+          "heldout_top3": 0.5
+        },
+        {
+          "heldout_manuscript": "4Q164",
+          "selected_feature": "character_only",
+          "training_macro_top1": 0.5986394557823129,
+          "training_macro_top3": 0.8129251700680272,
+          "heldout_top1": 0.0,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q166",
+          "selected_feature": "character_only",
+          "training_macro_top1": 0.5272108843537415,
+          "training_macro_top3": 0.8129251700680272,
+          "heldout_top1": 0.5,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q169",
+          "selected_feature": "character_only",
+          "training_macro_top1": 0.5272108843537415,
+          "training_macro_top3": 0.8129251700680272,
+          "heldout_top1": 0.5,
+          "heldout_top3": 1.0
+        },
+        {
+          "heldout_manuscript": "4Q171",
+          "selected_feature": "character_only",
+          "training_macro_top1": 0.5510204081632654,
+          "training_macro_top3": 0.8367346938775511,
+          "heldout_top1": 0.3333333333333333,
+          "heldout_top3": 0.8333333333333334
+        }
+      ]
+    }
+  },
+  "composition_comparison": [
+    {
+      "composition": "4QMMT",
+      "passages_retained": 9,
+      "sources": [
+        {
+          "source_book": "extrabiblical:Shirata",
+          "literal_top3_support": 5,
+          "residual_top3_support": 5,
+          "literal_fraction": 0.5555555555555556,
+          "residual_fraction": 0.5555555555555556,
+          "retained_fraction": 1.0
+        },
+        {
+          "source_book": "bhsa:Numeri",
+          "literal_top3_support": 2,
+          "residual_top3_support": 3,
+          "literal_fraction": 0.2222222222222222,
+          "residual_fraction": 0.3333333333333333,
+          "retained_fraction": 1.5
+        },
+        {
+          "source_book": "bhsa:Ecclesiastes",
+          "literal_top3_support": 3,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.3333333333333333,
+          "residual_fraction": 0.2222222222222222,
+          "retained_fraction": 0.6666666666666666
+        },
+        {
+          "source_book": "bhsa:Leviticus",
+          "literal_top3_support": 3,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.3333333333333333,
+          "residual_fraction": 0.2222222222222222,
+          "retained_fraction": 0.6666666666666666
+        },
+        {
+          "source_book": "bhsa:Deuteronomium",
+          "literal_top3_support": 2,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.2222222222222222,
+          "residual_fraction": 0.2222222222222222,
+          "retained_fraction": 1.0
+        },
+        {
+          "source_book": "bhsa:Reges_II",
+          "literal_top3_support": 1,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.1111111111111111,
+          "residual_fraction": 0.2222222222222222,
+          "retained_fraction": 2.0
+        },
+        {
+          "source_book": "bhsa:Nehemia",
+          "literal_top3_support": 0,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.0,
+          "residual_fraction": 0.2222222222222222,
+          "retained_fraction": null
+        },
+        {
+          "source_book": "bhsa:Chronica_I",
+          "literal_top3_support": 2,
+          "residual_top3_support": 1,
+          "literal_fraction": 0.2222222222222222,
+          "residual_fraction": 0.1111111111111111,
+          "retained_fraction": 0.5
+        },
+        {
+          "source_book": "bhsa:Ezechiel",
+          "literal_top3_support": 2,
+          "residual_top3_support": 1,
+          "literal_fraction": 0.2222222222222222,
+          "residual_fraction": 0.1111111111111111,
+          "retained_fraction": 0.5
+        },
+        {
+          "source_book": "bhsa:Daniel",
+          "literal_top3_support": 1,
+          "residual_top3_support": 1,
+          "literal_fraction": 0.1111111111111111,
+          "residual_fraction": 0.1111111111111111,
+          "retained_fraction": 1.0
+        }
+      ]
+    },
+    {
+      "composition": "Book_of_Jubilees",
+      "passages_retained": 8,
+      "sources": [
+        {
+          "source_book": "bhsa:Numeri",
+          "literal_top3_support": 2,
+          "residual_top3_support": 3,
+          "literal_fraction": 0.25,
+          "residual_fraction": 0.375,
+          "retained_fraction": 1.5
+        },
+        {
+          "source_book": "extrabiblical:Pirqe",
+          "literal_top3_support": 2,
+          "residual_top3_support": 3,
+          "literal_fraction": 0.25,
+          "residual_fraction": 0.375,
+          "retained_fraction": 1.5
+        },
+        {
+          "source_book": "bhsa:Jeremia",
+          "literal_top3_support": 2,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.25,
+          "residual_fraction": 0.25,
+          "retained_fraction": 1.0
+        },
+        {
+          "source_book": "extrabiblical:Shirata",
+          "literal_top3_support": 2,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.25,
+          "residual_fraction": 0.25,
+          "retained_fraction": 1.0
+        },
+        {
+          "source_book": "bhsa:Chronica_I",
+          "literal_top3_support": 1,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.125,
+          "residual_fraction": 0.25,
+          "retained_fraction": 2.0
+        },
+        {
+          "source_book": "bhsa:Ezechiel",
+          "literal_top3_support": 1,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.125,
+          "residual_fraction": 0.25,
+          "retained_fraction": 2.0
+        },
+        {
+          "source_book": "bhsa:Nehemia",
+          "literal_top3_support": 0,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.0,
+          "residual_fraction": 0.25,
+          "retained_fraction": null
+        },
+        {
+          "source_book": "bhsa:Genesis",
+          "literal_top3_support": 3,
+          "residual_top3_support": 1,
+          "literal_fraction": 0.375,
+          "residual_fraction": 0.125,
+          "retained_fraction": 0.3333333333333333
+        },
+        {
+          "source_book": "bhsa:Exodus",
+          "literal_top3_support": 2,
+          "residual_top3_support": 1,
+          "literal_fraction": 0.25,
+          "residual_fraction": 0.125,
+          "retained_fraction": 0.5
+        },
+        {
+          "source_book": "bhsa:Judices",
+          "literal_top3_support": 2,
+          "residual_top3_support": 1,
+          "literal_fraction": 0.25,
+          "residual_fraction": 0.125,
+          "retained_fraction": 0.5
+        }
+      ]
+    },
+    {
+      "composition": "Hodayot",
+      "passages_retained": 83,
+      "sources": [
+        {
+          "source_book": "bhsa:Psalmi",
+          "literal_top3_support": 42,
+          "residual_top3_support": 40,
+          "literal_fraction": 0.5060240963855421,
+          "residual_fraction": 0.4819277108433735,
+          "retained_fraction": 0.9523809523809523
+        },
+        {
+          "source_book": "bhsa:Numeri",
+          "literal_top3_support": 36,
+          "residual_top3_support": 39,
+          "literal_fraction": 0.43373493975903615,
+          "residual_fraction": 0.46987951807228917,
+          "retained_fraction": 1.0833333333333333
+        },
+        {
+          "source_book": "extrabiblical:Shirata",
+          "literal_top3_support": 28,
+          "residual_top3_support": 37,
+          "literal_fraction": 0.3373493975903614,
+          "residual_fraction": 0.4457831325301205,
+          "retained_fraction": 1.3214285714285714
+        },
+        {
+          "source_book": "bhsa:Jesaia",
+          "literal_top3_support": 24,
+          "residual_top3_support": 29,
+          "literal_fraction": 0.2891566265060241,
+          "residual_fraction": 0.3493975903614458,
+          "retained_fraction": 1.2083333333333333
+        },
+        {
+          "source_book": "bhsa:Iob",
+          "literal_top3_support": 9,
+          "residual_top3_support": 12,
+          "literal_fraction": 0.10843373493975904,
+          "residual_fraction": 0.14457831325301204,
+          "retained_fraction": 1.3333333333333333
+        },
+        {
+          "source_book": "bhsa:Jeremia",
+          "literal_top3_support": 11,
+          "residual_top3_support": 11,
+          "literal_fraction": 0.13253012048192772,
+          "residual_fraction": 0.13253012048192772,
+          "retained_fraction": 1.0
+        },
+        {
+          "source_book": "bhsa:Proverbia",
+          "literal_top3_support": 12,
+          "residual_top3_support": 9,
+          "literal_fraction": 0.14457831325301204,
+          "residual_fraction": 0.10843373493975904,
+          "retained_fraction": 0.75
+        },
+        {
+          "source_book": "bhsa:Ezechiel",
+          "literal_top3_support": 9,
+          "residual_top3_support": 8,
+          "literal_fraction": 0.10843373493975904,
+          "residual_fraction": 0.0963855421686747,
+          "retained_fraction": 0.8888888888888888
+        },
+        {
+          "source_book": "bhsa:Reges_I",
+          "literal_top3_support": 7,
+          "residual_top3_support": 7,
+          "literal_fraction": 0.08433734939759036,
+          "residual_fraction": 0.08433734939759036,
+          "retained_fraction": 1.0
+        },
+        {
+          "source_book": "bhsa:Ecclesiastes",
+          "literal_top3_support": 10,
+          "residual_top3_support": 6,
+          "literal_fraction": 0.12048192771084337,
+          "residual_fraction": 0.07228915662650602,
+          "retained_fraction": 0.6
+        }
+      ]
+    },
+    {
+      "composition": "Instruction",
+      "passages_retained": 45,
+      "sources": [
+        {
+          "source_book": "bhsa:Numeri",
+          "literal_top3_support": 23,
+          "residual_top3_support": 26,
+          "literal_fraction": 0.5111111111111111,
+          "residual_fraction": 0.5777777777777777,
+          "retained_fraction": 1.1304347826086956
+        },
+        {
+          "source_book": "extrabiblical:Shirata",
+          "literal_top3_support": 21,
+          "residual_top3_support": 23,
+          "literal_fraction": 0.4666666666666667,
+          "residual_fraction": 0.5111111111111111,
+          "retained_fraction": 1.0952380952380953
+        },
+        {
+          "source_book": "bhsa:Proverbia",
+          "literal_top3_support": 14,
+          "residual_top3_support": 14,
+          "literal_fraction": 0.3111111111111111,
+          "residual_fraction": 0.3111111111111111,
+          "retained_fraction": 1.0
+        },
+        {
+          "source_book": "bhsa:Jesaia",
+          "literal_top3_support": 11,
+          "residual_top3_support": 9,
+          "literal_fraction": 0.24444444444444444,
+          "residual_fraction": 0.2,
+          "retained_fraction": 0.8181818181818182
+        },
+        {
+          "source_book": "bhsa:Psalmi",
+          "literal_top3_support": 10,
+          "residual_top3_support": 8,
+          "literal_fraction": 0.2222222222222222,
+          "residual_fraction": 0.17777777777777778,
+          "retained_fraction": 0.8
+        },
+        {
+          "source_book": "bhsa:Iob",
+          "literal_top3_support": 7,
+          "residual_top3_support": 6,
+          "literal_fraction": 0.15555555555555556,
+          "residual_fraction": 0.13333333333333333,
+          "retained_fraction": 0.8571428571428571
+        },
+        {
+          "source_book": "bhsa:Jeremia",
+          "literal_top3_support": 2,
+          "residual_top3_support": 6,
+          "literal_fraction": 0.044444444444444446,
+          "residual_fraction": 0.13333333333333333,
+          "retained_fraction": 3.0
+        },
+        {
+          "source_book": "extrabiblical:Pirqe",
+          "literal_top3_support": 3,
+          "residual_top3_support": 5,
+          "literal_fraction": 0.06666666666666667,
+          "residual_fraction": 0.1111111111111111,
+          "retained_fraction": 1.6666666666666667
+        },
+        {
+          "source_book": "bhsa:Judices",
+          "literal_top3_support": 3,
+          "residual_top3_support": 4,
+          "literal_fraction": 0.06666666666666667,
+          "residual_fraction": 0.08888888888888889,
+          "retained_fraction": 1.3333333333333333
+        },
+        {
+          "source_book": "bhsa:Ecclesiastes",
+          "literal_top3_support": 3,
+          "residual_top3_support": 3,
+          "literal_fraction": 0.06666666666666667,
+          "residual_fraction": 0.06666666666666667,
+          "retained_fraction": 1.0
+        }
+      ]
+    },
+    {
+      "composition": "Pesharim",
+      "passages_retained": 35,
+      "sources": [
+        {
+          "source_book": "bhsa:Numeri",
+          "literal_top3_support": 8,
+          "residual_top3_support": 12,
+          "literal_fraction": 0.22857142857142856,
+          "residual_fraction": 0.34285714285714286,
+          "retained_fraction": 1.5
+        },
+        {
+          "source_book": "bhsa:Habakuk",
+          "literal_top3_support": 13,
+          "residual_top3_support": 11,
+          "literal_fraction": 0.37142857142857144,
+          "residual_fraction": 0.3142857142857143,
+          "retained_fraction": 0.8461538461538461
+        },
+        {
+          "source_book": "bhsa:Jesaia",
+          "literal_top3_support": 10,
+          "residual_top3_support": 10,
+          "literal_fraction": 0.2857142857142857,
+          "residual_fraction": 0.2857142857142857,
+          "retained_fraction": 1.0
+        },
+        {
+          "source_book": "bhsa:Psalmi",
+          "literal_top3_support": 10,
+          "residual_top3_support": 8,
+          "literal_fraction": 0.2857142857142857,
+          "residual_fraction": 0.22857142857142856,
+          "retained_fraction": 0.8
+        },
+        {
+          "source_book": "bhsa:Jeremia",
+          "literal_top3_support": 8,
+          "residual_top3_support": 7,
+          "literal_fraction": 0.22857142857142856,
+          "residual_fraction": 0.2,
+          "retained_fraction": 0.875
+        },
+        {
+          "source_book": "extrabiblical:Shirata",
+          "literal_top3_support": 4,
+          "residual_top3_support": 7,
+          "literal_fraction": 0.11428571428571428,
+          "residual_fraction": 0.2,
+          "retained_fraction": 1.75
+        },
+        {
+          "source_book": "bhsa:Ezechiel",
+          "literal_top3_support": 9,
+          "residual_top3_support": 5,
+          "literal_fraction": 0.2571428571428571,
+          "residual_fraction": 0.14285714285714285,
+          "retained_fraction": 0.5555555555555556
+        },
+        {
+          "source_book": "bhsa:Samuel_I",
+          "literal_top3_support": 3,
+          "residual_top3_support": 5,
+          "literal_fraction": 0.08571428571428572,
+          "residual_fraction": 0.14285714285714285,
+          "retained_fraction": 1.6666666666666667
+        },
+        {
+          "source_book": "bhsa:Chronica_II",
+          "literal_top3_support": 4,
+          "residual_top3_support": 4,
+          "literal_fraction": 0.11428571428571428,
+          "residual_fraction": 0.11428571428571428,
+          "retained_fraction": 1.0
+        },
+        {
+          "source_book": "bhsa:Nahum",
+          "literal_top3_support": 6,
+          "residual_top3_support": 3,
+          "literal_fraction": 0.17142857142857143,
+          "residual_fraction": 0.08571428571428572,
+          "retained_fraction": 0.5
+        }
+      ]
+    },
+    {
+      "composition": "Temple Scroll",
+      "passages_retained": 86,
+      "sources": [
+        {
+          "source_book": "bhsa:Numeri",
+          "literal_top3_support": 41,
+          "residual_top3_support": 49,
+          "literal_fraction": 0.47674418604651164,
+          "residual_fraction": 0.5697674418604651,
+          "retained_fraction": 1.1951219512195121
+        },
+        {
+          "source_book": "bhsa:Leviticus",
+          "literal_top3_support": 39,
+          "residual_top3_support": 28,
+          "literal_fraction": 0.45348837209302323,
+          "residual_fraction": 0.32558139534883723,
+          "retained_fraction": 0.717948717948718
+        },
+        {
+          "source_book": "bhsa:Deuteronomium",
+          "literal_top3_support": 30,
+          "residual_top3_support": 26,
+          "literal_fraction": 0.3488372093023256,
+          "residual_fraction": 0.3023255813953488,
+          "retained_fraction": 0.8666666666666667
+        },
+        {
+          "source_book": "bhsa:Ezechiel",
+          "literal_top3_support": 29,
+          "residual_top3_support": 25,
+          "literal_fraction": 0.3372093023255814,
+          "residual_fraction": 0.29069767441860467,
+          "retained_fraction": 0.8620689655172413
+        },
+        {
+          "source_book": "extrabiblical:Shirata",
+          "literal_top3_support": 2,
+          "residual_top3_support": 24,
+          "literal_fraction": 0.023255813953488372,
+          "residual_fraction": 0.27906976744186046,
+          "retained_fraction": 12.0
+        },
+        {
+          "source_book": "bhsa:Exodus",
+          "literal_top3_support": 24,
+          "residual_top3_support": 18,
+          "literal_fraction": 0.27906976744186046,
+          "residual_fraction": 0.20930232558139536,
+          "retained_fraction": 0.75
+        },
+        {
+          "source_book": "bhsa:Reges_I",
+          "literal_top3_support": 15,
+          "residual_top3_support": 17,
+          "literal_fraction": 0.1744186046511628,
+          "residual_fraction": 0.19767441860465115,
+          "retained_fraction": 1.1333333333333333
+        },
+        {
+          "source_book": "bhsa:Chronica_II",
+          "literal_top3_support": 13,
+          "residual_top3_support": 12,
+          "literal_fraction": 0.1511627906976744,
+          "residual_fraction": 0.13953488372093023,
+          "retained_fraction": 0.9230769230769231
+        },
+        {
+          "source_book": "bhsa:Jeremia",
+          "literal_top3_support": 9,
+          "residual_top3_support": 10,
+          "literal_fraction": 0.10465116279069768,
+          "residual_fraction": 0.11627906976744186,
+          "retained_fraction": 1.1111111111111112
+        },
+        {
+          "source_book": "bhsa:Samuel_I",
+          "literal_top3_support": 3,
+          "residual_top3_support": 6,
+          "literal_fraction": 0.03488372093023256,
+          "residual_fraction": 0.06976744186046512,
+          "retained_fraction": 2.0
+        }
+      ]
+    },
+    {
+      "composition": "rewritten pentateuch",
+      "passages_retained": 23,
+      "sources": [
+        {
+          "source_book": "bhsa:Numeri",
+          "literal_top3_support": 11,
+          "residual_top3_support": 13,
+          "literal_fraction": 0.4782608695652174,
+          "residual_fraction": 0.5652173913043478,
+          "retained_fraction": 1.1818181818181819
+        },
+        {
+          "source_book": "bhsa:Exodus",
+          "literal_top3_support": 13,
+          "residual_top3_support": 8,
+          "literal_fraction": 0.5652173913043478,
+          "residual_fraction": 0.34782608695652173,
+          "retained_fraction": 0.6153846153846154
+        },
+        {
+          "source_book": "extrabiblical:Shirata",
+          "literal_top3_support": 5,
+          "residual_top3_support": 7,
+          "literal_fraction": 0.21739130434782608,
+          "residual_fraction": 0.30434782608695654,
+          "retained_fraction": 1.4
+        },
+        {
+          "source_book": "bhsa:Ezechiel",
+          "literal_top3_support": 6,
+          "residual_top3_support": 5,
+          "literal_fraction": 0.2608695652173913,
+          "residual_fraction": 0.21739130434782608,
+          "retained_fraction": 0.8333333333333334
+        },
+        {
+          "source_book": "bhsa:Reges_I",
+          "literal_top3_support": 6,
+          "residual_top3_support": 4,
+          "literal_fraction": 0.2608695652173913,
+          "residual_fraction": 0.17391304347826086,
+          "retained_fraction": 0.6666666666666666
+        },
+        {
+          "source_book": "bhsa:Leviticus",
+          "literal_top3_support": 2,
+          "residual_top3_support": 4,
+          "literal_fraction": 0.08695652173913043,
+          "residual_fraction": 0.17391304347826086,
+          "retained_fraction": 2.0
+        },
+        {
+          "source_book": "bhsa:Jesaia",
+          "literal_top3_support": 0,
+          "residual_top3_support": 4,
+          "literal_fraction": 0.0,
+          "residual_fraction": 0.17391304347826086,
+          "retained_fraction": null
+        },
+        {
+          "source_book": "bhsa:Chronica_II",
+          "literal_top3_support": 2,
+          "residual_top3_support": 3,
+          "literal_fraction": 0.08695652173913043,
+          "residual_fraction": 0.13043478260869565,
+          "retained_fraction": 1.5
+        },
+        {
+          "source_book": "bhsa:Josua",
+          "literal_top3_support": 1,
+          "residual_top3_support": 3,
+          "literal_fraction": 0.043478260869565216,
+          "residual_fraction": 0.13043478260869565,
+          "retained_fraction": 3.0
+        },
+        {
+          "source_book": "bhsa:Samuel_II",
+          "literal_top3_support": 3,
+          "residual_top3_support": 2,
+          "literal_fraction": 0.13043478260869565,
+          "residual_fraction": 0.08695652173913043,
+          "retained_fraction": 0.6666666666666666
+        }
+      ]
+    }
+  ],
+  "residual_cluster_enrichment": {
+    "unit": "DSS scroll",
+    "iterations": 5000,
+    "tested_pairs": 287,
+    "rows": [
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "extrabiblical:Pirqe",
+        "top3_support_fraction": 0.375,
+        "top3_support_passages": 3,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.008198360327934412,
+        "bh_adjusted_p": 0.5738852229554089
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Proverbia",
+        "top3_support_fraction": 0.3111111111111111,
+        "top3_support_passages": 14,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.005398920215956809,
+        "bh_adjusted_p": 0.5738852229554089
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Chronica_I",
+        "top3_support_fraction": 0.25,
+        "top3_support_passages": 2,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.007998400319936013,
+        "bh_adjusted_p": 0.5738852229554089
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Samuel_I",
+        "top3_support_fraction": 0.14285714285714285,
+        "top3_support_passages": 5,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.009998000399920015,
+        "bh_adjusted_p": 0.5738852229554089
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Ruth",
+        "top3_support_fraction": 0.125,
+        "top3_support_passages": 1,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.001999600079984003,
+        "bh_adjusted_p": 0.5738852229554089
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Exodus",
+        "top3_support_fraction": 0.34782608695652173,
+        "top3_support_passages": 8,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.016796640671865627,
+        "bh_adjusted_p": 0.6025794841031794
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Nehemia",
+        "top3_support_fraction": 0.25,
+        "top3_support_passages": 2,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.014597080583883223,
+        "bh_adjusted_p": 0.6025794841031794
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Reges_II",
+        "top3_support_fraction": 0.2222222222222222,
+        "top3_support_passages": 2,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.016196760647870425,
+        "bh_adjusted_p": 0.6025794841031794
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Ecclesiastes",
+        "top3_support_fraction": 0.2222222222222222,
+        "top3_support_passages": 2,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.023795240951809637,
+        "bh_adjusted_p": 0.7588037947965962
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "extrabiblical:Shirata",
+        "top3_support_fraction": 0.5555555555555556,
+        "top3_support_passages": 5,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.11157768446310738,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "extrabiblical:Shirata",
+        "top3_support_fraction": 0.5111111111111111,
+        "top3_support_passages": 23,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.11357728454309138,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Leviticus",
+        "top3_support_fraction": 0.32558139534883723,
+        "top3_support_passages": 28,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.09218156368726255,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Habakuk",
+        "top3_support_fraction": 0.3142857142857143,
+        "top3_support_passages": 11,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.04359128174365127,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Deuteronomium",
+        "top3_support_fraction": 0.3023255813953488,
+        "top3_support_passages": 26,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.09718056388722256,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Jeremia",
+        "top3_support_fraction": 0.25,
+        "top3_support_passages": 2,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.0625874825034993,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Nehemia",
+        "top3_support_fraction": 0.2222222222222222,
+        "top3_support_passages": 2,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.04859028194361128,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Jeremia",
+        "top3_support_fraction": 0.2,
+        "top3_support_passages": 7,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.08658268346330734,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Reges_I",
+        "top3_support_fraction": 0.19767441860465115,
+        "top3_support_passages": 17,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.10477904419116177,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Iob",
+        "top3_support_fraction": 0.13333333333333333,
+        "top3_support_passages": 6,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.07878424315136973,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Josua",
+        "top3_support_fraction": 0.13043478260869565,
+        "top3_support_passages": 3,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.07258548290341932,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Genesis",
+        "top3_support_fraction": 0.125,
+        "top3_support_passages": 1,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.04279144171165767,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Judices",
+        "top3_support_fraction": 0.125,
+        "top3_support_passages": 1,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.10237952409518096,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Reges_II",
+        "top3_support_fraction": 0.125,
+        "top3_support_passages": 1,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.07138572285542892,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Daniel",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 1,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.039192161567686463,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Esra",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 1,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.03719256148770246,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Josua",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 1,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.11097780443911218,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Sacharia",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 1,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.051789642071585686,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Hosea",
+        "top3_support_fraction": 0.08571428571428572,
+        "top3_support_passages": 3,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.05398920215956809,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Nahum",
+        "top3_support_fraction": 0.08571428571428572,
+        "top3_support_passages": 3,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.08798240351929613,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Threni",
+        "top3_support_fraction": 0.044444444444444446,
+        "top3_support_passages": 2,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.0627874425114977,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "extrabiblical:Lachish",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.09358128374325135,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Daniel",
+        "top3_support_fraction": 0.03614457831325301,
+        "top3_support_passages": 3,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.09978004399120176,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Joel",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.04359128174365127,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Hosea",
+        "top3_support_fraction": 0.024096385542168676,
+        "top3_support_passages": 2,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.09578084383123375,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Threni",
+        "top3_support_fraction": 0.024096385542168676,
+        "top3_support_passages": 2,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.09998000399920016,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Canticum",
+        "top3_support_fraction": 0.012048192771084338,
+        "top3_support_passages": 1,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.06938612277544491,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Maleachi",
+        "top3_support_fraction": 0.012048192771084338,
+        "top3_support_passages": 1,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.10397920415916817,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Esther",
+        "top3_support_fraction": 0.011627906976744186,
+        "top3_support_passages": 1,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.03759248150369926,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Habakuk",
+        "top3_support_fraction": 0.011627906976744186,
+        "top3_support_passages": 1,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.10157968406318736,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Obadia",
+        "top3_support_fraction": 0.011627906976744186,
+        "top3_support_passages": 1,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.0673865226954609,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Ruth",
+        "top3_support_fraction": 0.011627906976744186,
+        "top3_support_passages": 1,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.10617876424715057,
+        "bh_adjusted_p": 0.7950409918016397
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Canticum",
+        "top3_support_fraction": 0.022222222222222223,
+        "top3_support_passages": 1,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.1235752849430114,
+        "bh_adjusted_p": 0.8060478813328245
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Zephania",
+        "top3_support_fraction": 0.022222222222222223,
+        "top3_support_passages": 1,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.1235752849430114,
+        "bh_adjusted_p": 0.8060478813328245
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "extrabiblical:Siloam",
+        "top3_support_fraction": 0.022222222222222223,
+        "top3_support_passages": 1,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.122375524895021,
+        "bh_adjusted_p": 0.8060478813328245
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Micha",
+        "top3_support_fraction": 0.012048192771084338,
+        "top3_support_passages": 1,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.1265746850629874,
+        "bh_adjusted_p": 0.8072652136239419
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Numeri",
+        "top3_support_fraction": 0.5777777777777777,
+        "top3_support_passages": 26,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.16076784643071385,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Psalmi",
+        "top3_support_fraction": 0.4819277108433735,
+        "top3_support_passages": 40,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.16856628674265148,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Deuteronomium",
+        "top3_support_fraction": 0.2222222222222222,
+        "top3_support_passages": 2,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.14097180563887224,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Leviticus",
+        "top3_support_fraction": 0.2222222222222222,
+        "top3_support_passages": 2,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.16376724655068986,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Exodus",
+        "top3_support_fraction": 0.20930232558139536,
+        "top3_support_passages": 18,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.17176564687062587,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Reges_I",
+        "top3_support_fraction": 0.17391304347826086,
+        "top3_support_passages": 4,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.15836832633473305,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Iob",
+        "top3_support_fraction": 0.14457831325301204,
+        "top3_support_passages": 12,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.13557288542291543,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Ecclesiastes",
+        "top3_support_fraction": 0.07228915662650602,
+        "top3_support_passages": 6,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.17136572685462909,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Sacharia",
+        "top3_support_fraction": 0.06666666666666667,
+        "top3_support_passages": 3,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.14817036592681462,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Sacharia",
+        "top3_support_fraction": 0.04819277108433735,
+        "top3_support_passages": 4,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.16756648670265947,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Samuel_II",
+        "top3_support_fraction": 0.04819277108433735,
+        "top3_support_passages": 4,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.16636672665466906,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Maleachi",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.15876824635072986,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "extrabiblical:Arad",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.17156568686262746,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Micha",
+        "top3_support_fraction": 0.03488372093023256,
+        "top3_support_passages": 3,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.14697060587882424,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Esra",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.14357128574285144,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Maleachi",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.16856628674265148,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "extrabiblical:Arad",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.17456508698260348,
+        "bh_adjusted_p": 0.8080674187743097
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Ezechiel",
+        "top3_support_fraction": 0.29069767441860467,
+        "top3_support_passages": 25,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.1861627674465107,
+        "bh_adjusted_p": 0.8219802193407473
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Samuel_II",
+        "top3_support_fraction": 0.08695652173913043,
+        "top3_support_passages": 2,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.18056388722255548,
+        "bh_adjusted_p": 0.8219802193407473
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Judices",
+        "top3_support_fraction": 0.08571428571428572,
+        "top3_support_passages": 3,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.18496300739852028,
+        "bh_adjusted_p": 0.8219802193407473
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Chronica_I",
+        "top3_support_fraction": 0.08571428571428572,
+        "top3_support_passages": 3,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.1893621275744851,
+        "bh_adjusted_p": 0.8234383426345033
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Numeri",
+        "top3_support_fraction": 0.5652173913043478,
+        "top3_support_passages": 13,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.20135972805438912,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Jesaia",
+        "top3_support_fraction": 0.2857142857142857,
+        "top3_support_passages": 10,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.22935412917416517,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Ezechiel",
+        "top3_support_fraction": 0.25,
+        "top3_support_passages": 2,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.22275544891021795,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Leviticus",
+        "top3_support_fraction": 0.17391304347826086,
+        "top3_support_passages": 4,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.21455708858228353,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Chronica_II",
+        "top3_support_fraction": 0.13953488372093023,
+        "top3_support_passages": 12,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.21595680863827235,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Chronica_I",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 1,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.21335732853429315,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Judices",
+        "top3_support_fraction": 0.08888888888888889,
+        "top3_support_passages": 4,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.20475904819036192,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Reges_I",
+        "top3_support_fraction": 0.08433734939759036,
+        "top3_support_passages": 7,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.22795440911817635,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Chronica_II",
+        "top3_support_fraction": 0.060240963855421686,
+        "top3_support_passages": 5,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.22495500899820037,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Daniel",
+        "top3_support_fraction": 0.011627906976744186,
+        "top3_support_passages": 1,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.22535492901419715,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Hosea",
+        "top3_support_fraction": 0.011627906976744186,
+        "top3_support_passages": 1,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.22335532893421317,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Maleachi",
+        "top3_support_fraction": 0.011627906976744186,
+        "top3_support_passages": 1,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.21495700859828035,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Threni",
+        "top3_support_fraction": 0.011627906976744186,
+        "top3_support_passages": 1,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.22755448910217957,
+        "bh_adjusted_p": 0.8332232287719671
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Ecclesiastes",
+        "top3_support_fraction": 0.06666666666666667,
+        "top3_support_passages": 3,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.24155168966206758,
+        "bh_adjusted_p": 0.8352449991929325
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Genesis",
+        "top3_support_fraction": 0.04819277108433735,
+        "top3_support_passages": 4,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.23315336932613479,
+        "bh_adjusted_p": 0.8352449991929325
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Micha",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.23635272945410918,
+        "bh_adjusted_p": 0.8352449991929325
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Reges_II",
+        "top3_support_fraction": 0.024096385542168676,
+        "top3_support_passages": 2,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.23895220955808838,
+        "bh_adjusted_p": 0.8352449991929325
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Chronica_II",
+        "top3_support_fraction": 0.11428571428571428,
+        "top3_support_passages": 4,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.24575084983003398,
+        "bh_adjusted_p": 0.8396487369192828
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Chronica_II",
+        "top3_support_fraction": 0.13043478260869565,
+        "top3_support_passages": 3,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.2495500899820036,
+        "bh_adjusted_p": 0.8425985391157061
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Exodus",
+        "top3_support_fraction": 0.024096385542168676,
+        "top3_support_passages": 2,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.252749450109978,
+        "bh_adjusted_p": 0.8434778160646941
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Numeri",
+        "top3_support_fraction": 0.5697674418604651,
+        "top3_support_passages": 49,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.2581483703259348,
+        "bh_adjusted_p": 0.8490892730544801
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Samuel_II",
+        "top3_support_fraction": 0.06666666666666667,
+        "top3_support_passages": 3,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.26034793041391724,
+        "bh_adjusted_p": 0.8490892730544801
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Deuteronomium",
+        "top3_support_fraction": 0.125,
+        "top3_support_passages": 1,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.2693461307738452,
+        "bh_adjusted_p": 0.849476258594435
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "extrabiblical:Pirqe",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 5,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.2689462107578484,
+        "bh_adjusted_p": 0.849476258594435
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Proverbia",
+        "top3_support_fraction": 0.10843373493975904,
+        "top3_support_passages": 9,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.26814637072585484,
+        "bh_adjusted_p": 0.849476258594435
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Jesaia",
+        "top3_support_fraction": 0.3493975903614458,
+        "top3_support_passages": 29,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.3095380923815237,
+        "bh_adjusted_p": 0.8958348330333934
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Ezechiel",
+        "top3_support_fraction": 0.21739130434782608,
+        "top3_support_passages": 5,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.3073385322935413,
+        "bh_adjusted_p": 0.8958348330333934
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Chronica_I",
+        "top3_support_fraction": 0.060240963855421686,
+        "top3_support_passages": 5,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.29634073185362925,
+        "bh_adjusted_p": 0.8958348330333934
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Genesis",
+        "top3_support_fraction": 0.05813953488372093,
+        "top3_support_passages": 5,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.3093381323735253,
+        "bh_adjusted_p": 0.8958348330333934
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Samuel_II",
+        "top3_support_fraction": 0.05714285714285714,
+        "top3_support_passages": 2,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.3065386922615477,
+        "bh_adjusted_p": 0.8958348330333934
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Leviticus",
+        "top3_support_fraction": 0.03614457831325301,
+        "top3_support_passages": 3,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.29354129174165167,
+        "bh_adjusted_p": 0.8958348330333934
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Samuel_I",
+        "top3_support_fraction": 0.03614457831325301,
+        "top3_support_passages": 3,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.30453909218156366,
+        "bh_adjusted_p": 0.8958348330333934
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "extrabiblical:Pirqe",
+        "top3_support_fraction": 0.03614457831325301,
+        "top3_support_passages": 3,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.3121375724855029,
+        "bh_adjusted_p": 0.8958348330333934
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Daniel",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.2891421715656869,
+        "bh_adjusted_p": 0.8958348330333934
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Josua",
+        "top3_support_fraction": 0.046511627906976744,
+        "top3_support_passages": 4,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.3163367326534693,
+        "bh_adjusted_p": 0.8988974482331256
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Psalmi",
+        "top3_support_fraction": 0.22857142857142856,
+        "top3_support_passages": 8,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.3277344531093781,
+        "bh_adjusted_p": 0.9208980633779786
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Jeremia",
+        "top3_support_fraction": 0.13253012048192772,
+        "top3_support_passages": 11,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.33773245350929815,
+        "bh_adjusted_p": 0.9208980633779786
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "extrabiblical:Pirqe",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 1,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.34073185362927416,
+        "bh_adjusted_p": 0.9208980633779786
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Judices",
+        "top3_support_fraction": 0.03614457831325301,
+        "top3_support_passages": 3,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.33093381323735255,
+        "bh_adjusted_p": 0.9208980633779786
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Sacharia",
+        "top3_support_fraction": 0.023255813953488372,
+        "top3_support_passages": 2,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.34173165366926617,
+        "bh_adjusted_p": 0.9208980633779786
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Samuel_II",
+        "top3_support_fraction": 0.023255813953488372,
+        "top3_support_passages": 2,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.34333133373325336,
+        "bh_adjusted_p": 0.9208980633779786
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Nehemia",
+        "top3_support_fraction": 0.08695652173913043,
+        "top3_support_passages": 2,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.34913017396520696,
+        "bh_adjusted_p": 0.9277811104445777
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Exodus",
+        "top3_support_fraction": 0.125,
+        "top3_support_passages": 1,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.3669266146770646,
+        "bh_adjusted_p": 0.9661278753423628
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Deuteronomium",
+        "top3_support_fraction": 0.03614457831325301,
+        "top3_support_passages": 3,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.3715256948610278,
+        "bh_adjusted_p": 0.9693443129555908
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Ezechiel",
+        "top3_support_fraction": 0.0963855421686747,
+        "top3_support_passages": 8,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.3853229354129174,
+        "bh_adjusted_p": 0.9962854275991648
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "bhsa:Numeri",
+        "top3_support_fraction": 0.46987951807228917,
+        "top3_support_passages": 39,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.5570885822835433,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Hodayot",
+        "source_book": "extrabiblical:Shirata",
+        "top3_support_fraction": 0.4457831325301205,
+        "top3_support_passages": 37,
+        "passages": 83,
+        "scrolls": 1,
+        "cluster_permutation_p": 0.46770645870825833,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Numeri",
+        "top3_support_fraction": 0.375,
+        "top3_support_passages": 3,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.7904419116176765,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Numeri",
+        "top3_support_fraction": 0.34285714285714286,
+        "top3_support_passages": 12,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.9266146770645871,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Numeri",
+        "top3_support_fraction": 0.3333333333333333,
+        "top3_support_passages": 3,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.8518296340731853,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "extrabiblical:Shirata",
+        "top3_support_fraction": 0.30434782608695654,
+        "top3_support_passages": 7,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.5242951409718056,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "extrabiblical:Shirata",
+        "top3_support_fraction": 0.27906976744186046,
+        "top3_support_passages": 24,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.5470905818836233,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "extrabiblical:Shirata",
+        "top3_support_fraction": 0.25,
+        "top3_support_passages": 2,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.7844431113777245,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Jesaia",
+        "top3_support_fraction": 0.2,
+        "top3_support_passages": 9,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.5198960207958409,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "extrabiblical:Shirata",
+        "top3_support_fraction": 0.2,
+        "top3_support_passages": 7,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.9576084783043392,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Psalmi",
+        "top3_support_fraction": 0.17777777777777778,
+        "top3_support_passages": 8,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.42131573685262946,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Jesaia",
+        "top3_support_fraction": 0.17391304347826086,
+        "top3_support_passages": 4,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.6050789842031594,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Ezechiel",
+        "top3_support_fraction": 0.14285714285714285,
+        "top3_support_passages": 5,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.5198960207958409,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Jeremia",
+        "top3_support_fraction": 0.13333333333333333,
+        "top3_support_passages": 6,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.47470505898820237,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Jesaia",
+        "top3_support_fraction": 0.125,
+        "top3_support_passages": 1,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.7746450709858028,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Book_of_Jubilees",
+        "source_book": "bhsa:Psalmi",
+        "top3_support_fraction": 0.125,
+        "top3_support_passages": 1,
+        "passages": 8,
+        "scrolls": 5,
+        "cluster_permutation_p": 0.5128974205158968,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Jeremia",
+        "top3_support_fraction": 0.11627906976744186,
+        "top3_support_passages": 10,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.5660867826434713,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Ezechiel",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 1,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.5834833033393322,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Jesaia",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 1,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.789242151569686,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "4QMMT",
+        "source_book": "bhsa:Psalmi",
+        "top3_support_fraction": 0.1111111111111111,
+        "top3_support_passages": 1,
+        "passages": 9,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.5292941411717657,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Jeremia",
+        "top3_support_fraction": 0.08695652173913043,
+        "top3_support_passages": 2,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.7974405118976204,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "extrabiblical:Pirqe",
+        "top3_support_fraction": 0.08695652173913043,
+        "top3_support_passages": 2,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.3987202559488102,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Proverbia",
+        "top3_support_fraction": 0.08571428571428572,
+        "top3_support_passages": 3,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.5852829434113177,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Reges_I",
+        "top3_support_fraction": 0.08571428571428572,
+        "top3_support_passages": 3,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.46770645870825833,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Samuel_I",
+        "top3_support_fraction": 0.06976744186046512,
+        "top3_support_passages": 6,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.40591881623675263,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Deuteronomium",
+        "top3_support_fraction": 0.06666666666666667,
+        "top3_support_passages": 3,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.5612877424515097,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Leviticus",
+        "top3_support_fraction": 0.06666666666666667,
+        "top3_support_passages": 3,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.5480903819236153,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Chronica_I",
+        "top3_support_fraction": 0.05813953488372093,
+        "top3_support_passages": 5,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.5020995800839833,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Nehemia",
+        "top3_support_fraction": 0.05813953488372093,
+        "top3_support_passages": 5,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.5060987802439512,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Deuteronomium",
+        "top3_support_fraction": 0.05714285714285714,
+        "top3_support_passages": 2,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.6732653469306139,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Ezechiel",
+        "top3_support_fraction": 0.044444444444444446,
+        "top3_support_passages": 2,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.9438112377524495,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Genesis",
+        "top3_support_fraction": 0.044444444444444446,
+        "top3_support_passages": 2,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.5562887422515497,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Nehemia",
+        "top3_support_fraction": 0.044444444444444446,
+        "top3_support_passages": 2,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.6402719456108779,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Samuel_I",
+        "top3_support_fraction": 0.044444444444444446,
+        "top3_support_passages": 2,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.7128574285142971,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Chronica_I",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.7474505098980204,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Deuteronomium",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.7370525894821036,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Genesis",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.5704859028194361,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Judices",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.6464707058588283,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Psalmi",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.7528494301139772,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Reges_II",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.42231553689262147,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "rewritten pentateuch",
+        "source_book": "bhsa:Samuel_I",
+        "top3_support_fraction": 0.043478260869565216,
+        "top3_support_passages": 1,
+        "passages": 23,
+        "scrolls": 4,
+        "cluster_permutation_p": 0.6562687462507498,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Jesaia",
+        "top3_support_fraction": 0.03488372093023256,
+        "top3_support_passages": 3,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.8446310737852429,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Judices",
+        "top3_support_fraction": 0.03488372093023256,
+        "top3_support_passages": 3,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.5876824635072986,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Exodus",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.8454309138172366,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Genesis",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.8358328334333134,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Iob",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.7022595480903819,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Josua",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.590881823635273,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Nehemia",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.7836432713457309,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Reges_II",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.6654669066186762,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "bhsa:Sacharia",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.7216556688662268,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Pesharim",
+        "source_book": "extrabiblical:Pirqe",
+        "top3_support_fraction": 0.02857142857142857,
+        "top3_support_passages": 1,
+        "passages": 35,
+        "scrolls": 8,
+        "cluster_permutation_p": 0.7608478304339132,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Reges_II",
+        "top3_support_fraction": 0.023255813953488372,
+        "top3_support_passages": 2,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.4263147370525895,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Chronica_I",
+        "top3_support_fraction": 0.022222222222222223,
+        "top3_support_passages": 1,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.9270145970805839,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Chronica_II",
+        "top3_support_fraction": 0.022222222222222223,
+        "top3_support_passages": 1,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.8202359528094381,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Exodus",
+        "top3_support_fraction": 0.022222222222222223,
+        "top3_support_passages": 1,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.8328334333133374,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Micha",
+        "top3_support_fraction": 0.022222222222222223,
+        "top3_support_passages": 1,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.4259148170365927,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Reges_I",
+        "top3_support_fraction": 0.022222222222222223,
+        "top3_support_passages": 1,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.9090181963607279,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Instruction",
+        "source_book": "bhsa:Reges_II",
+        "top3_support_fraction": 0.022222222222222223,
+        "top3_support_passages": 1,
+        "passages": 45,
+        "scrolls": 6,
+        "cluster_permutation_p": 0.7696460707858428,
+        "bh_adjusted_p": 1.0
+      },
+      {
+        "composition": "Temple Scroll",
+        "source_book": "bhsa:Psalmi",
+        "top3_support_fraction": 0.011627906976744186,
+        "top3_support_passages": 1,
+        "passages": 86,
+        "scrolls": 2,
+        "cluster_permutation_p": 0.5982803439312138,
+        "bh_adjusted_p": 1.0
+      }
+    ]
+  },
+  "protocol": {
+    "targets": [
+      "4QMMT",
+      "Book_of_Jubilees",
+      "Hodayot",
+      "Instruction",
+      "Pesharim",
+      "Temple Scroll",
+      "rewritten pentateuch"
+    ],
+    "query_source_sha256": "5d20a3af552a97e1995dad2bbfb2daadaab99dc4bc429ef8961d2f77d242997a",
+    "label_metadata_sha256": "2f97f536c92c1525b827ab9adf0a7df8acd116076b4da94b290776ba60c33a97",
+    "bhsa": {
+      "path": "/Users/shmulc/text-fabric-data/github/ETCBC/bhsa/tf/2021",
+      "git_revision": null,
+      "selected_features_sha256": "b8c0b51165e26325dcef761f44e4df640aa8f8823e6dba30bdaca77630799518"
+    },
+    "extrabiblical": {
+      "path": "/Users/shmulc/text-fabric-data/github/ETCBC/extrabiblical/tf/0.2",
+      "git_revision": "500dd401d619cca8d989e79d3e45654facb4bcd5",
+      "selected_features_sha256": "6c0f37c950b7bc817eb0722ef609ea93e7c87487c4f2e82b16ad0d2abadc39bd"
+    },
+    "chunk_words": 100,
+    "overlap_words": 15,
+    "ranking_weights": {
+      "lexical": 0.8,
+      "orthographic": 0.2,
+      "style": 0.0
+    },
+    "top_k": 5,
+    "permutation_seed": 17
+  }
+}

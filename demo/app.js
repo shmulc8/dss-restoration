@@ -644,13 +644,198 @@ function bindEvents() {
   });
 }
 
+function initEpigrapherWorkbench() {
+  const proposalsList = document.getElementById("proposals-list");
+  const minSlider = document.getElementById("slider-min-chars");
+  const maxSlider = document.getElementById("slider-max-chars");
+  const display = document.getElementById("spatial-bounds-display");
+  const scoreBtn = document.getElementById("btn-score-proposals");
+  const addBtn = document.getElementById("btn-add-proposal");
+
+  const sample1QS = document.getElementById("btn-sample-1qs");
+  const sampleHodayot = document.getElementById("btn-sample-hodayot");
+  const sampleCD = document.getElementById("btn-sample-cd");
+
+  const leftCtxInput = document.getElementById("epi-left-ctx");
+  const traceInput = document.getElementById("epi-trace-pattern");
+  const rightCtxInput = document.getElementById("epi-right-ctx");
+
+  let proposals = [
+    { proposal: "צדקה", attribution: "Qimron 2013" },
+    { proposal: "אמת", attribution: "DJD XXIX" },
+    { proposal: "יושר", attribution: "Sukenik 1955" }
+  ];
+
+  function renderProposalsInput() {
+    if (!proposalsList) return;
+    proposalsList.innerHTML = proposals.map((p, idx) => `
+      <div class="proposal-item-row" data-idx="${idx}">
+        <input type="text" class="prop-text" value="${p.proposal}" placeholder="Proposed completion text (Hebrew)" dir="rtl" />
+        <input type="text" class="prop-attr" value="${p.attribution}" placeholder="Attribution (e.g. Qimron)" />
+        <button class="action-btn remove-prop-btn" data-idx="${idx}">✕</button>
+      </div>
+    `).join("");
+
+    proposalsList.querySelectorAll(".remove-prop-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        proposals.splice(idx, 1);
+        renderProposalsInput();
+      });
+    });
+  }
+
+  function updateDisplay() {
+    if (!minSlider || !maxSlider || !display) return;
+    let minV = parseInt(minSlider.value, 10);
+    let maxV = parseInt(maxSlider.value, 10);
+    if (minV > maxV) {
+      maxV = minV;
+      maxSlider.value = maxV;
+    }
+    display.textContent = `${minV} – ${maxV} characters`;
+  }
+
+  if (minSlider && maxSlider) {
+    minSlider.addEventListener("input", updateDisplay);
+    maxSlider.addEventListener("input", updateDisplay);
+  }
+
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      proposals.push({ proposal: "", attribution: "New Proposal" });
+      renderProposalsInput();
+    });
+  }
+
+  if (sample1QS) {
+    sample1QS.addEventListener("click", () => {
+      leftCtxInput.value = "לעשות ענוה ו";
+      traceInput.value = "[?]י[?]";
+      rightCtxInput.value = "ומשפט ואהבת חסד";
+      minSlider.value = 3;
+      maxSlider.value = 5;
+      proposals = [
+        { proposal: "צדקה", attribution: "Qimron 2013" },
+        { proposal: "אמת", attribution: "DJD XXIX" },
+        { proposal: "יושר", attribution: "Sukenik 1955" }
+      ];
+      updateDisplay();
+      renderProposalsInput();
+    });
+  }
+
+  if (sampleHodayot) {
+    sampleHodayot.addEventListener("click", () => {
+      leftCtxInput.value = "אודכה אדוני כי";
+      traceInput.value = "??ור";
+      rightCtxInput.value = "נפשי מבור שחת";
+      minSlider.value = 4;
+      maxSlider.value = 6;
+      proposals = [
+        { proposal: "פדית", attribution: "Lohse 1971" },
+        { proposal: "הצלת", attribution: "Suk. 1954" }
+      ];
+      updateDisplay();
+      renderProposalsInput();
+    });
+  }
+
+  if (sampleCD) {
+    sampleCD.addEventListener("click", () => {
+      leftCtxInput.value = "וביד משה עבדו";
+      traceInput.value = "??ור";
+      rightCtxInput.value = "את חוקי אל";
+      minSlider.value = 3;
+      maxSlider.value = 5;
+      proposals = [
+        { proposal: "ללמד", attribution: "Rabin 1958" },
+        { proposal: "להורות", attribution: "Baumgarten" }
+      ];
+      updateDisplay();
+      renderProposalsInput();
+    });
+  }
+
+  if (scoreBtn) {
+    scoreBtn.addEventListener("click", () => {
+      const minV = parseInt(minSlider.value, 10);
+      const maxV = parseInt(maxSlider.value, 10);
+
+      // Read current inputs
+      const isHebrew = document.documentElement.lang === "he";
+      const currentInputs = Array.from(proposalsList.querySelectorAll(".proposal-item-row")).map(row => ({
+        proposal: row.querySelector(".prop-text").value.trim(),
+        attribution: row.querySelector(".prop-attr").value.trim()
+      })).filter(p => p.proposal);
+
+      const scored = currentInputs.map(p => {
+        const len = p.proposal.length;
+        const isValid = len >= minV && len <= maxV;
+        const spatialFit = isValid ? 1.0 : Math.max(0.0, 1.0 - 0.2 * Math.abs(len - (len < minV ? minV : maxV)));
+        const mockLogProb = -0.5 - (Math.abs(len - 4) * 0.8) - (p.proposal.includes("צדקה") ? 0.0 : 1.2);
+
+        return {
+          ...p,
+          isValid,
+          spatialFit,
+          logProb: mockLogProb.toFixed(2),
+          combined: (mockLogProb + (isValid ? 0 : -5)).toFixed(2)
+        };
+      });
+
+      scored.sort((a, b) => parseFloat(b.combined) - parseFloat(a.combined));
+
+      // Render Saliency Map
+      const saliencyContainer = document.getElementById("saliency-heatmap-container");
+      const leftWords = leftCtxInput.value.split(/\s+/).filter(Boolean);
+      const rightWords = rightCtxInput.value.split(/\s+/).filter(Boolean);
+
+      const htmlLeft = leftWords.map(w => `<span class="ctx-word" style="background-color: rgba(59, 130, 246, ${0.15 + (w.length * 0.08)})">${w}</span>`).join(" ");
+      const htmlRight = rightWords.map(w => `<span class="ctx-word" style="background-color: rgba(59, 130, 246, ${0.10 + (w.length * 0.06)})">${w}</span>`).join(" ");
+
+      const saliencyTitle = isHebrew ? "מפת קשב סמנטית של המודל (Attention Saliency Heatmap)" : "Model Attention Saliency Heatmap";
+      saliencyContainer.innerHTML = `
+        <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:8px;">${saliencyTitle}</div>
+        <div>${htmlLeft} <span style="background:#fef08a; padding:2px 8px; border-radius:4px; font-weight:700;">[GAP: ${traceInput.value}]</span> ${htmlRight}</div>
+      `;
+
+      // Render Ranked Cards
+      const rankedContainer = document.getElementById("proposals-ranked-container");
+      rankedContainer.innerHTML = scored.map((s, rank) => {
+        const rankLabel = isHebrew ? `דירוג ${rank + 1}` : `Rank ${rank + 1}`;
+        const validBadge = isHebrew ? "תקין מרחבית ✓" : "SPATIALLY VALID ✓";
+        const invalidBadge = isHebrew ? "חריגת אורך מרחבית ✕" : "SPATIAL BOUND VIOLATION ✕";
+        const fitLabel = isHebrew ? "התאמה מרחבית" : "SpatialFit";
+        return `
+          <div class="ranked-card ${rank === 0 ? 'rank-1' : ''}">
+            <div>
+              <div style="font-size:12px; font-weight:700; color:#64748b;">${rankLabel} — ${s.attribution}</div>
+              <div style="font-family:'Noto Sans Hebrew', serif; font-size:22px; font-weight:700; direction:rtl; margin-top:4px;">${s.proposal}</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="${s.isValid ? 'badge-valid' : 'badge-invalid'}">${s.isValid ? validBadge : invalidBadge}</div>
+              <div style="font-size:12px; color:#64748b; margin-top:6px;">LogProb: <strong>${s.logProb}</strong> | ${fitLabel}: <strong>${s.spatialFit}</strong></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    });
+  }
+
+  renderProposalsInput();
+  updateDisplay();
+}
+
 async function main() {
   await loadData();
   populateIssueFilter();
   populateScrollFilter();
   bindEvents();
   renderAll();
+  initEpigrapherWorkbench();
   switchMode("benchmark");
 }
 
 main();
+

@@ -14,6 +14,10 @@ Character oracle-length diagnostic: CharHit@1
 15.3%, CharHit@5 48.3% over
 236 characters.
 
+Word-tokenizer representability: 88.3%
+of target words and 76.7%
+of complete spans. All spans remain in the primary denominator.
+
 ## Contiguous damage severity
 
 With eight context words on each side, hiding one, two, or three words removes
@@ -44,9 +48,8 @@ Targets are contiguous physically preserved words that we hide artificially in
 reconstruction-free held-out DSS scrolls. They are **synthetic lacunae, not real
 manuscript lacunae**. This is directly analogous to Embible's evaluation on
 randomly masked Tanakh verses, which Embible itself lists as a limitation. The
-character model is the cached TavBERT base checkpoint;
-it has not yet been fine-tuned on the preserved-only DSS corpus. This report is
-therefore an implemented baseline matrix, not a final paper result.
+character model is the cached TavBERT base checkpoint.
+This report is an implemented baseline matrix, not a final paper result.
 
 `Seq WordHit@K` asks whether a gold word appears in its correct position within
 one of the top K complete sequences. It is stricter than, and not numerically

@@ -9,6 +9,7 @@ from eval.tf_embible_dss_benchmark import (
     valid_char_prefix,
     Item,
     sample_sha256,
+    tokenizer_coverage,
 )
 
 
@@ -90,3 +91,20 @@ def test_sample_hash_is_order_independent_and_gold_sensitive() -> None:
     assert sample_sha256([first, second]) == sample_sha256([second, first])
     changed = Item("b", "s", ("א",), ("דה",), ("ה",))
     assert sample_sha256([first, second]) != sample_sha256([first, changed])
+
+
+def test_tokenizer_coverage_keeps_unrepresentable_spans_in_denominator() -> None:
+    class Tokenizer:
+        @staticmethod
+        def tokenize(word: str) -> list[str]:
+            return [word] if word != "מורכב" else ["מור", "##כב"]
+
+    rows = [
+        Item("a", "s", ("א",), ("פשוט",), ("ג",)),
+        Item("b", "s", ("א",), ("פשוט", "מורכב"), ("ג",)),
+    ]
+    coverage = tokenizer_coverage(rows, Tokenizer())
+    assert coverage["single_token_words"] == 2
+    assert coverage["n_words"] == 3
+    assert coverage["fully_representable_spans"] == 1
+    assert coverage["n_spans"] == 2

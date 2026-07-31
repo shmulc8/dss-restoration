@@ -1,0 +1,51 @@
+{
+  "status": "model-selection pilot, not a frozen paper result",
+  "date": "2026-07-23",
+  "sample": {
+    "development_spans": 60,
+    "heldout_spans": 300,
+    "per_hidden_word_count": 100,
+    "nested_with_prior_30_span_sample": true,
+    "development_sha256": "c2b9a99a604702a20a9a64f0e5f5f01f70e997918a4547dd13e36b25094b4d7f",
+    "heldout_sha256": "d3a8701df04ae725655c6a1d423cf84b2fb82a6d55bbf76ac78eda152be18ec5"
+  },
+  "model_sha256": {
+    "preserved_only_word": "013ca67a3808034c70510da61d7e3a458196cd9ee8245a9d9072b91e4bd4bfc6",
+    "preserved_only_tavbert": "018e908859e92251c4694b96e11cffacb1bd4d2e9371002aa92b3a96515eab74"
+  },
+  "dev_fit": {
+    "word_length_penalty": -1.0,
+    "character_length_penalty": 0.0,
+    "rank_fusion_word_weight": 0.6
+  },
+  "exact_top10": {
+    "preserved_only_word": 15.0,
+    "preserved_only_tavbert": 6.0,
+    "embible_paper_overlap_adaptation": 4.7,
+    "dev_fitted_rank_fusion": 15.0,
+    "oracle_word_length_filter": 20.7
+  },
+  "word_model_top10_by_span_words": {
+    "1": 40.0,
+    "2": 5.0,
+    "3": 0.0
+  },
+  "word_tokenizer_coverage": {
+    "single_token_words": 554,
+    "target_words": 600,
+    "single_token_word_rate": 0.9233333333333333,
+    "fully_representable_spans": 259,
+    "target_spans": 300,
+    "fully_representable_span_rate": 0.8633333333333333,
+    "fully_representable_span_rate_by_words": {
+      "1": 0.95,
+      "2": 0.87,
+      "3": 0.77
+    }
+  },
+  "selection": {
+    "best_implemented_baseline": "preserved_only_word",
+    "rule": "exact Top-10, then simpler system on primary-metric tie",
+    "note": "rank fusion tied primary Top-10 and is not promoted"
+  }
+}

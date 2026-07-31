@@ -27,6 +27,12 @@ class Experiment:
 
 EXPERIMENTS = (
     Experiment(
+        "paper-protocol",
+        "Validate the locked paper evaluation and promotion contract",
+        ("eval/validate_paper_protocol.py",),
+        "checks",
+    ),
+    Experiment(
         "corpus",
         "Validate the reconstruction-free derived corpus",
         ("data/validate_preserved_nonbib_corpus.py",),

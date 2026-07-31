@@ -1,0 +1,127 @@
+{
+  "schema_version": "dss-paper-protocol-v1",
+  "status": "locked_before_final_training",
+  "claim_status": "evaluation_stronger_than_embible_model_not_yet_superior",
+  "research_tracks": {
+    "A": {
+      "name": "synthetic_preserved_recovery",
+      "reference_status": "observable_preserved_transcription",
+      "primary": true
+    },
+    "B": {
+      "name": "real_lacuna_literature_agreement",
+      "reference_status": "multiple_attributed_scholarly_proposals_not_ground_truth",
+      "primary": false
+    },
+    "C": {
+      "name": "blinded_scholar_assistance",
+      "reference_status": "human_outcomes",
+      "primary": false
+    },
+    "D": {
+      "name": "fixed_decoder_bible_transfer",
+      "reference_status": "observable_preserved_transcription",
+      "primary": false
+    }
+  },
+  "splits": {
+    "primary": "scroll_disjoint",
+    "hard": "composition_disjoint",
+    "near_duplicate_grouping_required": true,
+    "retrieval_index": "training_scrolls_only",
+    "test_used_for_selection": false
+  },
+  "primary_condition": {
+    "track": "A",
+    "length": "unknown",
+    "word_count": "unknown",
+    "word_boundaries": "unknown",
+    "visible_fragments": "physically_observable_only",
+    "failed_decode": "count_as_miss"
+  },
+  "primary_metric": "exact_complete_span_top10",
+  "secondary_metrics": [
+    "exact_complete_span_top1",
+    "exact_complete_span_top5",
+    "exact_complete_span_top20",
+    "mean_reciprocal_rank",
+    "top1_character_error_rate",
+    "boundary_f1",
+    "word_count_mae",
+    "decoder_failure_rate",
+    "calibration_error",
+    "selective_accuracy_by_coverage",
+    "latency"
+  ],
+  "mandatory_diagnostics": [
+    "tokenizer_word_coverage",
+    "tokenizer_complete_span_coverage",
+    "oracle_exact_length",
+    "oracle_word_boundaries",
+    "slot_wordhit_not_used_as_primary"
+  ],
+  "damage_strata_words": ["1", "2", "3", "4-5", "6+"],
+  "training": {
+    "labels": "physically_preserved_text_only",
+    "natural_reconstructions_as_labels": false,
+    "seeds": [41, 42, 43],
+    "early_stopping": "development_only",
+    "model_selection": [
+      "development_exact_complete_span_top10",
+      "simpler_system_on_primary_metric_tie"
+    ],
+    "final_architecture_requirement": "tokenization_free_character_byte_or_subword_sequence_span_model"
+  },
+  "required_systems": [
+    "frequency_or_ngram",
+    "pretrained_word_mlm",
+    "preserved_only_word_span_model",
+    "tokenization_free_unknown_length_span_model",
+    "character_only",
+    "embible_paper_overlap_adaptation",
+    "dev_fitted_rank_fusion",
+    "best_model_plus_train_only_retrieval"
+  ],
+  "rag": {
+    "paired_same_targets": true,
+    "answer_string_removal_stress_test": true,
+    "report_retrieval_recall_mrr_ndcg": true,
+    "report_downstream_delta_with_ci": true,
+    "promotion_requires_positive_dev_selected_test_delta": true
+  },
+  "statistics": {
+    "unit": "manuscript_location",
+    "confidence_interval": 0.95,
+    "bootstrap_cluster": ["scroll", "composition_for_hard_split"],
+    "paired_system_comparisons": true,
+    "multiple_comparison_correction": true
+  },
+  "promotion_gate": {
+    "paper_result_requires": [
+      "frozen_hashed_test_manifest",
+      "empty_split_intersections",
+      "near_duplicate_audit_passed",
+      "development_only_selection",
+      "three_seed_results",
+      "clustered_confidence_intervals",
+      "exact_multiword_sequence_scoring",
+      "unknown_length_primary_condition",
+      "target_level_audit_table",
+      "code_data_model_result_hashes"
+    ],
+    "stronger_than_embible_model_claim_requires": [
+      "shared_bible_protocol_outperforms_embible_style_baseline_with_paired_95pct_ci",
+      "dss_primary_outperforms_preserved_only_word_baseline_with_paired_95pct_ci",
+      "multiword_exact_span_gain_is_positive",
+      "no_oracle_length_or_boundary_information"
+    ]
+  },
+  "current_system_decision": {
+    "best_implemented_baseline": "preserved_only_word_span_model_unknown_length_decoder",
+    "reason": "ties_rank_fusion_on_expanded_exact_top10_and_is_simpler",
+    "character_model": "ablation_not_promoted",
+    "rank_fusion": "ablation_not_promoted",
+    "rag": "evidence_display_and_ablation_not_scoring_component",
+    "final_model": "not_yet_selected"
+  }
+}

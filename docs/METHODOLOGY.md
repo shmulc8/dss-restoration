@@ -93,6 +93,9 @@ rankings helps with partial words and whitespace uncertainty.
 - Select by the predeclared primary development metric, not by test Top-K.
 - Report all seeds, mean and dispersion; do not report only the best run.
 - Freeze the final checkpoint and decoder before scoring the test set.
+- Select by development exact complete-span Top-10; if systems tie on that
+  primary metric, prefer the simpler system. Top-1 remains a secondary outcome,
+  not an after-the-fact selection criterion.
 
 ### 3.4 Embible-derived character/word experiment
 
@@ -244,6 +247,12 @@ agreement and use paired tests.
 
 **Exact complete-span Top-10 under unknown length** on Track A. A hit requires
 the full sequence in the correct order. Failed decoding counts as a miss.
+
+Report tokenizer representability for every token-based decoder: the fraction
+of target words that map to one decoder unit and the fraction of complete spans
+the decoder can express. These diagnostics never remove cases from the primary
+denominator. The final architecture must not assume one tokenizer token per
+missing word.
 
 ### Secondary
 

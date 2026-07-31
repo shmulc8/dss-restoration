@@ -11,6 +11,7 @@ ft_msbert_span/
 ft_berel/
 ft_berel_span/
 ft_msbert_span_*/
+ft_tavbert_span_*/
 *.log
 
 # Local source data
@@ -20,3 +21,7 @@ dss_chunks.csv
 node_modules/
 demo/node_modules/
 
+# Large local artifacts (unification work)
+ft_byt5_span_*/
+analysis/cache/
+scratch/

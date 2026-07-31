@@ -749,6 +749,50 @@ def sample_sha256(items: list[Item]) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def tokenizer_coverage(items: list[Item], tokenizer: Any) -> dict[str, Any]:
+    """Report whether the one-mask-per-word decoder can represent each target."""
+    by_word_count: dict[str, dict[str, int | float]] = {}
+    total_words = 0
+    represented_words = 0
+    represented_spans = 0
+    for word_count in sorted({len(item.gold) for item in items}):
+        subset = [item for item in items if len(item.gold) == word_count]
+        local_words = sum(len(item.gold) for item in subset)
+        local_represented_words = sum(
+            len(tokenizer.tokenize(word)) == 1
+            for item in subset
+            for word in item.gold
+        )
+        local_represented_spans = sum(
+            all(len(tokenizer.tokenize(word)) == 1 for word in item.gold)
+            for item in subset
+        )
+        total_words += local_words
+        represented_words += local_represented_words
+        represented_spans += local_represented_spans
+        by_word_count[str(word_count)] = {
+            "n_spans": len(subset),
+            "n_words": local_words,
+            "single_token_words": local_represented_words,
+            "single_token_word_rate": local_represented_words / local_words,
+            "fully_representable_spans": local_represented_spans,
+            "fully_representable_span_rate": local_represented_spans / len(subset),
+        }
+    return {
+        "definition": (
+            "A span is fully representable only when every gold word maps to "
+            "exactly one word-model token; primary scores still include all spans."
+        ),
+        "n_spans": len(items),
+        "n_words": total_words,
+        "single_token_words": represented_words,
+        "single_token_word_rate": represented_words / total_words,
+        "fully_representable_spans": represented_spans,
+        "fully_representable_span_rate": represented_spans / len(items),
+        "by_word_count": by_word_count,
+    }
+
+
 def file_sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -816,6 +860,10 @@ Character oracle-length diagnostic: CharHit@1
 {oracle['char_hit1']:.1f}%, CharHit@5 {oracle['char_hit5']:.1f}% over
 {oracle['n_characters']} characters.
 
+Word-tokenizer representability: {100 * report["protocol"]["tokenizer_coverage"]["single_token_word_rate"]:.1f}%
+of target words and {100 * report["protocol"]["tokenizer_coverage"]["fully_representable_span_rate"]:.1f}%
+of complete spans. All spans remain in the primary denominator.
+
 ## Contiguous damage severity
 
 With eight context words on each side, hiding one, two, or three words removes
@@ -844,9 +892,8 @@ Targets are contiguous physically preserved words that we hide artificially in
 reconstruction-free held-out DSS scrolls. They are **synthetic lacunae, not real
 manuscript lacunae**. This is directly analogous to Embible's evaluation on
 randomly masked Tanakh verses, which Embible itself lists as a limitation. The
-character model is the cached TavBERT base checkpoint;
-it has not yet been fine-tuned on the preserved-only DSS corpus. This report is
-therefore an implemented baseline matrix, not a final paper result.
+character model is {("preserved-only DSS fine-tuned TavBERT" if report["protocol"]["char_model_dss_finetuned"] else "the cached TavBERT base checkpoint")}.
+This report is an implemented baseline matrix, not a final paper result.
 
 `Seq WordHit@K` asks whether a gold word appears in its correct position within
 one of the top K complete sequences. It is stricter than, and not numerically
@@ -905,6 +952,8 @@ def main() -> None:
         args.char_model,
         local_files_only=args.local_files_only,
     ).to(device).eval()
+    char_source = Path(args.char_model).resolve()
+    char_metadata = char_source / "preserved_char_training_metadata.json"
 
     print(f"device={device}; dev={len(dev_items)}; heldout={len(test_items)}")
     print("Generating development candidates...")
@@ -966,7 +1015,12 @@ def main() -> None:
             ),
             "char_model": args.char_model,
             "char_model_revision": cached_huggingface_revision(args.char_model),
-            "char_model_dss_finetuned": False,
+            "char_model_dss_finetuned": char_metadata.is_file(),
+            "char_model_sha256": (
+                file_sha256(char_source / "model.safetensors")
+                if (char_source / "model.safetensors").is_file()
+                else None
+            ),
             "primary_information": (
                 "unknown character length, word count, and word boundaries"
             ),
@@ -987,6 +1041,7 @@ def main() -> None:
             "heldout_sample_sha256": sample_sha256(test_items),
             "eligible_dev_by_words": dev_eligible,
             "eligible_heldout_by_words": test_eligible,
+            "tokenizer_coverage": tokenizer_coverage(test_items, word_tokenizer),
             "dev_fit": {
                 "word_length_penalty": word_penalty,
                 "char_length_penalty": char_penalty,

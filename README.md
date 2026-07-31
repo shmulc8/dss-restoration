@@ -9,6 +9,7 @@ index.
 - [Live research site](https://dss-restoration-demo.pages.dev/)
 - [Hebrew research deck](https://dss-restoration-demo.pages.dev/slides_he.html)
 - [Locked paper methodology](docs/METHODOLOGY.md)
+- [Final method and system decision](docs/BEST_METHOD.md)
 - [Current evidence register](docs/RESULTS.md)
 
 ## Research claim
@@ -39,6 +40,7 @@ interchangeable and must not be collapsed into one accuracy headline.
 | RAG ablation on those targets | Same 74 targets | 63.5% to 63.5% Top-10 | No measured improvement |
 | Multiword RAG pilot | 100 held-out Text-Fabric spans | 7.0% to 9.0% exact-sequence Top-10 | Descriptive pilot; word-slot count is supplied and uncertainty is too large for a paper claim |
 | Embible-style synthetic-damage baseline | 30 artificially hidden spans from held-out DSS scrolls | UWC 16.7%, character 6.7%, Embible overlap ensemble 6.7%, rank ensemble 10.0% exact Top-10 | Known-answer pilot, not real-lacuna evaluation; neither ensemble improves UWC and all 2–3 word exact scores are 0% |
+| Expanded system-selection diagnostic | 300 artificially hidden held-out DSS spans | word-only 15.0%, preserved-only TavBERT 6.0%, Embible overlap 4.7%, rank fusion 15.0% exact Top-10 | Word-only retained by the primary-metric simplicity tie-break; expanded nested pilot, not a frozen paper test |
 | Bible domain-transfer diagnostic | 120 spans from Embible's held-out Biblical verses | UWC exact Top-10: 80.0%, 42.5%, 27.5% for 1/2/3 words | Same DSS-trained model and decoder; the large DSS-to-Bible gap identifies domain generalization as a major bottleneck |
 
 The physical-constraint ablation on the 74 Qumran Digital targets scores 9.5%
@@ -85,6 +87,12 @@ Like Embible, this comparison creates synthetic damage in intact text so the
 answer is known. Real manuscript lacunae are a separate literature-agreement
 and scholar-evaluation track, not an automatic accuracy test.
 
+The expanded diagnostic also shows that the word decoder can express only
+86.3% of complete targets because it assumes one tokenizer token per missing
+word. The final paper model must therefore be tokenization-free at the word
+level—character, byte, or unrestricted subword sequence generation—while the
+word system remains the strongest implemented baseline.
+
 ## Current evaluation entry points
 
 ```bash
@@ -93,6 +101,9 @@ and scholar-evaluation track, not an automatic accuracy test.
 
 # Run validation only
 .venv/bin/python eval/run_all_experiments.py --checks
+
+# Validate the machine-readable promotion and evaluation contract directly
+.venv/bin/python eval/validate_paper_protocol.py
 
 # Run the retained pilot evaluations
 .venv/bin/python eval/run_all_experiments.py --pilots

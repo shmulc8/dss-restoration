@@ -125,6 +125,8 @@ Aligned-only scoring (Itay's current metric):
 | MsBERT fine-tuned | O-len | 9.8% | 21.6% | [16.8, 26.6] | 0.242 | 0.134 | 279 / 729 |
 | ByT5 preserved (adapter) | U0 | 0.5% | 3.3% | [2.1, 4.7] | 0.123 | 0.013 | 0 / 729 |
 | ByT5 preserved (adapter) | O-len (±2) | 0.5% | 4.0% | [2.6, 5.5] | 0.127 | 0.015 | 0 / 729 |
+| **ByT5 unified-trained** (Itay's data + task, T4, best epoch 5/7) | U0 | 0.8% | 5.4% | [3.7, 7.3] | 0.127 | 0.018 | 0 / 729 |
+| **ByT5 unified-trained** | O-len (±2, 30 beams) | 0.4% | 5.4% | [3.8, 6.9] | 0.137 | 0.016 | 0 / 729 |
 
 Headline scoring per §8 (unaligned = miss), hit@10: TavBERT base **21.1%**, TavBERT FT 20.6%, MsBERT base 10.3%, MsBERT FT 13.3%, ByT5 3.3%.
 
@@ -133,7 +135,7 @@ Headline scoring per §8 (unaligned = miss), hit@10: TavBERT base **21.1%**, Tav
 What this sample establishes:
 
 1. **The scoring rule decides the winner (§8 is not cosmetic).** Aligned-only crowns MsBERT-FT (21.6%); counting its 38% unaligned words as misses crowns TavBERT (21.1% vs 13.3%).
-2. **ByT5 must be re-trained on the unified data before any seq2seq conclusion.** Giving ByT5 the MLMs' length information (O-len ±2) lifts it only 3.3% → 4.0%, so the length diet is not the main gap. The checkpoint transfers poorly because the protocol is far from its training distribution: it was trained for one epoch, on strict-preserved chunks, to fill *contiguous* spans — here it faces scattered multi-gap sentences on differently curated text. Its 3–4% measures distribution shift, not the architecture's ceiling; a unified-data ByT5 fine-tune belongs in the GPU pass before the model-family comparison is called.
+2. **The seq2seq question is now answered — ByT5-small is not competitive on this benchmark.** We eliminated both confounds in turn. Distribution shift: a fresh `google/byt5-small` was fine-tuned on Itay's exact train split with the exact eval task format (per-sentence-seeded scatter masking, `restoration:` prompt; 15,294 examples, GPU, early-stopped at epoch 7, best val_loss 1.046 at epoch 5) — hit@10 rose only 3.3% → 5.4%. Length information: giving it the MLMs' gold-length diet (O-len ±2, 30 beams) changed nothing (5.4%). With training matched, data matched, and information matched, ByT5-small sits at ~5% vs TavBERT's ~21%: on scattered single-word-slot restoration, a byte-level generator at this scale is architecturally behind character MLMs, full stop. The remaining open questions for seq2seq are scale (byt5-base+) and the tracks where generation is structurally necessary — multiword unknown-length lacunae (R3 rows D–F, where MLMs are at ~0% too) and the partial-letters regime (§6c).
 3. **Fine-tuning helps MsBERT clearly** (hit@1 6.5% → 9.8%, MRR 0.097 → 0.134) **but barely moves TavBERT** on this recipe (early-stopped at epoch 4; char_sim did rise 0.176 → 0.209) — revisit the character-model schedule before the GPU run.
 4. **Nothing is statistically separated at n=100** — CIs overlap; the full-split GPU run with McNemar pairing produces the quotable ranking.
 

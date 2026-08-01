@@ -1,6 +1,6 @@
 # DSS Text Restoration — Unification Plan: Decision Points & Evidence
 
-**Purpose.** Shmulik and Itay have two independent codebases for the same research goal. This document is the single reference for merging them into one repository with one benchmark protocol: the background (§0), the twelve decisions to agree on (§1–§12), the empirical evidence gathered so far (§R), and the numbers each side stands behind (Appendix). All statements about the codebases were verified against the code itself on 2026-07-31.
+**Purpose.** Shmulik and Itay have two independent codebases for the same research goal. This document is the single reference for merging them into one repository with one benchmark protocol: the background (§0), the twelve decisions to agree on (§1–§12), the empirical evidence gathered so far (§R), and the numbers each side stands behind (Appendix). All statements about the codebases were verified against the code itself on 2026-07-31; the evaluation paths were audited for gold-information leaks on 2026-08-02 (§R5).
 
 ---
 
@@ -179,6 +179,22 @@ The register also lists claims the repo explicitly does **not** make (no end-to-
 |---|---|---|---|---|
 | TavBERT full-FT | Itay's TuningConfig, `ppp_nonbib` | epoch 4 | epoch 3 | 0.1425 → 0.1471 |
 | MsBERT full-FT | same | epoch 14 | epoch 12 | 0.1048 → 0.1572 |
+
+### R5. Evaluation-integrity audit (2026-08-02)
+
+A line-by-line audit of both scoring paths for gold-information leaks, so every number above can be trusted at face value:
+
+| Surface checked | Verdict |
+|---|---|
+| QD real-lacuna scorer: gold text reaching model input | **Clean.** Any context word containing a bracketed reconstruction is redacted to `<GAP>`; the target is always masked; no code path can insert a reading into the prompt. Visible-segment anchoring uses only letters outside editorial brackets — genuinely preserved characters. |
+| QD length constraint provenance | **Clean.** Estimated length comes from editorial slot counts (`○` markers / display slots), not from the specific attributed reading being scored. The one near-self-referential case — the "initial reading" — is reported only as the labeled human-baseline control, never in the headline metric. |
+| Itay's masking: `[MASK]` count = gold token count | **Known oracle, labeled.** This is exactly the O-len regime of §5 (exact char count for TavBERT, WordPiece count for MsBERT); every affected number in this document carries the label. |
+| Unaligned-word exclusion inflating hit@k | **Known, labeled.** §8; both scoring variants reported in R1. |
+| ByT5 adapter: other masked spans visible in context | **Asymmetry favoring ByT5, disclosed in R1.** Consistent between its training and eval, so no train/eval mismatch — and ByT5 loses despite the advantage. |
+| Split hygiene (`ppp_nonbib` xlsx + R1 sample) | **Clean, verified directly:** 0 scrolls appear in more than one split; all 100 R1 sample sentences are test-split; 0 test sentences share exact text with any train sentence. |
+| ByT5 unified training data | **Clean.** Trained on the train split only; the R1 sample is entirely test-split (above). |
+
+Standing rule going forward: any new evaluation path gets this audit before its numbers enter the document, and every length-informed number carries its §5 regime label.
 
 ---
 

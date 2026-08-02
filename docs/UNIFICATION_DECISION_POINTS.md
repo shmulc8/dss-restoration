@@ -59,7 +59,7 @@ What the code does today: **Itay's protocol leaks gold length** — the number o
   - **U0** — no length information;
   - **O-len** — gold-derived length (both current protocols);
   - **P0** — length budget from the physically recorded gap (available today — §6).
-  Headline tables report U0 + P0; O-len stays as a diagnostic. §R1 quantifies how much this changes results.
+  **Headline = length-informed (P0):** a real lacuna always comes with a measurable physical extent, so the researcher-relevant number includes it — §R2's 63.5% is this regime. Until the benchmark carries real gap measurements for every item, O-len serves as the labeled interim proxy for P0 (for char-level models an accurate measurement converges to it — §R2's exact-length row, 69.5%). U0 is a diagnostic ablation showing how much of the performance is the constraint. §R1 quantifies the regime gaps.
 
 ### 6. Ground the benchmark in real lacuna statistics
 From 12,971 real damaged-word runs on held-out scrolls (Shmulik's derived data, computed 2026-07-31):
@@ -219,7 +219,7 @@ Standing rule going forward: any new evaluation path gets this audit before its 
 | 2 | Benchmark unit | sentences (Itay's xlsx); chunks = training option |
 | 3 | Split | sha1 buckets → frozen scroll-list JSON, loaded everywhere |
 | 4 | Headline models | ByT5 + MsBERT + TavBERT; ByT5 via adapter (built, §R1) |
-| 5 | Length regimes | label all numbers U0 / O-len / P0; headline = U0 + P0 |
+| 5 | Length regimes | label all numbers U0 / O-len / P0; headline = P0 (O-len as labeled interim proxy); U0 = ablation |
 | 6 | Mask statistics | sample from real lacuna distribution; real char budgets; partial-letters regime |
 | 7 | Masking tracks | `scatter-30` + `lacuna-real` |
 | 8 | Unaligned words | miss in headline; aligned-only secondary |

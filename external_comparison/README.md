@@ -26,6 +26,13 @@ external `eval_runner` protocol on a paired 100-sentence test sample.
 - `results/<model>/{metrics.json,manifest.json}` + `results/summary_with_subsets.json` —
   the scored outputs quoted in §R1. `predictions.jsonl` files are kept out of
   git per the external repo's convention; available on request.
+- `qd_char_engine.py` — the §R2b partial-letters engine. It pre-fills visible
+  characters in every placement allowed by the QD physical constraint and
+  beam-decodes only the unknown slots. Run it as
+  `python external_comparison/qd_char_engine.py <model-or-path> <result-tag>`.
+  The three reported runs are in `results/qd_char/`.
+- `results/quick30_summary.json` — the fixed 30-sentence model-lineup pilot
+  quoted in §R6.
 
 ## Original run layout
 

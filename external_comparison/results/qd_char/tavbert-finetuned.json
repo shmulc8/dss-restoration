@@ -1,0 +1,11 @@
+{
+  "model": "scratch/external_finetune/models/tavbert_full_ppp_nonbib_local",
+  "engine": "char-beam-partial-letters",
+  "targets": 74,
+  "skipped_length_hypotheses": 0,
+  "beam_width": 50,
+  "length_tolerance": 1,
+  "top1": 0.43243243243243246,
+  "top10": 0.5945945945945946,
+  "top20": 0.6351351351351351
+}

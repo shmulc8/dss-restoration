@@ -1,0 +1,11 @@
+{
+  "model": "tau/tavbert-he",
+  "engine": "char-beam-partial-letters",
+  "targets": 74,
+  "skipped_length_hypotheses": 0,
+  "beam_width": 50,
+  "length_tolerance": 1,
+  "top1": 0.4594594594594595,
+  "top10": 0.6216216216216216,
+  "top20": 0.6756756756756757
+}

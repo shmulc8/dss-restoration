@@ -52,6 +52,7 @@
 ### 4. Model families — and how ByT5 enters the shared benchmark
 - **Itay:** MLMs behind a tokenizer-compat shim (MsBERT WordPiece, TavBERT char-level). **Shmulik:** ByT5 seq2seq plus MLM variants.
 - **Proposal:** headline models ByT5 + MsBERT + TavBERT (BEREL appendix-optional). Itay's runner stays the scoring/artifact layer; a `ByT5Predictor` adapter emits the same `predictions.jsonl` schema — built and demonstrated in §R1. Decoding may differ per model; the metric layer may not.
+- **Additional char-MLM candidates (pilot in §R6):** `dicta-il/dictabert-char` and `dictabert-large-char` drop into the runner's char path (one integration gotcha: their `tokenizer_config.json` must be patched to `PreTrainedTokenizerFast`, else `AutoTokenizer` silently builds a word-level tokenizer that maps every word to `[UNK]`). Fine-tuned dictabert-char already matches TavBERT on the synthetic track and gives the best QD Top-10/20 measured (§R2b); large-char fine-tuning is a GPU-pass item. NeoDictaBERT is deferred: needs `trust_remote_code` and inherits the subword alignment problem (§8).
 
 ### 5. Length information — the biggest comparability risk
 What the code does today: **Itay's protocol leaks gold length** — the number of `[MASK]` tokens equals the gold word's token count, which for char-level TavBERT is the *exact character count of the answer* and for MsBERT its WordPiece count: two different oracles. **Shmulik's length filter is also gold-derived** (candidates outside gold-length ± 2 chars dropped). Neither is "unconstrained," and no current protocol uses physically measured gaps.
@@ -73,7 +74,7 @@ From 12,971 real damaged-word runs on held-out scrolls (Shmulik's derived data, 
 | 5+ | 0.4% | | 5+ | 5.3% |
 
 Word-level: p90 = 2, p95 = 3, p99 = 4. Char-level (16,769 recorded patterns): median 2, p95 = 5, p99 = 7. **82.5% of damaged words retain at least one legible letter** (patterns like `סר⬚⬚ך` with known gap positions).
-- **Proposal:** (a) benchmark span lengths sampled from this distribution instead of uniform-K or a fixed mask ratio; (b) **real P0** — character budgets from the recorded `⬚` counts, never from the gold answer; (c) a **partial-letters regime** — the model also sees surviving letters and their positions. No existing benchmark evaluates (c); it is both the most faithful setting and a novel contribution. §R2 shows constraints of this kind are worth +54 points.
+- **Proposal:** (a) benchmark span lengths sampled from this distribution instead of uniform-K or a fixed mask ratio; (b) **real P0** — character budgets from the recorded `⬚` counts, never from the gold answer; (c) a **partial-letters regime** — the model also sees surviving letters and their positions. No prior benchmark evaluates (c); it is both the most faithful setting and a novel contribution. §R2 shows constraints of this kind are worth +54 points, and §R2b shows that character-level conditioning is competitive with vocabulary filtering while removing its candidate ceiling.
 
 ### 7. Eval masking policy
 - **Itay:** 30% of sentence words masked, span-concentration 0.5, per-sentence deterministic seeding. **Shmulik:** contiguous 1–3-word lacunae, 8-word context.
@@ -157,6 +158,17 @@ Evaluation design is itself an open decision (§5–§8), so R1 is only one lens
 
 **63.5% vs 9.5% on identical targets is the central finding so far: what the model is told about the gap matters far more than which model fills it** (every model-vs-model gap measured in R1 is ≤ 8 points). Note also 69.5% under exact length — the method *improves* as physical measurement improves, which is the practical case for real P0 data (§6). Known limits: single-word lacunae (78% of real gaps, per §6); candidates limited to single-WordPiece vocabulary words (a ceiling a byte-level generator could remove); agreement with scholars, not physical truth; n = 74.
 
+**R2b. Partial-letters conditioning — the §6c regime, first implementation (2026-08-02).** The MsBERT engine above uses the surviving letters only as a post-hoc *filter* on vocabulary candidates. A character-level engine can instead *condition* on them: pre-fill the surviving letters into the masked character slots (every placement compatible with anchoring and order) and beam-search only the unknown positions, ranking by mean log-probability of the generated characters. Same benchmark, same physical evidence, same scoring:
+
+| Engine (same QD setup, length ±1; n = 74) | Top-1 | Top-10 | Top-20 |
+|---|---|---|---|
+| MsBERT FT — vocab-rank, letters as filter (R2 headline) | 40.5% | 63.5% | 67.6% |
+| dictabert-char FT — letters as conditioning | 44.6% | **66.2%** | **73.0%** |
+| TavBERT base — same engine | **45.9%** | 62.2% | 67.6% |
+| TavBERT FT (Itay's recipe) — same engine | 43.2% | 59.5% | 63.5% |
+
+Findings: (a) character-level conditioning is competitive with filtered MsBERT: the best observed Top-1 is TavBERT base at 45.9% (+5.4 points), while dictabert-char FT gives the best Top-10/20 at 66.2%/73.0%; (b) every model remains far above the 20.3% human first-pass Top-1 control; (c) Top-10 stays in a narrow 59.5–66.2% band, so these pilot differences are not strong model-ranking evidence; (d) the char engine removes the single-WordPiece candidate ceiling and directly implements the physically faithful partial-letters regime. Caveats: single run, n = 74, and a new mean-log-probability ranking heuristic. Implementation and result artifacts: `external_comparison/qd_char_engine.py` and `external_comparison/results/qd_char/`.
+
 ### R3. Shmulik's original evidence register (pre-unification)
 
 Full detail: `docs/RESULTS.md` (evidence register, 2026-07-25); every row has a checked-in artifact; none is a frozen paper result.
@@ -194,7 +206,21 @@ A line-by-line audit of both scoring paths for gold-information leaks, so every 
 | Split hygiene (`ppp_nonbib` xlsx + R1 sample) | **Clean, verified directly:** 0 scrolls appear in more than one split; all 100 R1 sample sentences are test-split; 0 test sentences share exact text with any train sentence. |
 | ByT5 unified training data | **Clean.** Trained on the train split only; the R1 sample is entirely test-split (above). |
 
-Standing rule going forward: any new evaluation path gets this audit before its numbers enter the document, and every length-informed number carries its §5 regime label.
+Standing rule going forward: any new evaluation path gets this audit before its numbers enter the document, and every length-informed number carries its §5 regime label. Applied to §R2b's char engine: its conditioning input is only physically preserved letters and editorial slot counts — the same provenance as the R2 engine, no gold-derived information.
+
+### R6. Model-lineup quick checks — dicta char family (2026-08-02)
+
+Zero-shot and fine-tuned checks on a fixed 30-sentence slice of the R1 sample (250 masked words, Itay's runner, hit@10; aligned-only = headline for char models since they align 100% of words):
+
+| Model | hit@10 |
+|---|---|
+| TavBERT base | 24.4% [18.1, 31.9] |
+| **dictabert-char, fine-tuned (Itay's recipe, epoch-6 stop, probe-best)** | **22.8%** [17.0, 29.0] |
+| TavBERT fine-tuned | 22.4% |
+| dictabert-char base | 17.6% |
+| dictabert-large-char base (0.4B) | 17.6% |
+
+Takeaways: modern-Hebrew pretraining costs the dicta models ~7 points zero-shot, and fine-tuning on 1,783 scrolls sentences recovers all of it (probe_exact 0.113 → 0.140, the largest fine-tune gain of any char model measured); large-char at 4× parameters gains nothing zero-shot, so scale alone does not transfer to Qumran Hebrew — large-char *fine-tuned* is the open GPU-pass question; nothing separates the fine-tuned dicta model from TavBERT at n=250. Artifacts: `external_comparison/results/quick30_summary.json`.
 
 ---
 
@@ -202,7 +228,7 @@ Standing rule going forward: any new evaluation path gets this audit before its 
 
 1. **Meeting:** walk the 12 decision points (Appendix A is the checklist); most have a concrete proposal to accept, amend, or reject.
 2. **Freeze the split** (§3): generate the sha1 scroll assignment once, commit the JSON, both codebases load it.
-3. **GPU pass** (supersedes R1): full 338-sentence test split; TavBERT and MsBERT base + fine-tuned; ByT5 re-trained on the unified dataset with a proper schedule; 3 seeds where feasible; both scoring variants (§8); McNemar pairing.
+3. **GPU pass** (supersedes R1/R6): full 338-sentence test split; TavBERT, MsBERT, dictabert-char, dictabert-large-char — base + fine-tuned; ByT5 re-trained on the unified dataset with a proper schedule; 3 seeds where feasible; both scoring variants (§8); McNemar pairing.
 4. **Build the `lacuna-real` track** (§6–§7): span lengths from the empirical distribution, real P0 char budgets from recorded gap positions, and the partial-letters regime — the novel contribution candidate.
 5. **Grow the real-lacuna target set** (§10) beyond the current 74 targets, jointly.
 6. **Merge repositories** per §12, including the tests and cleanup items.

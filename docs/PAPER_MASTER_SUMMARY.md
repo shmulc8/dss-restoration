@@ -7,9 +7,10 @@
 ## 1. Executive Summary & Core Research Findings
 
 1. **Physical Evidence Dominance:** Providing physical lacuna constraints (exact/estimated character length $P0$ + partial letter traces `סר⬚⬚ך`) increases real-lacuna Top-10 restoration accuracy from **9.46% to 66.22%** (+56.76 percentage points).
-2. **Scoring Rule Sensitivity:** Scoring aligned-only words inflates WordPiece models (MsBERT 21.56%), but under fair all-words headline scoring ($unaligned = miss$), MsBERT drops to **13.31%** due to 38.3% unaligned predictions. Character-level MLM (TavBERT Base) leads at **21.12%**.
-3. **Pretraining Scale vs. Adaptation:** Increasing zero-shot model size 4.5× (DictaBERT-large-char 0.4B) yields **0.00% gain** over 88M base (17.60%). Fine-tuning on Qumran text recovers the ~5 point gap (17.60% $\to$ 22.80%).
-4. **Solving Multi-Word Unknown-Length Lacunae:** `LengthEnsembleCharMLMGenerator` evaluates candidate character lengths $L \in [L_{\min}, L_{\max}]$, normalizes log probabilities, and breaks the 0.0% wall on unknown-length multi-word gaps (**14.2% Hit@10**).
+2. **Primary Baseline Model (TavBERT):** Based purely on empirical performance, **TavBERT** is designated as the primary headline baseline model, achieving the top zero-shot cloze restoration score of **21.12% Hit@10** on synthetic cloze (`scatter-30`), **45.95% Top-1** on real literature lacunae ($n=74$), and **45.10% Top-1** on large-scale physical test lacunae ($n=3,695$).
+3. **Scoring Rule Sensitivity:** Scoring aligned-only words inflates WordPiece models (MsBERT 21.56%), but under fair all-words headline scoring ($unaligned = miss$), MsBERT drops to **13.31%** due to 38.3% unaligned predictions. Character-level MLM (TavBERT Base) leads at **21.12%**.
+4. **Pretraining Scale vs. Adaptation:** Increasing zero-shot model size 4.5× (DictaBERT-large-char 0.4B) yields **0.00% gain** over 88M base (17.60%). Fine-tuning DictaBERT-char on Qumran text recovers the ~5 point gap (17.60% $\to$ 22.80%).
+5. **Solving Multi-Word Unknown-Length Lacunae:** `LengthEnsembleCharMLMGenerator` evaluates candidate character lengths $L \in [L_{\min}, L_{\max}]$, normalizes log probabilities, and breaks the 0.0% wall on unknown-length multi-word gaps (**14.2% Hit@10**).
 
 ---
 

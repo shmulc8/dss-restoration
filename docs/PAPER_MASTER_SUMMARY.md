@@ -80,7 +80,7 @@
 
 ---
 
-### Table 4: Large-Scale Text-Fabric Physical Lacuna Corpus & Evaluation (27,814 Lacunae)
+### Table 5: Large-Scale Text-Fabric Physical Lacuna Corpus & Evaluation (27,814 Lacunae)
 
 * **Total Physical Lacunae Analyzed:** **27,814 physical lacunae** across 732 scrolls in the Text-Fabric corpus.
 * **Damaged Word Positions:** **165,239 word slots** (22,123 damaged words in the 93 test split scrolls).

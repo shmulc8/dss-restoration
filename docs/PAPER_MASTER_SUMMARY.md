@@ -80,11 +80,15 @@
 
 ---
 
-### Table 5: Empirical DSS Physical Damage Statistics (12,971 Damaged Words)
+### Table 5: Empirical DSS Physical Damage Statistics (27,814 Physical Lacunae)
 
-* **Partial Letter Traces:** **82.5%** of damaged words in Dead Sea Scrolls retain at least one legible character trace (`סר⬚⬚ך`).
-* **Gap Length Distribution:** 1 Word: **77.58%** | 2 Words: **17.41%** | 3 Words: **3.69%** | 4+ Words: **1.32%**
-* **Missing Characters per Word:** 1 char: **41.0%** | 2 chars: **36.6%** | 3 chars: **10.4%** | 4 chars: **6.7%** | 5+ chars: **5.3%**
+* **Total Physical Lacunae Analyzed:** **27,814 physical lacunae** across 732 scrolls in the Text-Fabric corpus.
+* **Damaged Word Positions:** **165,239 word slots**.
+* **Partial Letter Traces Available:** **49,130 damaged word tokens** (29.7%) retain legible character traces (`סר⬚⬚ך`).
+* **Scroll-Disjoint Split Distribution:** Train: **20,146 lacunae** (72.4%) | Validation: **3,887 lacunae** (14.0%) | Test: **3,695 lacunae** (13.3%).
+
+#### Gap Word Length Distribution
+* **1 Word:** **5,239 lacunae** | **2 Words:** **4,536 lacunae** | **3 Words:** **3,997 lacunae** | **4+ Words:** **14,042 lacunae**
 
 ---
 

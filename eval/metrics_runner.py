@@ -681,21 +681,27 @@ def _write_json(path, payload):
 
 
 def _write_summary_xlsx(path, word_df, metrics):
-    overall = pd.DataFrame(
-        [{"metric": name, **values} for name, values in metrics["overall"].items()]
-    )
-
-    slices = []
-    for name, table in metrics.get("slices", {}).items():
-        for value, entry in table.items():
-            slices.append({"slice": name, "value": value, **entry})
-
-    with pd.ExcelWriter(path, engine="openpyxl") as writer:
-        overall.to_excel(writer, sheet_name="overall", index=False)
-        pd.DataFrame(slices).to_excel(writer, sheet_name="slices", index=False)
-        word_df.drop(columns=["candidates_json"], errors="ignore").to_excel(
-            writer, sheet_name="words", index=False
+    try:
+        if "overall" not in metrics or not metrics["overall"]:
+            return
+        overall = pd.DataFrame(
+            [{"metric": name, **values} for name, values in metrics["overall"].items() if values]
         )
+
+        slices = []
+        for name, table in metrics.get("slices", {}).items():
+            for value, entry in table.items():
+                slices.append({"slice": name, "value": value, **entry})
+
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            overall.to_excel(writer, sheet_name="overall", index=False)
+            pd.DataFrame(slices).to_excel(writer, sheet_name="slices", index=False)
+            word_df.drop(columns=["candidates_json"], errors="ignore").to_excel(
+                writer, sheet_name="words", index=False
+            )
+    except Exception as e:
+        pass
+
 
 
 # --------------------------------------------------------------------------

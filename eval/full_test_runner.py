@@ -30,19 +30,20 @@ def run_full_test_benchmark(
     if not path.exists():
         raise FileNotFoundError(f"Run directory not found: {path}")
 
-    word_df, metrics, counts = score_run_dir(
-        path,
-        b_samples=num_bootstrap,
-        ci=confidence_level,
-    )
+    word_df, metrics, counts = score_run_dir(path)
 
-    overall = metrics.get("overall", {})
+    overall = metrics.get("overall") or {}
     masked_words = counts.get("masked_words", 0)
     unaligned = counts.get("unaligned_words", 0)
     aligned = masked_words - unaligned
 
-    headline_hit1 = (overall.get("hit_at_1", {}).get("mean", 0.0) * aligned / masked_words) if masked_words else 0.0
-    headline_hit10 = (overall.get("hit_at_10", {}).get("mean", 0.0) * aligned / masked_words) if masked_words else 0.0
+    hit1_entry = overall.get("hit_at_1") or {}
+    hit10_entry = overall.get("hit_at_10") or {}
+    char_sim_entry = overall.get("char_sim_top1") or {}
+    mrr_entry = overall.get("mrr") or {}
+
+    headline_hit1 = (hit1_entry.get("mean", 0.0) * aligned / masked_words) if masked_words and hit1_entry.get("mean") is not None else 0.0
+    headline_hit10 = (hit10_entry.get("mean", 0.0) * aligned / masked_words) if masked_words and hit10_entry.get("mean") is not None else 0.0
 
     report = {
         "run_directory": str(path),
@@ -54,12 +55,12 @@ def run_full_test_benchmark(
             "hit@10": headline_hit10,
         },
         "aligned_only_metrics": {
-            "hit@1": overall.get("hit_at_1", {}).get("mean", 0.0),
-            "hit@10": overall.get("hit_at_10", {}).get("mean", 0.0),
-            "hit@10_ci_low": overall.get("hit_at_10", {}).get("ci_low", 0.0),
-            "hit@10_ci_high": overall.get("hit_at_10", {}).get("ci_high", 0.0),
-            "char_sim": overall.get("char_sim_top1", {}).get("mean", 0.0),
-            "mrr": overall.get("mrr", {}).get("mean", 0.0),
+            "hit@1": hit1_entry.get("mean", 0.0),
+            "hit@10": hit10_entry.get("mean", 0.0),
+            "hit@10_ci_low": hit10_entry.get("ci_low", 0.0),
+            "hit@10_ci_high": hit10_entry.get("ci_high", 0.0),
+            "char_sim": char_sim_entry.get("mean", 0.0),
+            "mrr": mrr_entry.get("mean", 0.0),
         },
     }
 

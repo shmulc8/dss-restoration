@@ -144,11 +144,11 @@ dss-restoration/
 ### Essential Execution Commands
 
 ```bash
-# 1. Run full test suite (68/68 passing)
+# 1. Run full test suite (69/69 passing)
 uv run pytest
 
 # 2. Run multi-seed local fine-tuning
-PYTHONPATH=. uv run python training/run_multiseed_experiment.py --model dicta-il/dictabert-char --epochs 3
+PYTHONPATH=. uv run python training/run_multiseed_experiment.py --model tau/tavbert-he --epochs 3
 
 # 3. Evaluate full test split benchmark
 PYTHONPATH=. uv run python eval/full_test_runner.py --run-dir external_comparison/results/tavbert-base
@@ -156,3 +156,26 @@ PYTHONPATH=. uv run python eval/full_test_runner.py --run-dir external_compariso
 # 4. Score QD literature agreement benchmark
 PYTHONPATH=. uv run python eval/score_qd_researcher_benchmark.py
 ```
+
+---
+
+## 5. LaTeX / Overleaf Figure Snippet
+
+```latex
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=1.5cm, auto]
+    \node [draw, rectangle, fill=blue!10, rounded corners] (fragment) {Scroll Fragment: \texttt{... ו\ \textcjrab{סר⬚⬚ך}\ בלדד ...}};
+    \node [draw, rectangle, fill=green!10, below of=fragment] (filter) {PartialLetterFilter: \texttt{Pattern = סר??ך, Len = 5}};
+    \node [draw, rectangle, fill=orange!10, below of=filter] (model) {Char-MLM (TavBERT): Beam Search ($K=50$)};
+    \node [draw, rectangle, fill=purple!10, below of=model] (output) {Restoration: \textbf{סרכיך} (\textit{sarkekha}, Top-1, 45.95\%)};
+    
+    \draw[->, thick] (fragment) -- (filter);
+    \draw[->, thick] (filter) -- (model);
+    \draw[->, thick] (model) -- (output);
+\end{tikzpicture}
+\caption{Overview of the partial-letter character conditioning pipeline for Dead Sea Scroll text restoration.}
+\label{fig:pipeline_overview}
+\end{figure}
+```
+

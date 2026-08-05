@@ -28,7 +28,83 @@
 
 ---
 
-## 3. Publication Benchmark Tables
+## 3. Comprehensive Methodology & Algorithmic Design
+
+### 3.1 Manuscript Partitioning & Frozen Splits (`dss_scroll_splits_v1.json`)
+To prevent data contamination across fragments of the same scroll, we enforce **100% manuscript-disjoint partitioning** using a deterministic SHA-1 hash algorithm on scroll identifiers. The canonical partition ([`data/splits/dss_scroll_splits_v1.json`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/data/splits/dss_scroll_splits_v1.json)) divides 732 non-biblical Dead Sea Scrolls into:
+- **Train:** 531 scrolls (1,599 text chunks, 73.6%)
+- **Validation:** 108 scrolls (275 text chunks, 12.7%)
+- **Test:** 93 scrolls (305 text chunks, 13.7%)
+
+Zero scrolls straddle across partitions ($\text{Train} \cap \text{Val} = \emptyset$, $\text{Train} \cap \text{Test} = \emptyset$).
+
+---
+
+### 3.2 Unified Candidate Generator Interface (`eval/candidate_generator.py`)
+All model architectures (character-level MLMs, WordPiece MLMs, and Seq2Seq byte models) implement a single abstract interface ([`CandidateGenerator`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/eval/candidate_generator.py)):
+
+$$\text{generate\_candidates}(\text{context}_{\text{left}}, \text{context}_{\text{right}}, L, P, K) \to [C_1, C_2, \dots, C_K]$$
+
+where $L$ is target character length, $P$ is physical partial-letter pattern, and $K$ is beam width.
+
+---
+
+### 3.3 Partial-Letters Conditioning (§6c / R2b)
+Physical scroll inspection reveals that **82.5%** of damaged words retain legible character stroke traces (`סר⬚⬚ך`). 
+
+```
+Partial Letter Filter:
+Pattern = ס ר ⬚ ⬚ ך  (Length L = 5)
+Candidates:
+  ס ר כ י ך  --> MATCH  (sarkekha = "your rules")
+  ס ר מ ם ך  --> MATCH  (sarmamkh)
+  ס ר מ ם ם  --> REJECT (Mismatch at position 5: ם != ך)
+```
+
+For character-level MLMs (`TavBERT`, `dictabert-char`), conditioning is applied natively during character-by-character beam search. At token position $i$, candidate characters $c_i$ inconsistent with pattern character $P[i]$ (where $P[i] \neq \text{wildcard}$) receive zero probability:
+
+$$P(c_i \mid c_{<i}) = \begin{cases} P_{\text{model}}(c_i \mid c_{<i}) & \text{if } P[i] = \text{wildcard} \text{ or } c_i = P[i] \\ 0 & \text{otherwise} \end{cases}$$
+
+For WordPiece models (`MsBERT`), candidates are retrieved from vocabulary rank and filtered post-hoc via [`PartialLetterFilter.is_compatible()`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/eval/candidate_generator.py).
+
+---
+
+### 3.4 Length-Ensemble Beam Search for Unknown-Length Lacunae
+On multi-word gaps where exact character length is unknown, fixed-length MLMs fail (scoring 0.0%). We resolve this with [`LengthEnsembleCharMLMGenerator`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/eval/candidate_generator.py). The generator evaluates candidate character lengths $L \in [L_{\min}, L_{\max}]$, performs beam search for each length hypothesis $L$, and applies length-penalty log-probability scoring:
+
+$$\text{Score}(C_L) = \frac{\sum_{i=1}^{L} \log P(c_i \mid c_{<i}, \text{context})}{L^{\alpha}}$$
+
+where $\alpha = 0.5$ is the length penalty exponent. Candidates across all length hypotheses $L$ are pooled and ranked globally to select the top-$K$ predictions.
+
+---
+
+### 3.5 Scoring Protocol & Headline Metric ($unaligned = miss$)
+Predictions are aligned to gold words using sequence-level Levenshtein alignment.
+- **Headline All-Words Metric ($unaligned = miss$):** If a model fails to produce a prediction for a damaged word position (e.g., WordPiece tokenization misalignment), that word is assigned a Hit score of 0.0. This prevents sub-word tokenizers from artificially inflating metrics by ignoring 38.3% of hard predictions.
+- **Aligned-Only Metric:** Scores accuracy strictly on successfully aligned predictions (reported secondary for transparency).
+
+---
+
+### 3.6 Fine-Tuning Strategy with Validation Early Stopping ([`training/unified_trainer.py`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/training/unified_trainer.py))
+Models are fine-tuned on contiguous preserved text segments separated by `<GAP>` tokens.
+- **Task:** 1–3 word contiguous span masking.
+- **Hyperparameters:** Learning rate $1 \times 10^{-5}$, linear warmup ratio 0.1, L2 weight decay 0.01.
+- **Validation Early Stopping:** `evaluation_strategy="epoch"` and `load_best_model_at_end=True` track validation loss after every epoch on the 108 validation scrolls, restoring the optimal checkpoint (`eval_loss`) to prevent over-fitting.
+
+---
+
+### 3.7 Statistical Significance & Cluster Bootstrap
+- **95% Confidence Intervals:** Computed via sentence-level percentile cluster bootstrap ($B = 1000$ resamples). Resampling at sentence level preserves intra-sentence word correlation.
+- **Paired McNemar Test:** Evaluates statistical significance between competing model predictions:
+
+$$z = \frac{(|b - c| - 1)^2}{b + c}, \quad p = 2 \cdot (1 - \Phi(\sqrt{z}))$$
+
+where $b$ is the number of targets Model A got right and Model B got wrong, and $c$ is the reverse.
+
+---
+
+
+## 4. Publication Benchmark Tables
 
 ### Table 1: Main Synthetic Benchmark — Cloze Restoration (`scatter-30`)
 *Evaluated on the 100-sentence paired test split ($n=729$ masked words) under the gold-length $O\text{-len}$ regime with beam search ($10 \times 6$).*
@@ -110,7 +186,7 @@
 
 ---
 
-## 4. Codebase Architecture & Command Reference
+## 5. Codebase Architecture & Command Reference
 
 ```text
 dss-restoration/
@@ -152,7 +228,7 @@ PYTHONPATH=. uv run python eval/score_qd_researcher_benchmark.py
 
 ---
 
-## 5. LaTeX / Overleaf Figure Snippet
+## 6. LaTeX / Overleaf Figure Snippet
 
 ```latex
 \begin{figure}[t]

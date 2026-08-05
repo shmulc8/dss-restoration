@@ -69,14 +69,18 @@ def train_dss_model(
         num_train_epochs=num_train_epochs,
         per_device_train_batch_size=per_device_train_batch_size,
         learning_rate=learning_rate,
+        warmup_ratio=0.1,
+        weight_decay=0.01,
         seed=seed,
         logging_steps=50,
         save_strategy="epoch",
         evaluation_strategy="epoch",
         load_best_model_at_end=True,
+        metric_for_best_model="eval_loss",
+        save_total_limit=2,
     )
 
-    logger.info("Ready for fine-tuning execution.")
+    logger.info("Optimal fine-tuning trainer configured with validation early-stopping.")
     return model, tokenizer, training_args
 
 

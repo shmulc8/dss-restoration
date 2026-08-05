@@ -22,10 +22,10 @@ logger = logging.getLogger(__name__)
 
 
 def run_multiseed_pass(
-    model_name: str = "dicta-il/dictabert-char",
+    model_name: str = "tau/tavbert-he",
     seeds: list[int] = [41, 42, 43],
     epochs: int = 3,
-    output_base: str = "models/multiseed",
+    output_base: str = "models/multiseed_tavbert",
 ):
     """Run multi-seed fine-tuning pass locally and compute aggregate statistics."""
     results_by_seed = {}
@@ -40,6 +40,10 @@ def run_multiseed_pass(
             "model_name": model_name,
             "seed": seed,
             "epochs": epochs,
+            "learning_rate": 1e-5,
+            "warmup_ratio": 0.1,
+            "weight_decay": 0.01,
+            "early_stopping": "best_val_loss",
             "device": "mps" if torch.backends.mps.is_available() else "cpu",
             "output_dir": str(out_dir),
         }
@@ -52,9 +56,9 @@ def run_multiseed_pass(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Multi-Seed Local Experiment Runner")
-    parser.add_argument("--model", type=str, default="dicta-il/dictabert-char")
+    parser.add_argument("--model", type=str, default="tau/tavbert-he")
     parser.add_argument("--epochs", type=int, default=3)
-    parser.add_argument("--output_base", type=str, default="models/multiseed_dictabert_char")
+    parser.add_argument("--output_base", type=str, default="models/multiseed_tavbert")
     args = parser.parse_args()
 
     run_multiseed_pass(

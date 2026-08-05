@@ -38,6 +38,27 @@ from eval.masking import (
     PercentageContentMaskingPolicy,
 )
 from utils.tokenizer_compat import emits_whitespace_tokens, load_tokenizer
+from typing import List, Tuple
+from scipy.stats import norm
+
+
+def mcnemar_test(hits_a: List[int], hits_b: List[int]) -> Tuple[float, float]:
+    """Compute McNemar paired statistical test z-statistic and two-sided p-value.
+    
+    Args:
+        hits_a: List of 1/0 hit indicators for Model A.
+        hits_b: List of 1/0 hit indicators for Model B.
+    """
+    b = sum(1 for a, b in zip(hits_a, hits_b) if a == 1 and b == 0)
+    c = sum(1 for a, b in zip(hits_a, hits_b) if a == 0 and b == 1)
+
+    if b + c == 0:
+        return 0.0, 1.0
+
+    z = (abs(b - c) - 1.0) ** 2 / (b + c)
+    p_value = 2.0 * (1.0 - norm.cdf(float(np.sqrt(z))))
+    return z, float(p_value)
+
 
 # Bump when the scoring layer changes meaning. manifest.json records it, so
 # build_report.py can tell a run scored under an older scorer from a current one.
@@ -439,6 +460,26 @@ def _cluster_bootstrap(df, metrics, b=BOOTSTRAP_B, seed=BOOTSTRAP_SEED):
     correct and cheap.
     """
     import numpy as np
+from scipy.stats import norm
+
+
+def mcnemar_test(hits_a: List[int], hits_b: List[int]) -> Tuple[float, float]:
+    """Compute McNemar paired statistical test z-statistic and two-sided p-value.
+    
+    Args:
+        hits_a: List of 1/0 hit indicators for Model A.
+        hits_b: List of 1/0 hit indicators for Model B.
+    """
+    b = sum(1 for a, b in zip(hits_a, hits_b) if a == 1 and b == 0)
+    c = sum(1 for a, b in zip(hits_a, hits_b) if a == 0 and b == 1)
+
+    if b + c == 0:
+        return 0.0, 1.0
+
+    z = (abs(b - c) - 1.0) ** 2 / (b + c)
+    p_value = 2.0 * (1.0 - norm.cdf(np.sqrt(z)))
+    return z, p_value
+
 
     out = {}
 

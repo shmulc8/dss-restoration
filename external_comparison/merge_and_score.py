@@ -12,7 +12,6 @@ from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(TUNING))
 from eval.metrics_runner import score_run_dir
 
 TAGS = ["tavbert-base", "tavbert-finetuned", "msbert-base", "msbert-finetuned"]

@@ -1,6 +1,6 @@
 import numpy as np
 
-from training.finetune_tavbert_preserved_nonbib import choose_word_span
+from training.unified_trainer import choose_word_span
 
 
 def test_choose_word_span_is_contiguous_and_bounded() -> None:

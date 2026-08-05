@@ -15,10 +15,29 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
+import numpy as np
 from utils.splits import load_frozen_scroll_splits, get_scroll_sets
 from utils.tokenizer_compat import load_tokenizer
 
 logger = logging.getLogger(__name__)
+
+
+def choose_word_span(
+    text: str,
+    rng: np.random.Generator,
+) -> tuple[int, int, int]:
+    """Select a contiguous 1-3 word span within text for span-corruption training."""
+    words = text.split()
+    max_words = min(3, len(words))
+    probabilities = np.array([0.5, 0.3, 0.2][:max_words], dtype=float)
+    probabilities /= probabilities.sum()
+    word_count = int(rng.choice(np.arange(1, max_words + 1), p=probabilities))
+    start_word = int(rng.integers(0, len(words) - word_count + 1))
+    prefix = " ".join(words[:start_word])
+    target = " ".join(words[start_word : start_word + word_count])
+    start_character = len(prefix) + (1 if prefix else 0)
+    return start_character, start_character + len(target), word_count
+
 
 
 def train_dss_model(

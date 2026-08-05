@@ -49,10 +49,16 @@
 - **Shmulik:** seeded RNG, book-level — realized ≈ 61/14/25 by chunk; two split implementations exist and need consolidating regardless.
 - **Proposal:** generate once with the `sha1` bucketing, **commit the realized scroll→split assignment as a frozen JSON file**, and make every code path load that file. One test asserts scroll-disjointness and file↔corpus consistency.
 
-### 4. Model families — and how ByT5 enters the shared benchmark
-- **Itay:** MLMs behind a tokenizer-compat shim (MsBERT WordPiece, TavBERT char-level). **Shmulik:** ByT5 seq2seq plus MLM variants.
-- **Proposal:** headline models ByT5 + MsBERT + TavBERT (BEREL appendix-optional). Itay's runner stays the scoring/artifact layer; a `ByT5Predictor` adapter emits the same `predictions.jsonl` schema — built and demonstrated in §R1. Decoding may differ per model; the metric layer may not.
-- **Additional char-MLM candidates (pilot in §R6):** `dicta-il/dictabert-char` and `dictabert-large-char` drop into the runner's char path (one integration gotcha: their `tokenizer_config.json` must be patched to `PreTrainedTokenizerFast`, else `AutoTokenizer` silently builds a word-level tokenizer that maps every word to `[UNK]`). Fine-tuned dictabert-char already matches TavBERT on the synthetic track and gives the best QD Top-10/20 measured (§R2b); large-char fine-tuning is a GPU-pass item. NeoDictaBERT is deferred: needs `trust_remote_code` and inherits the subword alignment problem (§8).
+### 4. Model architecture and roster for the unified system
+- **Evidence-based center:** the final restoration engine should be a character-level MLM. Physical gap length, surviving letters and their positions, and spaces inside multiword gaps are character-shaped evidence; a char model covers every target and can condition on that evidence directly (§R2b). The final checkpoint does not exist yet: train the same realistic DSS restoration objective from two initializations, `dicta-il/dictabert-char` and `tau/tavbert-he`, then select on frozen dev criteria and paired full-test results.
+- **Current leaders — no single overall winner yet:**
+  - **TavBERT base** wins the headline synthetic comparison (21.1% hit@10 on `scatter-30`) and QD Top-1 (45.9%).
+  - **Fine-tuned dictabert-char** wins QD Top-10/20 (66.2%/73.0%) and is close to TavBERT on the 30-sentence synthetic pilot (22.8% vs 24.4% hit@10).
+  - **Fine-tuned MsBERT** wins only when unaligned targets are excluded (21.6% synthetic hit@10); under the headline all-target scoring it falls to 13.3%, so it remains a baseline rather than the system default.
+- **Primary candidates:** `dictabert-char` is the likely distributable default (88M parameters, safetensors, explicit CC BY 4.0); TavBERT is the mandatory competing initialization because it is strongest zero-shot and currently has the best QD Top-1. TavBERT's published model card does not state a license, so clarify redistribution terms before making it the released default. Current pilots do not statistically separate the two (§R2b, §R6).
+- **Baseline, not product core:** keep `dicta-il/MsBERT` as the manuscript-specific WordPiece baseline and for the vocabulary-filter comparison. It is not the default engine because its tokenization leaves targets unaligned and its fixed single-WordPiece candidate set cannot generate the partial-letter restorations directly (§8, §R1, §R2b).
+- **Conditional experiments:** run `dicta-il/dictabert-large-char` only as a one-seed scale ablation after the base pipeline is stable; it showed no zero-shot gain in §R6. Preserve ByT5-small as the negative seq2seq result in §R1, but remove it from the headline roster and main GPU rerun. Revisit a larger seq2seq model only if a separately defined unknown-length/multiword track demonstrates that the char engine cannot cover the task. BEREL and NeoDictaBERT leave the active roster.
+- **Unified software boundary:** retain the common `predictions.jsonl`/manifest/metric contract, not an MLM-specific runner as the permanent core. A model-neutral `CandidateGenerator` interface feeds one shared constraint, normalization, scoring, and artifact layer; implementations are `CharMLMGenerator` (DictaBERT-char and TavBERT), `WordMLMGenerator` (MsBERT), and an optional future `Seq2SeqGenerator`. Model IDs, pinned revisions, tokenizer family, and license live in a registry. Tokenizer compatibility is validated centrally rather than by manually patching downloaded model files.
 
 ### 5. Length information — the biggest comparability risk
 What the code does today: **Itay's protocol leaks gold length** — the number of `[MASK]` tokens equals the gold word's token count, which for char-level TavBERT is the *exact character count of the answer* and for MsBERT its WordPiece count: two different oracles. **Shmulik's length filter is also gold-derived** (candidates outside gold-length ± 2 chars dropped). Neither is "unconstrained," and no current protocol uses physically measured gaps.
@@ -100,7 +106,7 @@ Shmulik-only today; Itay's evaluation is fully synthetic. The Qumran-Digital sna
 - **Recipe:** each model's masking-mixture recipe is part of its identity but must be recorded in `training/tuning_config.json` inside every published checkpoint (Itay's convention — keep).
 
 ### 12. Repository mechanics
-- One repo: Itay's `tuning/` + `comparison/` stack as the eval/reporting backbone; Shmulik's `data/` (corpus building + validators), lemma & literature benchmarks, and demo merged in.
+- One repo with neutral core modules: Shmulik's corpus building, validators, physical constraints, lemma/literature benchmarks, and demo; Itay's durable artifact schema, scoring, bootstrap statistics, comparison viewer, and training conventions. Replace model-specific orchestration with the `CandidateGenerator` boundary in §4 rather than treating either existing runner as the permanent backbone.
 - Source of truth is `.py` modules; notebooks import from modules (invert the current notebook-is-source contract).
 - Results storage: Itay's HF-dataset sync, only `manifest.json` + `metrics.json` in git.
 - Tests: union of both suites (masking-regression + scoring; leakage validators + forbidden-claims guard).
@@ -228,7 +234,7 @@ Takeaways: modern-Hebrew pretraining costs the dicta models ~7 points zero-shot,
 
 1. **Meeting:** walk the 12 decision points (Appendix A is the checklist); most have a concrete proposal to accept, amend, or reject.
 2. **Freeze the split** (§3): generate the sha1 scroll assignment once, commit the JSON, both codebases load it.
-3. **GPU pass** (supersedes R1/R6): full 338-sentence test split; TavBERT, MsBERT, dictabert-char, dictabert-large-char — base + fine-tuned; ByT5 re-trained on the unified dataset with a proper schedule; 3 seeds where feasible; both scoring variants (§8); McNemar pairing.
+3. **GPU pass** (supersedes R1/R6): train the same realistic DSS char-restoration objective from TavBERT and dictabert-char, 3 seeds each, and evaluate base + fine-tuned checkpoints on the full 338-sentence test split and `lacuna-real`; include MsBERT base + fine-tuned as the WordPiece baseline. Both scoring variants (§8), paired McNemar tests, and dev-only checkpoint/model selection. Run dictabert-large-char afterward as a one-seed scale ablation only if the base pipeline is stable; do not rerun ByT5-small.
 4. **Build the `lacuna-real` track** (§6–§7): span lengths from the empirical distribution, real P0 char budgets from recorded gap positions, and the partial-letters regime — the novel contribution candidate.
 5. **Grow the real-lacuna target set** (§10) beyond the current 74 targets, jointly.
 6. **Merge repositories** per §12, including the tests and cleanup items.
@@ -244,7 +250,7 @@ Takeaways: modern-Hebrew pretraining costs the dicta models ~7 points zero-shot,
 | 1 | PPP words in training | yes (ratio ≥ 0.5); test strict-preserved; one strict control |
 | 2 | Benchmark unit | sentences (Itay's xlsx); chunks = training option |
 | 3 | Split | sha1 buckets → frozen scroll-list JSON, loaded everywhere |
-| 4 | Headline models | ByT5 + MsBERT + TavBERT; ByT5 via adapter (built, §R1) |
+| 4 | Model roster | char-MLM core: dictabert-char vs TavBERT; MsBERT baseline; large-char scale ablation; ByT5 retained as negative result only |
 | 5 | Length regimes | label all numbers U0 / O-len / P0; headline = P0 (O-len as labeled interim proxy); U0 = ablation |
 | 6 | Mask statistics | sample from real lacuna distribution; real char budgets; partial-letters regime |
 | 7 | Masking tracks | `scatter-30` + `lacuna-real` |
@@ -252,7 +258,7 @@ Takeaways: modern-Hebrew pretraining costs the dicta models ~7 points zero-shot,
 | 9 | Metrics & artifacts | union of both stacks; freeze schema |
 | 10 | Real-lacuna track | include (74 targets now; grow jointly) |
 | 11 | Checkpoints & seeds | probe-best; 3 seeds where compute allows; full FT; recipe recorded |
-| 12 | Repo backbone | Itay's eval stack + Shmulik's data/benchmarks; modules over notebooks |
+| 12 | Repo backbone | neutral `CandidateGenerator` core; shared constraints/scoring/artifacts; modules over notebooks |
 
 ### B. Already agreed (no decision needed)
 Scroll-disjoint splitting · non-biblical main corpus · zero editor-supplied letters in the test set · durable per-run artifacts with config fingerprints.

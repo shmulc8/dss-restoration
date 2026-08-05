@@ -23,7 +23,6 @@ import matplotlib
 matplotlib.use("Agg")
 
 HERE = Path(__file__).resolve().parent
-EXT = HERE.parent / "external_impl" / "new_dead_sea_scrolls"
 TUNING = EXT / "tuning"
 DATA = EXT / "data_preparation" / "dss_sentences_min7_splits_ppp_nonbib.xlsx"
 NOTEBOOK = TUNING / "finetune_msbert.ipynb"

@@ -11,9 +11,8 @@ from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TUNING = HERE.parent / "external_impl" / "new_dead_sea_scrolls" / "tuning"
 sys.path.insert(0, str(TUNING))
-from eval_runner import score_run_dir
+from eval.metrics_runner import score_run_dir
 
 TAGS = ["tavbert-base", "tavbert-finetuned", "msbert-base", "msbert-finetuned"]
 SAMPLE = set(json.loads((HERE / "sample_uids.json").read_text()))

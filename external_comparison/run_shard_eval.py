@@ -7,9 +7,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TUNING = HERE.parent / "external_impl" / "new_dead_sea_scrolls" / "tuning"
 sys.path.insert(0, str(TUNING))
-from eval_runner import run_eval
+from eval.metrics_runner import run_eval
 
 model_id, tag, shard = sys.argv[1], sys.argv[2], Path(sys.argv[3])
 out_root = HERE / "shard_eval_results" / tag / shard.stem

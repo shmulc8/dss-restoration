@@ -25,14 +25,13 @@ from transformers import AutoModelForMaskedLM, AutoTokenizer
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-TUNING = ROOT / "scratch" / "external_impl" / "new_dead_sea_scrolls" / "tuning"
 RESULTS_DIR = HERE / "results" / "qd_char"
 
 sys.path.insert(0, str(ROOT / "eval"))
 sys.path.insert(0, str(TUNING))
 
 import score_qd_researcher_benchmark as qd  # noqa: E402
-from eval_utils import MultiSpanPredictionPolicy  # noqa: E402
+from eval.masking import MultiSpanPredictionPolicy  # noqa: E402
 
 
 LENGTH_TOLERANCE = 1

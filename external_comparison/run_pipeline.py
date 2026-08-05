@@ -14,7 +14,6 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 PY = HERE.parent.parent / ".venv" / "bin" / "python"
-TUNING = HERE.parent / "external_impl" / "new_dead_sea_scrolls" / "tuning"
 DATA = (
     HERE.parent
     / "external_impl"
@@ -51,7 +50,7 @@ def finetune(run_name, model_id):
 def evaluate(model_id, tag):
     print(f"EVAL START: {tag} ({model_id})", flush=True)
     sys.path.insert(0, str(TUNING))
-    from eval_runner import run_eval
+    from eval.metrics_runner import run_eval
 
     run_eval(
         model_id=str(model_id),

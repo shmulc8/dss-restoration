@@ -18,11 +18,10 @@ from torch.utils.data import DataLoader, Dataset
 from transformers import AutoTokenizer, T5ForConditionalGeneration, get_linear_schedule_with_warmup
 
 HERE = Path(__file__).resolve().parent
-TUNING = HERE.parent / "external_impl" / "new_dead_sea_scrolls" / "tuning"
 DATA = HERE.parent / "external_impl" / "new_dead_sea_scrolls" / "data_preparation" / "dss_sentences_min7_splits_ppp_nonbib.xlsx"
 OUT = HERE / "models" / "byt5_unified_ppp_nonbib"
 sys.path.insert(0, str(TUNING))
-from eval_utils import PercentageContentMaskingPolicy
+from eval.masking import PercentageContentMaskingPolicy
 from transformers import AutoTokenizer as AT
 
 SEED = 42

@@ -15,7 +15,6 @@ import sys
 import urllib.request
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
 
 import torch
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, logging as tlog
@@ -36,7 +35,11 @@ HEBREW_RE = re.compile(r"[\u05D0-\u05EB]+")
 
 
 def hebrew_letters(value: str) -> str:
-    cleaned = "".join(character for character in (value or "") if character in HEBREW_SET or character == " ")
+    cleaned = "".join(
+        character
+        for character in (value or "")
+        if character in HEBREW_SET or character == " "
+    )
     return re.sub(r"\s+", " ", cleaned).strip()
 
 
@@ -57,7 +60,13 @@ def fetch_embible_test_verses() -> list[str]:
                     continue
                 try:
                     row = json.loads(line)
-                    text = row.get("text") or row.get("verse") or row.get("sentence") or row.get("sentence1") or ""
+                    text = (
+                        row.get("text")
+                        or row.get("verse")
+                        or row.get("sentence")
+                        or row.get("sentence1")
+                        or ""
+                    )
                     words = clean_hebrew_words(text)
                     if len(words) >= 12:
                         verses.append(" ".join(words))
@@ -67,7 +76,9 @@ def fetch_embible_test_verses() -> list[str]:
                 return verses
             raise ValueError("No valid verses extracted from JSONL")
     except Exception as err:
-        print(f"Warning: Failed to download online Embible verses ({err}). Using fallback synthetic Bible corpus...")
+        print(
+            f"Warning: Failed to download online Embible verses ({err}). Using fallback synthetic Bible corpus..."
+        )
         return [
             "בראשית ברא אלהים את השמים ואת הארץ והארץ היתה תהו ובהו וחשך על פני תהום",
             "ויאמר אלהים יהי אור ויהי אור וירא אלהים את האור כי טוב ויבדל אלהים בין האור ובין החשך",
@@ -79,12 +90,18 @@ def fetch_embible_test_verses() -> list[str]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-dir", type=Path, default=ROOT / "ft_byt5_span_preserved_nonbib_seed41")
+    parser.add_argument(
+        "--model-dir", type=Path, default=ROOT / "ft_byt5_span_preserved_nonbib_seed41"
+    )
     parser.add_argument("--num-samples", type=int, default=120)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--beam-width", type=int, default=10)
     parser.add_argument("--device", default="auto")
-    parser.add_argument("--output-json", type=Path, default=ROOT / "analysis" / "reports" / "byt5_bible_transfer_results.json")
+    parser.add_argument(
+        "--output-json",
+        type=Path,
+        default=ROOT / "analysis" / "reports" / "byt5_bible_transfer_results.json",
+    )
     return parser.parse_args()
 
 
@@ -92,11 +109,13 @@ def main() -> None:
     args = parse_args()
     torch.manual_seed(args.seed)
 
-    print(f"=== Running ByT5 Generator on Embible Biblical Verses ===")
+    print("=== Running ByT5 Generator on Embible Biblical Verses ===")
     print(f"Loading ByT5 model from {args.model_dir}...")
 
     if not args.model_dir.exists():
-        print(f"Model path {args.model_dir} not found. Attempting base google/byt5-small...")
+        print(
+            f"Model path {args.model_dir} not found. Attempting base google/byt5-small..."
+        )
         model_name = "google/byt5-small"
     else:
         model_name = str(args.model_dir)
@@ -105,7 +124,13 @@ def main() -> None:
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
     model.eval()
 
-    device = torch.device("cuda" if torch.cuda.is_available() and args.device != "cpu" else "mps" if torch.backends.mps.is_available() and args.device != "cpu" else "cpu")
+    device = torch.device(
+        "cuda"
+        if torch.cuda.is_available() and args.device != "cpu"
+        else "mps"
+        if torch.backends.mps.is_available() and args.device != "cpu"
+        else "cpu"
+    )
     model.to(device)
 
     verses = fetch_embible_test_verses()
@@ -125,10 +150,10 @@ def main() -> None:
             if len(words) < 8 + gap_len + 8:
                 continue
             idx = 8 + (item_idx % (len(words) - gap_len - 12))
-            left_ctx = " ".join(words[max(0, idx - 8):idx])
-            gold_words = words[idx:idx + gap_len]
+            left_ctx = " ".join(words[max(0, idx - 8) : idx])
+            gold_words = words[idx : idx + gap_len]
             gold_text = " ".join(gold_words)
-            right_ctx = " ".join(words[idx + gap_len:idx + gap_len + 8])
+            right_ctx = " ".join(words[idx + gap_len : idx + gap_len + 8])
 
             input_str = f"restoration: {left_ctx} <GAP> {right_ctx}"
             inputs = tokenizer(input_str, return_tensors="pt").to(device)
@@ -142,8 +167,11 @@ def main() -> None:
                     early_stopping=True,
                 )
 
-            preds = [tokenizer.decode(out, skip_special_tokens=True).strip() for out in outputs]
-            
+            preds = [
+                tokenizer.decode(out, skip_special_tokens=True).strip()
+                for out in outputs
+            ]
+
             # Normalize Hebrew characters (strip niqqud/punctuation)
             norm_gold = hebrew_letters(gold_text)
             norm_preds = [hebrew_letters(p) for p in preds]
@@ -166,13 +194,15 @@ def main() -> None:
             p0_preds = [p for p in unique_preds if min_len <= len(p) <= max_len]
             is_p0_top10 = norm_gold in p0_preds[:10]
 
-            results_by_length[gap_len].append({
-                "gold": gold_text,
-                "top1": is_top1,
-                "top5": is_top5,
-                "top10": is_top10,
-                "p0_top10": is_p0_top10
-            })
+            results_by_length[gap_len].append(
+                {
+                    "gold": gold_text,
+                    "top1": is_top1,
+                    "top5": is_top5,
+                    "top10": is_top10,
+                    "p0_top10": is_p0_top10,
+                }
+            )
 
             count += 1
             item_idx += 1
@@ -197,9 +227,11 @@ def main() -> None:
             "top1": round(t1, 1),
             "top5": round(t5, 1),
             "u0_top10": round(t10, 1),
-            "p0_top10": round(p0_t10, 1)
+            "p0_top10": round(p0_t10, 1),
         }
-        print(f"{gap_len}-Word Gap (N={n}): U0 Top-10 = {t10:.1f}% | P0 Physical Bounds Top-10 = {p0_t10:.1f}% | Top-1 = {t1:.1f}%")
+        print(
+            f"{gap_len}-Word Gap (N={n}): U0 Top-10 = {t10:.1f}% | P0 Physical Bounds Top-10 = {p0_t10:.1f}% | Top-1 = {t1:.1f}%"
+        )
 
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
     args.output_json.write_text(json.dumps(summary, indent=2, ensure_ascii=False))

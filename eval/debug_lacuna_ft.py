@@ -3,12 +3,15 @@
 Scholars care most about content words (nouns, verbs, adjectives). This script
 compares all models on the subset of content words versus all words.
 """
-import os, sys
+
+import os
+import sys
 from pathlib import Path
 import numpy as np
 import torch
 from transformers import AutoTokenizer, AutoModelForMaskedLM, logging as tlog
 from tf.app import use
+
 tlog.set_verbosity_error()
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,10 +25,12 @@ MODELS = [
     ("dicta-il/MsBERT", "MsBERT base"),
     ("dicta-il/BEREL", "BEREL base"),
 ]
-for d, nice in [("ft_msbert_span", "MsBERT+DSS-span-ft"),
-                ("ft_msbert_span_noparticles", "MsBERT+DSS-span-ft-no-particles"),
-                ("ft_msbert_span_refined", "MsBERT+DSS-span-ft-refined"),
-                ("ft_msbert_span_softshort", "MsBERT+DSS-span-ft-softshort")]:
+for d, nice in [
+    ("ft_msbert_span", "MsBERT+DSS-span-ft"),
+    ("ft_msbert_span_noparticles", "MsBERT+DSS-span-ft-no-particles"),
+    ("ft_msbert_span_refined", "MsBERT+DSS-span-ft-refined"),
+    ("ft_msbert_span_softshort", "MsBERT+DSS-span-ft-softshort"),
+]:
     model_dir = repo_path(d)
     if model_dir.is_dir():
         MODELS.append((str(model_dir), nice))
@@ -40,9 +45,45 @@ dev = "mps" if torch.backends.mps.is_available() else "cpu"
 allowed_scrolls, split_label = resolve_scroll_filter(SPLIT_MODE)
 
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
-FUNCTION = {"אשר", "כי", "כיא", "את", "אל", "על", "אם", "לא", "לוא", "כל", "כול",
-            "מן", "הוא", "היא", "אני", "אתה", "הם", "זה", "זאת", "לו", "בו", "עד",
-            "גם", "או", "כן", "אך", "רק", "יש", "אין", "מה", "מי", "ולא", "ואת", "וכל", "כה"}
+FUNCTION = {
+    "אשר",
+    "כי",
+    "כיא",
+    "את",
+    "אל",
+    "על",
+    "אם",
+    "לא",
+    "לוא",
+    "כל",
+    "כול",
+    "מן",
+    "הוא",
+    "היא",
+    "אני",
+    "אתה",
+    "הם",
+    "זה",
+    "זאת",
+    "לו",
+    "בו",
+    "עד",
+    "גם",
+    "או",
+    "כן",
+    "אך",
+    "רק",
+    "יש",
+    "אין",
+    "מה",
+    "מי",
+    "ולא",
+    "ואת",
+    "וכל",
+    "כה",
+}
+
+
 def norm(w):
     lem = morph_dss.lemma(w)
     lem = "".join(FINAL.get(c, c) for c in lem)
@@ -69,7 +110,11 @@ def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
 
 
 scrolls = {}
@@ -103,7 +148,9 @@ for ws in scrolls.values():
             items.append((ctx, tpos, ctx[tpos]))
 sel = rng.choice(len(items), size=min(MAX_ITEMS, len(items)), replace=False)
 items = [items[i] for i in sel]
-print(f"eval split: {split_label} | eligible scrolls: {len(scrolls)} | sampled items: {len(items)}")
+print(
+    f"eval split: {split_label} | eligible scrolls: {len(scrolls)} | sampled items: {len(items)}"
+)
 
 
 def beam_words(logits, ps, tok):
@@ -111,9 +158,14 @@ def beam_words(logits, ps, tok):
     for p in ps:
         lp = torch.log_softmax(logits[p], -1)
         top = torch.topk(lp, TOPN)
-        beams = sorted([(s + v, seq + [i]) for s, seq in beams
-                        for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                       key=lambda x: -x[0])[:BEAM]
+        beams = sorted(
+            [
+                (s + v, seq + [i])
+                for s, seq in beams
+                for i, v in zip(top.indices.tolist(), top.values.tolist())
+            ],
+            key=lambda x: -x[0],
+        )[:BEAM]
     out = []
     for _, seq in beams:
         w = tok.decode(seq).replace(" ", "").replace("##", "")
@@ -127,13 +179,19 @@ def beam_words(logits, ps, tok):
 def eval_model(repo, nice):
     tok = AutoTokenizer.from_pretrained(repo, use_fast=True)
     model = AutoModelForMaskedLM.from_pretrained(repo).to(dev).eval()
-    
+
     n_all = n_content = 0
     all_exact_1 = all_exact_10 = all_norm_1 = all_norm_10 = 0
     cont_exact_1 = cont_exact_10 = cont_norm_1 = cont_norm_10 = 0
-    
+
     for ctx, tpos, gold in items:
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         wmap = {}
         for pos, wid in enumerate(enc.word_ids(0)):
             if wid is not None:
@@ -147,7 +205,7 @@ def eval_model(repo, nice):
         with torch.no_grad():
             logits = model(ids.unsqueeze(0).to(dev)).logits[0].cpu()
         ranked = beam_words(logits, ps, tok)
-        
+
         # metrics
         n_all += 1
         e1 = bool(ranked) and gold == ranked[0]
@@ -155,9 +213,12 @@ def eval_model(repo, nice):
         ng = norm(gold)
         n1 = bool(ranked) and norm(ranked[0]) == ng
         n10 = any(norm(r) == ng for r in ranked)
-        
-        all_exact_1 += e1; all_exact_10 += e10; all_norm_1 += n1; all_norm_10 += n10
-        
+
+        all_exact_1 += e1
+        all_exact_10 += e10
+        all_norm_1 += n1
+        all_norm_10 += n10
+
         if is_content(gold):
             n_content += 1
             # Physical layout constraint: candidates must be within a realistic length range
@@ -166,20 +227,27 @@ def eval_model(repo, nice):
             fe10 = gold in ranked_filt
             fn1 = bool(ranked_filt) and norm(ranked_filt[0]) == ng
             fn10 = any(norm(r) == ng for r in ranked_filt)
-            cont_exact_1 += fe1; cont_exact_10 += fe10; cont_norm_1 += fn1; cont_norm_10 += fn10
-            
+            cont_exact_1 += fe1
+            cont_exact_10 += fe10
+            cont_norm_1 += fn1
+            cont_norm_10 += fn10
+
     return dict(
         nice=nice,
-        all_exact_1=all_exact_1/n_all*100,
-        all_norm_10=all_norm_10/n_all*100,
-        cont_exact_1=cont_exact_1/n_content*100,
-        cont_norm_10=cont_norm_10/n_content*100,
+        all_exact_1=all_exact_1 / n_all * 100,
+        all_norm_10=all_norm_10 / n_all * 100,
+        cont_exact_1=cont_exact_1 / n_content * 100,
+        cont_norm_10=cont_norm_10 / n_content * 100,
         n_all=n_all,
-        n_content=n_content
+        n_content=n_content,
     )
 
 
-print(f"{'model':22s} | {'ALL words (top-1/top-10)':>26s} | {'CONTENT words (top-1/top-10)':>30s}")
+print(
+    f"{'model':22s} | {'ALL words (top-1/top-10)':>26s} | {'CONTENT words (top-1/top-10)':>30s}"
+)
 for repo, nice in MODELS:
     r = eval_model(repo, nice)
-    print(f"{r['nice']:22s} | EXACT Top-1: {r['all_exact_1']:4.1f}% / NORM Top-10: {r['all_norm_10']:4.1f}% | EXACT Top-1: {r['cont_exact_1']:4.1f}% / NORM Top-10: {r['cont_norm_10']:4.1f}%")
+    print(
+        f"{r['nice']:22s} | EXACT Top-1: {r['all_exact_1']:4.1f}% / NORM Top-10: {r['all_norm_10']:4.1f}% | EXACT Top-1: {r['cont_exact_1']:4.1f}% / NORM Top-10: {r['cont_norm_10']:4.1f}%"
+    )

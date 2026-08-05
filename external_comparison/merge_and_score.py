@@ -5,6 +5,7 @@ Dedup rule: a sentence may appear in an interrupted shard run and again in the
 top-up run; keep the copy with the most span records (complete beats truncated).
 Only sentences present for ALL four models are scored (paired sample).
 """
+
 import json
 import sys
 from collections import defaultdict
@@ -54,8 +55,13 @@ for tag in TAGS:
                 out.write(json.dumps(span, ensure_ascii=False) + "\n")
     src_manifest = next((HERE / "shard_eval_results" / tag).glob("*/*/manifest.json"))
     manifest = json.loads(src_manifest.read_text())
-    manifest["paired_sample"] = {"n_sentences": len(common), "source": "sample_uids.json"}
-    (merged / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
+    manifest["paired_sample"] = {
+        "n_sentences": len(common),
+        "source": "sample_uids.json",
+    }
+    (merged / "manifest.json").write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False)
+    )
 
     word_df, metrics, counts = score_run_dir(merged)
     o = metrics["overall"]
@@ -88,7 +94,9 @@ for tag, s in summary.items():
     scored = total - s["unaligned"]
     for k in ("hit@1", "hit@10"):
         adj = s[k] * scored / total if total else 0.0
-        print(f"{tag} {k}_all_words: {adj:.4f} (aligned-only {s[k]:.4f}, {s['unaligned']}/{total} unaligned)")
+        print(
+            f"{tag} {k}_all_words: {adj:.4f} (aligned-only {s[k]:.4f}, {s['unaligned']}/{total} unaligned)"
+        )
 
 (HERE / "merged_results" / "summary.json").write_text(json.dumps(summary, indent=2))
 print("\nwrote merged_results/summary.json")

@@ -12,11 +12,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import math
 import random
 import sys
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 import torch
@@ -35,7 +33,9 @@ tlog.set_verbosity_error()
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-model", default="google/byt5-small")
-    parser.add_argument("--output-dir", type=Path, default=ROOT / "ft_byt5_span_preserved_nonbib_seed41")
+    parser.add_argument(
+        "--output-dir", type=Path, default=ROOT / "ft_byt5_span_preserved_nonbib_seed41"
+    )
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--learning-rate", type=float, default=1e-3)
@@ -76,11 +76,11 @@ def choose_word_span(
     probabilities /= probabilities.sum()
     word_count = int(rng.choice(np.arange(1, max_words + 1), p=probabilities))
     start_word = int(rng.integers(0, len(words) - word_count + 1))
-    
+
     prefix = " ".join(words[:start_word])
-    target = " ".join(words[start_word:start_word + word_count])
-    suffix = " ".join(words[start_word + word_count:])
-    
+    target = " ".join(words[start_word : start_word + word_count])
+    suffix = " ".join(words[start_word + word_count :])
+
     scroll_tag = f"[{scroll}] " if scroll else ""
     context_text = f"restoration: {scroll_tag}{prefix} <extra_id_0> {suffix}".strip()
     return context_text, f"<extra_id_0> {target}"
@@ -93,16 +93,28 @@ def train() -> None:
     random.seed(args.seed)
     rng = np.random.default_rng(args.seed)
 
-    device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
+    device = (
+        "cuda"
+        if torch.cuda.is_available()
+        else "mps"
+        if torch.backends.mps.is_available()
+        else "cpu"
+    )
     print(f"Loading ByT5 tokenization-free model ({args.base_model}) on {device}...")
 
-    tokenizer = AutoTokenizer.from_pretrained(args.base_model, local_files_only=args.local_files_only)
-    model = AutoModelForSeq2SeqLM.from_pretrained(args.base_model, local_files_only=args.local_files_only)
+    tokenizer = AutoTokenizer.from_pretrained(
+        args.base_model, local_files_only=args.local_files_only
+    )
+    model = AutoModelForSeq2SeqLM.from_pretrained(
+        args.base_model, local_files_only=args.local_files_only
+    )
     model.to(device)
 
     train_texts = preserved_segments("train")
     dev_texts = preserved_segments("dev")
-    print(f"Loaded {len(train_texts)} train segments and {len(dev_texts)} dev segments.")
+    print(
+        f"Loaded {len(train_texts)} train segments and {len(dev_texts)} dev segments."
+    )
 
     optimizer = AdamW(model.parameters(), lr=args.learning_rate)
 
@@ -115,14 +127,16 @@ def train() -> None:
         "learning_rate": args.learning_rate,
         "corpus_sha256": corpus_sha256(),
     }
-    (args.output_dir / "byt5_training_metadata.json").write_text(json.dumps(metadata, indent=2))
+    (args.output_dir / "byt5_training_metadata.json").write_text(
+        json.dumps(metadata, indent=2)
+    )
 
     for epoch in range(1, args.epochs + 1):
         model.train()
         total_loss = 0.0
         shuffled = train_texts.copy()
         random.shuffle(shuffled)
-        
+
         batch_inputs = []
         batch_targets = []
         step_count = 0
@@ -133,8 +147,20 @@ def train() -> None:
             batch_targets.append(target)
 
             if len(batch_inputs) >= args.batch_size:
-                model_inputs = tokenizer(batch_inputs, max_length=args.max_length, padding=True, truncation=True, return_tensors="pt").to(device)
-                labels = tokenizer(text_target=batch_targets, max_length=128, padding=True, truncation=True, return_tensors="pt")["input_ids"].to(device)
+                model_inputs = tokenizer(
+                    batch_inputs,
+                    max_length=args.max_length,
+                    padding=True,
+                    truncation=True,
+                    return_tensors="pt",
+                ).to(device)
+                labels = tokenizer(
+                    text_target=batch_targets,
+                    max_length=128,
+                    padding=True,
+                    truncation=True,
+                    return_tensors="pt",
+                )["input_ids"].to(device)
                 labels[labels == tokenizer.pad_token_id] = -100
 
                 optimizer.zero_grad()

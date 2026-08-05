@@ -87,14 +87,12 @@ def test_relation_labels_do_not_promote_similarity_without_controls():
 def test_preserved_queries_drop_gap_markers_and_use_metadata(tmp_path):
     metadata = tmp_path / "metadata.csv"
     metadata.write_text(
-        "book,composition,genre,section\n"
-        "4QX,Instruction,Wisdom,sectarian_texts\n",
+        "book,composition,genre,section\n4QX,Instruction,Wisdom,sectarian_texts\n",
         encoding="utf-8",
     )
     corpus = tmp_path / "preserved.jsonl"
     corpus.write_text(
-        '{"scroll":"4QX","chunk_index":2,'
-        '"text":"כי <GAP> אמר חכמה <GAP> דרך"}\n',
+        '{"scroll":"4QX","chunk_index":2,"text":"כי <GAP> אמר חכמה <GAP> דרך"}\n',
         encoding="utf-8",
     )
     rows = load_preserved_dss_queries(

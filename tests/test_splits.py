@@ -1,6 +1,5 @@
 """Unit tests for unified frozen scroll splits module."""
 
-import pytest
 from utils.splits import (
     load_frozen_scroll_splits,
     get_scroll_sets,

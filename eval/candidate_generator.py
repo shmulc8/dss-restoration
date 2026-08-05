@@ -8,13 +8,13 @@ Implements Decision Point #4 from UNIFICATION_DECISION_POINTS.md:
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple, Dict, Any
-import re
+from typing import List, Optional, Dict, Any
 
 
 @dataclass
 class Candidate:
     """Represents a single restoration prediction candidate."""
+
     text: str
     score: float
     tokens: Optional[List[str]] = None
@@ -35,7 +35,7 @@ class CandidateGenerator(ABC):
         top_k: int = 10,
     ) -> List[Candidate]:
         """Generate top-k restoration candidates given context and optional constraints.
-        
+
         Args:
             context_left: Surviving text preceding the lacuna.
             context_right: Surviving text following the lacuna.
@@ -50,9 +50,11 @@ class PartialLetterFilter:
     """Utilities for matching candidates against physical partial letter patterns."""
 
     @staticmethod
-    def is_compatible(candidate_text: str, pattern: str, wildcard_char: str = "⬚") -> bool:
+    def is_compatible(
+        candidate_text: str, pattern: str, wildcard_char: str = "⬚"
+    ) -> bool:
         """Check if candidate_text is physically compatible with a partial letter pattern.
-        
+
         Example: candidate "סרכיך" is compatible with pattern "סר⬚⬚ך".
         """
         if len(candidate_text) != len(pattern):
@@ -81,7 +83,9 @@ class MockCandidateGenerator(CandidateGenerator):
         for i, text in enumerate(self.mock_candidates):
             if target_len is not None and len(text) != target_len:
                 continue
-            if partial_pattern is not None and not PartialLetterFilter.is_compatible(text, partial_pattern):
+            if partial_pattern is not None and not PartialLetterFilter.is_compatible(
+                text, partial_pattern
+            ):
                 continue
             score = -1.0 * (i + 1)
             results.append(Candidate(text=text, score=score))

@@ -1,4 +1,5 @@
 """Prepare static JSON assets for the local demo site."""
+
 import csv
 import json
 import re
@@ -39,12 +40,19 @@ def load_failures():
         except Exception:
             row["target_fit_frequency"] = None
         row["top_candidates"] = [row.get(f"model_top{i}", "") for i in range(1, 6)]
-        row["has_short_top1"] = bool(row["model_top1"]) and len(row["model_top1"]) + 1 < len(row["target_word"])
+        row["has_short_top1"] = bool(row["model_top1"]) and len(
+            row["model_top1"]
+        ) + 1 < len(row["target_word"])
         row["rarity_bucket"] = (
-            "unseen" if row["target_fit_frequency"] == 0 else
-            "rare" if row["target_fit_frequency"] is not None and row["target_fit_frequency"] <= 3 else
-            "medium" if row["target_fit_frequency"] is not None and row["target_fit_frequency"] <= 20 else
-            "common"
+            "unseen"
+            if row["target_fit_frequency"] == 0
+            else "rare"
+            if row["target_fit_frequency"] is not None
+            and row["target_fit_frequency"] <= 3
+            else "medium"
+            if row["target_fit_frequency"] is not None
+            and row["target_fit_frequency"] <= 20
+            else "common"
         )
         issue_map = {
             "exact_top1_hit": "Exact top-1 hit",
@@ -54,14 +62,21 @@ def load_failures():
             "same_length_semantic": "Plausible but wrong content-word choice",
             "other_miss": "Needs manual inspection",
         }
-        row["likely_issue_label"] = issue_map.get(row["likely_issue"], row["likely_issue"])
+        row["likely_issue_label"] = issue_map.get(
+            row["likely_issue"], row["likely_issue"]
+        )
         row["similar_passages"] = similar.get(row.get("row_id", ""), [])
         for passage in row["similar_passages"]:
             passage["same_composition"] = passage.get("same_composition", False) or (
-                composition_group_for_scroll(passage.get("book", "")) == row["composition_group"]
+                composition_group_for_scroll(passage.get("book", ""))
+                == row["composition_group"]
             )
-        row["gold_in_similar"] = any(passage.get("gold_present") for passage in row["similar_passages"])
-        row["top1_in_similar"] = any(passage.get("top1_present") for passage in row["similar_passages"])
+        row["gold_in_similar"] = any(
+            passage.get("gold_present") for passage in row["similar_passages"]
+        )
+        row["top1_in_similar"] = any(
+            passage.get("top1_present") for passage in row["similar_passages"]
+        )
     return rows
 
 
@@ -82,9 +97,11 @@ def load_spans():
         row["slot_details"] = json.loads(row["slot_details_json"])
         row["top_candidates"] = [slot.get("top1", "") for slot in row["slot_details"]]
         row["likely_issue_label"] = (
-            "Exact span hit" if row["case_status"] == "hit" else
-            "Partial span recovery" if row["slot_top5_hits"] > 0 else
-            "Span miss"
+            "Exact span hit"
+            if row["case_status"] == "hit"
+            else "Partial span recovery"
+            if row["slot_top5_hits"] > 0
+            else "Span miss"
         )
     return rows
 
@@ -105,7 +122,9 @@ def load_unknowns():
         row["case_status"] = "unknown"
         row["top1_phrase"] = row.get("top1_phrase", "")
         row["top1_constrained_phrase"] = row.get("top1_constrained_phrase", "")
-        row["slot_details"] = json.loads(row["slot_details_json"]) if row.get("slot_details_json") else []
+        row["slot_details"] = (
+            json.loads(row["slot_details_json"]) if row.get("slot_details_json") else []
+        )
     return rows
 
 
@@ -164,11 +183,15 @@ def load_benchmark():
         for key, value in re.findall(r"'([^']+)':\s*(\d+)", payload):
             benchmark["n_per_bucket"][key] = int(value)
     if RETRIEVAL_BENCHMARK_JSON.exists():
-        benchmark["retrieval"] = json.loads(RETRIEVAL_BENCHMARK_JSON.read_text(encoding="utf-8"))
+        benchmark["retrieval"] = json.loads(
+            RETRIEVAL_BENCHMARK_JSON.read_text(encoding="utf-8")
+        )
     else:
         benchmark["retrieval"] = None
     if PARALLEL_LOOKUP_JSON.exists():
-        benchmark["parallel_lookup"] = json.loads(PARALLEL_LOOKUP_JSON.read_text(encoding="utf-8"))
+        benchmark["parallel_lookup"] = json.loads(
+            PARALLEL_LOOKUP_JSON.read_text(encoding="utf-8")
+        )
     else:
         benchmark["parallel_lookup"] = None
     return benchmark
@@ -218,7 +241,9 @@ def main():
         encoding="utf-8",
     )
     (DEMO_DATA / "guide.json").write_text(
-        json.dumps({"markdown": guide, "summary": summary}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {"markdown": guide, "summary": summary}, ensure_ascii=False, indent=2
+        ),
         encoding="utf-8",
     )
     print(f"wrote {DEMO_DATA / 'failures.json'}")

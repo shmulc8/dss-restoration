@@ -67,18 +67,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-json",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "reports"
-        / "cross_corpus_quote_ablation.json",
+        default=ROOT / "analysis" / "reports" / "cross_corpus_quote_ablation.json",
     )
     parser.add_argument(
         "--output-markdown",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "reports"
-        / "CROSS_CORPUS_QUOTE_ABLATION.md",
+        default=ROOT / "analysis" / "reports" / "CROSS_CORPUS_QUOTE_ABLATION.md",
     )
     return parser.parse_args()
 
@@ -175,8 +169,7 @@ def rank_passages(
     word_percentiles = row_percentiles(word_scores)
     char_percentiles = row_percentiles(char_scores)
     combined = (
-        lexical_weight * word_percentiles
-        + orthographic_weight * char_percentiles
+        lexical_weight * word_percentiles + orthographic_weight * char_percentiles
     )
     output = []
     for query_index, query in enumerate(queries):
@@ -352,9 +345,7 @@ def nested_feature_control(
             ):
                 grouped[query["book"]].append(row)
         by_feature[feature] = grouped
-    manuscripts = sorted(
-        set.intersection(*(set(rows) for rows in by_feature.values()))
-    )
+    manuscripts = sorted(set.intersection(*(set(rows) for rows in by_feature.values())))
     if len(manuscripts) < 2:
         return {"status": "not_run", "reason": "fewer than two mapped manuscripts"}
 
@@ -420,12 +411,8 @@ def nested_feature_control(
                     -feature_order.index(feature),
                 ),
             )
-            heldout_top1 = score(
-                selected, heldout, str(labels[heldout_index]), 1
-            )
-            heldout_top3 = score(
-                selected, heldout, str(labels[heldout_index]), 3
-            )
+            heldout_top1 = score(selected, heldout, str(labels[heldout_index]), 1)
+            heldout_top3 = score(selected, heldout, str(labels[heldout_index]), 3)
             top1.append(heldout_top1)
             top3.append(heldout_top3)
             selections.append(
@@ -573,17 +560,17 @@ def markdown_report(report: dict) -> str:
     nested = report["nested_feature_validation"]["residual"]
     lines.extend(
         [
-        "",
-        "Feature choice was also repeated in nested leave-one-manuscript-out",
-        "validation, selecting among combined, word-only, and character-only",
-        "rankings on the other manuscripts before scoring each held-out Pesher.",
-        f"Nested residual Top-1 / Top-3: "
-        f"{100 * nested.get('macro_top1_recovery', 0):.1f}% / "
-        f"{100 * nested.get('macro_top3_recovery', 0):.1f}% "
-        f"(Top-3 permutation p={nested.get('top3_permutation_p', 1):.4g}).",
-        "",
-        "## Composition-level decomposition",
-        "",
+            "",
+            "Feature choice was also repeated in nested leave-one-manuscript-out",
+            "validation, selecting among combined, word-only, and character-only",
+            "rankings on the other manuscripts before scoring each held-out Pesher.",
+            f"Nested residual Top-1 / Top-3: "
+            f"{100 * nested.get('macro_top1_recovery', 0):.1f}% / "
+            f"{100 * nested.get('macro_top3_recovery', 0):.1f}% "
+            f"(Top-3 permutation p={nested.get('top3_permutation_p', 1):.4g}).",
+            "",
+            "## Composition-level decomposition",
+            "",
         ]
     )
     for block in report["composition_comparison"]:
@@ -646,9 +633,7 @@ def markdown_report(report: dict) -> str:
 
 def main() -> None:
     args = parse_args()
-    targets = {
-        value.strip() for value in args.targets.split(",") if value.strip()
-    }
+    targets = {value.strip() for value in args.targets.split(",") if value.strip()}
     queries = load_preserved_dss_queries(
         args.dss_preserved_jsonl,
         metadata_csv=args.dss_csv,
@@ -674,8 +659,7 @@ def main() -> None:
     )
     inventory = ngram_inventory(external, args.quote_ngram)
     masked_rows = [
-        mask_external_ngrams(query, inventory, n=args.quote_ngram)
-        for query in queries
+        mask_external_ngrams(query, inventory, n=args.quote_ngram) for query in queries
     ]
     residual_queries = [
         residual
@@ -683,13 +667,9 @@ def main() -> None:
         if audit["residual_words"] >= args.residual_min_words
     ]
     retained_ids = {query.passage_id for query in residual_queries}
-    literal_queries = [
-        query for query in queries if query.passage_id in retained_ids
-    ]
+    literal_queries = [query for query in queries if query.passage_id in retained_ids]
     audits = [
-        audit
-        for residual, audit in masked_rows
-        if residual.passage_id in retained_ids
+        audit for residual, audit in masked_rows if residual.passage_id in retained_ids
     ]
     surviving_matches = sum(
         surviving_inventory_matches(
@@ -700,9 +680,7 @@ def main() -> None:
         for residual in residual_queries
     )
     if surviving_matches:
-        raise RuntimeError(
-            f"quotation ablation left {surviving_matches} matched runs"
-        )
+        raise RuntimeError(f"quotation ablation left {surviving_matches} matched runs")
     literal_ranked = rank_passages(literal_queries, external, top_k=args.top_k)
     residual_ranked = rank_passages(residual_queries, external, top_k=args.top_k)
     literal_feature_rankings = {"combined": literal_ranked}
@@ -727,12 +705,8 @@ def main() -> None:
             orthographic_weight=orthographic_weight,
         )
         feature_sensitivity[name] = {
-            "literal": evaluate_pesher_source_control(
-                literal_feature_rankings[name]
-            ),
-            "residual": evaluate_pesher_source_control(
-                residual_feature_rankings[name]
-            ),
+            "literal": evaluate_pesher_source_control(literal_feature_rankings[name]),
+            "residual": evaluate_pesher_source_control(residual_feature_rankings[name]),
         }
     report = {
         "status": "paper_method_candidate_quote_aware_connection_screen",
@@ -753,9 +727,7 @@ def main() -> None:
             "median_masked_fraction": float(
                 np.median([audit["masked_fraction"] for audit in audits])
             ),
-            "total_matching_windows": sum(
-                audit["matched_windows"] for audit in audits
-            ),
+            "total_matching_windows": sum(audit["matched_windows"] for audit in audits),
             "surviving_matching_runs": surviving_matches,
         },
         "positive_controls": {
@@ -767,9 +739,7 @@ def main() -> None:
             "literal": nested_feature_control(literal_feature_rankings),
             "residual": nested_feature_control(residual_feature_rankings),
         },
-        "composition_comparison": compare_conditions(
-            literal_ranked, residual_ranked
-        ),
+        "composition_comparison": compare_conditions(literal_ranked, residual_ranked),
         "residual_cluster_enrichment": clustered_composition_enrichment(
             residual_ranked,
             permutations=args.permutations,

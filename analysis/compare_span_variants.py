@@ -5,6 +5,7 @@ Reports:
 2. Content-word exact/norm metrics.
 3. How often the top-1 prediction is suspiciously short.
 """
+
 import sys
 import os
 from pathlib import Path
@@ -40,7 +41,11 @@ for spec in filter(None, os.environ.get("EXTRA_MODELS", "").split(",")):
     model_dir = repo_path(dirname)
     if model_dir.is_dir():
         MODELS.append((str(model_dir), label))
-MODEL_FILTERS = [part.strip().lower() for part in os.environ.get("MODEL_FILTER", "").split(",") if part.strip()]
+MODEL_FILTERS = [
+    part.strip().lower()
+    for part in os.environ.get("MODEL_FILTER", "").split(",")
+    if part.strip()
+]
 
 WINDOW, MIN_PRESERVED, MAX_ITEMS = 20, 8, 300
 TOPN, BEAM, K = 50, 50, 20
@@ -50,9 +55,41 @@ HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
 FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 FUNCTION = {
-    "אשר", "כי", "כיא", "את", "אל", "על", "אם", "לא", "לוא", "כל", "כול",
-    "מן", "הוא", "היא", "אני", "אתה", "הם", "זה", "זאת", "לו", "בו", "עד",
-    "גם", "או", "כן", "אך", "רק", "יש", "אין", "מה", "מי", "ולא", "ואת", "וכל", "כה",
+    "אשר",
+    "כי",
+    "כיא",
+    "את",
+    "אל",
+    "על",
+    "אם",
+    "לא",
+    "לוא",
+    "כל",
+    "כול",
+    "מן",
+    "הוא",
+    "היא",
+    "אני",
+    "אתה",
+    "הם",
+    "זה",
+    "זאת",
+    "לו",
+    "בו",
+    "עד",
+    "גם",
+    "או",
+    "כן",
+    "אך",
+    "רק",
+    "יש",
+    "אין",
+    "מה",
+    "מי",
+    "ולא",
+    "ואת",
+    "וכל",
+    "כה",
 }
 rng = np.random.default_rng(0)
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -63,7 +100,9 @@ if MODEL_FILTERS:
     MODELS = [
         (repo, label)
         for repo, label in MODELS
-        if any(token in label.lower() or token in repo.lower() for token in MODEL_FILTERS)
+        if any(
+            token in label.lower() or token in repo.lower() for token in MODEL_FILTERS
+        )
     ]
 
 
@@ -97,7 +136,11 @@ def winfo(word_node):
     signs = L.d(word_node, "sign")
     glyph = "".join(F.glyph.v(sign) or "" for sign in signs)
     recs = [F.rec.v(sign) for sign in signs]
-    return glyph, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        glyph,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
 
 
 scrolls = {}
@@ -171,7 +214,13 @@ for repo, label in MODELS:
     short_top1 = 0
 
     for ctx, tpos, gold in items:
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         word_map = {}
         for pos, word_id in enumerate(enc.word_ids(0)):
             if word_id is not None:
@@ -191,14 +240,40 @@ for repo, label in MODELS:
         results.append((gold, ranked))
 
     n = len(results)
-    exact_1 = sum(1 for gold, ranked in results if ranked and ranked[0] == gold) / n * 100
+    exact_1 = (
+        sum(1 for gold, ranked in results if ranked and ranked[0] == gold) / n * 100
+    )
     exact_10 = sum(1 for gold, ranked in results if gold in ranked[:10]) / n * 100
-    norm_1 = sum(1 for gold, ranked in results if ranked and norm(ranked[0]) == norm(gold)) / n * 100
-    norm_10 = sum(1 for gold, ranked in results if any(norm(word) == norm(gold) for word in ranked[:10])) / n * 100
+    norm_1 = (
+        sum(1 for gold, ranked in results if ranked and norm(ranked[0]) == norm(gold))
+        / n
+        * 100
+    )
+    norm_10 = (
+        sum(
+            1
+            for gold, ranked in results
+            if any(norm(word) == norm(gold) for word in ranked[:10])
+        )
+        / n
+        * 100
+    )
 
     content = [(gold, ranked) for gold, ranked in results if is_content(gold)]
     nc = max(1, len(content))
-    cont_exact_1 = sum(1 for gold, ranked in content if ranked and ranked[0] == gold) / nc * 100
-    cont_norm_10 = sum(1 for gold, ranked in content if any(norm(word) == norm(gold) for word in ranked[:10])) / nc * 100
+    cont_exact_1 = (
+        sum(1 for gold, ranked in content if ranked and ranked[0] == gold) / nc * 100
+    )
+    cont_norm_10 = (
+        sum(
+            1
+            for gold, ranked in content
+            if any(norm(word) == norm(gold) for word in ranked[:10])
+        )
+        / nc
+        * 100
+    )
 
-    print(f"{label:28s} | EXACT t1 {exact_1:4.1f}% t10 {exact_10:4.1f}% | NORM t1 {norm_1:4.1f}% t10 {norm_10:4.1f}% | content exact t1 {cont_exact_1:4.1f}% norm t10 {cont_norm_10:4.1f}% | short top1 {short_top1:3d}/{n}")
+    print(
+        f"{label:28s} | EXACT t1 {exact_1:4.1f}% t10 {exact_10:4.1f}% | NORM t1 {norm_1:4.1f}% t10 {norm_10:4.1f}% | content exact t1 {cont_exact_1:4.1f}% norm t10 {cont_norm_10:4.1f}% | short top1 {short_top1:3d}/{n}"
+    )

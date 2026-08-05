@@ -3,6 +3,7 @@
 The retrieval index is intentionally restricted to the `fit` partition. For the
 held-out benchmark this avoids retrieving text from the held-out scrolls.
 """
+
 import csv
 import json
 import math
@@ -20,14 +21,24 @@ from utils.clitic_join import join_likely_clitics
 from utils.composition_lookup import composition_group_for_scroll
 from utils.dss_split import load_partition
 
-CASES_CSV = Path(os.environ.get(
-    "CASES_CSV",
-    ROOT / "analysis" / "reports" / "full_single_word_cases_refined_hebrew_only.csv",
-))
-OUT_JSON = Path(os.environ.get(
-    "OUT_JSON",
-    ROOT / "analysis" / "reports" / "similar_passages_fit_for_full_single_word_cases.json",
-))
+CASES_CSV = Path(
+    os.environ.get(
+        "CASES_CSV",
+        ROOT
+        / "analysis"
+        / "reports"
+        / "full_single_word_cases_refined_hebrew_only.csv",
+    )
+)
+OUT_JSON = Path(
+    os.environ.get(
+        "OUT_JSON",
+        ROOT
+        / "analysis"
+        / "reports"
+        / "similar_passages_fit_for_full_single_word_cases.json",
+    )
+)
 TOP_K = int(os.environ.get("TOP_K", "5"))
 RETRIEVAL_PARTITION = os.environ.get("RETRIEVAL_PARTITION", "fit")
 HEB = re.compile(r"[\u05d0-\u05ea]+")
@@ -52,21 +63,25 @@ def load_docs():
         tf = Counter(tok)
         for term in tf:
             df[term] += 1
-        docs.append({
-            "doc_id": f"{RETRIEVAL_PARTITION}-{idx + 1}",
-            "book": row.get("book", ""),
-            "sentence_path": row.get("sentence_path", ""),
-            "composition": row.get("composition", ""),
-            "composition_group": composition_group_for_scroll(row.get("book", "")),
-            "genre": row.get("genre", ""),
-            "section": row.get("section", ""),
-            "text": text,
-            "display_text": display_text(text),
-            "tf": tf,
-            "length": max(1, len(tok)),
-        })
+        docs.append(
+            {
+                "doc_id": f"{RETRIEVAL_PARTITION}-{idx + 1}",
+                "book": row.get("book", ""),
+                "sentence_path": row.get("sentence_path", ""),
+                "composition": row.get("composition", ""),
+                "composition_group": composition_group_for_scroll(row.get("book", "")),
+                "genre": row.get("genre", ""),
+                "section": row.get("section", ""),
+                "text": text,
+                "display_text": display_text(text),
+                "tf": tf,
+                "length": max(1, len(tok)),
+            }
+        )
     n_docs = max(1, len(docs))
-    idf = {term: math.log((n_docs + 1) / (count + 0.5)) + 1.0 for term, count in df.items()}
+    idf = {
+        term: math.log((n_docs + 1) / (count + 0.5)) + 1.0 for term, count in df.items()
+    }
     for doc in docs:
         norm = 0.0
         weights = {}
@@ -133,31 +148,39 @@ def export():
         case_group = composition_group_for_scroll(row.get("scroll", ""))
         q_weights, q_norm = query_weights(query_text, idf)
         passages = []
-        for rank, (score, doc) in enumerate(score_docs(q_weights, q_norm, docs), start=1):
+        for rank, (score, doc) in enumerate(
+            score_docs(q_weights, q_norm, docs), start=1
+        ):
             text = doc["text"]
-            passages.append({
-                "rank": rank,
-                "score": round(score, 4),
-                "book": doc["book"],
-                "sentence_path": doc["sentence_path"],
-                "composition": doc["composition"],
-                "same_composition": doc["composition_group"] == case_group,
-                "genre": doc["genre"],
-                "section": doc["section"],
-                "source_scope": RETRIEVAL_PARTITION,
-                "text": doc["display_text"],
-                "gold_present": contains_word(text, row["target_word"]),
-                "top1_present": contains_word(text, row["model_top1"]),
-                "candidate_hits": candidate_hits(text, row),
-            })
+            passages.append(
+                {
+                    "rank": rank,
+                    "score": round(score, 4),
+                    "book": doc["book"],
+                    "sentence_path": doc["sentence_path"],
+                    "composition": doc["composition"],
+                    "same_composition": doc["composition_group"] == case_group,
+                    "genre": doc["genre"],
+                    "section": doc["section"],
+                    "source_scope": RETRIEVAL_PARTITION,
+                    "text": doc["display_text"],
+                    "gold_present": contains_word(text, row["target_word"]),
+                    "top1_present": contains_word(text, row["model_top1"]),
+                    "candidate_hits": candidate_hits(text, row),
+                }
+            )
         payload[str(row["row_id"])] = passages
         if idx % 500 == 0:
             print(f"retrieved {idx}/{len(cases)}", flush=True)
 
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
-    OUT_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    OUT_JSON.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(f"wrote {OUT_JSON}")
-    print(f"cases={len(cases)} docs={len(docs)} top_k={TOP_K} partition={RETRIEVAL_PARTITION}")
+    print(
+        f"cases={len(cases)} docs={len(docs)} top_k={TOP_K} partition={RETRIEVAL_PARTITION}"
+    )
 
 
 if __name__ == "__main__":

@@ -94,18 +94,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-json",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "reports"
-        / "cross_corpus_embedding_benchmark.json",
+        default=ROOT / "analysis" / "reports" / "cross_corpus_embedding_benchmark.json",
     )
     parser.add_argument(
         "--output-markdown",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "reports"
-        / "CROSS_CORPUS_EMBEDDING_BENCHMARK.md",
+        default=ROOT / "analysis" / "reports" / "CROSS_CORPUS_EMBEDDING_BENCHMARK.md",
     )
     return parser.parse_args()
 
@@ -258,9 +252,10 @@ def diversified_details(
         for external_index, candidate in enumerate(external):
             key = (candidate.corpus, candidate.book)
             previous = best_by_book.get(key)
-            if previous is None or scores[query_index, external_index] > scores[
-                query_index, previous
-            ]:
+            if (
+                previous is None
+                or scores[query_index, external_index] > scores[query_index, previous]
+            ):
                 best_by_book[key] = external_index
         ranked = sorted(
             best_by_book.values(),
@@ -354,9 +349,7 @@ def main() -> None:
     args = parse_args()
     targets = None
     if args.targets.strip().lower() != "all":
-        targets = {
-            value.strip() for value in args.targets.split(",") if value.strip()
-        }
+        targets = {value.strip() for value in args.targets.split(",") if value.strip()}
 
     queries = load_preserved_dss_queries(
         args.dss_preserved_jsonl,
@@ -383,10 +376,9 @@ def main() -> None:
     )
 
     word_scores, char_scores = _tfidf_similarities(queries, external)
-    tfidf_scores = (
-        SOURCE_WEIGHTS["lexical"] * row_percentiles(word_scores)
-        + SOURCE_WEIGHTS["orthographic"] * row_percentiles(char_scores)
-    )
+    tfidf_scores = SOURCE_WEIGHTS["lexical"] * row_percentiles(
+        word_scores
+    ) + SOURCE_WEIGHTS["orthographic"] * row_percentiles(char_scores)
     query_embeddings, query_model = encode_passages(
         queries,
         model_name=args.model,
@@ -406,9 +398,8 @@ def main() -> None:
         cache_dir=args.cache_dir,
     )
     embedding_scores = query_embeddings @ external_embeddings.T
-    hybrid_scores = (
-        0.5 * row_percentiles(tfidf_scores)
-        + 0.5 * row_percentiles(embedding_scores)
+    hybrid_scores = 0.5 * row_percentiles(tfidf_scores) + 0.5 * row_percentiles(
+        embedding_scores
     )
 
     report = {

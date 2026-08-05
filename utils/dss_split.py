@@ -8,6 +8,7 @@ This prevents overlapping chunks from leaking across experimental boundaries
 while still leaving room for real model selection before touching the final
 held-out benchmark.
 """
+
 import csv
 from functools import lru_cache
 import numpy as np
@@ -19,13 +20,18 @@ SECT = {"sectarian_texts": "sect", "non_sectarian_texts": "non"}
 
 
 def _load_rows():
-    rows = [r for r in csv.DictReader(CSV.open())
-            if r["text"].strip() and len(r["text"].split()) >= 20]
+    rows = [
+        r
+        for r in csv.DictReader(CSV.open())
+        if r["text"].strip() and len(r["text"].split()) >= 20
+    ]
     return rows
 
 
 @lru_cache(maxsize=8)
-def protocol_splits(final_frac_books=0.30, dev_frac_within_fit=0.20, seed=0, n_bib_contrast=60):
+def protocol_splits(
+    final_frac_books=0.30, dev_frac_within_fit=0.20, seed=0, n_bib_contrast=60
+):
     rows = _load_rows()
     nonbib = [r for r in rows if r["bib"] == "nonbib"]
     bib = [r for r in rows if r["bib"] == "bib"]
@@ -93,9 +99,16 @@ def load_split(test_frac_books=0.30, seed=0, n_bib_contrast=60):
 
 if __name__ == "__main__":
     splits = protocol_splits()
-    tr, dv, te, bc = splits["train"], splits["dev"], splits["heldout"], splits["bib_contrast"]
+    tr, dv, te, bc = (
+        splits["train"],
+        splits["dev"],
+        splits["heldout"],
+        splits["bib_contrast"],
+    )
+
     def sect_n(rs):
         return sum(1 for r in rs if SECT.get(r["section"]) == "sect")
+
     print(f"train nonbib chunks: {len(tr)} ({sect_n(tr)} sectarian)")
     print(f"dev   nonbib chunks: {len(dv)} ({sect_n(dv)} sectarian)")
     print(f"test  nonbib chunks: {len(te)} ({sect_n(te)} sectarian)")

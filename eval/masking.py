@@ -28,14 +28,14 @@ class MaskedExample:
     original_sentence: str
     masked_sentence: str
 
-    masked_word_indices: list   # word positions in the original sentence, sorted
-    gold_words: list            # original words, aligned with masked_word_indices
+    masked_word_indices: list  # word positions in the original sentence, sorted
+    gold_words: list  # original words, aligned with masked_word_indices
 
-    gold_word_tokens: list      # per masked word: its tokenizer pieces (raw, "##" kept when the tokenizer uses it)
-    gold_word_token_ids: list   # per masked word: the matching token ids
+    gold_word_tokens: list  # per masked word: its tokenizer pieces (raw, "##" kept when the tokenizer uses it)
+    gold_word_token_ids: list  # per masked word: the matching token ids
+
 
 class MaskingPolicy(ABC):
-
     @abstractmethod
     def generate(self, sentence: str, uid=None) -> MaskedExample:
         pass
@@ -50,7 +50,7 @@ class MaskingPolicy(ABC):
         function of (seed, sentence).
         """
         if uid is None:
-            return self.rng                      # legacy path, order-dependent
+            return self.rng  # legacy path, order-dependent
         digest = hashlib.sha1(f"{self.seed}|{uid}".encode()).hexdigest()
         return random.Random(int(digest[:16], 16))
 
@@ -86,9 +86,7 @@ class MaskingPolicy(ABC):
             # the separator is irrelevant (whitespace is discarded); under a
             # character-level tokenizer a space is a real token and would split
             # every span, so _group_mask_spans would only ever see length-1 spans.
-            masked_words[idx] = "".join(
-                [self.tokenizer.mask_token] * len(pieces)
-            )
+            masked_words[idx] = "".join([self.tokenizer.mask_token] * len(pieces))
 
         return MaskedExample(
             original_sentence=sentence,
@@ -96,17 +94,12 @@ class MaskingPolicy(ABC):
             masked_word_indices=chosen,
             gold_words=gold,
             gold_word_tokens=gold_tokens,
-            gold_word_token_ids=gold_token_ids
+            gold_word_token_ids=gold_token_ids,
         )
 
-class RandomWordMaskingPolicy(MaskingPolicy):
 
-    def __init__(
-        self,
-        tokenizer,
-        mask_ratio=0.15,
-        seed=42
-    ):
+class RandomWordMaskingPolicy(MaskingPolicy):
+    def __init__(self, tokenizer, mask_ratio=0.15, seed=42):
         self.tokenizer = tokenizer
 
         # These two policies pair with SingleTokenPredictionPolicy, which can only
@@ -127,7 +120,6 @@ class RandomWordMaskingPolicy(MaskingPolicy):
         self.rng = random.Random(seed)
 
     def generate(self, sentence, uid=None):
-
         rng = self._rng_for(uid)
 
         words = sentence.split()
@@ -136,7 +128,6 @@ class RandomWordMaskingPolicy(MaskingPolicy):
 
         # only words represented by a single token
         for i, word in enumerate(words):
-
             pieces = self.tokenizer.tokenize(word)
 
             if len(pieces) == 1:
@@ -145,17 +136,12 @@ class RandomWordMaskingPolicy(MaskingPolicy):
         if len(eligible) == 0:
             return None
 
-        n_mask = max(
-            1,
-            round(len(eligible) * self.mask_ratio)
-        )
+        n_mask = max(1, round(len(eligible) * self.mask_ratio))
 
-        chosen = rng.sample(
-            eligible,
-            min(n_mask, len(eligible))
-        )
+        chosen = rng.sample(eligible, min(n_mask, len(eligible)))
 
         return self._build_example(sentence, words, chosen)
+
 
 class PercentageContentMaskingPolicy(MaskingPolicy):
     def __init__(self, tokenizer, mask_ratio=0.15, span_concentration=0.5, seed=42):
@@ -225,7 +211,6 @@ class PercentageContentMaskingPolicy(MaskingPolicy):
             return rng.choice(options) if options else None
 
         for _ in range(n_mask):
-
             idx = None
 
             if spans and rng.random() < self.span_concentration:
@@ -239,13 +224,9 @@ class PercentageContentMaskingPolicy(MaskingPolicy):
 
         return masked
 
-class SingleWordMaskingPolicy(MaskingPolicy):
 
-    def __init__(
-        self,
-        tokenizer,
-        seed=42
-    ):
+class SingleWordMaskingPolicy(MaskingPolicy):
+    def __init__(self, tokenizer, seed=42):
         self.tokenizer = tokenizer
 
         # These two policies pair with SingleTokenPredictionPolicy, which can only
@@ -265,7 +246,6 @@ class SingleWordMaskingPolicy(MaskingPolicy):
         self.rng = random.Random(seed)
 
     def generate(self, sentence, uid=None):
-
         rng = self._rng_for(uid)
 
         words = sentence.split()
@@ -274,7 +254,6 @@ class SingleWordMaskingPolicy(MaskingPolicy):
 
         # Only keep words that tokenize into a single token
         for i, word in enumerate(words):
-
             pieces = self.tokenizer.tokenize(word)
 
             if len(pieces) == 1:
@@ -290,14 +269,7 @@ class SingleWordMaskingPolicy(MaskingPolicy):
 
 
 class PredictionPolicy(ABC):
-
-    def __init__(
-        self,
-        model,
-        tokenizer,
-        top_k=10,
-        device="cpu"
-    ):
+    def __init__(self, model, tokenizer, top_k=10, device="cpu"):
         self.model = model.to(device)
         self.model.eval()
 
@@ -311,11 +283,9 @@ class PredictionPolicy(ABC):
         """
         Tokenize a sentence and move it to the correct device.
         """
-        return self.tokenizer(
-            text,
-            return_tensors="pt",
-            truncation=True
-        ).to(self.device)
+        return self.tokenizer(text, return_tensors="pt", truncation=True).to(
+            self.device
+        )
 
     @torch.no_grad()
     def _forward(self, encoded):
@@ -328,10 +298,9 @@ class PredictionPolicy(ABC):
         """
         Return the indices of every [MASK] token.
         """
-        return (
-            encoded.input_ids[0]
-            == self.tokenizer.mask_token_id
-        ).nonzero(as_tuple=True)[0]
+        return (encoded.input_ids[0] == self.tokenizer.mask_token_id).nonzero(
+            as_tuple=True
+        )[0]
 
     @torch.no_grad()
     def _topk_single_token_candidates(self, logits):
@@ -340,22 +309,21 @@ class PredictionPolicy(ABC):
         """
         log_probs = torch.log_softmax(logits, dim=-1)
 
-        top = torch.topk(
-            log_probs,
-            self.top_k
-        )
+        top = torch.topk(log_probs, self.top_k)
 
         candidates = []
 
         for token_id, score in zip(top.indices.tolist(), top.values.tolist()):
             token = self.tokenizer.convert_ids_to_tokens([token_id])[0]
 
-            candidates.append({
-                "text": self.detokenize([token]),
-                "tokens": [token],
-                "token_ids": [token_id],
-                "score": float(score)
-            })
+            candidates.append(
+                {
+                    "text": self.detokenize([token]),
+                    "tokens": [token],
+                    "token_ids": [token_id],
+                    "score": float(score),
+                }
+            )
 
         return candidates
 
@@ -369,58 +337,40 @@ class PredictionPolicy(ABC):
 
 
 class SingleTokenPredictionPolicy(PredictionPolicy):
-
     @torch.no_grad()
     def predict(self, masked_example):
-
-        encoded = self._encode(
-            masked_example.masked_sentence
-        )
+        encoded = self._encode(masked_example.masked_sentence)
 
         logits = self._forward(encoded)
 
         results = []
 
         for span_index, pos in enumerate(self._mask_positions(encoded)):
+            candidates = self._topk_single_token_candidates(logits[0, pos])
 
-            candidates = self._topk_single_token_candidates(
-                logits[0, pos]
+            results.append(
+                {
+                    "span_index": span_index,
+                    "mask_positions": [int(pos.item())],
+                    "span_length": 1,
+                    "mode": "single_token",
+                    "topk_phrases": candidates,
+                }
             )
-
-            results.append({
-                "span_index": span_index,
-                "mask_positions": [int(pos.item())],
-                "span_length": 1,
-                "mode": "single_token",
-                "topk_phrases": candidates
-            })
 
         return results
 
 
 class MultiSpanPredictionPolicy(PredictionPolicy):
-
     def __init__(
-        self,
-        model,
-        tokenizer,
-        top_k=10,
-        beam_width=3,
-        beam_depth=5,
-        device="cpu"
+        self, model, tokenizer, top_k=10, beam_width=3, beam_depth=5, device="cpu"
     ):
-        super().__init__(
-            model=model,
-            tokenizer=tokenizer,
-            top_k=top_k,
-            device=device
-        )
+        super().__init__(model=model, tokenizer=tokenizer, top_k=top_k, device=device)
 
         self.beam_width = beam_width
         self.beam_depth = beam_depth
 
     def _group_mask_spans(self, mask_positions):
-
         spans = []
 
         if len(mask_positions) == 0:
@@ -442,18 +392,14 @@ class MultiSpanPredictionPolicy(PredictionPolicy):
         return spans
 
     @torch.no_grad()
-    def _decode_span_with_beam(
-        self,
-        encoded,
-        span_positions
-    ):
+    def _decode_span_with_beam(self, encoded, span_positions):
         # Beams live as a (n_beams, seq_len) tensor; one forward per position
         # covers every beam. Mathematically identical to expanding beams one
         # at a time (up to float associativity and topk tie order).
-        beam_ids = encoded.input_ids.clone()                       # (1, L)
+        beam_ids = encoded.input_ids.clone()  # (1, L)
         beam_scores = torch.zeros(1, device=beam_ids.device)
-        chosen_ids = [[]]                                          # python ids per beam
-        attn = encoded.attention_mask                              # (1, L)
+        chosen_ids = [[]]  # python ids per beam
+        attn = encoded.attention_mask  # (1, L)
 
         search_steps = min(len(span_positions), self.beam_depth)
 
@@ -462,20 +408,21 @@ class MultiSpanPredictionPolicy(PredictionPolicy):
             logits = self.model(
                 input_ids=beam_ids,
                 attention_mask=attn.expand(n, -1),
-            ).logits[:, pos]                                       # (n, V)
+            ).logits[:, pos]  # (n, V)
             log_probs = torch.log_softmax(logits, dim=-1)
-            top = torch.topk(log_probs, self.beam_width)           # (n, W)
+            top = torch.topk(log_probs, self.beam_width)  # (n, W)
 
-            total = beam_scores.unsqueeze(1) + top.values          # (n, W)
+            total = beam_scores.unsqueeze(1) + top.values  # (n, W)
             best = torch.topk(total.flatten(), self.beam_width)
-            parent = best.indices // self.beam_width               # (W,)
-            token = top.indices.flatten()[best.indices]            # (W,)
+            parent = best.indices // self.beam_width  # (W,)
+            token = top.indices.flatten()[best.indices]  # (W,)
 
             beam_ids = beam_ids[parent].clone()
             beam_ids[:, pos] = token
             beam_scores = best.values
-            chosen_ids = [chosen_ids[p] + [t] for p, t in
-                          zip(parent.tolist(), token.tolist())]
+            chosen_ids = [
+                chosen_ids[p] + [t] for p, t in zip(parent.tolist(), token.tolist())
+            ]
 
         # Span longer than beam_depth: finish remaining positions greedily,
         # still one batched forward per position across all beams.
@@ -486,7 +433,7 @@ class MultiSpanPredictionPolicy(PredictionPolicy):
                 attention_mask=attn.expand(n, -1),
             ).logits[:, pos]
             log_probs = torch.log_softmax(logits, dim=-1)
-            token_scores, token_ids = log_probs.max(dim=-1)        # (n,)
+            token_scores, token_ids = log_probs.max(dim=-1)  # (n,)
             beam_ids[:, pos] = token_ids
             beam_scores = beam_scores + token_scores
             chosen_ids = [c + [t] for c, t in zip(chosen_ids, token_ids.tolist())]
@@ -494,22 +441,21 @@ class MultiSpanPredictionPolicy(PredictionPolicy):
         phrase_candidates = []
         for ids, score in zip(chosen_ids, beam_scores.tolist()):
             tokens = self.tokenizer.convert_ids_to_tokens(ids)
-            phrase_candidates.append({
-                "text": self.detokenize(tokens),
-                "tokens": tokens,
-                "token_ids": ids,
-                "score": float(score),
-            })
+            phrase_candidates.append(
+                {
+                    "text": self.detokenize(tokens),
+                    "tokens": tokens,
+                    "token_ids": ids,
+                    "score": float(score),
+                }
+            )
 
         phrase_candidates.sort(key=lambda item: item["score"], reverse=True)
-        return phrase_candidates[:self.top_k]
+        return phrase_candidates[: self.top_k]
 
     @torch.no_grad()
     def predict(self, masked_example):
-
-        encoded = self._encode(
-            masked_example.masked_sentence
-        )
+        encoded = self._encode(masked_example.masked_sentence)
 
         logits = self._forward(encoded)
 
@@ -519,36 +465,31 @@ class MultiSpanPredictionPolicy(PredictionPolicy):
         results = []
 
         for span_index, span_positions in enumerate(spans):
-
             if len(span_positions) == 1:
                 pos = span_positions[0]
 
-                candidates = self._topk_single_token_candidates(
-                    logits[0, pos]
-                )
+                candidates = self._topk_single_token_candidates(logits[0, pos])
 
                 mode = "single_token"
             else:
-                candidates = self._decode_span_with_beam(
-                    encoded,
-                    span_positions
-                )
+                candidates = self._decode_span_with_beam(encoded, span_positions)
 
                 mode = "beam"
 
-            results.append({
-                "span_index": span_index,
-                "mask_positions": span_positions,
-                "span_length": len(span_positions),
-                "mode": mode,
-                "topk_phrases": candidates
-            })
+            results.append(
+                {
+                    "span_index": span_index,
+                    "mask_positions": span_positions,
+                    "span_length": len(span_positions),
+                    "mode": mode,
+                    "topk_phrases": candidates,
+                }
+            )
 
         return results
 
 
 class Evaluator:
-
     def _gold_spans(self, masked_example, prediction_spans):
         """
         Align gold token slots with prediction spans: each masked word
@@ -563,7 +504,7 @@ class Evaluator:
             masked_example.masked_word_indices,
             masked_example.gold_words,
             masked_example.gold_word_tokens,
-            masked_example.gold_word_token_ids
+            masked_example.gold_word_token_ids,
         ):
             for piece, piece_id in zip(pieces, piece_ids):
                 slot_word_indices.append(word_idx)
@@ -578,24 +519,24 @@ class Evaluator:
 
             word_indices = []
 
-            for idx in slot_word_indices[cursor:cursor + take]:
+            for idx in slot_word_indices[cursor : cursor + take]:
                 if not word_indices or word_indices[-1] != idx:
                     word_indices.append(idx)
 
             gold_words = [
-                masked_example.gold_words[
-                    masked_example.masked_word_indices.index(idx)
-                ]
+                masked_example.gold_words[masked_example.masked_word_indices.index(idx)]
                 for idx in word_indices
             ]
 
-            spans.append({
-                "word_indices": word_indices,
-                "gold_words": gold_words,
-                "gold_text": " ".join(gold_words),
-                "gold_tokens": slot_tokens[cursor:cursor + take],
-                "gold_token_ids": slot_token_ids[cursor:cursor + take]
-            })
+            spans.append(
+                {
+                    "word_indices": word_indices,
+                    "gold_words": gold_words,
+                    "gold_text": " ".join(gold_words),
+                    "gold_tokens": slot_tokens[cursor : cursor + take],
+                    "gold_token_ids": slot_token_ids[cursor : cursor + take],
+                }
+            )
 
             cursor += take
 
@@ -606,9 +547,7 @@ class Evaluator:
         Number of slots where the predicted token id equals the gold id.
         """
         return sum(
-            1
-            for predicted, gold in zip(predicted_ids, gold_ids)
-            if predicted == gold
+            1 for predicted, gold in zip(predicted_ids, gold_ids) if predicted == gold
         )
 
     def _levenshtein_similarity(self, predicted_ids, gold_ids):
@@ -630,90 +569,56 @@ class Evaluator:
                 cost = 0 if predicted_ids[i - 1] == gold_ids[j - 1] else 1
 
                 current[j] = min(
-                    previous[j] + 1,
-                    current[j - 1] + 1,
-                    previous[j - 1] + cost
+                    previous[j] + 1, current[j - 1] + 1, previous[j - 1] + cost
                 )
 
             previous = current
 
         return 1.0 - previous[m] / max(n, m)
 
-    def evaluate(
-        self,
-        masked_example,
-        predictions
-    ):
-
+    def evaluate(self, masked_example, predictions):
         rows = []
 
         gold_spans = self._gold_spans(masked_example, predictions)
 
         for gold, span in zip(gold_spans, predictions):
-
-            candidates = [
-                phrase["text"]
-                for phrase in span["topk_phrases"]
-            ]
+            candidates = [phrase["text"] for phrase in span["topk_phrases"]]
 
             # Best partial score over the top-k candidates.
             n_tokens_correct = max(
                 (
                     self._positional_matches(
-                        phrase["token_ids"],
-                        gold["gold_token_ids"]
+                        phrase["token_ids"], gold["gold_token_ids"]
                     )
                     for phrase in span["topk_phrases"]
                 ),
-                default=0
+                default=0,
             )
 
             levenshtein_similarity = max(
                 (
                     self._levenshtein_similarity(
-                        phrase["token_ids"],
-                        gold["gold_token_ids"]
+                        phrase["token_ids"], gold["gold_token_ids"]
                     )
                     for phrase in span["topk_phrases"]
                 ),
-                default=0.0
+                default=0.0,
             )
 
-            rows.append({
-
-                "sentence":
-                    masked_example.original_sentence,
-
-                "masked_sentence":
-                    masked_example.masked_sentence,
-
-                "word_indices":
-                    gold["word_indices"],
-
-                "gold":
-                    gold["gold_text"],
-
-                "predictions":
-                    candidates,
-
-                "mode":
-                    span["mode"],
-
-                "span_length":
-                    span["span_length"],
-
-                "n_tokens_correct":
-                    n_tokens_correct,
-
-                "token_accuracy":
-                    n_tokens_correct / span["span_length"],
-
-                "levenshtein_similarity":
-                    levenshtein_similarity,
-
-                "correct":
-                    n_tokens_correct == span["span_length"]
-
-            })
+            rows.append(
+                {
+                    "sentence": masked_example.original_sentence,
+                    "masked_sentence": masked_example.masked_sentence,
+                    "word_indices": gold["word_indices"],
+                    "gold": gold["gold_text"],
+                    "predictions": candidates,
+                    "mode": span["mode"],
+                    "span_length": span["span_length"],
+                    "n_tokens_correct": n_tokens_correct,
+                    "token_accuracy": n_tokens_correct / span["span_length"],
+                    "levenshtein_similarity": levenshtein_similarity,
+                    "correct": n_tokens_correct == span["span_length"],
+                }
+            )
 
         return rows

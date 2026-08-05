@@ -1,6 +1,7 @@
-"""Inspect etcbc/dss features on reconstructed words to see if we can find alternative readings or notes on debates.
-"""
+"""Inspect etcbc/dss features on reconstructed words to see if we can find alternative readings or notes on debates."""
+
 from tf.app import use
+
 A = use("etcbc/dss", silent="deep")
 api = A.api
 F, L = api.F, api.L

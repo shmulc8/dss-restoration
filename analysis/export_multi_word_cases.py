@@ -8,6 +8,7 @@ This mirrors the span benchmark regime:
 The output drives the local demo site so researchers can inspect real span
 failures rather than only single-word cases.
 """
+
 import csv
 import json
 import os
@@ -36,7 +37,9 @@ MODEL_NAME = os.environ.get("MODEL_NAME", "ft_msbert_span_refined")
 MODEL_REPO = str(repo_path(MODEL_NAME))
 CSV_OUT = os.environ.get(
     "CSV_OUT",
-    str(ROOT / "analysis" / "reports" / "full_multi_word_cases_refined_hebrew_only.csv"),
+    str(
+        ROOT / "analysis" / "reports" / "full_multi_word_cases_refined_hebrew_only.csv"
+    ),
 )
 WINDOW = int(os.environ.get("WINDOW", "40"))
 MIN_PRESERVED = int(os.environ.get("MIN_PRESERVED", "6"))
@@ -113,26 +116,29 @@ def beam_autoregressive(model, input_ids, gap_token_positions, tok, dev, beam_wi
         for score, current_ids, pred_words in beams:
             with torch.no_grad():
                 logits = model(current_ids.unsqueeze(0).to(dev)).logits[0].cpu()
-                
+
             slot_beams = [(0.0, [])]
             for p in ps:
                 lp = torch.log_softmax(logits[p], -1)
                 top = torch.topk(lp, TOPN)
                 slot_beams = sorted(
-                    [(s + v, seq + [i]) for s, seq in slot_beams
-                     for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                    key=lambda x: -x[0]
+                    [
+                        (s + v, seq + [i])
+                        for s, seq in slot_beams
+                        for i, v in zip(top.indices.tolist(), top.values.tolist())
+                    ],
+                    key=lambda x: -x[0],
                 )[:beam_width]
-                
+
             for slot_score, seq in slot_beams:
                 word = tok.decode(seq).replace(" ", "").replace("##", "")
                 new_ids = current_ids.clone()
                 for i, p in enumerate(ps):
                     new_ids[p] = seq[i]
                 new_beams.append((score + slot_score, new_ids, pred_words + [word]))
-                
+
         beams = sorted(new_beams, key=lambda x: -x[0])[:beam_width]
-        
+
     out = []
     for _, _, pred_words in beams:
         if pred_words not in out:
@@ -191,7 +197,9 @@ def collect_items():
             end = idx
             while end < len(words) and words[end][1]:
                 end += 1
-            gap_targets = [pos for pos in range(idx, end) if is_hebrew_word(words[pos][0])]
+            gap_targets = [
+                pos for pos in range(idx, end) if is_hebrew_word(words[pos][0])
+            ]
             gap_size = len(gap_targets)
             if 2 <= gap_size <= MAX_GAP_WORDS:
                 lo = max(0, idx - WINDOW)
@@ -212,13 +220,15 @@ def collect_items():
                         if is_preserved:
                             preserved += 1
                 if preserved >= MIN_PRESERVED and gap_positions:
-                    items.append({
-                        "scroll": scroll_name,
-                        "context_words": context_words,
-                        "gap_positions": gap_positions,
-                        "gold_words": gold_words,
-                        "gap_length": gap_size,
-                    })
+                    items.append(
+                        {
+                            "scroll": scroll_name,
+                            "context_words": context_words,
+                            "gap_positions": gap_positions,
+                            "gold_words": gold_words,
+                            "gap_length": gap_size,
+                        }
+                    )
             idx = end
     if MAX_ITEMS > 0:
         items = items[:MAX_ITEMS]
@@ -228,7 +238,9 @@ def collect_items():
 def joined_context(words, gap_positions):
     gap_set = set(gap_positions)
     placeholder = "__LACUNA__"
-    patched = [placeholder if idx in gap_set else word for idx, word in enumerate(words)]
+    patched = [
+        placeholder if idx in gap_set else word for idx, word in enumerate(words)
+    ]
     text, _ = join_likely_clitics(" ".join(patched))
     return text.replace(placeholder, "⬚⬚⬚")
 
@@ -243,15 +255,24 @@ def classify_slot(gold, ranked, gold_freq):
     if not ranked:
         return "empty", "No candidate decoded."
     if norm(gold) == norm(top1):
-        return "exact_top1_hit", "The model's first guess is exactly correct for this slot."
+        return (
+            "exact_top1_hit",
+            "The model's first guess is exactly correct for this slot.",
+        )
     if any(norm(candidate) == norm(gold) for candidate in ranked):
-        return "exact_top5_hit", "The gold word appears in the model's top-5 list for this slot."
+        return (
+            "exact_top5_hit",
+            "The gold word appears in the model's top-5 list for this slot.",
+        )
     if top1 and len(top1) <= max(1, len(gold) - 2):
         return "particle_or_too_short", "Top guess is much shorter than the gold word."
     if gold_freq <= 1:
         return "rare_or_unseen", "Gold word is very rare or unseen in the fit data."
     if any(len(candidate) == len(gold) for candidate in ranked):
-        return "same_length_semantic", "Model prefers another plausible word of similar length."
+        return (
+            "same_length_semantic",
+            "Model prefers another plausible word of similar length.",
+        )
     return "other_miss", "Miss without a simple short/rare/same-length explanation."
 
 
@@ -279,23 +300,45 @@ def main():
     out_path = Path(CSV_OUT)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
-        "row_id", "model", "split", "book_filter", "scroll",
-        "gap_length", "gap_bucket", "target_phrase", "target_words",
-        "target_fit_frequencies", "top1_phrase", "top5_phrases",
-        "context_for_reading", "raw_context", "case_status", "reader_note",
-        "slot_top1_hits", "slot_top5_hits", "slot_details_json",
+        "row_id",
+        "model",
+        "split",
+        "book_filter",
+        "scroll",
+        "gap_length",
+        "gap_bucket",
+        "target_phrase",
+        "target_words",
+        "target_fit_frequencies",
+        "top1_phrase",
+        "top5_phrases",
+        "context_for_reading",
+        "raw_context",
+        "case_status",
+        "reader_note",
+        "slot_top1_hits",
+        "slot_top5_hits",
+        "slot_details_json",
     ]
 
     with out_path.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=fieldnames)
         writer.writeheader()
         for row_id, item in enumerate(items, start=1):
-            enc = tok(item["context_words"], is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+            enc = tok(
+                item["context_words"],
+                is_split_into_words=True,
+                return_tensors="pt",
+                truncation=True,
+                max_length=512,
+            )
             word_map = {}
             for pos, word_id in enumerate(enc.word_ids(0)):
                 if word_id is not None:
                     word_map.setdefault(word_id, []).append(pos)
-            gap_token_positions = [word_map.get(gap_pos) for gap_pos in item["gap_positions"]]
+            gap_token_positions = [
+                word_map.get(gap_pos) for gap_pos in item["gap_positions"]
+            ]
             if any(positions is None for positions in gap_token_positions):
                 continue
 
@@ -305,12 +348,16 @@ def main():
                     ids[pos] = tok.mask_token_id
 
             # Get joint autoregressive predictions
-            ranked_phrases = beam_autoregressive(model, ids, gap_token_positions, tok, dev, beam_width=5)
+            ranked_phrases = beam_autoregressive(
+                model, ids, gap_token_positions, tok, dev, beam_width=5
+            )
 
             slot_rows = []
-            for slot_index, (positions, gold) in enumerate(zip(gap_token_positions, item["gold_words"]), start=1):
+            for slot_index, (positions, gold) in enumerate(
+                zip(gap_token_positions, item["gold_words"]), start=1
+            ):
                 j = slot_index - 1
-                
+
                 # Decompose autoregressive phrases into candidate words for this slot
                 ranked = []
                 for phrase in ranked_phrases:
@@ -321,43 +368,56 @@ def main():
                 ranked = ranked[:K]
 
                 category, note = classify_slot(gold, ranked, surf[gold])
-                slot_rows.append({
-                    "slot_index": slot_index,
-                    "gold_word": gold,
-                    "gold_fit_frequency": surf[gold],
-                    "top_candidates": ranked,
-                    "top1": ranked[0] if ranked else "",
-                    "hit_top1": bool(ranked) and norm(ranked[0]) == norm(gold),
-                    "hit_top5": any(norm(candidate) == norm(gold) for candidate in ranked),
-                    "likely_issue": category,
-                    "reader_note": note,
-                })
+                slot_rows.append(
+                    {
+                        "slot_index": slot_index,
+                        "gold_word": gold,
+                        "gold_fit_frequency": surf[gold],
+                        "top_candidates": ranked,
+                        "top1": ranked[0] if ranked else "",
+                        "hit_top1": bool(ranked) and norm(ranked[0]) == norm(gold),
+                        "hit_top5": any(
+                            norm(candidate) == norm(gold) for candidate in ranked
+                        ),
+                        "likely_issue": category,
+                        "reader_note": note,
+                    }
+                )
 
             case_status, reader_note = classify_case(slot_rows)
             top1_phrase = " ".join(ranked_phrases[0]) if ranked_phrases else ""
             top5_phrases = [" ".join(phrase) for phrase in ranked_phrases[:5]]
 
-            writer.writerow({
-                "row_id": row_id,
-                "model": MODEL_NAME,
-                "split": split_label,
-                "book_filter": book_filter_label,
-                "scroll": item["scroll"],
-                "gap_length": item["gap_length"],
-                "gap_bucket": gap_bucket(item["gap_length"]),
-                "target_phrase": " ".join(item["gold_words"]),
-                "target_words": json.dumps(item["gold_words"], ensure_ascii=False),
-                "target_fit_frequencies": json.dumps([slot["gold_fit_frequency"] for slot in slot_rows], ensure_ascii=False),
-                "top1_phrase": top1_phrase,
-                "top5_phrases": json.dumps(top5_phrases[:K], ensure_ascii=False),
-                "context_for_reading": joined_context(item["context_words"], item["gap_positions"]),
-                "raw_context": raw_context(item["context_words"], item["gap_positions"]),
-                "case_status": case_status,
-                "reader_note": reader_note,
-                "slot_top1_hits": sum(1 for slot in slot_rows if slot["hit_top1"]),
-                "slot_top5_hits": sum(1 for slot in slot_rows if slot["hit_top5"]),
-                "slot_details_json": json.dumps(slot_rows, ensure_ascii=False),
-            })
+            writer.writerow(
+                {
+                    "row_id": row_id,
+                    "model": MODEL_NAME,
+                    "split": split_label,
+                    "book_filter": book_filter_label,
+                    "scroll": item["scroll"],
+                    "gap_length": item["gap_length"],
+                    "gap_bucket": gap_bucket(item["gap_length"]),
+                    "target_phrase": " ".join(item["gold_words"]),
+                    "target_words": json.dumps(item["gold_words"], ensure_ascii=False),
+                    "target_fit_frequencies": json.dumps(
+                        [slot["gold_fit_frequency"] for slot in slot_rows],
+                        ensure_ascii=False,
+                    ),
+                    "top1_phrase": top1_phrase,
+                    "top5_phrases": json.dumps(top5_phrases[:K], ensure_ascii=False),
+                    "context_for_reading": joined_context(
+                        item["context_words"], item["gap_positions"]
+                    ),
+                    "raw_context": raw_context(
+                        item["context_words"], item["gap_positions"]
+                    ),
+                    "case_status": case_status,
+                    "reader_note": reader_note,
+                    "slot_top1_hits": sum(1 for slot in slot_rows if slot["hit_top1"]),
+                    "slot_top5_hits": sum(1 for slot in slot_rows if slot["hit_top5"]),
+                    "slot_details_json": json.dumps(slot_rows, ensure_ascii=False),
+                }
+            )
             if row_id % 100 == 0:
                 print(f"processed {row_id}/{len(items)}", flush=True)
 

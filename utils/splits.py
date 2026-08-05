@@ -10,7 +10,12 @@ import json
 from pathlib import Path
 from typing import Dict, Set
 
-SPLITS_JSON = Path(__file__).resolve().parent.parent / "data" / "splits" / "dss_scroll_splits_v1.json"
+SPLITS_JSON = (
+    Path(__file__).resolve().parent.parent
+    / "data"
+    / "splits"
+    / "dss_scroll_splits_v1.json"
+)
 
 
 def load_frozen_scroll_splits() -> Dict[str, str]:

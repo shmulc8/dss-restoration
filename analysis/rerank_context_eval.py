@@ -6,6 +6,7 @@
 The goal is to compare these interventions on exactly the same targets so the
 differences are attributable to the intervention, not to a changed sample.
 """
+
 import sys
 from pathlib import Path
 
@@ -36,9 +37,41 @@ HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
 FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 FUNCTION = {
-    "אשר", "כי", "כיא", "את", "אל", "על", "אם", "לא", "לוא", "כל", "כול",
-    "מן", "הוא", "היא", "אני", "אתה", "הם", "זה", "זאת", "לו", "בו", "עד",
-    "גם", "או", "כן", "אך", "רק", "יש", "אין", "מה", "מי", "ולא", "ואת", "וכל", "כה",
+    "אשר",
+    "כי",
+    "כיא",
+    "את",
+    "אל",
+    "על",
+    "אם",
+    "לא",
+    "לוא",
+    "כל",
+    "כול",
+    "מן",
+    "הוא",
+    "היא",
+    "אני",
+    "אתה",
+    "הם",
+    "זה",
+    "זאת",
+    "לו",
+    "בו",
+    "עד",
+    "גם",
+    "או",
+    "כן",
+    "אך",
+    "רק",
+    "יש",
+    "אין",
+    "מה",
+    "מי",
+    "ולא",
+    "ואת",
+    "וכל",
+    "כה",
 }
 PROCLITIC_LETTERS = {"ו", "ל", "ב", "כ", "ה", "מ", "ש"}
 rng = np.random.default_rng(0)
@@ -101,7 +134,9 @@ def beam_candidates(logits, positions, tok):
             best_by_word[word] = score
 
     ranked = sorted(best_by_word.items(), key=lambda item: -item[1])[:K]
-    reranked = sorted(best_by_word.items(), key=lambda item: -rerank_score(item[0], item[1]))[:K]
+    reranked = sorted(
+        best_by_word.items(), key=lambda item: -rerank_score(item[0], item[1])
+    )[:K]
     return ranked, reranked
 
 
@@ -117,7 +152,11 @@ def winfo(word_node):
     signs = L.d(word_node, "sign")
     glyph = "".join(F.glyph.v(sign) or "" for sign in signs)
     recs = [F.rec.v(sign) for sign in signs]
-    return glyph, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        glyph,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
 
 
 scrolls = {}
@@ -135,7 +174,12 @@ for scroll_id, words in scrolls.items():
         if fully_rec and heb(glyph):
             target_ids.append((scroll_id, idx))
 
-sample_ids = [target_ids[i] for i in rng.choice(len(target_ids), size=min(len(target_ids), MAX_ITEMS * 3), replace=False)]
+sample_ids = [
+    target_ids[i]
+    for i in rng.choice(
+        len(target_ids), size=min(len(target_ids), MAX_ITEMS * 3), replace=False
+    )
+]
 
 
 def build_items(window: int):
@@ -158,7 +202,9 @@ def build_items(window: int):
 
 
 items_by_window = {window: build_items(window) for window in WINDOWS}
-shared_ids = set.intersection(*(set(items.keys()) for items in items_by_window.values()))
+shared_ids = set.intersection(
+    *(set(items.keys()) for items in items_by_window.values())
+)
 shared_ids = sorted(shared_ids)
 if len(shared_ids) > MAX_ITEMS:
     pick = rng.choice(len(shared_ids), size=MAX_ITEMS, replace=False)
@@ -180,11 +226,29 @@ morph_dss.lemmas([gold for ctx, tpos, gold in shared[WINDOWS[0]]])
 def summarize(results):
     n = len(results)
     return dict(
-        exact_1=sum(1 for gold, ranked in results if ranked and ranked[0] == gold) / n * 100,
+        exact_1=sum(1 for gold, ranked in results if ranked and ranked[0] == gold)
+        / n
+        * 100,
         exact_10=sum(1 for gold, ranked in results if gold in ranked[:10]) / n * 100,
-        norm_1=sum(1 for gold, ranked in results if ranked and norm(ranked[0]) == norm(gold)) / n * 100,
-        norm_10=sum(1 for gold, ranked in results if any(norm(word) == norm(gold) for word in ranked[:10])) / n * 100,
-        norm_20=sum(1 for gold, ranked in results if any(norm(word) == norm(gold) for word in ranked[:20])) / n * 100,
+        norm_1=sum(
+            1 for gold, ranked in results if ranked and norm(ranked[0]) == norm(gold)
+        )
+        / n
+        * 100,
+        norm_10=sum(
+            1
+            for gold, ranked in results
+            if any(norm(word) == norm(gold) for word in ranked[:10])
+        )
+        / n
+        * 100,
+        norm_20=sum(
+            1
+            for gold, ranked in results
+            if any(norm(word) == norm(gold) for word in ranked[:20])
+        )
+        / n
+        * 100,
     )
 
 
@@ -199,7 +263,13 @@ for repo, label in MODELS:
         reranked = []
         short_top1 = short_top1_reranked = 0
         for ctx, tpos, gold in shared[window]:
-            enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+            enc = tok(
+                ctx,
+                is_split_into_words=True,
+                return_tensors="pt",
+                truncation=True,
+                max_length=512,
+            )
             word_map = {}
             for pos, word_id in enumerate(enc.word_ids(0)):
                 if word_id is not None:
@@ -225,7 +295,13 @@ for repo, label in MODELS:
 
         base_metrics = summarize(baseline)
         rerank_metrics = summarize(reranked)
-        print(f"window={window:2d} baseline  | EXACT t1 {base_metrics['exact_1']:4.1f}% t10 {base_metrics['exact_10']:4.1f}% | NORM t1 {base_metrics['norm_1']:4.1f}% t10 {base_metrics['norm_10']:4.1f}% t20 {base_metrics['norm_20']:4.1f}%")
-        print(f"window={window:2d} reranked  | EXACT t1 {rerank_metrics['exact_1']:4.1f}% t10 {rerank_metrics['exact_10']:4.1f}% | NORM t1 {rerank_metrics['norm_1']:4.1f}% t10 {rerank_metrics['norm_10']:4.1f}% t20 {rerank_metrics['norm_20']:4.1f}%")
-        print(f"window={window:2d} short-top1 baseline={short_top1:3d} reranked={short_top1_reranked:3d}")
+        print(
+            f"window={window:2d} baseline  | EXACT t1 {base_metrics['exact_1']:4.1f}% t10 {base_metrics['exact_10']:4.1f}% | NORM t1 {base_metrics['norm_1']:4.1f}% t10 {base_metrics['norm_10']:4.1f}% t20 {base_metrics['norm_20']:4.1f}%"
+        )
+        print(
+            f"window={window:2d} reranked  | EXACT t1 {rerank_metrics['exact_1']:4.1f}% t10 {rerank_metrics['exact_10']:4.1f}% | NORM t1 {rerank_metrics['norm_1']:4.1f}% t10 {rerank_metrics['norm_10']:4.1f}% t20 {rerank_metrics['norm_20']:4.1f}%"
+        )
+        print(
+            f"window={window:2d} short-top1 baseline={short_top1:3d} reranked={short_top1_reranked:3d}"
+        )
     print()

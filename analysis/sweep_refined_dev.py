@@ -38,9 +38,41 @@ HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
 FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 FUNCTION = {
-    "אשר", "כי", "כיא", "את", "אל", "על", "אם", "לא", "לוא", "כל", "כול",
-    "מן", "הוא", "היא", "אני", "אתה", "הם", "זה", "זאת", "לו", "בו", "עד",
-    "גם", "או", "כן", "אך", "רק", "יש", "אין", "מה", "מי", "ולא", "ואת", "וכל", "כה",
+    "אשר",
+    "כי",
+    "כיא",
+    "את",
+    "אל",
+    "על",
+    "אם",
+    "לא",
+    "לוא",
+    "כל",
+    "כול",
+    "מן",
+    "הוא",
+    "היא",
+    "אני",
+    "אתה",
+    "הם",
+    "זה",
+    "זאת",
+    "לו",
+    "בו",
+    "עד",
+    "גם",
+    "או",
+    "כן",
+    "אך",
+    "רק",
+    "יש",
+    "אין",
+    "מה",
+    "מי",
+    "ולא",
+    "ואת",
+    "וכל",
+    "כה",
 }
 CONFIGS = [
     ("e1_lr2e5", 1, 2e-5),
@@ -103,13 +135,15 @@ def make_batch(batch_texts, tok, mask_id, vocab_size, local_rng):
     labels = torch.full((len(encoded), max_len), -100, dtype=torch.long)
 
     for batch_idx, (ids, wids, words) in enumerate(encoded):
-        input_ids[batch_idx, :len(ids)] = torch.tensor(ids)
-        attn[batch_idx, :len(ids)] = 1
+        input_ids[batch_idx, : len(ids)] = torch.tensor(ids)
+        attn[batch_idx, : len(ids)] = 1
         groups = {}
         for pos, word_id in enumerate(wids):
             if word_id is not None and word_id < len(words):
                 groups.setdefault(word_id, []).append(pos)
-        eligible = [word_id for word_id in groups if len(words[word_id]) >= MIN_TARGET_LEN]
+        eligible = [
+            word_id for word_id in groups if len(words[word_id]) >= MIN_TARGET_LEN
+        ]
         if not eligible:
             continue
 
@@ -140,7 +174,11 @@ def winfo(word_node):
     signs = L.d(word_node, "sign")
     glyph = "".join(F.glyph.v(sign) or "" for sign in signs)
     recs = [F.rec.v(sign) for sign in signs]
-    return glyph, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        glyph,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
 
 
 scrolls = {}
@@ -205,7 +243,13 @@ def eval_model(model, tok):
     results = []
     short_top1 = 0
     for ctx, tpos, gold in items:
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         word_map = {}
         for pos, word_id in enumerate(enc.word_ids(0)):
             if word_id is not None:
@@ -225,15 +269,39 @@ def eval_model(model, tok):
         results.append((gold, ranked))
 
     n = len(results)
-    exact_1 = sum(1 for gold, ranked in results if ranked and ranked[0] == gold) / n * 100
+    exact_1 = (
+        sum(1 for gold, ranked in results if ranked and ranked[0] == gold) / n * 100
+    )
     exact_10 = sum(1 for gold, ranked in results if gold in ranked[:10]) / n * 100
-    norm_1 = sum(1 for gold, ranked in results if ranked and norm(ranked[0]) == norm(gold)) / n * 100
-    norm_10 = sum(1 for gold, ranked in results if any(norm(word) == norm(gold) for word in ranked[:10])) / n * 100
+    norm_1 = (
+        sum(1 for gold, ranked in results if ranked and norm(ranked[0]) == norm(gold))
+        / n
+        * 100
+    )
+    norm_10 = (
+        sum(
+            1
+            for gold, ranked in results
+            if any(norm(word) == norm(gold) for word in ranked[:10])
+        )
+        / n
+        * 100
+    )
 
     content = [(gold, ranked) for gold, ranked in results if is_content(gold)]
     nc = max(1, len(content))
-    cont_exact_1 = sum(1 for gold, ranked in content if ranked and ranked[0] == gold) / nc * 100
-    cont_norm_10 = sum(1 for gold, ranked in content if any(norm(word) == norm(gold) for word in ranked[:10])) / nc * 100
+    cont_exact_1 = (
+        sum(1 for gold, ranked in content if ranked and ranked[0] == gold) / nc * 100
+    )
+    cont_norm_10 = (
+        sum(
+            1
+            for gold, ranked in content
+            if any(norm(word) == norm(gold) for word in ranked[:10])
+        )
+        / nc
+        * 100
+    )
     return exact_1, exact_10, norm_1, norm_10, cont_exact_1, cont_norm_10, short_top1, n
 
 
@@ -242,7 +310,9 @@ print(
     f"| train chunks={len(train_texts)} "
     f"| {split_label} sampled items={len(items)}"
 )
-print("name           | EXACT t1 t10 | NORM t1 t10 | content exact t1 norm t10 | short top1")
+print(
+    "name           | EXACT t1 t10 | NORM t1 t10 | content exact t1 norm t10 | short top1"
+)
 
 configs = [cfg for cfg in CONFIGS if ONLY_CONFIG in {None, "", cfg[0]}]
 if not configs:
@@ -259,15 +329,19 @@ for offset, (name, epochs, lr) in enumerate(configs):
     for _ in range(epochs):
         order = local_rng.permutation(len(train_texts))
         for step in range(steps_per_epoch):
-            batch = [train_texts[i] for i in order[step * BATCH:(step + 1) * BATCH]]
-            input_ids, attn, labels = make_batch(batch, tok, mask_id, vocab_size, local_rng)
+            batch = [train_texts[i] for i in order[step * BATCH : (step + 1) * BATCH]]
+            input_ids, attn, labels = make_batch(
+                batch, tok, mask_id, vocab_size, local_rng
+            )
             out = model(input_ids=input_ids, attention_mask=attn, labels=labels)
             out.loss.backward()
             opt.step()
             opt.zero_grad()
 
     model.eval()
-    exact_1, exact_10, norm_1, norm_10, cont_exact_1, cont_norm_10, short_top1, n = eval_model(model, tok)
+    exact_1, exact_10, norm_1, norm_10, cont_exact_1, cont_norm_10, short_top1, n = (
+        eval_model(model, tok)
+    )
     print(
         f"{name:14s} | {exact_1:5.1f}% {exact_10:5.1f}% | {norm_1:5.1f}% {norm_10:5.1f}% | "
         f"{cont_exact_1:5.1f}% {cont_norm_10:5.1f}% | {short_top1:3d}/{n}"

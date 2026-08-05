@@ -9,6 +9,7 @@ This variant keeps the same span-masking setup but excludes 1-character words
 from the masked target set. The hope is that the model preserves its base
 knowledge of proclitics while specializing more on content-bearing DSS words.
 """
+
 import math
 import sys
 from pathlib import Path
@@ -46,7 +47,9 @@ def count_eligible_words():
         words = text.split()
         total_words += len(words)
         eligible_words += sum(1 for word in words if len(word) >= MIN_TARGET_LEN)
-    print(f"eligible target words: {eligible_words}/{total_words} ({eligible_words/max(total_words,1)*100:.1f}%)")
+    print(
+        f"eligible target words: {eligible_words}/{total_words} ({eligible_words / max(total_words, 1) * 100:.1f}%)"
+    )
 
 
 def span_words(nwords):
@@ -76,13 +79,15 @@ def make_batch(batch_texts, tok, mask_id, vocab_size):
     labels = torch.full((len(encoded), max_len), -100, dtype=torch.long)
 
     for batch_idx, (ids, wids, words) in enumerate(encoded):
-        input_ids[batch_idx, :len(ids)] = torch.tensor(ids)
-        attn[batch_idx, :len(ids)] = 1
+        input_ids[batch_idx, : len(ids)] = torch.tensor(ids)
+        attn[batch_idx, : len(ids)] = 1
         groups = {}
         for pos, word_id in enumerate(wids):
             if word_id is not None and word_id < len(words):
                 groups.setdefault(word_id, []).append(pos)
-        eligible = [word_id for word_id in groups if len(words[word_id]) >= MIN_TARGET_LEN]
+        eligible = [
+            word_id for word_id in groups if len(words[word_id]) >= MIN_TARGET_LEN
+        ]
         if not eligible:
             continue
 
@@ -113,14 +118,17 @@ def finetune():
         order = rng.permutation(len(texts))
         total_loss = 0.0
         for step in range(steps_per_epoch):
-            batch = [texts[i] for i in order[step * BATCH:(step + 1) * BATCH]]
+            batch = [texts[i] for i in order[step * BATCH : (step + 1) * BATCH]]
             input_ids, attn, labels = make_batch(batch, tok, mask_id, vocab_size)
             out = model(input_ids=input_ids, attention_mask=attn, labels=labels)
             out.loss.backward()
             opt.step()
             opt.zero_grad()
             total_loss += out.loss.item()
-        print(f"  epoch {epoch+1}/{EPOCHS}  loss={total_loss/steps_per_epoch:.3f}", flush=True)
+        print(
+            f"  epoch {epoch + 1}/{EPOCHS}  loss={total_loss / steps_per_epoch:.3f}",
+            flush=True,
+        )
 
     model.save_pretrained(str(OUTDIR))
     tok.save_pretrained(str(OUTDIR))

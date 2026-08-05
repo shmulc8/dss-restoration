@@ -1,22 +1,29 @@
 """Like finetune.py but with CONTIGUOUS SPAN masking (whole multi-word runs),
 matching real lacunae, instead of scattered 15% single-word masks. Saves to
 ./ft_berel_span and ./ft_msbert_span."""
-import os, sys, math
+
+import sys
+import math
 from pathlib import Path
 import numpy as np
 import torch
 from torch.optim import AdamW
 from transformers import AutoTokenizer, AutoModelForMaskedLM, logging as tlog
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from utils.dss_split import load_split
 from utils.paths import repo_path
+
 tlog.set_verbosity_error()
 
-BASES = [("dicta-il/BEREL", repo_path("ft_berel_span")), ("dicta-il/MsBERT", repo_path("ft_msbert_span"))]
+BASES = [
+    ("dicta-il/BEREL", repo_path("ft_berel_span")),
+    ("dicta-il/MsBERT", repo_path("ft_msbert_span")),
+]
 MAX_LEN, EPOCHS, BATCH, LR = 160, 4, 16, 3e-5
-MASK_FRAC, SPAN_P, SPAN_MAX = 0.15, 0.3, 10   # geometric mean ~3.3 words, clip 10
+MASK_FRAC, SPAN_P, SPAN_MAX = 0.15, 0.3, 10  # geometric mean ~3.3 words, clip 10
 rng = np.random.default_rng(0)
 
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -26,8 +33,10 @@ print(f"device={dev} | span-mask | train chunks={len(texts)}\n")
 
 
 def encode_all(tok):
-    return [(e["input_ids"], e.word_ids())
-            for e in (tok(t, truncation=True, max_length=MAX_LEN) for t in texts)]
+    return [
+        (e["input_ids"], e.word_ids())
+        for e in (tok(t, truncation=True, max_length=MAX_LEN) for t in texts)
+    ]
 
 
 def span_words(nwords):
@@ -51,8 +60,8 @@ def make_batch(batch, tok, MASK, vocab):
     attn = torch.zeros((len(batch), Lmax), dtype=torch.long)
     labels = torch.full((len(batch), Lmax), -100, dtype=torch.long)
     for bi, (ids, wids) in enumerate(batch):
-        input_ids[bi, :len(ids)] = torch.tensor(ids)
-        attn[bi, :len(ids)] = 1
+        input_ids[bi, : len(ids)] = torch.tensor(ids)
+        attn[bi, : len(ids)] = 1
         groups = {}
         for pos, w in enumerate(wids):
             if w is not None:
@@ -84,13 +93,16 @@ def finetune(repo, outdir):
         order = rng.permutation(len(data))
         tot = 0.0
         for si in range(spe):
-            batch = [data[i] for i in order[si * BATCH:(si + 1) * BATCH]]
+            batch = [data[i] for i in order[si * BATCH : (si + 1) * BATCH]]
             input_ids, attn, labels = make_batch(batch, tok, MASK, vocab)
             out = model(input_ids=input_ids, attention_mask=attn, labels=labels)
-            out.loss.backward(); opt.step(); opt.zero_grad()
+            out.loss.backward()
+            opt.step()
+            opt.zero_grad()
             tot += out.loss.item()
-        print(f"  epoch {ep+1}/{EPOCHS}  loss={tot/spe:.3f}", flush=True)
-    model.save_pretrained(str(outdir)); tok.save_pretrained(str(outdir))
+        print(f"  epoch {ep + 1}/{EPOCHS}  loss={tot / spe:.3f}", flush=True)
+    model.save_pretrained(str(outdir))
+    tok.save_pretrained(str(outdir))
     print(f"  saved -> {outdir}\n", flush=True)
 
 

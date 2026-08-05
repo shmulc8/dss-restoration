@@ -82,4 +82,6 @@ def split_scrolls(split: str, path: Path = MANIFEST_PATH):
     try:
         return set(manifest["scroll_splits"][normalized])
     except KeyError as error:
-        raise ValueError(f"Unknown split {split!r}; expected train|dev|heldout") from error
+        raise ValueError(
+            f"Unknown split {split!r}; expected train|dev|heldout"
+        ) from error

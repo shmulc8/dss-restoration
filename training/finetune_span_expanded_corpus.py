@@ -8,6 +8,7 @@ Augments the DSS training corpus with:
 
 Fine-tunes ft_msbert_span_refined on the combined expanded corpus.
 """
+
 import math
 import os
 import sys
@@ -43,21 +44,36 @@ HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
 
 # ── DSS Synonym Pairs (Period-Appropriate Second Temple Hebrew) ──
 SYNONYM_PAIRS = [
-    ("אמת", "צדקה"), ("אמת", "צדק"),
-    ("משפט", "דין"), ("חסד", "רחמים"),
-    ("רשע", "חטא"), ("תורה", "חוק"),
-    ("עולם", "נצח"), ("ברית", "עדות"),
-    ("כבוד", "הדר"), ("גבורה", "עוז"),
-    ("דעת", "בינה"), ("חכמה", "שכל"),
-    ("נפש", "רוח"), ("לב", "נפש"),
-    ("מעשה", "פעולה"), ("דבר", "מלה"),
-    ("ארץ", "אדמה"), ("שמים", "מרום"),
-    ("אור", "נגה"), ("חושך", "אפלה"),
-    ("טוב", "ישר"), ("רע", "חטא"),
-    ("קדוש", "טהור"), ("טמא", "חלל"),
-    ("עם", "גוי"), ("איש", "אדם"),
-    ("מלך", "שר"), ("כהן", "לוי"),
-    ("מלחמה", "קרב"), ("שלום", "מנוחה"),
+    ("אמת", "צדקה"),
+    ("אמת", "צדק"),
+    ("משפט", "דין"),
+    ("חסד", "רחמים"),
+    ("רשע", "חטא"),
+    ("תורה", "חוק"),
+    ("עולם", "נצח"),
+    ("ברית", "עדות"),
+    ("כבוד", "הדר"),
+    ("גבורה", "עוז"),
+    ("דעת", "בינה"),
+    ("חכמה", "שכל"),
+    ("נפש", "רוח"),
+    ("לב", "נפש"),
+    ("מעשה", "פעולה"),
+    ("דבר", "מלה"),
+    ("ארץ", "אדמה"),
+    ("שמים", "מרום"),
+    ("אור", "נגה"),
+    ("חושך", "אפלה"),
+    ("טוב", "ישר"),
+    ("רע", "חטא"),
+    ("קדוש", "טהור"),
+    ("טמא", "חלל"),
+    ("עם", "גוי"),
+    ("איש", "אדם"),
+    ("מלך", "שר"),
+    ("כהן", "לוי"),
+    ("מלחמה", "קרב"),
+    ("שלום", "מנוחה"),
 ]
 
 # Build bidirectional synonym map
@@ -66,13 +82,16 @@ for a, b in SYNONYM_PAIRS:
     SYNONYM_MAP.setdefault(a, set()).add(b)
     SYNONYM_MAP.setdefault(b, set()).add(a)
 
+
 def heb_word(w):
     return len(w) >= 2 and all(ch in HEB for ch in w)
+
 
 # ── Load Base Training Data ──
 train = load_partition("train")
 base_texts = [row["text"].strip() for row in train]
 print(f"Base training chunks: {len(base_texts)}")
+
 
 # ── Augmentation Strategy 1: Synonym Substitution ──
 def synonym_augment(text, prob=0.15):
@@ -92,6 +111,7 @@ def synonym_augment(text, prob=0.15):
         return " ".join(augmented)
     return None
 
+
 # ── Augmentation Strategy 2: Context Window Shuffling ──
 def window_shift_augment(text, shift_range=5):
     """Create new training sample by shifting context window."""
@@ -109,6 +129,7 @@ def window_shift_augment(text, shift_range=5):
         return " ".join(shifted)
     return None
 
+
 # ── Augmentation Strategy 3: Word Dropout (Noise Injection) ──
 def word_dropout_augment(text, drop_prob=0.05):
     """Randomly drop words to simulate damaged/missing context."""
@@ -118,6 +139,7 @@ def word_dropout_augment(text, drop_prob=0.05):
         return " ".join(kept)
     return None
 
+
 # ── Augmentation Strategy 4: Clitic Join Augmentation ──
 def clitic_augment(text):
     """Join likely clitics (reusing existing clitic joiner)."""
@@ -125,6 +147,7 @@ def clitic_augment(text):
     if merges > 0:
         return joined
     return None
+
 
 # ── Generate All Augmented Texts ──
 aug_synonym = []
@@ -163,6 +186,7 @@ print(f"Clitic join augmented chunks: {len(aug_clitic)}")
 all_texts = base_texts + aug_synonym + aug_window + aug_dropout + aug_clitic
 print(f"Total combined training chunks: {len(all_texts)}")
 
+
 # ── Training Loop (identical structure to finetune_span_continue_cliticaug.py) ──
 def span_words(nwords):
     target = max(1, round(nwords * MASK_FRAC))
@@ -191,8 +215,8 @@ def make_batch(batch_texts, tok, mask_id, vocab_size):
     labels = torch.full((len(encoded), max_len), -100, dtype=torch.long)
 
     for batch_idx, (ids, wids) in enumerate(encoded):
-        input_ids[batch_idx, :len(ids)] = torch.tensor(ids)
-        attn[batch_idx, :len(ids)] = 1
+        input_ids[batch_idx, : len(ids)] = torch.tensor(ids)
+        attn[batch_idx, : len(ids)] = 1
         groups = {}
         for pos, word_id in enumerate(wids):
             if word_id is not None:
@@ -218,7 +242,9 @@ def finetune():
         raise RuntimeError(f"Base checkpoint not found: {BASE_REPO}")
 
     print(f"\n=== {Path(BASE_REPO).name} -> {OUTDIR} ===")
-    print(f"device={dev} | epochs={EPOCHS} | lr={LR:g} | batch={BATCH} | chunks={len(all_texts)}")
+    print(
+        f"device={dev} | epochs={EPOCHS} | lr={LR:g} | batch={BATCH} | chunks={len(all_texts)}"
+    )
     tok = AutoTokenizer.from_pretrained(BASE_REPO, use_fast=True)
     model = AutoModelForMaskedLM.from_pretrained(BASE_REPO).to(dev).train()
     mask_id, vocab_size = tok.mask_token_id, model.config.vocab_size
@@ -229,14 +255,17 @@ def finetune():
         order = rng.permutation(len(all_texts))
         total_loss = 0.0
         for step in range(steps_per_epoch):
-            batch = [all_texts[i] for i in order[step * BATCH:(step + 1) * BATCH]]
+            batch = [all_texts[i] for i in order[step * BATCH : (step + 1) * BATCH]]
             input_ids, attn, labels = make_batch(batch, tok, mask_id, vocab_size)
             out = model(input_ids=input_ids, attention_mask=attn, labels=labels)
             out.loss.backward()
             opt.step()
             opt.zero_grad()
             total_loss += out.loss.item()
-        print(f"  epoch {epoch+1}/{EPOCHS}  loss={total_loss/steps_per_epoch:.3f}", flush=True)
+        print(
+            f"  epoch {epoch + 1}/{EPOCHS}  loss={total_loss / steps_per_epoch:.3f}",
+            flush=True,
+        )
 
     model.save_pretrained(str(OUTDIR))
     tok.save_pretrained(str(OUTDIR))

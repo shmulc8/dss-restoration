@@ -26,9 +26,7 @@ from utils.preserved_corpus import GAP_TOKEN, load_chunks
 tlog.set_verbosity_error()
 
 BASE_REPO = os.environ.get("BASE_REPO", "dicta-il/MsBERT")
-OUTDIR = repo_path(
-    os.environ.get("OUTDIR_NAME", "ft_msbert_span_preserved_nonbib")
-)
+OUTDIR = repo_path(os.environ.get("OUTDIR_NAME", "ft_msbert_span_preserved_nonbib"))
 MAX_LEN = int(os.environ.get("MAX_LEN", "160"))
 EPOCHS = int(os.environ.get("EPOCHS", "2"))
 BATCH = int(os.environ.get("BATCH", "16"))
@@ -84,8 +82,8 @@ def make_batch(batch_words, tokenizer, vocab_size):
 
     for batch_index, (words, encoding) in enumerate(zip(batch_words, encodings)):
         ids = encoding["input_ids"]
-        input_ids[batch_index, :len(ids)] = torch.tensor(ids)
-        attention[batch_index, :len(ids)] = 1
+        input_ids[batch_index, : len(ids)] = torch.tensor(ids)
+        attention[batch_index, : len(ids)] = 1
         groups = {}
         for position, word_id in enumerate(encoding.word_ids()):
             if word_id is not None:
@@ -99,9 +97,7 @@ def make_batch(batch_words, tokenizer, vocab_size):
                 if draw < 0.8:
                     input_ids[batch_index, position] = tokenizer.mask_token_id
                 elif draw < 0.9:
-                    input_ids[batch_index, position] = int(
-                        rng.integers(vocab_size)
-                    )
+                    input_ids[batch_index, position] = int(rng.integers(vocab_size))
 
     return input_ids.to(device), attention.to(device), labels.to(device)
 
@@ -123,7 +119,7 @@ def main():
         order = rng.permutation(len(training_words))
         total_loss = 0.0
         for step in range(steps_per_epoch):
-            indices = order[step * BATCH:(step + 1) * BATCH]
+            indices = order[step * BATCH : (step + 1) * BATCH]
             batch_words = [training_words[index] for index in indices]
             input_ids, attention, labels = make_batch(
                 batch_words,

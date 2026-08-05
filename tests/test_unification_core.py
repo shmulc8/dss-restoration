@@ -1,19 +1,11 @@
 """Unit tests for native unified masking and metrics runner modules."""
 
-import pytest
-from eval.masking import (
-    MaskedExample,
-    PercentageContentMaskingPolicy,
-    RandomWordMaskingPolicy,
-    SingleWordMaskingPolicy,
-)
 from eval.metrics_runner import (
     normalize_he,
     char_sim,
     split_candidate_words,
-    HIT_KS,
 )
-from utils.tokenizer_compat import word_char_spans, make_detokenizer
+from utils.tokenizer_compat import word_char_spans
 
 
 def test_hebrew_normalization():

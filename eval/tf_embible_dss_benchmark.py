@@ -116,18 +116,19 @@ def candidate_spans(
                 minimum = context_words * 2 + length
                 if len(segment) < minimum:
                     continue
-                for local_start in range(context_words, len(segment) - context_words - length + 1):
-                    gold = tuple(segment[local_start:local_start + length])
+                for local_start in range(
+                    context_words, len(segment) - context_words - length + 1
+                ):
+                    gold = tuple(segment[local_start : local_start + length])
                     if not all(is_hebrew_word(word) for word in gold):
                         continue
                     gold_text = " ".join(gold)
                     if len(gold_text) > max_chars:
                         continue
-                    left = tuple(segment[local_start - context_words:local_start])
+                    left = tuple(segment[local_start - context_words : local_start])
                     right = tuple(
                         segment[
-                            local_start + length:
-                            local_start + length + context_words
+                            local_start + length : local_start + length + context_words
                         ]
                     )
                     if not all(is_hebrew_token(word) for word in (*left, *right)):
@@ -215,10 +216,14 @@ def word_candidates(
             batch_ids = torch.stack([beam[1] for beam in beams]).to(device)
             attention = encoding["attention_mask"].repeat(len(beams), 1).to(device)
             with torch.inference_mode():
-                logits = model(
-                    input_ids=batch_ids,
-                    attention_mask=attention,
-                ).logits[:, position].cpu()
+                logits = (
+                    model(
+                        input_ids=batch_ids,
+                        attention_mask=attention,
+                    )
+                    .logits[:, position]
+                    .cpu()
+                )
             expanded = []
             for beam_index, (score, ids, predicted) in enumerate(beams):
                 log_probs = torch.log_softmax(logits[beam_index], dim=-1)
@@ -233,9 +238,7 @@ def word_candidates(
                         continue
                     new_ids = ids.clone()
                     new_ids[position] = token_id
-                    expanded.append(
-                        (score + token_score, new_ids, (*predicted, token))
-                    )
+                    expanded.append((score + token_score, new_ids, (*predicted, token)))
                     accepted += 1
                     if accepted >= top_k_per_step:
                         break
@@ -309,8 +312,8 @@ def char_candidates(
     )
     attention = torch.zeros_like(input_ids)
     for row_index, sequence in enumerate(sequences):
-        input_ids[row_index, :len(sequence)] = sequence
-        attention[row_index, :len(sequence)] = 1
+        input_ids[row_index, : len(sequence)] = sequence
+        attention[row_index, : len(sequence)] = 1
     with torch.inference_mode():
         logits = model(
             input_ids=input_ids.to(device),
@@ -407,10 +410,7 @@ def rank_scores(rows: list[tuple[str, float]]) -> dict[str, float]:
     if not rows:
         return {}
     denominator = max(1, len(rows) - 1)
-    return {
-        text: 1.0 - rank / denominator
-        for rank, (text, _) in enumerate(rows)
-    }
+    return {text: 1.0 - rank / denominator for rank, (text, _) in enumerate(rows)}
 
 
 def ensemble_candidates(
@@ -444,10 +444,7 @@ def normalize_candidate_scores(
     high = max(values)
     if high == low:
         return {text: 1.0 for text, _ in rows}
-    return {
-        text: (score - low) / (high - low)
-        for text, score in rows
-    }
+    return {text: (score - low) / (high - low) for text, score in rows}
 
 
 def embible_overlap_candidates(
@@ -516,8 +513,7 @@ def levenshtein(left: str, right: str) -> int:
                 min(
                     current[-1] + 1,
                     previous[right_index] + 1,
-                    previous[right_index - 1]
-                    + (left_character != right_character),
+                    previous[right_index - 1] + (left_character != right_character),
                 )
             )
         previous = current
@@ -525,7 +521,9 @@ def levenshtein(left: str, right: str) -> int:
 
 
 def boundary_f1(prediction: str, gold: str) -> float:
-    predicted = {index for index, character in enumerate(prediction) if character == " "}
+    predicted = {
+        index for index, character in enumerate(prediction) if character == " "
+    }
     expected = {index for index, character in enumerate(gold) if character == " "}
     if not predicted and not expected:
         return 1.0
@@ -537,7 +535,9 @@ def boundary_f1(prediction: str, gold: str) -> float:
     return 2 * precision * recall / (precision + recall) if true_positive else 0.0
 
 
-def summarize(rows_by_item: list[tuple[Item, list[tuple[str, float]]]]) -> dict[str, Any]:
+def summarize(
+    rows_by_item: list[tuple[Item, list[tuple[str, float]]]],
+) -> dict[str, Any]:
     ranks = []
     cers = []
     boundary_scores = []
@@ -554,7 +554,9 @@ def summarize(rows_by_item: list[tuple[Item, list[tuple[str, float]]]]) -> dict[
             prediction = ""
         else:
             prediction = rows[0][0]
-        cers.append(levenshtein(prediction, item.gold_text) / max(1, len(item.gold_text)))
+        cers.append(
+            levenshtein(prediction, item.gold_text) / max(1, len(item.gold_text))
+        )
         boundary_scores.append(boundary_f1(prediction, item.gold_text))
         predicted_words = len(prediction.split()) if prediction else 0
         word_count_errors.append(abs(predicted_words - len(item.gold)))
@@ -709,11 +711,7 @@ def evaluate_records(
     for word_count in sorted({len(record["item"].gold) for record in records}):
         by_word_count[str(word_count)] = {
             name: summarize(
-                [
-                    row
-                    for row in system_rows
-                    if len(row[0].gold) == word_count
-                ]
+                [row for row in system_rows if len(row[0].gold) == word_count]
             )
             for name, system_rows in systems.items()
         }
@@ -759,9 +757,7 @@ def tokenizer_coverage(items: list[Item], tokenizer: Any) -> dict[str, Any]:
         subset = [item for item in items if len(item.gold) == word_count]
         local_words = sum(len(item.gold) for item in subset)
         local_represented_words = sum(
-            len(tokenizer.tokenize(word)) == 1
-            for item in subset
-            for word in item.gold
+            len(tokenizer.tokenize(word)) == 1 for item in subset for word in item.gold
         )
         local_represented_spans = sum(
             all(len(tokenizer.tokenize(word)) == 1 for word in item.gold)
@@ -811,7 +807,9 @@ def cached_huggingface_revision(model_id: str) -> str | None:
         / "refs"
         / "main"
     )
-    return reference.read_text(encoding="utf-8").strip() if reference.is_file() else None
+    return (
+        reference.read_text(encoding="utf-8").strip() if reference.is_file() else None
+    )
 
 
 def render_markdown(report: dict[str, Any]) -> str:
@@ -857,8 +855,8 @@ def render_markdown(report: dict[str, Any]) -> str:
 {chr(10).join(rows)}
 
 Character oracle-length diagnostic: CharHit@1
-{oracle['char_hit1']:.1f}%, CharHit@5 {oracle['char_hit5']:.1f}% over
-{oracle['n_characters']} characters.
+{oracle["char_hit1"]:.1f}%, CharHit@5 {oracle["char_hit5"]:.1f}% over
+{oracle["n_characters"]} characters.
 
 Word-tokenizer representability: {100 * report["protocol"]["tokenizer_coverage"]["single_token_word_rate"]:.1f}%
 of target words and {100 * report["protocol"]["tokenizer_coverage"]["fully_representable_span_rate"]:.1f}%
@@ -939,19 +937,27 @@ def main() -> None:
         use_fast=True,
         local_files_only=True,
     )
-    word_model = AutoModelForMaskedLM.from_pretrained(
-        str(word_source),
-        local_files_only=True,
-    ).to(device).eval()
+    word_model = (
+        AutoModelForMaskedLM.from_pretrained(
+            str(word_source),
+            local_files_only=True,
+        )
+        .to(device)
+        .eval()
+    )
     char_tokenizer = AutoTokenizer.from_pretrained(
         args.char_model,
         use_fast=True,
         local_files_only=args.local_files_only,
     )
-    char_model = AutoModelForMaskedLM.from_pretrained(
-        args.char_model,
-        local_files_only=args.local_files_only,
-    ).to(device).eval()
+    char_model = (
+        AutoModelForMaskedLM.from_pretrained(
+            args.char_model,
+            local_files_only=args.local_files_only,
+        )
+        .to(device)
+        .eval()
+    )
     char_source = Path(args.char_model).resolve()
     char_metadata = char_source / "preserved_char_training_metadata.json"
 
@@ -1009,9 +1015,7 @@ def main() -> None:
             "split": "scroll-disjoint preserved_nonbib dev/heldout",
             "word_model": word_source.name,
             "word_model_sha256": (
-                file_sha256(word_checkpoint)
-                if word_checkpoint.is_file()
-                else None
+                file_sha256(word_checkpoint) if word_checkpoint.is_file() else None
             ),
             "char_model": args.char_model,
             "char_model_revision": cached_huggingface_revision(args.char_model),
@@ -1048,11 +1052,7 @@ def main() -> None:
                 "ensemble_word_weight": ensemble_weight,
             },
         },
-        "results": {
-            key: value
-            for key, value in evaluation.items()
-            if key != "cases"
-        },
+        "results": {key: value for key, value in evaluation.items() if key != "cases"},
         "cases": evaluation["cases"],
     }
     args.output_json.parent.mkdir(parents=True, exist_ok=True)

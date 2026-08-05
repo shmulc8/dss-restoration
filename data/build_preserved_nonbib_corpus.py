@@ -27,7 +27,6 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from utils.paths import repo_path
 from utils.preserved_corpus import (
     CHUNKS_PATH,
     GAP_TOKEN,
@@ -77,7 +76,7 @@ def chunk_events(events, split, scroll, max_units, min_preserved):
         if event["kind"] in {"word", "gap"}
     ]
     for chunk_index, start in enumerate(range(0, len(units), max_units)):
-        tokens = units[start:start + max_units]
+        tokens = units[start : start + max_units]
         preserved_count = sum(token != GAP_TOKEN for token in tokens)
         if preserved_count < min_preserved:
             continue
@@ -109,12 +108,12 @@ def lacuna_records(events, split, scroll, context_size=20):
         run = significant[index:end]
         left = [
             event["token"]
-            for event in significant[max(0, index - context_size):index]
+            for event in significant[max(0, index - context_size) : index]
             if event["kind"] == "word"
         ]
         right = [
             event["token"]
-            for event in significant[end:end + context_size]
+            for event in significant[end : end + context_size]
             if event["kind"] == "word"
         ]
         missing_char_values = [
@@ -147,7 +146,9 @@ def write_jsonl(path, rows):
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as handle:
         for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+            handle.write(
+                json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n"
+            )
 
 
 def sha256(path):
@@ -181,9 +182,7 @@ def main():
 
     scroll_splits = split_names(scroll_nodes, args.seed)
     split_by_scroll = {
-        scroll: split
-        for split, scrolls in scroll_splits.items()
-        for scroll in scrolls
+        scroll: split for split, scrolls in scroll_splits.items() for scroll in scrolls
     }
 
     chunks = []
@@ -213,11 +212,18 @@ def main():
     for row in chunks:
         if any(marker in row["text"] for marker in forbidden):
             raise AssertionError(f"Editorial material leaked into chunk: {row}")
-        if not set(row["text"].split()) <= ({GAP_TOKEN} | {
-            token
-            for token in row["text"].split()
-            if token and all(character in set(chr(c) for c in range(0x05D0, 0x05EB)) for character in token)
-        }):
+        if not set(row["text"].split()) <= (
+            {GAP_TOKEN}
+            | {
+                token
+                for token in row["text"].split()
+                if token
+                and all(
+                    character in set(chr(c) for c in range(0x05D0, 0x05EB))
+                    for character in token
+                )
+            }
+        ):
             raise AssertionError(f"Non-Hebrew training token found: {row}")
 
     write_jsonl(args.chunks_out, chunks)
@@ -274,12 +280,16 @@ def main():
         },
     }
     args.manifest_out.parent.mkdir(parents=True, exist_ok=True)
-    args.manifest_out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    args.manifest_out.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
+    )
     manifest["sha256"] = {
         "chunks": sha256(args.chunks_out),
         "lacunae": sha256(args.lacunae_out),
     }
-    args.manifest_out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    args.manifest_out.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
+    )
 
     print(json.dumps(manifest["counts"], ensure_ascii=False, indent=2))
     print(f"wrote {args.chunks_out}")

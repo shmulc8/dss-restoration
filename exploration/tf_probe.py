@@ -1,6 +1,8 @@
 """Probe etcbc/dss Text-Fabric: find the reconstruction marker so we can build a
 REAL-lacuna eval (words editors restored in [ ]), not synthetic masking."""
+
 from tf.app import use
+
 A = use("etcbc/dss", silent="deep")
 api = A.api
 F, Fs, L, T = api.F, api.Fs, api.L, api.T
@@ -8,8 +10,25 @@ F, Fs, L, T = api.F, api.Fs, api.L, api.T
 feats = sorted(api.Fall())
 print("otypes:", F.otype.all)
 print("\nfeatures:", feats)
-recish = [f for f in feats if any(k in f.lower() for k in
-          ("rec", "unc", "cor", "rem", "lac", "gap", "full", "glyph", "cons", "int"))]
+recish = [
+    f
+    for f in feats
+    if any(
+        k in f.lower()
+        for k in (
+            "rec",
+            "unc",
+            "cor",
+            "rem",
+            "lac",
+            "gap",
+            "full",
+            "glyph",
+            "cons",
+            "int",
+        )
+    )
+]
 print("\ncandidate reconstruction/int features:", recish)
 for f in recish:
     try:

@@ -2,6 +2,7 @@
 
 This is meant to drive the local demo site with full, non-sampled data.
 """
+
 import csv
 import os
 import sys
@@ -28,7 +29,9 @@ MODEL_NAME = os.environ.get("MODEL_NAME", "ft_msbert_span_refined")
 MODEL_REPO = str(repo_path(MODEL_NAME))
 SPLIT_MODE = os.environ.get("EVAL_SCROLL_SPLIT", "heldout")
 BOOK_FILTER_MODE = os.environ.get("BOOK_FILTER_MODE", "no-aram")
-CSV_OUT = os.environ.get("CSV_OUT", str(ROOT / "analysis" / "reports" / "full_single_word_cases.csv"))
+CSV_OUT = os.environ.get(
+    "CSV_OUT", str(ROOT / "analysis" / "reports" / "full_single_word_cases.csv")
+)
 WINDOW = int(os.environ.get("WINDOW", "20"))
 MIN_PRESERVED = int(os.environ.get("MIN_PRESERVED", "8"))
 TOPN = int(os.environ.get("TOPN", "20"))
@@ -47,7 +50,11 @@ def beam_words(logits, positions, tok):
         logp = torch.log_softmax(logits[pos], -1)
         top = torch.topk(logp, TOPN)
         beams = sorted(
-            [(score + delta, seq + [tok_id]) for score, seq in beams for tok_id, delta in zip(top.indices.tolist(), top.values.tolist())],
+            [
+                (score + delta, seq + [tok_id])
+                for score, seq in beams
+                for tok_id, delta in zip(top.indices.tolist(), top.values.tolist())
+            ],
             key=lambda item: -item[0],
         )[:BEAM]
     out = []
@@ -109,12 +116,14 @@ def collect_items():
                     if is_preserved and pos != idx:
                         preserved += 1
             if tpos is not None and preserved >= MIN_PRESERVED:
-                items.append({
-                    "scroll": scroll_name,
-                    "context_words": ctx,
-                    "target_pos": tpos,
-                    "gold": ctx[tpos],
-                })
+                items.append(
+                    {
+                        "scroll": scroll_name,
+                        "context_words": ctx,
+                        "target_pos": tpos,
+                        "gold": ctx[tpos],
+                    }
+                )
     if MAX_ITEMS > 0:
         items = items[:MAX_ITEMS]
     return items, split_label, book_filter_label
@@ -131,7 +140,9 @@ def fit_frequencies():
 
 def joined_context(words, target_pos):
     placeholder = "__LACUNA__"
-    patched = [placeholder if idx == target_pos else word for idx, word in enumerate(words)]
+    patched = [
+        placeholder if idx == target_pos else word for idx, word in enumerate(words)
+    ]
     text, _ = join_likely_clitics(" ".join(patched))
     return text.replace(placeholder, "⬚⬚⬚")
 
@@ -147,9 +158,15 @@ def classify(gold, ranked, gold_freq):
     if top1 and len(top1) <= max(1, len(gold) - 2):
         return "particle_or_too_short", "Top guess is much shorter than the gold word."
     if gold_freq <= 1:
-        return "rare_or_unseen", "Gold word is very rare or unseen in the fit partition."
+        return (
+            "rare_or_unseen",
+            "Gold word is very rare or unseen in the fit partition.",
+        )
     if any(len(candidate) == len(gold) for candidate in ranked):
-        return "same_length_semantic", "Model prefers another plausible word of similar length."
+        return (
+            "same_length_semantic",
+            "Model prefers another plausible word of similar length.",
+        )
     return "other_miss", "Miss without a simple short/rare/same-length explanation."
 
 
@@ -164,16 +181,38 @@ def main():
     out_path = Path(CSV_OUT)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
-        "row_id", "model", "split", "book_filter", "scroll", "target_word", "target_fit_frequency",
-        "target_position", "context_for_reading", "raw_context", "model_top1", "model_top2", "model_top3",
-        "model_top4", "model_top5", "all_top5", "case_status", "likely_issue", "reader_note",
+        "row_id",
+        "model",
+        "split",
+        "book_filter",
+        "scroll",
+        "target_word",
+        "target_fit_frequency",
+        "target_position",
+        "context_for_reading",
+        "raw_context",
+        "model_top1",
+        "model_top2",
+        "model_top3",
+        "model_top4",
+        "model_top5",
+        "all_top5",
+        "case_status",
+        "likely_issue",
+        "reader_note",
     ]
 
     with out_path.open("w", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=fieldnames)
         writer.writeheader()
         for idx, item in enumerate(items, start=1):
-            enc = tok(item["context_words"], is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+            enc = tok(
+                item["context_words"],
+                is_split_into_words=True,
+                return_tensors="pt",
+                truncation=True,
+                max_length=512,
+            )
             word_map = {}
             for pos, word_id in enumerate(enc.word_ids(0)):
                 if word_id is not None:
@@ -197,8 +236,13 @@ def main():
                 "target_word": item["gold"],
                 "target_fit_frequency": surf[item["gold"]],
                 "target_position": item["target_pos"],
-                "context_for_reading": joined_context(item["context_words"], item["target_pos"]),
-                "raw_context": " ".join("⬚⬚⬚" if i == item["target_pos"] else w for i, w in enumerate(item["context_words"])),
+                "context_for_reading": joined_context(
+                    item["context_words"], item["target_pos"]
+                ),
+                "raw_context": " ".join(
+                    "⬚⬚⬚" if i == item["target_pos"] else w
+                    for i, w in enumerate(item["context_words"])
+                ),
                 "model_top1": ranked[0] if len(ranked) > 0 else "",
                 "model_top2": ranked[1] if len(ranked) > 1 else "",
                 "model_top3": ranked[2] if len(ranked) > 2 else "",

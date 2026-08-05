@@ -1,8 +1,6 @@
 """Unit tests for CandidateGenerator interface and PartialLetterFilter."""
 
-import pytest
 from eval.candidate_generator import (
-    Candidate,
     PartialLetterFilter,
     MockCandidateGenerator,
 )
@@ -23,7 +21,7 @@ def test_partial_letter_filter():
 
 def test_mock_candidate_generator_length_filter():
     gen = MockCandidateGenerator(mock_candidates=["אמר", "דבר", "צוה", "ישראל"])
-    
+
     # Target length 3 -> "אמר", "דבר", "צוה"
     cands_3 = gen.generate_candidates("context", "right", target_len=3)
     assert len(cands_3) == 3

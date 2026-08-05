@@ -44,8 +44,7 @@ from eval.tf_embible_dss_benchmark import (
 
 BACKEND_COMMIT = "7c9e769274a273d0b357b066d932f1c6833ca5f8"
 RAW_ROOT = (
-    "https://raw.githubusercontent.com/harelm4/Embible-Backend/"
-    f"{BACKEND_COMMIT}/"
+    f"https://raw.githubusercontent.com/harelm4/Embible-Backend/{BACKEND_COMMIT}/"
 )
 SOURCES = {
     "dev": {
@@ -158,15 +157,11 @@ def fetch_json(relative_path: str) -> tuple[Any, str]:
 def normalize_bible_text(value: str) -> str:
     decomposed = unicodedata.normalize("NFD", value)
     without_marks = "".join(
-        character
-        for character in decomposed
-        if unicodedata.category(character) != "Mn"
+        character for character in decomposed if unicodedata.category(character) != "Mn"
     )
     without_marks = without_marks.replace("־", " ")
     filtered = "".join(
-        character
-        if ("א" <= character <= "ת" or character in {"?", " "})
-        else ""
+        character if ("א" <= character <= "ת" or character in {"?", " "}) else ""
         for character in without_marks
     )
     return " ".join(filtered.split())
@@ -178,9 +173,7 @@ def resolve_canonical_verses(
     books: dict[str, list[str]] = {}
     book_hashes: dict[str, str] = {}
     for book in sorted({str(row["name"]) for row in rows}):
-        verses, digest = fetch_json(
-            f"data/bible_books_jsons/{book}.txt.json"
-        )
+        verses, digest = fetch_json(f"data/bible_books_jsons/{book}.txt.json")
         if not isinstance(verses, list):
             raise ValueError(f"unexpected Bible book payload: {book}")
         books[book] = [normalize_bible_text(str(verse)) for verse in verses]
@@ -190,13 +183,9 @@ def resolve_canonical_verses(
     resolution = {"unique": 0, "ambiguous": 0, "missing": 0}
     for row in rows:
         masked = normalize_bible_text(str(row["verse"]))
-        pattern = re.compile(
-            "^" + re.escape(masked).replace(r"\?", ".") + "$"
-        )
+        pattern = re.compile("^" + re.escape(masked).replace(r"\?", ".") + "$")
         matches = [
-            verse
-            for verse in books[str(row["name"])]
-            if pattern.fullmatch(verse)
+            verse for verse in books[str(row["name"])] if pattern.fullmatch(verse)
         ]
         if len(matches) == 1:
             resolved.append({**row, "resolved_verse": matches[0]})
@@ -246,9 +235,9 @@ def candidate_spans(
                 context_words,
                 len(words) - context_words - length + 1,
             ):
-                gold = tuple(words[start:start + length])
-                left = tuple(words[start - context_words:start])
-                right = tuple(words[start + length:start + length + context_words])
+                gold = tuple(words[start : start + length])
+                left = tuple(words[start - context_words : start])
+                right = tuple(words[start + length : start + length + context_words])
                 if not all(is_hebrew_word(word) for word in gold):
                     continue
                 if len(" ".join(gold)) > max_chars:
@@ -351,8 +340,8 @@ Embible's random character/word masking or published metrics.
 | ---: | :--- | ---: | ---: | ---: | ---: | ---: |
 {chr(10).join(rows)}
 
-Development tuning used {report['protocol']['dev_items']} Biblical spans and the
-held-out evaluation used {report['protocol']['test_items']} spans, with at most
+Development tuning used {report["protocol"]["dev_items"]} Biblical spans and the
+held-out evaluation used {report["protocol"]["test_items"]} spans, with at most
 one target per verse in each split. No Biblical text was used for training.
 """
 
@@ -363,9 +352,7 @@ def main() -> None:
         raise ValueError("sample sizes must be positive")
     raw_dev_rows, dev_source_hash = fetch_source("dev")
     raw_test_rows, test_source_hash = fetch_source("test")
-    dev_rows, dev_resolution, dev_book_hashes = resolve_canonical_verses(
-        raw_dev_rows
-    )
+    dev_rows, dev_resolution, dev_book_hashes = resolve_canonical_verses(raw_dev_rows)
     test_rows, test_resolution, test_book_hashes = resolve_canonical_verses(
         raw_test_rows
     )
@@ -402,18 +389,24 @@ def main() -> None:
     word_tokenizer = AutoTokenizer.from_pretrained(
         str(word_source), use_fast=True, local_files_only=True
     )
-    word_model = AutoModelForMaskedLM.from_pretrained(
-        str(word_source), local_files_only=True
-    ).to(device).eval()
+    word_model = (
+        AutoModelForMaskedLM.from_pretrained(str(word_source), local_files_only=True)
+        .to(device)
+        .eval()
+    )
     char_tokenizer = AutoTokenizer.from_pretrained(
         args.char_model,
         use_fast=True,
         local_files_only=args.local_files_only,
     )
-    char_model = AutoModelForMaskedLM.from_pretrained(
-        args.char_model,
-        local_files_only=args.local_files_only,
-    ).to(device).eval()
+    char_model = (
+        AutoModelForMaskedLM.from_pretrained(
+            args.char_model,
+            local_files_only=args.local_files_only,
+        )
+        .to(device)
+        .eval()
+    )
 
     print(f"device={device}; bible dev={len(dev_items)}; test={len(test_items)}")
     dev_records = generate_records(
@@ -494,9 +487,7 @@ def main() -> None:
                 "ensemble_word_weight": ensemble_weight,
             },
         },
-        "results": {
-            key: value for key, value in evaluation.items() if key != "cases"
-        },
+        "results": {key: value for key, value in evaluation.items() if key != "cases"},
         "cases": evaluation["cases"],
     }
     args.output_json.parent.mkdir(parents=True, exist_ok=True)

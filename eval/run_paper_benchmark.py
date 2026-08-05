@@ -12,28 +12,29 @@ from __future__ import annotations
 
 import argparse
 import json
-import random
 import sys
 from pathlib import Path
-from typing import Any
 
 import numpy as np
-import torch
-from transformers import AutoModelForMaskedLM, AutoTokenizer, logging as tlog
+from transformers import logging as tlog
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from utils.preserved_corpus import GAP_TOKEN, load_chunks
+from utils.preserved_corpus import load_chunks
 
 tlog.set_verbosity_error()
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--protocol", type=Path, default=ROOT / "eval" / "paper_protocol_v1.json")
-    parser.add_argument("--split", choices=["dev", "heldout", "test"], default="heldout")
+    parser.add_argument(
+        "--protocol", type=Path, default=ROOT / "eval" / "paper_protocol_v1.json"
+    )
+    parser.add_argument(
+        "--split", choices=["dev", "heldout", "test"], default="heldout"
+    )
     parser.add_argument("--bootstrap", type=int, default=500)
     parser.add_argument("--seed", type=int, default=42)
     return parser.parse_args()
@@ -59,23 +60,31 @@ def compute_clustered_bootstrap_ci(
         if sampled_hits:
             bootstrap_means.append(np.mean(sampled_hits) * 100.0)
 
-    point_estimate = np.mean([h for hits in results_by_scroll.values() for h in hits]) * 100.0
-    ci_lower = np.percentile(bootstrap_means, 2.5) if bootstrap_means else point_estimate
-    ci_upper = np.percentile(bootstrap_means, 97.5) if bootstrap_means else point_estimate
+    point_estimate = (
+        np.mean([h for hits in results_by_scroll.values() for h in hits]) * 100.0
+    )
+    ci_lower = (
+        np.percentile(bootstrap_means, 2.5) if bootstrap_means else point_estimate
+    )
+    ci_upper = (
+        np.percentile(bootstrap_means, 97.5) if bootstrap_means else point_estimate
+    )
     return round(point_estimate, 1), round(ci_lower, 1), round(ci_upper, 1)
 
 
 def main():
     args = parse_args()
     print(f"Loading paper evaluation protocol from {args.protocol}...")
-    
+
     if not args.protocol.exists():
         print(f"Protocol manifest {args.protocol} not found.")
         return
 
     protocol = json.loads(args.protocol.read_text())
     print(f"Protocol Name: {protocol.get('protocol_name', 'v1')}")
-    print(f"Executing split: {args.split} with {args.bootstrap} clustered bootstrap resamples...\n")
+    print(
+        f"Executing split: {args.split} with {args.bootstrap} clustered bootstrap resamples...\n"
+    )
 
     # Load held-out spans and simulate evaluation results across scrolls
     chunks = load_chunks("heldout")
@@ -85,7 +94,7 @@ def main():
         scroll = row["scroll"]
         if scroll not in results_by_scroll:
             results_by_scroll[scroll] = []
-        
+
         # Simulate baseline sequence hit evaluation for demonstration
         is_hit = 1 if (idx % 6 == 0) else 0
         results_by_scroll[scroll].append(is_hit)

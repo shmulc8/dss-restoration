@@ -32,17 +32,14 @@ TF_DIR = Path(
 def main():
     manifest = load_manifest(MANIFEST_PATH)
     split_sets = {
-        split: set(scrolls)
-        for split, scrolls in manifest["scroll_splits"].items()
+        split: set(scrolls) for split, scrolls in manifest["scroll_splits"].items()
     }
     assert not (split_sets["train"] & split_sets["dev"])
     assert not (split_sets["train"] & split_sets["heldout"])
     assert not (split_sets["dev"] & split_sets["heldout"])
 
     chunks = [
-        row
-        for split in ("train", "dev", "heldout")
-        for row in load_chunks(split)
+        row for split in ("train", "dev", "heldout") for row in load_chunks(split)
     ]
     for row in chunks:
         assert row["scroll"] in split_sets[row["split"]]
@@ -79,8 +76,7 @@ def main():
             assert source_event["kind"] == "gap"
             assert source_event["pattern"] == stored_pattern
             assert all(
-                character in HEBREW or character == "?"
-                for character in stored_pattern
+                character in HEBREW or character == "?" for character in stored_pattern
             )
 
     print("SUCCESS: train/dev/heldout scroll sets are disjoint")
@@ -89,10 +85,7 @@ def main():
         "SUCCESS: no brackets, unknown markers, or reconstructed letters "
         "occur in training text"
     )
-    print(
-        "SUCCESS: every lacuna record maps to non-biblical "
-        "Text-Fabric gap nodes"
-    )
+    print("SUCCESS: every lacuna record maps to non-biblical Text-Fabric gap nodes")
     print(
         f"validated {len(chunks):,} chunks and {len(lacunae):,} lacunae "
         f"across {sum(len(value) for value in split_sets.values()):,} scrolls"

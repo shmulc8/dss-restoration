@@ -1,10 +1,13 @@
 """Generate real restoration examples from the best model (MsBERT+span-ft) on
 real single-word lacunae: short context with the gap, editor's word, model top-5."""
+
 import sys
 from pathlib import Path
-import numpy as np, torch
+import numpy as np
+import torch
 from transformers import AutoTokenizer, AutoModelForMaskedLM, logging as tlog
 from tf.app import use
+
 tlog.set_verbosity_error()
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,7 +57,7 @@ for w in F.otype.s("word"):
 items = []
 for ws in scrolls.values():
     for i, (g, fr, pr) in enumerate(ws):
-        if not fr or len(g) < 3 or any(c not in HEB for c in g):   # content-ish: len>=3
+        if not fr or len(g) < 3 or any(c not in HEB for c in g):  # content-ish: len>=3
             continue
         lo, hi = max(0, i - WINDOW), min(len(ws), i + WINDOW + 1)
         ctx, tpos, preserved = [], None, 0
@@ -77,9 +80,14 @@ def beam_words(logits, ps, tok):
     for p in ps:
         lp = torch.log_softmax(logits[p], -1)
         t = torch.topk(lp, TOPN)
-        beams = sorted([(s + v, seq + [i]) for s, seq in beams
-                        for i, v in zip(t.indices.tolist(), t.values.tolist())],
-                       key=lambda x: -x[0])[:BEAM]
+        beams = sorted(
+            [
+                (s + v, seq + [i])
+                for s, seq in beams
+                for i, v in zip(t.indices.tolist(), t.values.tolist())
+            ],
+            key=lambda x: -x[0],
+        )[:BEAM]
     out = []
     for _, seq in beams:
         w = tok.decode(seq).replace(" ", "").replace("##", "")
@@ -99,7 +107,13 @@ for tag in ("EXACT", "IN5", "NORM", "MISS"):
     for ctx, tpos, gold in items:
         if shown >= 6:
             break
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         wmap = {}
         for pos, wid in enumerate(enc.word_ids(0)):
             if wid is not None:
@@ -115,8 +129,15 @@ for tag in ("EXACT", "IN5", "NORM", "MISS"):
         r = beam_words(logits, ps, tok)
         if not r:
             continue
-        this = ("EXACT" if r[0] == gold else "IN5" if gold in r else
-                "NORM" if any(norm(x) == norm(gold) for x in r) else "MISS")
+        this = (
+            "EXACT"
+            if r[0] == gold
+            else "IN5"
+            if gold in r
+            else "NORM"
+            if any(norm(x) == norm(gold) for x in r)
+            else "MISS"
+        )
         if this != tag:
             continue
         lo, hi = max(0, tpos - DISP), min(len(ctx), tpos + DISP + 1)

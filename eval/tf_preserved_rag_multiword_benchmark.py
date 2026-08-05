@@ -112,9 +112,7 @@ def candidate_rows(
             continue
         seen.add(candidate)
         retrieval_score, _, _ = rag_score(index, left, right, candidate)
-        rows.append(
-            (candidate, token_id, float(model_score) + alpha * retrieval_score)
-        )
+        rows.append((candidate, token_id, float(model_score) + alpha * retrieval_score))
     rows.sort(key=lambda row: (-row[2], row[0]))
     return rows
 
@@ -300,9 +298,7 @@ def load_lacunae(tf_dir: Path) -> list[dict[str, Any]]:
             while end < len(words) and words[end][1]:
                 end += 1
             target_indices = [
-                index
-                for index in range(start, end)
-                if hebrew_letters(words[index][0])
+                index for index in range(start, end) if hebrew_letters(words[index][0])
             ]
             if 1 <= len(target_indices) <= 12:
                 lo = max(0, start - WINDOW)
@@ -338,8 +334,7 @@ def load_lacunae(tf_dir: Path) -> list[dict[str, Any]]:
 
 def encode_item(item: dict[str, Any], tokenizer: Any):
     words = [
-        tokenizer.mask_token if word == GAP_TOKEN else word
-        for word in item["context"]
+        tokenizer.mask_token if word == GAP_TOKEN else word for word in item["context"]
     ]
     encoding = tokenizer(
         words,
@@ -393,10 +388,14 @@ def sequence_beam(
         ids_batch = torch.stack([beam[1] for beam in beams]).to(DEVICE)
         masks = attention_mask.unsqueeze(0).repeat(len(beams), 1).to(DEVICE)
         with torch.inference_mode():
-            logits = model(
-                input_ids=ids_batch,
-                attention_mask=masks,
-            ).logits[:, token_position].cpu()
+            logits = (
+                model(
+                    input_ids=ids_batch,
+                    attention_mask=masks,
+                )
+                .logits[:, token_position]
+                .cpu()
+            )
         expanded = []
         for beam_index, (score, ids, context, predictions) in enumerate(beams):
             left, right = contiguous_context(context, word_position)
@@ -469,10 +468,14 @@ def evaluate(
             continue
         input_ids, attention_mask, token_positions = encoded
         with torch.inference_mode():
-            logits = model(
-                input_ids=input_ids.unsqueeze(0).to(DEVICE),
-                attention_mask=attention_mask.unsqueeze(0).to(DEVICE),
-            ).logits[0].cpu()
+            logits = (
+                model(
+                    input_ids=input_ids.unsqueeze(0).to(DEVICE),
+                    attention_mask=attention_mask.unsqueeze(0).to(DEVICE),
+                )
+                .logits[0]
+                .cpu()
+            )
         name = bucket(item["length"])
         for method, weight in (("baseline", 0.0), ("rag", alpha)):
             for word_position, token_position, gold in zip(
@@ -512,10 +515,7 @@ def evaluate(
             print(f"evaluated spans: {number}/{len(items)}", flush=True)
     return {
         method: {
-            level: {
-                name: percentages(counts)
-                for name, counts in by_bucket.items()
-            }
+            level: {name: percentages(counts) for name, counts in by_bucket.items()}
             for level, by_bucket in levels.items()
         }
         for method, levels in cells.items()
@@ -530,9 +530,7 @@ def aggregate_buckets(
     result: dict[str, float | int] = {"n": total}
     for metric in ("top1", "top5", "top10", "top20"):
         successes = sum(
-            float(bucket_results[name][metric])
-            * int(bucket_results[name]["n"])
-            / 100
+            float(bucket_results[name][metric]) * int(bucket_results[name]["n"]) / 100
             for name in names
         )
         result[metric] = 100 * successes / total if total else 0.0
@@ -566,7 +564,7 @@ entire lacuna to match, in order, in one of the Top-K beams.
 The Text-Fabric reconstructions are anonymous editorial evaluation labels, not
 physical ground truth. They were excluded from model input, training, and
 retrieval. RAG uses only preserved non-biblical training scrolls; alpha
-`{report['protocol']['rag_fit']['alpha']}` was selected only on dev scrolls.
+`{report["protocol"]["rag_fit"]["alpha"]}` was selected only on dev scrolls.
 
 No gold character lengths are used. The decoder knows only the number of word
 slots in a lacuna.
@@ -632,9 +630,7 @@ def main() -> None:
         for level, by_bucket in levels.items():
             summary[method][level] = {
                 "single_word": aggregate_buckets(by_bucket, ("1",)),
-                "multiword": aggregate_buckets(
-                    by_bucket, ("2", "3", "4-5", "6+")
-                ),
+                "multiword": aggregate_buckets(by_bucket, ("2", "3", "4-5", "6+")),
             }
     report = {
         "protocol": {
@@ -645,9 +641,7 @@ def main() -> None:
             "known_lacuna_information": "word-slot count only; no gold lengths",
             "sample_seed": 42,
             "sample_per_length_bucket": args.per_bucket,
-            "eligible_spans_found": {
-                name: len(grouped[name]) for name in BUCKETS
-            },
+            "eligible_spans_found": {name: len(grouped[name]) for name in BUCKETS},
             "sampled_spans": sampled_counts,
             "retrieval_index": index_metadata,
             "rag_fit": rag_fit,

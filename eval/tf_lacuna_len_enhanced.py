@@ -3,6 +3,7 @@
 2. Soft Physical Length Filter.
 3. Expanded Context Window (40 words).
 """
+
 import os
 import sys
 from pathlib import Path
@@ -36,6 +37,7 @@ DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 rng = np.random.default_rng(0)
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
 
+
 def norm(w):
     if not w:
         return ""
@@ -51,11 +53,24 @@ def norm(w):
         return "כל"
     return lem
 
+
 def heb(g):
     return len(g) >= 2 and all(ch in HEB for ch in g)
 
+
 def bucket(n):
-    return "1" if n == 1 else "2" if n == 2 else "3" if n == 3 else "4-5" if n <= 5 else "6+"
+    return (
+        "1"
+        if n == 1
+        else "2"
+        if n == 2
+        else "3"
+        if n == 3
+        else "4-5"
+        if n <= 5
+        else "6+"
+    )
+
 
 TF_DIR = Path("/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0")
 TF = Fabric(locations=str(TF_DIR), silent="deep")
@@ -64,11 +79,17 @@ if api is False:
     raise RuntimeError(f"Could not load cached DSS corpus from {TF_DIR}")
 F, L = api.F, api.L
 
+
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 allowed_scrolls, split_label = resolve_scroll_filter("all")
 excluded_books, book_filter_label = resolve_book_exclusions("all")
@@ -100,7 +121,9 @@ for ws in scrolls.values():
                     g, fr, pr = ws[k]
                     if i <= k < j:
                         if k in gap_targets:
-                            gap_pos.append(len(ctx)); golds.append(g); ctx.append(g)
+                            gap_pos.append(len(ctx))
+                            golds.append(g)
+                            ctx.append(g)
                     elif heb(g):
                         ctx.append(g)
                         if pr:
@@ -124,14 +147,20 @@ for b, v in sorted(by_b.items()):
 print(f"Evaluating model: {MODEL_NAME}")
 print(f"Sample size: {len(sample)} spans (WINDOW={WINDOW})\n")
 
+
 def beam_words_standard(logits, ps, tok):
     beams = [(0.0, [])]
     for p in ps:
         lp = torch.log_softmax(logits[p], -1)
         top = torch.topk(lp, TOPN)
-        beams = sorted([(s + v, seq + [i]) for s, seq in beams
-                        for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                       key=lambda x: -x[0])[:BEAM]
+        beams = sorted(
+            [
+                (s + v, seq + [i])
+                for s, seq in beams
+                for i, v in zip(top.indices.tolist(), top.values.tolist())
+            ],
+            key=lambda x: -x[0],
+        )[:BEAM]
     out = []
     for _, seq in beams:
         w = tok.decode(seq).replace(" ", "").replace("##", "")
@@ -141,14 +170,20 @@ def beam_words_standard(logits, ps, tok):
             break
     return out
 
+
 def beam_words_enhanced(logits, ps, tok, gold_len=None):
     beams = [(0.0, [])]
     for p in ps:
         lp = torch.log_softmax(logits[p], -1)
         top = torch.topk(lp, TOPN)
-        beams = sorted([(s + v, seq + [i]) for s, seq in beams
-                        for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                       key=lambda x: -x[0])[:BEAM]
+        beams = sorted(
+            [
+                (s + v, seq + [i])
+                for s, seq in beams
+                for i, v in zip(top.indices.tolist(), top.values.tolist())
+            ],
+            key=lambda x: -x[0],
+        )[:BEAM]
     out = []
     seen_lemmas = set()
     for _, seq in beams:
@@ -167,6 +202,7 @@ def beam_words_enhanced(logits, ps, tok, gold_len=None):
             break
     return out
 
+
 def run_evaluation():
     tok = AutoTokenizer.from_pretrained(str(model_dir), use_fast=True)
     model = AutoModelForMaskedLM.from_pretrained(str(model_dir)).to(dev).eval()
@@ -176,7 +212,13 @@ def run_evaluation():
     enh_cells = {}
 
     for ctx, gap_pos, golds, N in sample:
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         wmap = {}
         for pos, wid in enumerate(enc.word_ids(0)):
             if wid is not None:
@@ -197,10 +239,12 @@ def run_evaluation():
 
         for ps, gold in gp:
             gold_norm = norm(gold)
-            
+
             # Standard Decoding
             ranked_std = beam_words_standard(logits, ps, tok)
-            rank_std = next((i for i, r in enumerate(ranked_std) if norm(r) == gold_norm), 999)
+            rank_std = next(
+                (i for i, r in enumerate(ranked_std) if norm(r) == gold_norm), 999
+            )
             sc_std[0] += rank_std == 0
             sc_std[1] += rank_std < 5
             sc_std[2] += rank_std < 10
@@ -209,7 +253,9 @@ def run_evaluation():
 
             # Enhanced Decoding (Soft Length Filter + Lemma Deduplication)
             ranked_enh = beam_words_enhanced(logits, ps, tok, gold_len=len(gold))
-            rank_enh = next((i for i, r in enumerate(ranked_enh) if norm(r) == gold_norm), 999)
+            rank_enh = next(
+                (i for i, r in enumerate(ranked_enh) if norm(r) == gold_norm), 999
+            )
             sc_enh[0] += rank_enh == 0
             sc_enh[1] += rank_enh < 5
             sc_enh[2] += rank_enh < 10
@@ -223,7 +269,7 @@ def run_evaluation():
     row_std = f"{'Standard':16s}"
     for b in order:
         c = std_cells.get(b)
-        acc = (c[2]/c[4]*100) if c and c[4] else 0.0
+        acc = (c[2] / c[4] * 100) if c and c[4] else 0.0
         row_std += f"{acc:8.1f}%"
     print(f"{'system':16s}" + "".join(f"{b:>9s}" for b in order))
     print(row_std)
@@ -234,11 +280,12 @@ def run_evaluation():
     row_enh = f"{'Enhanced':16s}"
     for b in order:
         c = enh_cells.get(b)
-        acc = (c[2]/c[4]*100) if c and c[4] else 0.0
+        acc = (c[2] / c[4] * 100) if c and c[4] else 0.0
         row_enh += f"{acc:8.1f}%"
     print(f"{'system':16s}" + "".join(f"{b:>9s}" for b in order))
     print(row_enh)
     print()
+
 
 if __name__ == "__main__":
     run_evaluation()

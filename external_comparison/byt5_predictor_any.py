@@ -8,6 +8,7 @@ external schema so score_run_dir scores it bit-identically.
 Candidate "tokens" are the candidate's whitespace words (no "##" prefixes), so
 the external split_candidate_words aligns multi-word spans correctly.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -62,7 +63,9 @@ for uid, sent in sentences.items():
                 early_stopping=True,
             )
         cands, seen = [], set()
-        ranked = sorted(zip(gen.sequences, gen.sequences_scores.tolist()), key=lambda x: -x[1])
+        ranked = sorted(
+            zip(gen.sequences, gen.sequences_scores.tolist()), key=lambda x: -x[1]
+        )
         for seq, score in ranked:
             text = tok.decode(seq, skip_special_tokens=True).strip()
             if not text or text in seen:
@@ -89,7 +92,15 @@ for uid, sent in sentences.items():
         print(f"{n_done}/{len(sentences)} sentences", flush=True)
 
 out.close()
-manifest = json.loads((HERE / "merged_results" / "tavbert-base" / "manifest.json").read_text())
-manifest["model"] = {"id": str(MODEL_DIR), "family": "byt5-seq2seq", "adapter": "byt5_predictor.py"}
-(OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
+manifest = json.loads(
+    (HERE / "merged_results" / "tavbert-base" / "manifest.json").read_text()
+)
+manifest["model"] = {
+    "id": str(MODEL_DIR),
+    "family": "byt5-seq2seq",
+    "adapter": "byt5_predictor.py",
+}
+(OUT_DIR / "manifest.json").write_text(
+    json.dumps(manifest, indent=2, ensure_ascii=False)
+)
 print("DONE, predictions at", OUT_DIR)

@@ -1,11 +1,13 @@
 """Test predictions of MsBERT base vs MsBERT+DSS-span-ft on a specific sectarian scroll sentence.
 We mask a key theological or sectarian content word and compare predictions.
 """
-import os, sys
+
+import sys
 from pathlib import Path
 import torch
 from transformers import AutoTokenizer, AutoModelForMaskedLM, logging as tlog
 from tf.app import use
+
 tlog.set_verbosity_error()
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,7 +55,7 @@ for w in words[:400]:
 
 print("\n--- First few reconstructed sentences/phrases in 1QS ---")
 for i in range(0, len(text_words), 15):
-    phrase = " ".join(g for w, g in text_words[i:i+15])
+    phrase = " ".join(g for w, g in text_words[i : i + 15])
     print(f"[{i}]: {phrase}")
 
 # Let's pick a very famous sentence from 1QS Column 1, lines 1-3:
@@ -91,38 +93,44 @@ print(f"Masking word: '{target_word_gold}' (index {target_word_idx} in context)"
 # Prepare input context
 ctx = [g for w, g in context_slice]
 
+
 # Evaluate models
 def eval_sentence(repo, nice):
     tok = AutoTokenizer.from_pretrained(repo, use_fast=True)
     model = AutoModelForMaskedLM.from_pretrained(repo).eval()
-    
+
     enc = tok(ctx, is_split_into_words=True, return_tensors="pt")
     wmap = {}
     for pos, wid in enumerate(enc.word_ids(0)):
         if wid is not None:
             wmap.setdefault(wid, []).append(pos)
-            
+
     ps = wmap.get(target_word_idx)
     if not ps:
         print(f"Error mapping target word to token positions in {nice}!")
         return
-        
+
     ids = enc["input_ids"][0].clone()
     for p in ps:
         ids[p] = tok.mask_token_id
-        
+
     with torch.no_grad():
         logits = model(ids.unsqueeze(0)).logits[0]
-        
+
     # Unconstrained predictions
     beams = [(0.0, [])]
     for p in ps:
         lp = torch.log_softmax(logits[p], -1)
         top = torch.topk(lp, 20)
-        beams = sorted([(s + v, seq + [i]) for s, seq in beams
-                        for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                       key=lambda x: -x[0])[:25]
-    
+        beams = sorted(
+            [
+                (s + v, seq + [i])
+                for s, seq in beams
+                for i, v in zip(top.indices.tolist(), top.values.tolist())
+            ],
+            key=lambda x: -x[0],
+        )[:25]
+
     out = []
     for _, seq in beams:
         w = tok.decode(seq).replace(" ", "").replace("##", "")
@@ -130,13 +138,14 @@ def eval_sentence(repo, nice):
             out.append(w)
         if len(out) >= 5:
             break
-            
+
     print(f"\n### {nice}")
     print(f"  Top-5 predictions: {' / '.join(out)}")
-    
+
     # Let's show character length constrained predictions (simulating physical gap size)
     out_cond = [w for w in out if len(w) == len(target_word_gold)]
     print(f"  Length-constrained (len={len(target_word_gold)}): {' / '.join(out_cond)}")
+
 
 eval_sentence("dicta-il/MsBERT", "MsBERT base")
 model_dir = repo_path("ft_msbert_span")

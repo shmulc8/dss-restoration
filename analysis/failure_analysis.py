@@ -5,6 +5,7 @@ Outputs:
 2. Concrete miss examples with context, top-k predictions, and fit-set frequency hints.
 3. Optional CSV export for spreadsheet review.
 """
+
 import os
 import sys
 import csv
@@ -73,11 +74,13 @@ def edit_distance(a: str, b: str) -> int:
     for i, ca in enumerate(a, start=1):
         cur = [i]
         for j, cb in enumerate(b, start=1):
-            cur.append(min(
-                prev[j] + 1,
-                cur[j - 1] + 1,
-                prev[j - 1] + (ca != cb),
-            ))
+            cur.append(
+                min(
+                    prev[j] + 1,
+                    cur[j - 1] + 1,
+                    prev[j - 1] + (ca != cb),
+                )
+            )
         prev = cur
     return prev[-1]
 
@@ -168,7 +171,9 @@ def load_items():
     return items, split_label, len(scrolls)
 
 
-def classify(gold: str, ranked: list[str], surface_freq: Counter, lemma_freq: Counter) -> tuple[str, str]:
+def classify(
+    gold: str, ranked: list[str], surface_freq: Counter, lemma_freq: Counter
+) -> tuple[str, str]:
     gold_norm = norm(gold)
     top1 = ranked[0] if ranked else ""
     gold_freq = surface_freq[gold]
@@ -179,22 +184,40 @@ def classify(gold: str, ranked: list[str], surface_freq: Counter, lemma_freq: Co
 
     if len(top1) <= max(1, len(gold) - 2):
         if gold and gold[0] in PREFIXES:
-            return "particle_or_split", "Top prediction is much shorter than the gold word, likely reflecting split clitics in the training data."
-        return "too_short", "Top prediction is much shorter than the gold word, suggesting residual short-word bias."
+            return (
+                "particle_or_split",
+                "Top prediction is much shorter than the gold word, likely reflecting split clitics in the training data.",
+            )
+        return (
+            "too_short",
+            "Top prediction is much shorter than the gold word, suggesting residual short-word bias.",
+        )
 
     if gold_freq == 0 and gold_lemma_freq == 0:
-        return "unseen_lexeme", "Gold form and lemma are absent from the fit partition, so this looks like a true lexical generalization failure."
+        return (
+            "unseen_lexeme",
+            "Gold form and lemma are absent from the fit partition, so this looks like a true lexical generalization failure.",
+        )
 
     if gold_freq == 0 and gold_lemma_freq > 0:
-        return "seen_lemma_unseen_form", "The lemma exists in fit data but this surface form does not, suggesting morphological or orthographic sparsity."
+        return (
+            "seen_lemma_unseen_form",
+            "The lemma exists in fit data but this surface form does not, suggesting morphological or orthographic sparsity.",
+        )
 
     near_same_len = [cand for cand in ranked if len(cand) == len(gold)]
     if near_same_len:
         best = min(near_same_len, key=lambda cand: edit_distance(cand, gold))
         if edit_distance(best, gold) <= 2:
-            return "orthographic_or_morph", "A same-length near-neighbor is ranked, so the miss is probably a fine-grained orthographic or inflectional distinction."
+            return (
+                "orthographic_or_morph",
+                "A same-length near-neighbor is ranked, so the miss is probably a fine-grained orthographic or inflectional distinction.",
+            )
 
-    return "semantic_or_ambiguous", "Candidates have plausible length but not the target lemma, so context may be too weak or the target is semantically underdetermined."
+    return (
+        "semantic_or_ambiguous",
+        "Candidates have plausible length but not the target lemma, so context may be too weak or the target is semantically underdetermined.",
+    )
 
 
 def collect_failures():
@@ -211,7 +234,13 @@ def collect_failures():
     failures = []
     category_counts = Counter()
     for ctx, tpos, gold in items:
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         word_map = {}
         for pos, word_id in enumerate(enc.word_ids(0)):
             if word_id is not None:
@@ -234,18 +263,20 @@ def collect_failures():
         category_counts[category] += 1
         lo, hi = max(0, tpos - 5), min(len(ctx), tpos + 6)
         snippet = " ".join(ctx[idx] if idx != tpos else "⬚⬚⬚" for idx in range(lo, hi))
-        failures.append({
-            "split_label": split_label,
-            "eligible_scrolls": n_scrolls,
-            "gold": gold,
-            "gold_norm": norm(gold),
-            "category": category,
-            "why": why,
-            "gold_freq": surface_freq[gold],
-            "gold_lemma_freq": lemma_freq[norm(gold)],
-            "context": snippet,
-            "top10": ranked[:10],
-        })
+        failures.append(
+            {
+                "split_label": split_label,
+                "eligible_scrolls": n_scrolls,
+                "gold": gold,
+                "gold_norm": norm(gold),
+                "category": category,
+                "why": why,
+                "gold_freq": surface_freq[gold],
+                "gold_lemma_freq": lemma_freq[norm(gold)],
+                "context": snippet,
+                "top10": ranked[:10],
+            }
+        )
 
     failures.sort(key=lambda item: (item["category"], item["gold_freq"], item["gold"]))
     return failures, category_counts, split_label, n_scrolls, len(items)
@@ -297,12 +328,16 @@ def write_csv(path: str, failures: list[dict]):
                 "why": item["why"],
             }
             for idx in range(10):
-                row[f"top{idx+1}"] = item["top10"][idx] if idx < len(item["top10"]) else ""
+                row[f"top{idx + 1}"] = (
+                    item["top10"][idx] if idx < len(item["top10"]) else ""
+                )
             writer.writerow(row)
 
 
 def main():
-    failures, category_counts, split_label, n_scrolls, sampled_items = collect_failures()
+    failures, category_counts, split_label, n_scrolls, sampled_items = (
+        collect_failures()
+    )
     if CSV_OUT:
         write_csv(CSV_OUT, failures)
 
@@ -312,7 +347,9 @@ def main():
     )
     print(f"norm top-10 misses: {len(failures)}")
     for category, count in category_counts.most_common():
-        print(f"  {category:22s} {count:3d}  {count / max(1, len(failures)) * 100:4.1f}%")
+        print(
+            f"  {category:22s} {count:3d}  {count / max(1, len(failures)) * 100:4.1f}%"
+        )
 
     print("\n=== Example misses ===")
     for item in failures[:EXAMPLES]:

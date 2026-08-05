@@ -2,6 +2,7 @@
 
 Evaluates MsBERT ft-SPAN-refined on single-word masks on intact preserved text (rec != 1).
 """
+
 import sys
 from pathlib import Path
 import numpy as np
@@ -30,6 +31,7 @@ DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 rng = np.random.default_rng(42)
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
 
+
 def norm(w):
     if not w:
         return ""
@@ -45,20 +47,29 @@ def norm(w):
         return "כל"
     return lem
 
+
 def heb(g):
     return len(g) >= 2 and all(ch in HEB for ch in g)
 
+
 from tf.fabric import Fabric
+
 TF_DIR = Path("/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0")
 TF = Fabric(locations=str(TF_DIR), silent="deep")
 api = TF.load("otype glyph rec biblical scroll", silent="deep")
 F, L = api.F, api.L
 
+
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 allowed_scrolls, _ = resolve_scroll_filter("heldout")
 
@@ -103,42 +114,48 @@ mask_id = tok.mask_token_id
 top1, top5, top10, top20, total = 0, 0, 0, 0, 0
 
 for ctx, gap_pos, gold in sampled_items:
-    enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+    enc = tok(
+        ctx,
+        is_split_into_words=True,
+        return_tensors="pt",
+        truncation=True,
+        max_length=512,
+    )
     wmap = {}
     for pos, wid in enumerate(enc.word_ids(0)):
         if wid is not None:
             wmap.setdefault(wid, []).append(pos)
-            
+
     target_positions = wmap.get(gap_pos)
     if not target_positions:
         continue
-        
+
     ids = enc["input_ids"][0].clone()
     for p in target_positions:
         ids[p] = mask_id
-        
+
     with torch.no_grad():
         logits = model(ids.unsqueeze(0).to(dev)).logits[0].cpu()
-        
+
     lp = torch.log_softmax(logits[target_positions[0]], -1)
     top = torch.topk(lp, 20)
     preds = [tok.decode([idx]).strip() for idx in top.indices.tolist()]
-    
+
     gold_norm = norm(gold)
     rank = next((i for i, r in enumerate(preds) if norm(r) == gold_norm), 999)
-    
-    top1 += (rank == 0)
-    top5 += (rank < 5)
-    top10 += (rank < 10)
-    top20 += (rank < 20)
+
+    top1 += rank == 0
+    top5 += rank < 5
+    top10 += rank < 10
+    top20 += rank < 20
     total += 1
 
 print("\n==================================================")
 print("=== SINGLE-WORD INTACT TEXT RESTORATION (rec != 1) ===")
 print("==================================================")
 print(f"Total Single-Word Test Cases: {total}")
-print(f"Top-1  Accuracy: {top1/total*100:.1f}%")
-print(f"Top-5  Accuracy: {top5/total*100:.1f}%")
-print(f"Top-10 Accuracy: {top10/total*100:.1f}%")
-print(f"Top-20 Accuracy: {top20/total*100:.1f}%")
+print(f"Top-1  Accuracy: {top1 / total * 100:.1f}%")
+print(f"Top-5  Accuracy: {top5 / total * 100:.1f}%")
+print(f"Top-10 Accuracy: {top10 / total * 100:.1f}%")
+print(f"Top-20 Accuracy: {top20 / total * 100:.1f}%")
 print("==================================================")

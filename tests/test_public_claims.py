@@ -27,7 +27,9 @@ def test_removed_claims_do_not_reappear() -> None:
     for path in PUBLIC_SURFACES:
         text = path.read_text(encoding="utf-8")
         for fragment in FORBIDDEN_FRAGMENTS:
-            assert fragment not in text, f"{fragment!r} reappeared in {path.relative_to(ROOT)}"
+            assert fragment not in text, (
+                f"{fragment!r} reappeared in {path.relative_to(ROOT)}"
+            )
 
 
 def test_public_surfaces_link_the_methodology() -> None:
@@ -75,9 +77,7 @@ def test_bible_transfer_public_numbers_match_generated_report() -> None:
     assert report["protocol"]["bible_used_for_training"] is False
     assert report["protocol"]["test_items"] == 120
     expected = {"1": "80.0%", "2": "42.5%", "3": "27.5%"}
-    surfaces = "\n".join(
-        path.read_text(encoding="utf-8") for path in PUBLIC_SURFACES
-    )
+    surfaces = "\n".join(path.read_text(encoding="utf-8") for path in PUBLIC_SURFACES)
     for word_count, displayed in expected.items():
         actual = report["results"]["by_word_count"][word_count]["uwc_word"]["top10"]
         assert f"{actual:.1f}%" == displayed

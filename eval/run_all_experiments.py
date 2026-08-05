@@ -91,9 +91,15 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--list", action="store_true", help="list registered evaluations")
-    mode.add_argument("--checks", action="store_true", help="run validation checks only")
-    mode.add_argument("--pilots", action="store_true", help="run retained pilot evaluations")
-    mode.add_argument("--all", action="store_true", help="run checks followed by pilots")
+    mode.add_argument(
+        "--checks", action="store_true", help="run validation checks only"
+    )
+    mode.add_argument(
+        "--pilots", action="store_true", help="run retained pilot evaluations"
+    )
+    mode.add_argument(
+        "--all", action="store_true", help="run checks followed by pilots"
+    )
     parser.add_argument(
         "--only",
         choices=[experiment.key for experiment in EXPERIMENTS],
@@ -136,7 +142,9 @@ def main() -> int:
         )
         if result.returncode:
             failures.append(experiment.key)
-            print(f"FAILED: {experiment.key} exited {result.returncode}", file=sys.stderr)
+            print(
+                f"FAILED: {experiment.key} exited {result.returncode}", file=sys.stderr
+            )
 
     if failures:
         print(f"\nFailed evaluations: {', '.join(failures)}", file=sys.stderr)

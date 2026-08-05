@@ -14,12 +14,14 @@ e.g.
 
 cwd should be this directory; runs/ and models/ are created here.
 """
+
 import json
 import re
 import sys
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 
 HERE = Path(__file__).resolve().parent
@@ -42,9 +44,7 @@ print("headless run: hub disabled, run_name={run_name}, model={model_id}")
 """
 
 nb = json.load(open(NOTEBOOK))
-cells = [
-    "".join(c["source"]) for c in nb["cells"] if c["cell_type"] == "code"
-]
+cells = ["".join(c["source"]) for c in nb["cells"] if c["cell_type"] == "code"]
 # code cell 0 in the code-only list corresponds to notebook cell 2
 cells[0] = STUB_CELL_2
 
@@ -56,9 +56,7 @@ for src in cells:
     src, n_model = re.subn(
         r'model_name: str = "[^"]*"', f'model_name: str = "{model_id}"', src
     )
-    src, _ = re.subn(
-        r'data_path: str = "[^"]*"', f'data_path: str = "{DATA}"', src
-    )
+    src, _ = re.subn(r'data_path: str = "[^"]*"', f'data_path: str = "{DATA}"', src)
     src, _ = re.subn(r"^EXPORT_EPOCH = .*$", "EXPORT_EPOCH = None", src, flags=re.M)
     src = src.replace("plt.show()", "plt.close(fig)")
     patched.append(src)

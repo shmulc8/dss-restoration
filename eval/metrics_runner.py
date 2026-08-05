@@ -59,6 +59,7 @@ DEFAULT_RESULTS_REPO = "almo2988/dss-eval-results"
 # 1a. Identity
 # --------------------------------------------------------------------------
 
+
 def sentence_uid(row):
     """Stable id for a *location* in the corpus, not for a piece of text.
 
@@ -88,14 +89,17 @@ def _short_json_sha(payload, length):
 
 def protocol_id(fingerprint, split, policy_class, mask_ratio, span_concentration, seed):
     """The *task*. Two runs are comparable iff their protocol_ids are equal."""
-    return _short_json_sha({
-        "dataset_fingerprint": fingerprint,
-        "split": split,
-        "policy_class": policy_class,
-        "mask_ratio": mask_ratio,
-        "span_concentration": span_concentration,
-        "seed": seed,
-    }, 8)
+    return _short_json_sha(
+        {
+            "dataset_fingerprint": fingerprint,
+            "split": split,
+            "policy_class": policy_class,
+            "mask_ratio": mask_ratio,
+            "span_concentration": span_concentration,
+            "seed": seed,
+        },
+        8,
+    )
 
 
 def decode_id(predictor_class, top_k, beam_width, beam_depth):
@@ -106,12 +110,15 @@ def decode_id(predictor_class, top_k, beam_width, beam_depth):
     given 3 is not a fair fight, so the viewer flags a mismatch inside one
     leaderboard.
     """
-    return _short_json_sha({
-        "predictor_class": predictor_class,
-        "top_k": top_k,
-        "beam_width": beam_width,
-        "beam_depth": beam_depth,
-    }, 8)
+    return _short_json_sha(
+        {
+            "predictor_class": predictor_class,
+            "top_k": top_k,
+            "beam_width": beam_width,
+            "beam_depth": beam_depth,
+        },
+        8,
+    )
 
 
 def make_run_id(model_id, protocol, decode, created=None):
@@ -122,6 +129,7 @@ def make_run_id(model_id, protocol, decode, created=None):
 # --------------------------------------------------------------------------
 # 1c. Normalisation and character-level string metrics
 # --------------------------------------------------------------------------
+
 
 def normalize_he(s, collapse_finals=False):
     """Strip everything that is not an unpointed Hebrew letter.
@@ -135,8 +143,10 @@ def normalize_he(s, collapse_finals=False):
     cleanup step.
     """
     s = unicodedata.normalize("NFC", s)
-    s = "".join(c for c in s if unicodedata.category(c) != "Mn")   # strip nikkud/cantillation
-    s = "".join(c for c in s if "א" <= c <= "ת")          # letters only
+    s = "".join(
+        c for c in s if unicodedata.category(c) != "Mn"
+    )  # strip nikkud/cantillation
+    s = "".join(c for c in s if "א" <= c <= "ת")  # letters only
     if collapse_finals:
         s = s.translate(str.maketrans("ךםןףץ", "כמנפצ"))
     return s
@@ -191,13 +201,25 @@ def char_sim(a, b):
 
 _METRIC_COLUMNS = (
     ["char_sim_top1", "char_sim_top1_norm", "char_sim_oracle", "char_sim_oracle_norm"]
-    + [f"hit_at_{k}" for k in HIT_KS] + ["gold_rank", "mrr"]
-    + [f"hit_at_{k}_norm" for k in HIT_KS] + ["gold_rank_norm", "mrr_norm"]
+    + [f"hit_at_{k}" for k in HIT_KS]
+    + ["gold_rank", "mrr"]
+    + [f"hit_at_{k}_norm" for k in HIT_KS]
+    + ["gold_rank_norm", "mrr_norm"]
 )
 
 WORD_SCORE_COLUMNS = (
-    ["sentence_uid", "text_sha", "word_index", "span_index", "span_word_count",
-     "span_length", "alignment", "gold_word", "pred_top1", "n_candidates"]
+    [
+        "sentence_uid",
+        "text_sha",
+        "word_index",
+        "span_index",
+        "span_word_count",
+        "span_length",
+        "alignment",
+        "gold_word",
+        "pred_top1",
+        "n_candidates",
+    ]
     + _METRIC_COLUMNS
     + ["token_accuracy", "levenshtein_similarity", "candidates_json"]
 )
@@ -206,7 +228,8 @@ WORD_SCORE_COLUMNS = (
 # null whenever the gold is not in the candidate list, so its mean would be a
 # mean over the subset that happened to succeed. mrr is the well-defined version.
 MEAN_METRICS = [c for c in _METRIC_COLUMNS if not c.startswith("gold_rank")] + [
-    "token_accuracy", "levenshtein_similarity",
+    "token_accuracy",
+    "levenshtein_similarity",
 ]
 
 
@@ -257,7 +280,7 @@ def _per_word_candidates(span, n_words):
         slots = [[] for _ in range(n_words)]
         for words, score in splits:
             if len(words) != n_words:
-                continue                      # cannot place it; skip this candidate
+                continue  # cannot place it; skip this candidate
             for j in range(n_words):
                 slots[j].append((words[j], score))
         alignment = "split"
@@ -265,7 +288,7 @@ def _per_word_candidates(span, n_words):
     deduped = []
     for slot in slots:
         seen = {}
-        for text, score in slot:              # rank order, so first win = best rank
+        for text, score in slot:  # rank order, so first win = best rank
             if text not in seen:
                 seen[text] = score
         deduped.append(list(seen.items()))
@@ -287,7 +310,9 @@ def _word_metrics(gold, candidates, suffix=""):
 
     out = {
         f"char_sim_top1{suffix}": char_sim(top1, gold),
-        f"char_sim_oracle{suffix}": max((char_sim(t, gold) for t in texts), default=0.0),
+        f"char_sim_oracle{suffix}": max(
+            (char_sim(t, gold) for t in texts), default=0.0
+        ),
         f"gold_rank{suffix}": rank,
         f"mrr{suffix}": 1.0 / rank if rank else 0.0,
     }
@@ -325,14 +350,19 @@ def score_span(span, evaluator=None):
     span_length = span.get("span_length") or max(len(gold_token_ids), 1)
 
     n_tokens_correct = max(
-        (evaluator._positional_matches(c["token_ids"], gold_token_ids) for c in candidates),
+        (
+            evaluator._positional_matches(c["token_ids"], gold_token_ids)
+            for c in candidates
+        ),
         default=0,
     )
     legacy = {
         "token_accuracy": n_tokens_correct / span_length if span_length else None,
         "levenshtein_similarity": max(
-            (evaluator._levenshtein_similarity(c["token_ids"], gold_token_ids)
-             for c in candidates),
+            (
+                evaluator._levenshtein_similarity(c["token_ids"], gold_token_ids)
+                for c in candidates
+            ),
             default=0.0,
         ),
     }
@@ -350,14 +380,17 @@ def score_span(span, evaluator=None):
 
     if alignment == "unaligned":
         row = dict(base)
-        row.update({
-            "word_index": None,
-            "gold_word": span.get("gold_text", " ".join(gold_words)),
-            "pred_top1": candidates[0]["text"] if candidates else "",
-            "n_candidates": None,
-            "candidates_json": json.dumps(
-                [[c["text"], c["score"]] for c in candidates], ensure_ascii=False),
-        })
+        row.update(
+            {
+                "word_index": None,
+                "gold_word": span.get("gold_text", " ".join(gold_words)),
+                "pred_top1": candidates[0]["text"] if candidates else "",
+                "n_candidates": None,
+                "candidates_json": json.dumps(
+                    [[c["text"], c["score"]] for c in candidates], ensure_ascii=False
+                ),
+            }
+        )
         row.update({key: None for key in _METRIC_COLUMNS})
         row.update(legacy)
         return [row], n_words
@@ -368,19 +401,23 @@ def score_span(span, evaluator=None):
         slot = slots[j]
 
         row = dict(base)
-        row.update({
-            "word_index": word_index,
-            "gold_word": gold,
-            "pred_top1": slot[0][0] if slot else "",
-            "n_candidates": len(slot),
-            "candidates_json": json.dumps(slot, ensure_ascii=False),
-        })
+        row.update(
+            {
+                "word_index": word_index,
+                "gold_word": gold,
+                "pred_top1": slot[0][0] if slot else "",
+                "n_candidates": len(slot),
+                "candidates_json": json.dumps(slot, ensure_ascii=False),
+            }
+        )
         row.update(_word_metrics(gold, slot))
-        row.update(_word_metrics(
-            normalize_he(gold),
-            [(normalize_he(t), s) for t, s in slot],
-            suffix="_norm",
-        ))
+        row.update(
+            _word_metrics(
+                normalize_he(gold),
+                [(normalize_he(t), s) for t, s in slot],
+                suffix="_norm",
+            )
+        )
         row.update(legacy)
 
         rows.append(row)
@@ -391,6 +428,7 @@ def score_span(span, evaluator=None):
 # --------------------------------------------------------------------------
 # Aggregation
 # --------------------------------------------------------------------------
+
 
 def _cluster_bootstrap(df, metrics, b=BOOTSTRAP_B, seed=BOOTSTRAP_SEED):
     """Percentile bootstrap CIs, resampling *sentences*.
@@ -405,7 +443,9 @@ def _cluster_bootstrap(df, metrics, b=BOOTSTRAP_B, seed=BOOTSTRAP_SEED):
     out = {}
 
     if df.empty:
-        return {m: {"mean": None, "ci_low": None, "ci_high": None, "n": 0} for m in metrics}
+        return {
+            m: {"mean": None, "ci_low": None, "ci_high": None, "n": 0} for m in metrics
+        }
 
     groups = df.groupby("sentence_uid", sort=True)
     order = list(groups.groups)
@@ -430,7 +470,8 @@ def _cluster_bootstrap(df, metrics, b=BOOTSTRAP_B, seed=BOOTSTRAP_SEED):
         resampled = sums[draw].sum(axis=1) / np.maximum(counts[draw].sum(axis=1), 1e-12)
 
         low, high = np.percentile(
-            resampled, [100 * BOOTSTRAP_ALPHA / 2, 100 * (1 - BOOTSTRAP_ALPHA / 2)])
+            resampled, [100 * BOOTSTRAP_ALPHA / 2, 100 * (1 - BOOTSTRAP_ALPHA / 2)]
+        )
 
         out[metric] = {
             "mean": float(sums.sum() / total),
@@ -468,10 +509,8 @@ def compute_metrics(word_df, sentences, spans):
     """metrics.json payload: overall means with CIs, slices, and the §1.3 diagnostics."""
     scored = word_df[word_df["alignment"] != "unaligned"].copy()
 
-    spans_per_sentence = pd.Series(
-        [s["n_spans"] for s in sentences], dtype="float64")
-    words_per_span = pd.Series(
-        [len(s["word_indices"]) for s in spans], dtype="float64")
+    spans_per_sentence = pd.Series([s["n_spans"] for s in sentences], dtype="float64")
+    words_per_span = pd.Series([len(s["word_indices"]) for s in spans], dtype="float64")
 
     gold_len = scored["gold_word"].astype(str).str.len()
 
@@ -503,7 +542,8 @@ def compute_metrics(word_df, sentences, spans):
             "span_word_count": _slice_means(scored, "span_word_count", MEAN_METRICS),
             "span_length": _slice_means(scored, "span_length", MEAN_METRICS),
             "gold_word_len": _slice_means(
-                scored.assign(gold_word_len=gold_len), "gold_word_len", MEAN_METRICS),
+                scored.assign(gold_word_len=gold_len), "gold_word_len", MEAN_METRICS
+            ),
         }
 
         if "scroll" in scored.columns:
@@ -515,6 +555,7 @@ def compute_metrics(word_df, sentences, spans):
 # --------------------------------------------------------------------------
 # predictions.jsonl -> derived files
 # --------------------------------------------------------------------------
+
 
 def read_predictions(run_dir):
     """(sentence records, span records) from a run's predictions.jsonl."""
@@ -550,7 +591,9 @@ def score_records(sentences, spans):
         word_df["scroll"] = word_df["sentence_uid"].map(scroll_by_uid)
 
     masked_words = sum(len(s["masked_word_indices"]) for s in sentences)
-    aligned = int((word_df["alignment"] != "unaligned").sum()) if not word_df.empty else 0
+    aligned = (
+        int((word_df["alignment"] != "unaligned").sum()) if not word_df.empty else 0
+    )
 
     counts = {
         "sentences": len(sentences),
@@ -561,7 +604,8 @@ def score_records(sentences, spans):
         # unsplittable candidate, or a mask lost to sequence truncation.
         "unaligned_words": masked_words - aligned,
         "unaligned_spans": int((word_df["alignment"] == "unaligned").sum())
-        if not word_df.empty else 0,
+        if not word_df.empty
+        else 0,
     }
 
     return word_df, counts
@@ -596,9 +640,9 @@ def _write_json(path, payload):
 
 
 def _write_summary_xlsx(path, word_df, metrics):
-    overall = pd.DataFrame([
-        {"metric": name, **values} for name, values in metrics["overall"].items()
-    ])
+    overall = pd.DataFrame(
+        [{"metric": name, **values} for name, values in metrics["overall"].items()]
+    )
 
     slices = []
     for name, table in metrics.get("slices", {}).items():
@@ -609,12 +653,14 @@ def _write_summary_xlsx(path, word_df, metrics):
         overall.to_excel(writer, sheet_name="overall", index=False)
         pd.DataFrame(slices).to_excel(writer, sheet_name="slices", index=False)
         word_df.drop(columns=["candidates_json"], errors="ignore").to_excel(
-            writer, sheet_name="words", index=False)
+            writer, sheet_name="words", index=False
+        )
 
 
 # --------------------------------------------------------------------------
 # 1b. The runner
 # --------------------------------------------------------------------------
+
 
 def resolve_device(device=None):
     """cuda -> mps -> cpu, the same priority the notebooks use."""
@@ -639,9 +685,14 @@ def _resolve_revision(model_id, hf_token=None):
     try:
         from huggingface_hub import HfApi
 
-        return {"source": "hub", "revision": HfApi(token=hf_token).model_info(model_id).sha}
-    except Exception as exc:                   # offline, private, or renamed
-        print(f"  ! could not resolve revision for {model_id}: {type(exc).__name__}: {exc}")
+        return {
+            "source": "hub",
+            "revision": HfApi(token=hf_token).model_info(model_id).sha,
+        }
+    except Exception as exc:  # offline, private, or renamed
+        print(
+            f"  ! could not resolve revision for {model_id}: {type(exc).__name__}: {exc}"
+        )
         return {"source": "hub", "revision": None}
 
 
@@ -656,13 +707,13 @@ def run_eval(
     top_k: int = 10,
     beam_width: int = 10,
     beam_depth: int = 6,
-    limit: int | None = None,          # smoke runs: first N sentences
+    limit: int | None = None,  # smoke runs: first N sentences
     out_root: str = "results/runs",
     push_to_hub: bool = False,
     results_repo: str = DEFAULT_RESULTS_REPO,
     hf_token: str | None = None,
-    device: str | None = None,         # None → cuda → mps → cpu
-) -> str:                              # returns run_dir
+    device: str | None = None,  # None → cuda → mps → cpu
+) -> str:  # returns run_dir
     from transformers import AutoModelForMaskedLM
     import transformers
 
@@ -694,8 +745,13 @@ def run_eval(
 
     # ---- identity ----
     protocol = protocol_id(
-        fingerprint, split, "PercentageContentMaskingPolicy",
-        mask_ratio, span_concentration, seed)
+        fingerprint,
+        split,
+        "PercentageContentMaskingPolicy",
+        mask_ratio,
+        span_concentration,
+        seed,
+    )
     decode = decode_id("MultiSpanPredictionPolicy", top_k, beam_width, beam_depth)
     run_id = make_run_id(model_id, protocol, decode, created)
 
@@ -719,21 +775,25 @@ def run_eval(
         seed=seed,
     )
     predictor = MultiSpanPredictionPolicy(
-        model, tokenizer,
-        top_k=top_k, beam_width=beam_width, beam_depth=beam_depth, device=device,
+        model,
+        tokenizer,
+        top_k=top_k,
+        beam_width=beam_width,
+        beam_depth=beam_depth,
+        device=device,
     )
     evaluator = Evaluator()
 
     try:
         from tqdm.auto import tqdm
     except ImportError:
+
         def tqdm(it, **kwargs):
             return it
 
     sentence_records, span_records = [], []
 
     with open(run_dir / "predictions.jsonl", "w", encoding="utf-8") as out:
-
         for row in tqdm(df.to_dict("records"), desc=run_id[:40]):
             sentence = str(row["sentence"])
 
@@ -834,13 +894,17 @@ def run_eval(
 
     overall = metrics["overall"]
     print(f"\n{run_id}")
-    print(f"  words scored: {counts['aligned_words']} / {counts['masked_words']}"
-          f"  ({counts['unaligned_words']} unaligned)")
+    print(
+        f"  words scored: {counts['aligned_words']} / {counts['masked_words']}"
+        f"  ({counts['unaligned_words']} unaligned)"
+    )
     for name in ["char_sim_top1", "hit_at_1", "hit_at_10", "mrr"]:
         entry = overall.get(name) or {}
         if entry.get("mean") is not None:
-            print(f"  {name:<16} {entry['mean']:.4f} "
-                  f"[{entry['ci_low']:.4f}, {entry['ci_high']:.4f}]")
+            print(
+                f"  {name:<16} {entry['mean']:.4f} "
+                f"[{entry['ci_low']:.4f}, {entry['ci_high']:.4f}]"
+            )
 
     if push_to_hub:
         _push_run(run_dir, run_id, results_repo, hf_token)
@@ -873,4 +937,6 @@ def _push_run(run_dir, run_id, results_repo, hf_token):
         ignore_patterns=["**/.ipynb_checkpoints/*", "**/__pycache__/*"],
     )
 
-    print(f"\npushed -> https://huggingface.co/datasets/{results_repo}/tree/main/runs/{run_id}")
+    print(
+        f"\npushed -> https://huggingface.co/datasets/{results_repo}/tree/main/runs/{run_id}"
+    )

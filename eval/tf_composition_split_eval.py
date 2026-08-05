@@ -3,7 +3,7 @@
 Evaluates whether model performance holds when entire literary compositions (e.g. Damascus Document,
 Serekh ha-Yahad) are purged from the training set, preventing parallel manuscript copy leakage.
 """
-import os
+
 import sys
 from pathlib import Path
 import numpy as np
@@ -34,6 +34,7 @@ FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
 
+
 def norm(w):
     if not w:
         return ""
@@ -49,25 +50,42 @@ def norm(w):
         return "כל"
     return lem
 
+
 def heb(g):
     return len(g) >= 2 and all(ch in HEB for ch in g)
 
+
 def bucket(n):
-    return "1" if n == 1 else "2" if n == 2 else "3" if n == 3 else "4-5" if n <= 5 else "6+"
+    return (
+        "1"
+        if n == 1
+        else "2"
+        if n == 2
+        else "3"
+        if n == 3
+        else "4-5"
+        if n <= 5
+        else "6+"
+    )
+
 
 def run_composition_split_check():
     rows = _load_rows()
     nonbib = [r for r in rows if r["bib"] == "nonbib"]
-    compositions = sorted(set(r["composition"] for r in nonbib if r["composition"].strip()))
-    
+    compositions = sorted(
+        set(r["composition"] for r in nonbib if r["composition"].strip())
+    )
+
     rng = np.random.default_rng(42)
     perm = rng.permutation(len(compositions))
     n_heldout = max(1, int(len(compositions) * 0.30))
     heldout_compositions = {compositions[i] for i in perm[:n_heldout]}
-    
+
     print(f"Total non-biblical compositions: {len(compositions)}")
-    print(f"Held-out compositions ({len(heldout_compositions)}): {sorted(list(heldout_compositions))[:10]}...")
-    
+    print(
+        f"Held-out compositions ({len(heldout_compositions)}): {sorted(list(heldout_compositions))[:10]}..."
+    )
+
     scroll2comp = {r["book"]: r["composition"] for r in nonbib}
 
     TF_DIR = Path("/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0")
@@ -81,7 +99,11 @@ def run_composition_split_check():
         signs = L.d(w, "sign")
         g = "".join(F.glyph.v(s) or "" for s in signs)
         recs = [F.rec.v(s) for s in signs]
-        return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+        return (
+            g,
+            (bool(signs) and all(r == 1 for r in recs)),
+            (bool(signs) and all(r != 1 for r in recs)),
+        )
 
     scrolls = {}
     for w in F.otype.s("word"):
@@ -111,7 +133,9 @@ def run_composition_split_check():
                         g, fr, pr = ws[k]
                         if i <= k < j:
                             if k in gap_targets:
-                                gap_pos.append(len(ctx)); golds.append(g); ctx.append(g)
+                                gap_pos.append(len(ctx))
+                                golds.append(g)
+                                ctx.append(g)
                         elif heb(g):
                             ctx.append(g)
                             if pr:
@@ -126,7 +150,10 @@ def run_composition_split_check():
     for it in items:
         by_b.setdefault(bucket(it[3]), []).append(it)
 
-    print("Gap-length buckets (composition-heldout spans found):", {b: len(v) for b, v in sorted(by_b.items())})
+    print(
+        "Gap-length buckets (composition-heldout spans found):",
+        {b: len(v) for b, v in sorted(by_b.items())},
+    )
     sample = []
     for b, v in sorted(by_b.items()):
         take = min(len(v), PER_BUCKET)
@@ -140,7 +167,13 @@ def run_composition_split_check():
 
     slot_cells = {}
     for ctx, gap_pos, golds, N in sample:
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         wmap = {}
         for pos, wid in enumerate(enc.word_ids(0)):
             if wid is not None:
@@ -177,11 +210,12 @@ def run_composition_split_check():
     row = "MsBERT span-ft  "
     for b in order:
         c = slot_cells.get(b)
-        acc = (c[2]/c[4]*100) if c and c[4] else 0.0
+        acc = (c[2] / c[4] * 100) if c and c[4] else 0.0
         row += f"{acc:8.1f}%"
     print(f"{'bucket':16s}" + "".join(f"{b:>9s}" for b in order))
     print(row)
     print()
+
 
 if __name__ == "__main__":
     run_composition_split_check()

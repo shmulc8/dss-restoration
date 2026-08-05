@@ -74,7 +74,7 @@ def choose_word_span(
     word_count = int(rng.choice(np.arange(1, max_words + 1), p=probabilities))
     start_word = int(rng.integers(0, len(words) - word_count + 1))
     prefix = " ".join(words[:start_word])
-    target = " ".join(words[start_word:start_word + word_count])
+    target = " ".join(words[start_word : start_word + word_count])
     start_character = len(prefix) + (1 if prefix else 0)
     return start_character, start_character + len(target), word_count
 
@@ -105,9 +105,7 @@ def make_batch(
         positions = [
             position
             for position, (token_start, token_end) in enumerate(offsets)
-            if token_end > token_start
-            and token_start >= start
-            and token_end <= end
+            if token_end > token_start and token_start >= start and token_end <= end
         ]
         if not positions:
             continue
@@ -145,10 +143,14 @@ def main() -> None:
     )
     if not tokenizer.is_fast:
         raise ValueError("TavBERT training requires offset mappings")
-    model = AutoModelForMaskedLM.from_pretrained(
-        args.base_model,
-        local_files_only=args.local_files_only,
-    ).to(device).train()
+    model = (
+        AutoModelForMaskedLM.from_pretrained(
+            args.base_model,
+            local_files_only=args.local_files_only,
+        )
+        .to(device)
+        .train()
+    )
     optimizer = AdamW(model.parameters(), lr=args.learning_rate)
     steps_per_epoch = math.ceil(len(segments) / args.batch_size)
     epoch_losses = []
@@ -163,9 +165,7 @@ def main() -> None:
         total_loss = 0.0
         completed_steps = 0
         for step in range(steps_per_epoch):
-            indices = order[
-                step * args.batch_size:(step + 1) * args.batch_size
-            ]
+            indices = order[step * args.batch_size : (step + 1) * args.batch_size]
             batch = [segments[index] for index in indices]
             input_ids, attention, labels, word_counts = make_batch(
                 batch,

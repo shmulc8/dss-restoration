@@ -1,4 +1,5 @@
 """Continue span-ft training on original plus clitic-joined augmented texts."""
+
 import math
 import os
 import sys
@@ -39,7 +40,9 @@ aug_texts = []
 changed = 0
 merge_total = 0
 for text in base_texts:
-    joined, merges = join_likely_clitics(text, prefixes=PREFIXES, min_next_len=MIN_NEXT_LEN)
+    joined, merges = join_likely_clitics(
+        text, prefixes=PREFIXES, min_next_len=MIN_NEXT_LEN
+    )
     if merges:
         changed += 1
         merge_total += merges
@@ -88,8 +91,8 @@ def make_batch(batch_texts, tok, mask_id, vocab_size):
     labels = torch.full((len(encoded), max_len), -100, dtype=torch.long)
 
     for batch_idx, (ids, wids) in enumerate(encoded):
-        input_ids[batch_idx, :len(ids)] = torch.tensor(ids)
-        attn[batch_idx, :len(ids)] = 1
+        input_ids[batch_idx, : len(ids)] = torch.tensor(ids)
+        attn[batch_idx, : len(ids)] = 1
         groups = {}
         for pos, word_id in enumerate(wids):
             if word_id is not None:
@@ -125,14 +128,17 @@ def finetune():
         order = rng.permutation(len(texts))
         total_loss = 0.0
         for step in range(steps_per_epoch):
-            batch = [texts[i] for i in order[step * BATCH:(step + 1) * BATCH]]
+            batch = [texts[i] for i in order[step * BATCH : (step + 1) * BATCH]]
             input_ids, attn, labels = make_batch(batch, tok, mask_id, vocab_size)
             out = model(input_ids=input_ids, attention_mask=attn, labels=labels)
             out.loss.backward()
             opt.step()
             opt.zero_grad()
             total_loss += out.loss.item()
-        print(f"  epoch {epoch+1}/{EPOCHS}  loss={total_loss/steps_per_epoch:.3f}", flush=True)
+        print(
+            f"  epoch {epoch + 1}/{EPOCHS}  loss={total_loss / steps_per_epoch:.3f}",
+            flush=True,
+        )
 
     model.save_pretrained(str(OUTDIR))
     tok.save_pretrained(str(OUTDIR))

@@ -8,6 +8,7 @@ model trained on dev-set features to optimally combine:
 
 Trains on dev partition, evaluates on heldout partition.
 """
+
 import sys
 from pathlib import Path
 from collections import Counter
@@ -38,6 +39,7 @@ FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 dev_device = "mps" if torch.backends.mps.is_available() else "cpu"
 
+
 def norm(w):
     if not w:
         return ""
@@ -53,8 +55,10 @@ def norm(w):
         return "כל"
     return lem
 
+
 def heb(g):
     return len(g) >= 2 and all(ch in HEB for ch in g)
+
 
 # ── Build Parallel Witness N-gram DB (from training partition only) ──
 train_rows = load_partition("train")
@@ -69,7 +73,7 @@ for words in train_texts:
     clean = [w for w in words if heb(w)]
     for n in range(3, 7):
         for i in range(len(clean) - n + 1):
-            gram = tuple(norm(w) for w in clean[i:i+n])
+            gram = tuple(norm(w) for w in clean[i : i + n])
             prefix = gram[:-1]
             target = gram[-1]
             ngram_db.setdefault(prefix, Counter())[target] += 1
@@ -79,16 +83,23 @@ print(f"RAG DB built: {len(ngram_db)} n-gram contexts")
 
 # ── Load DSS Corpus from Text-Fabric ──
 from tf.fabric import Fabric
+
 TF_DIR = Path("/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0")
 TF = Fabric(locations=str(TF_DIR), silent="deep")
 api = TF.load("otype glyph rec biblical scroll", silent="deep")
 F, L = api.F, api.L
 
+
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 from utils.eval_split import resolve_scroll_filter
 
@@ -101,6 +112,7 @@ for w in F.otype.s("word"):
         continue
     scroll_name = F.scroll.v(sc[0])
     scrolls.setdefault(scroll_name, []).append(winfo(w))
+
 
 def build_single_word_items(split):
     """Build intact single-word probes from one protocol scroll partition."""
@@ -146,6 +158,7 @@ tok = AutoTokenizer.from_pretrained(str(model_dir), use_fast=True)
 model = AutoModelForMaskedLM.from_pretrained(str(model_dir)).to(dev_device).eval()
 mask_id = tok.mask_token_id
 
+
 def get_rag_features(ctx_words, candidate_norm):
     """Extract RAG features for a candidate word given left context."""
     best_ngram_len = 0
@@ -164,6 +177,7 @@ def get_rag_features(ctx_words, candidate_norm):
                     total_hits += count
     return best_ngram_len, best_hit_count, total_hits
 
+
 def extract_features_for_items(items, label=""):
     """Extract (features, labels) for logistic regression training/evaluation."""
     all_features = []
@@ -176,7 +190,7 @@ def extract_features_for_items(items, label=""):
     # per candidate.
     inference_batch = 16
     for start in range(0, len(items), inference_batch):
-        batch_items = items[start:start + inference_batch]
+        batch_items = items[start : start + inference_batch]
         enc = tok(
             [ctx for ctx, _, _ in batch_items],
             is_split_into_words=True,
@@ -235,9 +249,9 @@ def extract_features_for_items(items, label=""):
             rag_ngram_len, rag_hit_count, rag_total = get_rag_features(ctx_left, w_norm)
 
             features = [
-                mlm_score,                          # MsBERT log-prob
-                rag_ngram_len,                      # Best matching n-gram length (0-6)
-                np.log1p(rag_hit_count),            # Log-scaled hit count
+                mlm_score,  # MsBERT log-prob
+                rag_ngram_len,  # Best matching n-gram length (0-6)
+                np.log1p(rag_hit_count),  # Log-scaled hit count
                 1.0 if rag_hit_count > 0 else 0.0,  # Binary RAG match flag
             ]
             label_val = 1 if w_norm == gold_norm else 0
@@ -247,6 +261,7 @@ def extract_features_for_items(items, label=""):
             all_meta.append((gold_norm, item_idx))
 
     return np.array(all_features), np.array(all_labels), all_meta
+
 
 print("Extracting dev features...")
 dev_features, dev_labels, dev_meta = extract_features_for_items(dev_sample, "dev")
@@ -270,6 +285,7 @@ feature_names = ["mlm_log_prob", "rag_ngram_len", "log_rag_hits", "rag_match_fla
 print(f"  Learned Weights: {dict(zip(feature_names, clf.coef_[0].round(4)))}")
 print(f"  Intercept: {clf.intercept_[0]:.4f}")
 
+
 # ── Evaluate: Baseline (MLM only) vs Learned Reranker ──
 def evaluate_reranker(features, labels, meta, use_learned=False):
     """Evaluate Top-K accuracy using either baseline MLM scores or learned reranker."""
@@ -289,21 +305,24 @@ def evaluate_reranker(features, labels, meta, use_learned=False):
         ranked = sorted(candidates, key=lambda x: -x[0])
         gold_rank = next((i for i, (_, lbl, _) in enumerate(ranked) if lbl == 1), 999)
 
-        top1 += (gold_rank == 0)
-        top5 += (gold_rank < 5)
-        top10 += (gold_rank < 10)
-        top20 += (gold_rank < 20)
+        top1 += gold_rank == 0
+        top5 += gold_rank < 5
+        top10 += gold_rank < 10
+        top20 += gold_rank < 20
         total += 1
 
     return {
-        "top1": top1/total*100 if total else 0,
-        "top5": top5/total*100 if total else 0,
-        "top10": top10/total*100 if total else 0,
-        "top20": top20/total*100 if total else 0,
-        "total": total
+        "top1": top1 / total * 100 if total else 0,
+        "top5": top5 / total * 100 if total else 0,
+        "top10": top10 / total * 100 if total else 0,
+        "top20": top20 / total * 100 if total else 0,
+        "total": total,
     }
 
-res_baseline = evaluate_reranker(test_features, test_labels, test_meta, use_learned=False)
+
+res_baseline = evaluate_reranker(
+    test_features, test_labels, test_meta, use_learned=False
+)
 res_learned = evaluate_reranker(test_features, test_labels, test_meta, use_learned=True)
 
 print("\n==================================================")
@@ -311,15 +330,20 @@ print("=== LEARNED RAG RERANKER BENCHMARK (Track A) ===")
 print("==================================================")
 print(f"Total Test Items: {res_baseline['total']}")
 print()
-print(f"Decoding Strategy                      Top-1    Top-5   Top-10   Top-20")
-print(f"1. Baseline (MLM score only)          {res_baseline['top1']:.1f}%   {res_baseline['top5']:.1f}%   {res_baseline['top10']:.1f}%   {res_baseline['top20']:.1f}%")
-print(f"2. Learned RAG Reranker               {res_learned['top1']:.1f}%   {res_learned['top5']:.1f}%   {res_learned['top10']:.1f}%   {res_learned['top20']:.1f}%")
-diff10 = res_learned['top10'] - res_baseline['top10']
+print("Decoding Strategy                      Top-1    Top-5   Top-10   Top-20")
+print(
+    f"1. Baseline (MLM score only)          {res_baseline['top1']:.1f}%   {res_baseline['top5']:.1f}%   {res_baseline['top10']:.1f}%   {res_baseline['top20']:.1f}%"
+)
+print(
+    f"2. Learned RAG Reranker               {res_learned['top1']:.1f}%   {res_learned['top5']:.1f}%   {res_learned['top10']:.1f}%   {res_learned['top20']:.1f}%"
+)
+diff10 = res_learned["top10"] - res_baseline["top10"]
 print(f"→ Net Learned RAG Reranker Top-10 Gain: {diff10:+.1f} percentage points")
 print("==================================================")
 
 # Save learned weights for future use
 import json
+
 weights_path = ROOT / "analysis" / "reports" / "learned_rag_weights.json"
 weights_data = {
     "feature_names": feature_names,

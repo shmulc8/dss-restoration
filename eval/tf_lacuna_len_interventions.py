@@ -8,6 +8,7 @@ Compares:
 This keeps the original gap-length setup but focuses on the main two models:
 MsBERT base and MsBERT+span-ft.
 """
+
 import sys
 from pathlib import Path
 
@@ -38,9 +39,41 @@ HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
 FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 FUNCTION = {
-    "אשר", "כי", "כיא", "את", "אל", "על", "אם", "לא", "לוא", "כל", "כול",
-    "מן", "הוא", "היא", "אני", "אתה", "הם", "זה", "זאת", "לו", "בו", "עד",
-    "גם", "או", "כן", "אך", "רק", "יש", "אין", "מה", "מי", "ולא", "ואת", "וכל", "כה",
+    "אשר",
+    "כי",
+    "כיא",
+    "את",
+    "אל",
+    "על",
+    "אם",
+    "לא",
+    "לוא",
+    "כל",
+    "כול",
+    "מן",
+    "הוא",
+    "היא",
+    "אני",
+    "אתה",
+    "הם",
+    "זה",
+    "זאת",
+    "לו",
+    "בו",
+    "עד",
+    "גם",
+    "או",
+    "כן",
+    "אך",
+    "רק",
+    "יש",
+    "אין",
+    "מה",
+    "מי",
+    "ולא",
+    "ואת",
+    "וכל",
+    "כה",
 }
 PROCLITIC_LETTERS = {"ו", "ל", "ב", "כ", "ה", "מ", "ש"}
 rng = np.random.default_rng(0)
@@ -66,7 +99,17 @@ def heb(word: str) -> bool:
 
 
 def bucket(n: int) -> str:
-    return "1" if n == 1 else "2" if n == 2 else "3" if n == 3 else "4-5" if n <= 5 else "6+"
+    return (
+        "1"
+        if n == 1
+        else "2"
+        if n == 2
+        else "3"
+        if n == 3
+        else "4-5"
+        if n <= 5
+        else "6+"
+    )
 
 
 def rerank_score(word: str, base_score: float) -> float:
@@ -106,7 +149,9 @@ def beam_candidates(logits, positions, tok):
             best_by_word[word] = score
 
     ranked = sorted(best_by_word.items(), key=lambda item: -item[1])[:K]
-    reranked = sorted(best_by_word.items(), key=lambda item: -rerank_score(item[0], item[1]))[:K]
+    reranked = sorted(
+        best_by_word.items(), key=lambda item: -rerank_score(item[0], item[1])
+    )[:K]
     return [word for word, _ in ranked], [word for word, _ in reranked]
 
 
@@ -122,7 +167,11 @@ def winfo(word_node):
     signs = L.d(word_node, "sign")
     glyph = "".join(F.glyph.v(sign) or "" for sign in signs)
     recs = [F.rec.v(sign) for sign in signs]
-    return glyph, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        glyph,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
 
 
 scrolls = {}
@@ -187,7 +236,9 @@ for window in WINDOWS:
     items = collect_items(window)
     sample, counts = balanced_sample(items)
     all_samples[window] = sample
-    print(f"window={window}: spans found={len(items)} eval spans={len(sample)} counts={counts}")
+    print(
+        f"window={window}: spans found={len(items)} eval spans={len(sample)} counts={counts}"
+    )
 print()
 
 
@@ -199,12 +250,20 @@ def evaluate_model(repo: str, label: str, sample):
     rerank_cells = {}
 
     for ctx, gap_pos, golds, gap_len in sample:
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         word_map = {}
         for pos, word_id in enumerate(enc.word_ids(0)):
             if word_id is not None:
                 word_map.setdefault(word_id, []).append(pos)
-        gap_positions = [(word_map.get(target), gold) for target, gold in zip(gap_pos, golds)]
+        gap_positions = [
+            (word_map.get(target), gold) for target, gold in zip(gap_pos, golds)
+        ]
         if any(pos_list is None for pos_list, _ in gap_positions):
             continue
 
@@ -221,8 +280,12 @@ def evaluate_model(repo: str, label: str, sample):
         for pos_list, gold in gap_positions:
             ranked, reranked = beam_candidates(logits, pos_list, tok)
             gold_norm = norm(gold)
-            base_rank = next((i for i, word in enumerate(ranked) if norm(word) == gold_norm), 999)
-            rerank_rank = next((i for i, word in enumerate(reranked) if norm(word) == gold_norm), 999)
+            base_rank = next(
+                (i for i, word in enumerate(ranked) if norm(word) == gold_norm), 999
+            )
+            rerank_rank = next(
+                (i for i, word in enumerate(reranked) if norm(word) == gold_norm), 999
+            )
             base_cell[0] += base_rank == 0
             base_cell[1] += base_rank < 5
             base_cell[2] += base_rank < 10
@@ -239,7 +302,9 @@ def evaluate_model(repo: str, label: str, sample):
 
 for window in WINDOWS:
     print(f"=== WINDOW {window} ===")
-    results = [evaluate_model(repo, label, all_samples[window]) for repo, label in MODELS]
+    results = [
+        evaluate_model(repo, label, all_samples[window]) for repo, label in MODELS
+    ]
     for metric, idx in [("top-1", 0), ("top-5", 1), ("top-10", 2), ("top-20", 3)]:
         print(f"--- baseline {metric} ---")
         print(f"{'model':16s}" + "".join(f"{b:>9s}" for b in order))
@@ -247,7 +312,11 @@ for window in WINDOWS:
             row = f"{label:16s}"
             for b in order:
                 c = base_cells.get(b)
-                row += f"{(c[idx]/c[4]*100 if c and c[4] else 0):8.1f}%" if c else f"{'-':>9s}"
+                row += (
+                    f"{(c[idx] / c[4] * 100 if c and c[4] else 0):8.1f}%"
+                    if c
+                    else f"{'-':>9s}"
+                )
             print(row)
         print()
 
@@ -257,6 +326,10 @@ for window in WINDOWS:
             row = f"{label:16s}"
             for b in order:
                 c = rerank_cells.get(b)
-                row += f"{(c[idx]/c[4]*100 if c and c[4] else 0):8.1f}%" if c else f"{'-':>9s}"
+                row += (
+                    f"{(c[idx] / c[4] * 100 if c and c[4] else 0):8.1f}%"
+                    if c
+                    else f"{'-':>9s}"
+                )
             print(row)
         print()

@@ -144,7 +144,11 @@ def summarize(
     by_length: dict[int, list[int]] = defaultdict(list)
     for item, rows in zip(items, candidates):
         rank = next(
-            (index for index, candidate in enumerate(rows) if candidate == item.gold_text),
+            (
+                index
+                for index, candidate in enumerate(rows)
+                if candidate == item.gold_text
+            ),
             999,
         )
         ranks.append(rank)
@@ -175,8 +179,7 @@ def summarize(
     return {
         **metrics(ranks),
         "by_word_count": {
-            str(length): metrics(local)
-            for length, local in sorted(by_length.items())
+            str(length): metrics(local) for length, local in sorted(by_length.items())
         },
         "cases": cases,
     }
@@ -213,10 +216,14 @@ def evaluate() -> None:
         model_dir,
         local_files_only=args.local_files_only,
     )
-    model = AutoModelForSeq2SeqLM.from_pretrained(
-        model_dir,
-        local_files_only=args.local_files_only,
-    ).to(device).eval()
+    model = (
+        AutoModelForSeq2SeqLM.from_pretrained(
+            model_dir,
+            local_files_only=args.local_files_only,
+        )
+        .to(device)
+        .eval()
+    )
     candidates = generate_candidates(
         items,
         tokenizer=tokenizer,

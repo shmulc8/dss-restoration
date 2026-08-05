@@ -18,7 +18,9 @@ def load_tokenizer(model_name):
         if "does not exist or is not currently imported" not in str(e):
             raise
         tok = PreTrainedTokenizerFast.from_pretrained(model_name)
-    assert tok.is_fast, "the pipeline relies on offset mappings, which need a fast tokenizer"
+    assert tok.is_fast, (
+        "the pipeline relies on offset mappings, which need a fast tokenizer"
+    )
     return tok
 
 
@@ -51,18 +53,18 @@ def offset_word_ids(text, offset_mapping):
     spans = word_char_spans(text)
     out = []
     for start, end in offset_mapping:
-        if start == end:                       # special token
+        if start == end:  # special token
             out.append(None)
             continue
         hit = next((i for i, (s, e) in enumerate(spans) if s <= start < e), None)
-        out.append(hit)                        # None for a pure-whitespace token
+        out.append(hit)  # None for a pure-whitespace token
     return out
 
 
 def make_detokenizer(tokenizer):
     """Return tokens -> str, correct for the given tokenizer's shape."""
     if emits_whitespace_tokens(tokenizer):
-        return lambda tokens: "".join(tokens)          # spaces are already tokens
+        return lambda tokens: "".join(tokens)  # spaces are already tokens
 
     def wordpiece_detok(tokens):
         out = ""

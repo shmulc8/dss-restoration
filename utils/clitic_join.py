@@ -7,7 +7,9 @@ def _is_hebrew_word(token: str) -> bool:
     return bool(token) and all(ch in HEB for ch in token)
 
 
-def join_likely_clitics(text: str, prefixes: str = "ובכלמשה", min_next_len: int = 3) -> tuple[str, int]:
+def join_likely_clitics(
+    text: str, prefixes: str = "ובכלמשה", min_next_len: int = 3
+) -> tuple[str, int]:
     """Join one-letter prefix tokens with the following multi-letter Hebrew token.
 
     This is intentionally conservative:

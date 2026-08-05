@@ -86,18 +86,14 @@ def build_items():
             for word_node in L.d(scroll_node, "word")
             if not F.biblical.v(word_node)
         ]
-        significant = [
-            event for event in events if event["kind"] in {"word", "gap"}
-        ]
+        significant = [event for event in events if event["kind"] in {"word", "gap"}]
         for target_index, target in enumerate(significant):
             if target["kind"] != "word" or len(target["token"]) < 2:
                 continue
             start = max(0, target_index - WINDOW)
             end = min(len(significant), target_index + WINDOW + 1)
             window = significant[start:end]
-            preserved_context = sum(
-                event["kind"] == "word" for event in window
-            ) - 1
+            preserved_context = sum(event["kind"] == "word" for event in window) - 1
             if preserved_context < MIN_CONTEXT_WORDS:
                 continue
             words = [
@@ -136,7 +132,7 @@ def evaluate(model_source, items):
     batch_size = 16
 
     for start in range(0, len(items), batch_size):
-        batch = items[start:start + batch_size]
+        batch = items[start : start + batch_size]
         model_words = [
             [
                 tokenizer.mask_token if word == GAP_TOKEN else word
@@ -187,10 +183,7 @@ def evaluate(model_source, items):
             records.append((item["gold"], predictions))
 
     morph_dss.lemmas(
-        word
-        for gold, predictions in records
-        for word in [gold, *predictions]
-        if word
+        word for gold, predictions in records for word in [gold, *predictions] if word
     )
     ranks = []
     for gold, predictions in records:
@@ -249,14 +242,9 @@ def main():
         "results": results,
     }
     report_path = (
-        ROOT
-        / "analysis"
-        / "reports"
-        / "preserved_nonbib_intact_benchmark.json"
+        ROOT / "analysis" / "reports" / "preserved_nonbib_intact_benchmark.json"
     )
-    report_path.write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n"
-    )
+    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(f"saved -> {report_path}")
 
 

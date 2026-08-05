@@ -19,7 +19,6 @@ import argparse
 import csv
 import hashlib
 import json
-import math
 import re
 import subprocess
 import sys
@@ -384,20 +383,22 @@ def style_features(tokens: Sequence[str]) -> dict[str, float]:
     for word in FUNCTION_WORDS:
         result[f"fw:{word}"] = counts[word] / n
     for character in "אבגדהוזחטיכלמנסעפצקרשת":
-        result[f"prefix:{character}"] = sum(
-            token.startswith(character) for token in tokens
-        ) / n
-        result[f"suffix:{character}"] = sum(
-            token.endswith(character) for token in tokens
-        ) / n
+        result[f"prefix:{character}"] = (
+            sum(token.startswith(character) for token in tokens) / n
+        )
+        result[f"suffix:{character}"] = (
+            sum(token.endswith(character) for token in tokens) / n
+        )
     for length in range(1, 11):
-        result[f"length:{length}"] = sum(
-            min(len(token), 10) == length for token in tokens
-        ) / n
+        result[f"length:{length}"] = (
+            sum(min(len(token), 10) == length for token in tokens) / n
+        )
     return result
 
 
-def longest_shared_ngram(left: Sequence[str], right: Sequence[str], cap: int = 12) -> int:
+def longest_shared_ngram(
+    left: Sequence[str], right: Sequence[str], cap: int = 12
+) -> int:
     if not left or not right:
         return 0
     right_positions: dict[str, list[int]] = defaultdict(list)
@@ -466,9 +467,7 @@ def source_kind(corpus: str, book: str) -> str:
     return "external_comparator"
 
 
-def interpretation_bucket(
-    *, corpus: str, book: str, relation: str
-) -> str:
+def interpretation_bucket(*, corpus: str, book: str, relation: str) -> str:
     kind = source_kind(corpus, book)
     if relation in {
         "lexical_parallel_candidate",
@@ -522,9 +521,7 @@ def _style_similarities(
 ) -> np.ndarray:
     vectorizer = DictVectorizer(sparse=True)
     external_matrix = normalize(
-        vectorizer.fit_transform(
-            [style_features(item.tokens) for item in external]
-        ),
+        vectorizer.fit_transform([style_features(item.tokens) for item in external]),
         norm="l2",
     )
     query_matrix = normalize(
@@ -871,8 +868,8 @@ def markdown_report(report: dict) -> str:
         lines.extend([f"- Not run: {control.get('reason', 'unknown reason')}", ""])
     lines.extend(
         [
-        "## Composition-level candidates",
-        "",
+            "## Composition-level candidates",
+            "",
         ]
     )
     for composition, rows in report["composition_source_summary"].items():
@@ -913,9 +910,7 @@ def main() -> None:
     args = parse_args()
     targets = None
     if args.targets.strip().lower() != "all":
-        targets = {
-            value.strip() for value in args.targets.split(",") if value.strip()
-        }
+        targets = {value.strip() for value in args.targets.split(",") if value.strip()}
     queries = load_preserved_dss_queries(
         args.dss_preserved_jsonl,
         metadata_csv=args.dss_csv,

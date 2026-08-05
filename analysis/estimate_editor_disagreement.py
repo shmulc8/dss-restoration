@@ -4,9 +4,9 @@ Text-Fabric does not identify an editor or edition for each ``rec == 1``
 reading. The percentages printed below are fixed hypotheses from an earlier
 prototype, not values derived from aligned editor readings.
 """
+
 import sys
 from pathlib import Path
-import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -20,11 +20,17 @@ TF = Fabric(locations=str(TF_DIR), silent="deep")
 api = TF.load("otype glyph rec biblical scroll", silent="deep")
 F, L = api.F, api.L
 
+
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 comp_map = scroll_to_composition_group()
 
@@ -57,7 +63,9 @@ print(f"Total Reconstructed Words Analyzed: {total_reconstructed_words} lacuna w
 print()
 print("Fixed prototype assumptions (not measured from aligned editions):")
 print("1. Semantic & Lexical Ambiguity: 38.0% of lacunae allow 2+ valid Hebrew words.")
-print("2. Parallel Manuscript Textual Variants: 22.8% variation across parallel copies.")
+print(
+    "2. Parallel Manuscript Textual Variants: 22.8% variation across parallel copies."
+)
 print("3. Morphological & Inflectional Variants: 30.2% variation in prefixes/suffixes.")
 print()
 print("Legacy claimed range: 22.8% – 38.0% (not empirically supported here)")

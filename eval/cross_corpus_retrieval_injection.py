@@ -74,10 +74,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--candidate-cache",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "cache"
-        / "external_retrieval_candidates.json",
+        default=ROOT / "analysis" / "cache" / "external_retrieval_candidates.json",
     )
     parser.add_argument(
         "--injection-cache-dir",
@@ -121,18 +118,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-json",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "reports"
-        / "cross_corpus_retrieval_injection.json",
+        default=ROOT / "analysis" / "reports" / "cross_corpus_retrieval_injection.json",
     )
     parser.add_argument(
         "--output-markdown",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "reports"
-        / "CROSS_CORPUS_RETRIEVAL_INJECTION.md",
+        default=ROOT / "analysis" / "reports" / "CROSS_CORPUS_RETRIEVAL_INJECTION.md",
     )
     return parser.parse_args()
 
@@ -216,9 +207,7 @@ def selected_position_logits(
 ) -> torch.Tensor:
     """Compute MLM logits only at requested positions, not every sequence token."""
     if not hasattr(model, "bert") or not hasattr(model, "cls"):
-        raise TypeError(
-            "proposal scorer requires a BERT masked-LM with .bert and .cls"
-        )
+        raise TypeError("proposal scorer requires a BERT masked-LM with .bert and .cls")
     hidden = model.bert(
         input_ids=input_ids,
         attention_mask=attention_mask,
@@ -333,9 +322,7 @@ def score_record_proposals(
                 continue
             work[len(token_ids)].append((record_index, phrase, token_ids))
 
-    output: list[dict[str, tuple[float, int]]] = [
-        {} for _ in records
-    ]
+    output: list[dict[str, tuple[float, int]]] = [{} for _ in records]
     total = sum(len(rows) for rows in work.values())
     completed = 0
     for word_count, rows in sorted(work.items()):
@@ -398,9 +385,7 @@ def score_record_proposals(
                     )
                     selected = candidate_ids[:, offset]
                     log_probs = torch.log_softmax(position_logits, dim=-1)
-                    scores += log_probs.gather(
-                        1, selected.unsqueeze(1)
-                    ).squeeze(1)
+                    scores += log_probs.gather(1, selected.unsqueeze(1)).squeeze(1)
                     input_ids[row_ids, local_positions] = selected
             for (record_index, phrase, _), score in zip(
                 batch,
@@ -421,8 +406,7 @@ def baseline_raw_rows(record: dict[str, Any]) -> list[tuple[str, float, int]]:
     if rows is None:
         raise KeyError("candidate record has neither 'word' nor 'baseline' rows")
     return [
-        (str(candidate), float(score), int(size))
-        for candidate, score, size in rows
+        (str(candidate), float(score), int(size)) for candidate, score, size in rows
     ]
 
 
@@ -561,11 +545,15 @@ def load_or_build_shelf_records(
         payload = json.loads(cache_path.read_text(encoding="utf-8"))
         if payload.get("receipt") != receipt:
             raise ValueError(f"injection cache receipt mismatch: {cache_path}")
-        return payload["dev"], payload["heldout"], {
-            **payload["audit"],
-            "cache": str(cache_path),
-            "cache_hit": True,
-        }
+        return (
+            payload["dev"],
+            payload["heldout"],
+            {
+                **payload["audit"],
+                "cache": str(cache_path),
+                "cache_hit": True,
+            },
+        )
 
     dev, dev_audit = build_injection_records(
         dev_candidates,
@@ -605,11 +593,15 @@ def load_or_build_shelf_records(
         + "\n",
         encoding="utf-8",
     )
-    return dev, heldout, {
-        **audit,
-        "cache": str(cache_path),
-        "cache_hit": False,
-    }
+    return (
+        dev,
+        heldout,
+        {
+            **audit,
+            "cache": str(cache_path),
+            "cache_hit": False,
+        },
+    )
 
 
 def ranked_condition(
@@ -676,9 +668,7 @@ def fit_proposal_limit(
     )
     return {
         "selection_split": "dev",
-        "objective": (
-            "exact complete-span Top-10, then Top-1, then fewer proposals"
-        ),
+        "objective": ("exact complete-span Top-10, then Top-1, then fewer proposals"),
         "selected_proposals_per_length": selected,
         "grid": grid,
     }
@@ -730,8 +720,7 @@ def summarize(
                 "hit_top10": rank < 10,
                 "gold_proposed": gold_is_proposed,
                 "gold_proposal_model_representable": (
-                    gold_is_proposed
-                    and record["gold"] in record["proposal_scores"]
+                    gold_is_proposed and record["gold"] in record["proposal_scores"]
                 ),
                 "top10": [candidate for candidate, _ in rows[:10]],
             }
@@ -740,16 +729,21 @@ def summarize(
     def metrics(local_ranks: Sequence[int]) -> dict[str, Any]:
         return {
             "n": len(local_ranks),
-            "exact_top1": 100 * sum(rank == 0 for rank in local_ranks) / len(local_ranks),
-            "exact_top5": 100 * sum(rank < 5 for rank in local_ranks) / len(local_ranks),
-            "exact_top10": 100 * sum(rank < 10 for rank in local_ranks) / len(local_ranks),
-            "exact_top20": 100 * sum(rank < 20 for rank in local_ranks) / len(local_ranks),
+            "exact_top1": 100
+            * sum(rank == 0 for rank in local_ranks)
+            / len(local_ranks),
+            "exact_top5": 100
+            * sum(rank < 5 for rank in local_ranks)
+            / len(local_ranks),
+            "exact_top10": 100
+            * sum(rank < 10 for rank in local_ranks)
+            / len(local_ranks),
+            "exact_top20": 100
+            * sum(rank < 20 for rank in local_ranks)
+            / len(local_ranks),
             "mean_reciprocal_rank": float(
                 np.mean(
-                    [
-                        1.0 / (rank + 1) if rank != 999 else 0.0
-                        for rank in local_ranks
-                    ]
+                    [1.0 / (rank + 1) if rank != 999 else 0.0 for rank in local_ranks]
                 )
             ),
             "candidate_pool_recall": 100
@@ -886,9 +880,7 @@ def main() -> None:
         beam_width=args.beam_width,
         top_k_per_step=args.top_k_per_step,
     )
-    candidate_payload = json.loads(
-        args.candidate_cache.read_text(encoding="utf-8")
-    )
+    candidate_payload = json.loads(args.candidate_cache.read_text(encoding="utf-8"))
     if candidate_payload.get("receipt") != expected_receipt:
         raise ValueError("frozen candidate cache receipt mismatch")
     dev_candidates = candidate_payload["dev"]
@@ -907,10 +899,14 @@ def main() -> None:
         use_fast=True,
         local_files_only=True,
     )
-    model = AutoModelForMaskedLM.from_pretrained(
-        str(model_path),
-        local_files_only=True,
-    ).to(device).eval()
+    model = (
+        AutoModelForMaskedLM.from_pretrained(
+            str(model_path),
+            local_files_only=True,
+        )
+        .to(device)
+        .eval()
+    )
 
     baseline_records = [
         {
@@ -940,8 +936,7 @@ def main() -> None:
     cache_metadata = {}
     for shelf_index, (name, documents) in enumerate(shelves.items()):
         print(
-            f"building injection condition {name}: "
-            f"{len(documents)} passages",
+            f"building injection condition {name}: {len(documents)} passages",
             flush=True,
         )
         all_items = [*dev_items, *heldout_items]
@@ -1045,9 +1040,7 @@ def main() -> None:
         )
     else:
         maximum_pool = max(
-            results[name]["maximum_injection_diagnostic"][
-                "candidate_pool_recall"
-            ]
+            results[name]["maximum_injection_diagnostic"]["candidate_pool_recall"]
             for name in shelf_order
         )
         interpretation = (
@@ -1071,9 +1064,7 @@ def main() -> None:
             "retrieval_query": "visible eight-word left and right context only",
             "retrieval_top_k": args.retrieval_top_k,
             "proposal_limits_per_length": PROPOSAL_LIMITS,
-            "equal_proposal_limit_for_word_counts": list(
-                range(1, MAX_WORDS + 1)
-            ),
+            "equal_proposal_limit_for_word_counts": list(range(1, MAX_WORDS + 1)),
             "proposal_scoring": (
                 "preserved-only word model sequential masked-token log likelihood"
             ),

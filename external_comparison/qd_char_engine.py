@@ -52,7 +52,9 @@ def parse_args() -> argparse.Namespace:
     )
     args = parser.parse_args()
     if not SAFE_TAG_RE.fullmatch(args.tag):
-        parser.error("tag may contain only letters, digits, dot, underscore, and hyphen")
+        parser.error(
+            "tag may contain only letters, digits, dot, underscore, and hyphen"
+        )
     if not TUNING.is_dir():
         parser.error(f"external tuning checkout not found: {TUNING}")
     return args
@@ -79,9 +81,7 @@ def load_eligible_targets() -> dict[tuple[str, int], dict[str, Any]]:
 
         readings: dict[str, set[str]] = {}
         for row in rows:
-            normalized, _ = qd.parse_attributed_reading(
-                row, constraint, POOL_TOLERANCE
-            )
+            normalized, _ = qd.parse_attributed_reading(row, constraint, POOL_TOLERANCE)
             if normalized is not None:
                 readings.setdefault(normalized, set()).add(str(row["reading"]))
         # The main scorer builds a tolerance-2 pool, then drops targets that have
@@ -139,9 +139,7 @@ def placement_templates(
 
 def target_text(item: dict[str, Any], mask: str, length: int) -> str:
     return " ".join(
-        mask * length
-        if word == "<TARGET>"
-        else (mask if word == "<GAP>" else word)
+        mask * length if word == "<TARGET>" else (mask if word == "<GAP>" else word)
         for word in item["context_words"]
     )
 
@@ -155,12 +153,7 @@ def target_span(
     """Locate the target mask run, with a tokenizer-based fallback."""
     target_index = int(item["target_index"])
     start = 1 + sum(
-        (
-            length
-            if index == target_index
-            else (1 if word == "<GAP>" else len(word))
-        )
-        + 1
+        (length if index == target_index else (1 if word == "<GAP>" else len(word))) + 1
         for index, word in enumerate(item["context_words"][:target_index])
     )
     ids = encoded.input_ids[0]
@@ -225,16 +218,13 @@ def decode_target(
                 normalized = qd.hebrew_letters(word)
                 if len(normalized) < 2:
                     continue
-                mean_log_probability = candidate["score"] / max(
-                    len(free_positions), 1
-                )
+                mean_log_probability = candidate["score"] / max(len(free_positions), 1)
                 merged[normalized] = max(
                     mean_log_probability, merged.get(normalized, float("-inf"))
                 )
 
     ordered = [
-        candidate
-        for candidate, _ in sorted(merged.items(), key=lambda row: -row[1])
+        candidate for candidate, _ in sorted(merged.items(), key=lambda row: -row[1])
     ]
     return (
         [

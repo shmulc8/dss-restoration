@@ -5,7 +5,7 @@ Compares:
 2. Medial string stripping (vav/yod middle stripping + divine name + final letter normalization).
 3. DictaBERT-based lemmatization (dicta-il/dictabert-lex + divine name + spelling normalization of lo/loa, kol/kool, ki/kia without stripping vav/yod).
 """
-import os
+
 import sys
 from pathlib import Path
 import numpy as np
@@ -36,6 +36,7 @@ FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 rng = np.random.default_rng(0)
 
+
 # String normalization
 def norm_string(w):
     w = "".join(FINAL.get(c, c) for c in w)
@@ -47,6 +48,7 @@ def norm_string(w):
         inner = w[1:-1].replace("ו", "").replace("י", "")
         return w[0] + inner + w[-1]
     return w
+
 
 # Lemmatized normalization
 def norm_lemma(w):
@@ -65,17 +67,37 @@ def norm_lemma(w):
         return "כל"
     return lem
 
+
 def is_content(w):
-    return len(w) >= 3 and w not in {"אשר", "כי", "כיא", "את", "אל", "על", "אם", "לא", "לוא", "כל", "כול"}
+    return len(w) >= 3 and w not in {
+        "אשר",
+        "כי",
+        "כיא",
+        "את",
+        "אל",
+        "על",
+        "אם",
+        "לא",
+        "לוא",
+        "כל",
+        "כול",
+    }
+
 
 A = use("etcbc/dss", silent="deep")
 F, L = A.api.F, A.api.L
+
 
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 # Find test items
 scrolls = {}
@@ -113,14 +135,20 @@ print(f"Loaded {len(items)} test items.")
 print("Pre-lemmatizing gold words...", flush=True)
 morph_dss.lemmas([g for _, _, g in items])
 
+
 def beam_words(logits, ps, tok):
     beams = [(0.0, [])]
     for p in ps:
         lp = torch.log_softmax(logits[p], -1)
         top = torch.topk(lp, TOPN)
-        beams = sorted([(s + v, seq + [i]) for s, seq in beams
-                        for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                       key=lambda x: -x[0])[:BEAM]
+        beams = sorted(
+            [
+                (s + v, seq + [i])
+                for s, seq in beams
+                for i, v in zip(top.indices.tolist(), top.values.tolist())
+            ],
+            key=lambda x: -x[0],
+        )[:BEAM]
     out = []
     for _, seq in beams:
         w = tok.decode(seq).replace(" ", "").replace("##", "")
@@ -130,20 +158,27 @@ def beam_words(logits, ps, tok):
             break
     return out
 
+
 for repo, nice in MODELS:
     print(f"\nEvaluating {nice}...", flush=True)
     tok = AutoTokenizer.from_pretrained(repo, use_fast=True)
     model = AutoModelForMaskedLM.from_pretrained(repo).eval()
     MASK = tok.mask_token_id
-    
+
     n_all = n_content = 0
     all_exact_1 = all_exact_10 = 0
     all_str_1 = all_str_10 = 0
     all_lem_1 = all_lem_10 = 0
-    
+
     # loop and evaluate
     for i, (ctx, tpos, gold) in enumerate(items):
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         wmap = {}
         for pos, wid in enumerate(enc.word_ids(0)):
             if wid is not None:
@@ -157,31 +192,40 @@ for repo, nice in MODELS:
         with torch.no_grad():
             logits = model(ids.unsqueeze(0)).logits[0]
         ranked = beam_words(logits, ps, tok)
-        
+
         # Pre-lemmatize predicted words to fill cache
         if ranked:
             morph_dss.lemmas(ranked)
-            
+
         n_all += 1
-        
+
         # 1. Exact
         e1 = bool(ranked) and gold == ranked[0]
         e10 = gold in ranked
-        all_exact_1 += e1; all_exact_10 += e10
-        
+        all_exact_1 += e1
+        all_exact_10 += e10
+
         # 2. String Normalization
         ng_str = norm_string(gold)
         s1 = bool(ranked) and norm_string(ranked[0]) == ng_str
         s10 = any(norm_string(r) == ng_str for r in ranked)
-        all_str_1 += s1; all_str_10 += s10
-        
+        all_str_1 += s1
+        all_str_10 += s10
+
         # 3. Lemmatized Normalization
         ng_lem = norm_lemma(gold)
         l1 = bool(ranked) and norm_lemma(ranked[0]) == ng_lem
         l10 = any(norm_lemma(r) == ng_lem for r in ranked)
-        all_lem_1 += l1; all_lem_10 += l10
-        
+        all_lem_1 += l1
+        all_lem_10 += l10
+
     print(f"Results for {nice} (n={n_all}):")
-    print(f"  EXACT Matching          -> Top-1: {all_exact_1/n_all*100:4.1f}% | Top-10: {all_exact_10/n_all*100:4.1f}%")
-    print(f"  STRING Normalization    -> Top-1: {all_str_1/n_all*100:4.1f}% | Top-10: {all_str_10/n_all*100:4.1f}%")
-    print(f"  LEMMA Normalization     -> Top-1: {all_lem_1/n_all*100:4.1f}% | Top-10: {all_lem_10/n_all*100:4.1f}%")
+    print(
+        f"  EXACT Matching          -> Top-1: {all_exact_1 / n_all * 100:4.1f}% | Top-10: {all_exact_10 / n_all * 100:4.1f}%"
+    )
+    print(
+        f"  STRING Normalization    -> Top-1: {all_str_1 / n_all * 100:4.1f}% | Top-10: {all_str_10 / n_all * 100:4.1f}%"
+    )
+    print(
+        f"  LEMMA Normalization     -> Top-1: {all_lem_1 / n_all * 100:4.1f}% | Top-10: {all_lem_10 / n_all * 100:4.1f}%"
+    )

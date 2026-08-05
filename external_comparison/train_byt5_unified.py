@@ -8,17 +8,27 @@ visible, target "<extra_id_0> span". Multiple mask draws per sentence (seed
 offsets) give ~3x data. Early stopping on val loss; best checkpoint saved to
 models/byt5_unified_ppp_nonbib.
 """
-import json
+
 import sys
 from pathlib import Path
 
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader, Dataset
-from transformers import AutoTokenizer, T5ForConditionalGeneration, get_linear_schedule_with_warmup
+from transformers import (
+    AutoTokenizer,
+    T5ForConditionalGeneration,
+    get_linear_schedule_with_warmup,
+)
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE.parent / "external_impl" / "new_dead_sea_scrolls" / "data_preparation" / "dss_sentences_min7_splits_ppp_nonbib.xlsx"
+DATA = (
+    HERE.parent
+    / "external_impl"
+    / "new_dead_sea_scrolls"
+    / "data_preparation"
+    / "dss_sentences_min7_splits_ppp_nonbib.xlsx"
+)
 OUT = HERE / "models" / "byt5_unified_ppp_nonbib"
 sys.path.insert(0, str(TUNING))
 from eval.masking import PercentageContentMaskingPolicy
@@ -38,7 +48,9 @@ device = "mps" if torch.backends.mps.is_available() else "cpu"
 # The policy only uses its tokenizer to build [MASK] strings; word selection is
 # tokenizer-independent. TavBERT's tokenizer is the cheapest valid choice.
 policy_tok = AT.from_pretrained("tau/tavbert-he")
-policy = PercentageContentMaskingPolicy(policy_tok, mask_ratio=0.3, span_concentration=0.5, seed=SEED)
+policy = PercentageContentMaskingPolicy(
+    policy_tok, mask_ratio=0.3, span_concentration=0.5, seed=SEED
+)
 
 tok = AutoTokenizer.from_pretrained("google/byt5-small")
 model = T5ForConditionalGeneration.from_pretrained("google/byt5-small").to(device)
@@ -61,7 +73,10 @@ def build_examples(df, draws):
     for _, r in df.iterrows():
         words = str(r["sentence"]).split()
         for d in range(draws):
-            ex = policy.generate(str(r["sentence"]), uid=f"{r['scroll']}|{r['fragment']}|{r['line_start']}|{r['line_end']}|draw{d}")
+            ex = policy.generate(
+                str(r["sentence"]),
+                uid=f"{r['scroll']}|{r['fragment']}|{r['line_start']}|{r['line_end']}|draw{d}",
+            )
             if not ex.masked_word_indices:
                 continue
             for grp in spans_of(ex.masked_word_indices):
@@ -92,14 +107,22 @@ class SpanDS(Dataset):
 
 def collate(batch):
     ctxs, tgts = zip(*batch)
-    enc = tok(list(ctxs), return_tensors="pt", padding=True, truncation=True, max_length=512)
-    lab = tok(list(tgts), return_tensors="pt", padding=True, truncation=True, max_length=64)
+    enc = tok(
+        list(ctxs), return_tensors="pt", padding=True, truncation=True, max_length=512
+    )
+    lab = tok(
+        list(tgts), return_tensors="pt", padding=True, truncation=True, max_length=64
+    )
     labels = lab["input_ids"].masked_fill(lab["input_ids"] == tok.pad_token_id, -100)
     return enc["input_ids"], enc["attention_mask"], labels
 
 
-train_dl = DataLoader(SpanDS(train_ex), batch_size=MICRO_BATCH, shuffle=True, collate_fn=collate)
-val_dl = DataLoader(SpanDS(val_ex), batch_size=MICRO_BATCH, shuffle=False, collate_fn=collate)
+train_dl = DataLoader(
+    SpanDS(train_ex), batch_size=MICRO_BATCH, shuffle=True, collate_fn=collate
+)
+val_dl = DataLoader(
+    SpanDS(val_ex), batch_size=MICRO_BATCH, shuffle=False, collate_fn=collate
+)
 
 steps = (len(train_dl) // GRAD_ACCUM) * MAX_EPOCHS
 opt = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=0.01)
@@ -111,7 +134,11 @@ def val_loss():
     model.eval()
     tot, n = 0.0, 0
     for ids, am, labels in val_dl:
-        out = model(input_ids=ids.to(device), attention_mask=am.to(device), labels=labels.to(device))
+        out = model(
+            input_ids=ids.to(device),
+            attention_mask=am.to(device),
+            labels=labels.to(device),
+        )
         tot += out.loss.item() * ids.size(0)
         n += ids.size(0)
     model.train()
@@ -124,7 +151,11 @@ for epoch in range(1, MAX_EPOCHS + 1):
     running, seen = 0.0, 0
     opt.zero_grad()
     for step, (ids, am, labels) in enumerate(train_dl, 1):
-        out = model(input_ids=ids.to(device), attention_mask=am.to(device), labels=labels.to(device))
+        out = model(
+            input_ids=ids.to(device),
+            attention_mask=am.to(device),
+            labels=labels.to(device),
+        )
         (out.loss / GRAD_ACCUM).backward()
         running += out.loss.item()
         seen += 1
@@ -134,7 +165,10 @@ for epoch in range(1, MAX_EPOCHS + 1):
             sched.step()
             opt.zero_grad()
     vl = val_loss()
-    print(f"epoch {epoch} | train_loss {running/seen:.4f} | val_loss {vl:.4f}", flush=True)
+    print(
+        f"epoch {epoch} | train_loss {running / seen:.4f} | val_loss {vl:.4f}",
+        flush=True,
+    )
     if vl < best - 0.01:
         best, bad = vl, 0
         OUT.mkdir(parents=True, exist_ok=True)

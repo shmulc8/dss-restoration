@@ -4,7 +4,7 @@ Evaluates MsBERT ft-SPAN-refined on:
 1. Intact / Preserved Text (rec != 1) where words are artificially masked.
 2. Real Physical Lacunae (rec == 1) where words were reconstructed by human editors.
 """
-import os
+
 import sys
 from pathlib import Path
 import numpy as np
@@ -35,6 +35,7 @@ DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 rng = np.random.default_rng(42)
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
 
+
 def norm(w):
     if not w:
         return ""
@@ -50,11 +51,24 @@ def norm(w):
         return "כל"
     return lem
 
+
 def heb(g):
     return len(g) >= 2 and all(ch in HEB for ch in g)
 
+
 def bucket(n):
-    return "1" if n == 1 else "2" if n == 2 else "3" if n == 3 else "4-5" if n <= 5 else "6+"
+    return (
+        "1"
+        if n == 1
+        else "2"
+        if n == 2
+        else "3"
+        if n == 3
+        else "4-5"
+        if n <= 5
+        else "6+"
+    )
+
 
 TF_DIR = Path("/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0")
 TF = Fabric(locations=str(TF_DIR), silent="deep")
@@ -63,11 +77,17 @@ if api is False:
     raise RuntimeError(f"Could not load cached DSS corpus from {TF_DIR}")
 F, L = api.F, api.L
 
+
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 allowed_scrolls, split_label = resolve_scroll_filter("heldout")
 
@@ -105,7 +125,9 @@ for ws in scrolls.values():
                     g, fr, pr = ws[k]
                     if i <= k < j:
                         if k in gap_targets:
-                            gap_pos.append(len(ctx)); golds.append(g); ctx.append(g)
+                            gap_pos.append(len(ctx))
+                            golds.append(g)
+                            ctx.append(g)
                     elif heb(g):
                         ctx.append(g)
                 if gap_pos:
@@ -120,13 +142,17 @@ for ws in scrolls.values():
         if ws[i][2] and heb(ws[i][0]):
             for span_len in [1, 2, 3, 4, 6]:
                 j = i + span_len
-                if j <= len(ws) and all(ws[k][2] and heb(ws[k][0]) for k in range(i, j)):
+                if j <= len(ws) and all(
+                    ws[k][2] and heb(ws[k][0]) for k in range(i, j)
+                ):
                     lo, hi = max(0, i - WINDOW), min(len(ws), j + WINDOW)
                     ctx, gap_pos, golds = [], [], []
                     for k in range(lo, hi):
                         g, fr, pr = ws[k]
                         if i <= k < j:
-                            gap_pos.append(len(ctx)); golds.append(g); ctx.append(g)
+                            gap_pos.append(len(ctx))
+                            golds.append(g)
+                            ctx.append(g)
                         elif heb(g):
                             ctx.append(g)
                     if gap_pos:
@@ -134,6 +160,7 @@ for ws in scrolls.values():
             i += 5
         else:
             i += 1
+
 
 # Sample balanced items
 def sample_buckets(items_list):
@@ -150,6 +177,7 @@ def sample_buckets(items_list):
         s += [v[i] for i in idx]
     return s
 
+
 sample_lacuna = sample_buckets(real_lacuna_items)
 sample_intact = sample_buckets(intact_text_items)
 
@@ -160,10 +188,17 @@ tok = AutoTokenizer.from_pretrained(str(model_dir), use_fast=True)
 model = AutoModelForMaskedLM.from_pretrained(str(model_dir)).to(dev).eval()
 mask_id = tok.mask_token_id
 
+
 def eval_dataset(dataset_sample, label):
     cells = {}
     for ctx, gap_pos, golds, N in dataset_sample:
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         wmap = {}
         for pos, wid in enumerate(enc.word_ids(0)):
             if wid is not None:
@@ -195,6 +230,7 @@ def eval_dataset(dataset_sample, label):
             sc[4] += 1
     return cells
 
+
 lacuna_results = eval_dataset(sample_lacuna, "Real Lacunae")
 intact_results = eval_dataset(sample_intact, "Intact Text")
 
@@ -207,14 +243,14 @@ print(f"{'Text Type':28s}" + "".join(f"{b:>9s}" for b in order))
 row_intact = f"{'Intact Text (rec != 1)':28s}"
 for b in order:
     c = intact_results.get(b)
-    acc = (c[2]/c[4]*100) if c and c[4] else 0.0
+    acc = (c[2] / c[4] * 100) if c and c[4] else 0.0
     row_intact += f"{acc:8.1f}%"
 print(row_intact)
 
 row_lacuna = f"{'Real Lacunae (rec == 1)':28s}"
 for b in order:
     c = lacuna_results.get(b)
-    acc = (c[2]/c[4]*100) if c and c[4] else 0.0
+    acc = (c[2] / c[4] * 100) if c and c[4] else 0.0
     row_lacuna += f"{acc:8.1f}%"
 print(row_lacuna)
 print()

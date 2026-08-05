@@ -12,6 +12,7 @@ This benchmark is intentionally conservative:
 - retrieval uses only the allowed source partition already baked into the JSON
 - reranking only reorders existing model candidates; it never injects the gold
 """
+
 import csv
 import json
 import os
@@ -27,18 +28,24 @@ REPORTS = ROOT / "analysis" / "reports"
 
 from utils.composition_lookup import composition_group_for_scroll
 
-CASES_CSV = Path(os.environ.get(
-    "CASES_CSV",
-    REPORTS / "full_single_word_cases_refined_hebrew_only.csv",
-))
-SIMILAR_JSON = Path(os.environ.get(
-    "SIMILAR_JSON",
-    REPORTS / "similar_passages_fit_for_full_single_word_cases.json",
-))
-OUT_JSON = Path(os.environ.get(
-    "OUT_JSON",
-    REPORTS / "retrieval_benchmark_single_word.json",
-))
+CASES_CSV = Path(
+    os.environ.get(
+        "CASES_CSV",
+        REPORTS / "full_single_word_cases_refined_hebrew_only.csv",
+    )
+)
+SIMILAR_JSON = Path(
+    os.environ.get(
+        "SIMILAR_JSON",
+        REPORTS / "similar_passages_fit_for_full_single_word_cases.json",
+    )
+)
+OUT_JSON = Path(
+    os.environ.get(
+        "OUT_JSON",
+        REPORTS / "retrieval_benchmark_single_word.json",
+    )
+)
 
 
 def load_inputs():
@@ -49,7 +56,11 @@ def load_inputs():
 
 
 def top_candidates(row):
-    return [row.get(f"model_top{i}", "") for i in range(1, 6) if row.get(f"model_top{i}", "")]
+    return [
+        row.get(f"model_top{i}", "")
+        for i in range(1, 6)
+        if row.get(f"model_top{i}", "")
+    ]
 
 
 def support_scores(row, passages):
@@ -175,6 +186,7 @@ def evaluate(name, cases, similar, include_passage):
         },
     }
 
+
 def main():
     cases, similar = load_inputs()
 
@@ -189,7 +201,9 @@ def main():
             "fit_cross_composition_only",
             cases,
             similar,
-            include_passage=lambda passage, case_group: not passage.get("same_composition", False),
+            include_passage=lambda passage, case_group: not passage.get(
+                "same_composition", False
+            ),
         ),
     }
 
@@ -204,12 +218,24 @@ def main():
         coverage = section["coverage"]
         rerank = section["rerank"]
         print(f"=== {key} ===")
-        print(f"cases with retrieved passages: {coverage['cases_with_passages']}/{coverage['cases']} = {coverage['cases_with_passages_pct']:4.1f}%")
-        print(f"gold present in retrieved passages (all cases):   {coverage['gold_present_all_count']}/{coverage['cases']} = {coverage['gold_present_all_pct']:4.1f}%")
-        print(f"gold present in retrieved passages (top-5 misses): {coverage['gold_present_miss_count']}/{coverage['misses']} = {coverage['gold_present_miss_pct']:4.1f}%")
-        print(f"baseline exact top-1: {rerank['baseline_top1_count']}/{coverage['cases']} = {rerank['baseline_top1_pct']:4.1f}%")
-        print(f"reranked exact top-1: {rerank['reranked_top1_count']}/{coverage['cases']} = {rerank['reranked_top1_pct']:4.1f}%")
-        print(f"net top-1 delta: {rerank['delta_cases']:+d} cases ({rerank['delta_pts']:+.1f} pts)")
+        print(
+            f"cases with retrieved passages: {coverage['cases_with_passages']}/{coverage['cases']} = {coverage['cases_with_passages_pct']:4.1f}%"
+        )
+        print(
+            f"gold present in retrieved passages (all cases):   {coverage['gold_present_all_count']}/{coverage['cases']} = {coverage['gold_present_all_pct']:4.1f}%"
+        )
+        print(
+            f"gold present in retrieved passages (top-5 misses): {coverage['gold_present_miss_count']}/{coverage['misses']} = {coverage['gold_present_miss_pct']:4.1f}%"
+        )
+        print(
+            f"baseline exact top-1: {rerank['baseline_top1_count']}/{coverage['cases']} = {rerank['baseline_top1_pct']:4.1f}%"
+        )
+        print(
+            f"reranked exact top-1: {rerank['reranked_top1_count']}/{coverage['cases']} = {rerank['reranked_top1_pct']:4.1f}%"
+        )
+        print(
+            f"net top-1 delta: {rerank['delta_cases']:+d} cases ({rerank['delta_pts']:+.1f} pts)"
+        )
         print(f"improved top-1 cases: {rerank['improved_top1_cases']}")
         print(f"hurt top-1 cases:     {rerank['hurt_top1_cases']}")
         print()

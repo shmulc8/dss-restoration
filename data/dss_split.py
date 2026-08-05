@@ -1,4 +1,5 @@
 """Compatibility wrapper for the shared DSS split utilities."""
+
 import sys
 from pathlib import Path
 

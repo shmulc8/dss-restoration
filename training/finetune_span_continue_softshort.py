@@ -3,6 +3,7 @@
 Instead of excluding one-letter words from the objective, keep them in the
 training signal but downweight their contribution to the masked-LM loss.
 """
+
 import math
 import os
 import sys
@@ -53,7 +54,7 @@ def count_word_lengths():
         short_words += sum(1 for word in words if len(word) <= SHORT_LEN)
     print(
         f"short target words: {short_words}/{total_words} "
-        f"({short_words/max(total_words, 1)*100:.1f}%)"
+        f"({short_words / max(total_words, 1) * 100:.1f}%)"
     )
 
 
@@ -85,8 +86,8 @@ def make_batch(batch_texts, tok, mask_id, vocab_size):
     weights = torch.zeros((len(encoded), max_len), dtype=torch.float32)
 
     for batch_idx, (ids, wids, words) in enumerate(encoded):
-        input_ids[batch_idx, :len(ids)] = torch.tensor(ids)
-        attn[batch_idx, :len(ids)] = 1
+        input_ids[batch_idx, : len(ids)] = torch.tensor(ids)
+        attn[batch_idx, : len(ids)] = 1
         groups = {}
         for pos, word_id in enumerate(wids):
             if word_id is not None and word_id < len(words):
@@ -142,15 +143,20 @@ def finetune():
         order = rng.permutation(len(texts))
         total_loss = 0.0
         for step in range(steps_per_epoch):
-            batch = [texts[i] for i in order[step * BATCH:(step + 1) * BATCH]]
-            input_ids, attn, labels, weights = make_batch(batch, tok, mask_id, vocab_size)
+            batch = [texts[i] for i in order[step * BATCH : (step + 1) * BATCH]]
+            input_ids, attn, labels, weights = make_batch(
+                batch, tok, mask_id, vocab_size
+            )
             logits = model(input_ids=input_ids, attention_mask=attn).logits
             loss = weighted_mlm_loss(logits, labels, weights)
             loss.backward()
             opt.step()
             opt.zero_grad()
             total_loss += loss.item()
-        print(f"  epoch {epoch+1}/{EPOCHS}  loss={total_loss/steps_per_epoch:.3f}", flush=True)
+        print(
+            f"  epoch {epoch + 1}/{EPOCHS}  loss={total_loss / steps_per_epoch:.3f}",
+            flush=True,
+        )
 
     model.save_pretrained(str(OUTDIR))
     tok.save_pretrained(str(OUTDIR))

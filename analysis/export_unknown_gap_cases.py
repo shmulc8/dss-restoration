@@ -3,6 +3,7 @@
 These are not benchmark items. They are researcher-facing loci where the corpus
 signals strong uncertainty or loss, but no gold restoration is available.
 """
+
 import csv
 import json
 import os
@@ -87,7 +88,9 @@ def beam_words(logits, positions, tok, max_candidates=100):
     return out
 
 
-def beam_autoregressive(model, input_ids, gap_token_positions, tok, dev, patterns=None, beam_width=5):
+def beam_autoregressive(
+    model, input_ids, gap_token_positions, tok, dev, patterns=None, beam_width=5
+):
     beams = [(0.0, input_ids.clone().to(dev), [])]
     for slot_idx, ps in enumerate(gap_token_positions):
         pattern = patterns[slot_idx] if patterns else None
@@ -95,19 +98,22 @@ def beam_autoregressive(model, input_ids, gap_token_positions, tok, dev, pattern
         for score, current_ids, pred_words in beams:
             with torch.no_grad():
                 logits = model(current_ids.unsqueeze(0).to(dev)).logits[0].cpu()
-                
+
             slot_beams = [(0.0, [])]
             for p in ps:
                 lp = torch.log_softmax(logits[p], -1)
                 search_topk = 500 if pattern else TOPN
                 top = torch.topk(lp, search_topk)
-                
+
                 expanded = sorted(
-                    [(s + v, seq + [i]) for s, seq in slot_beams
-                     for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                    key=lambda x: -x[0]
+                    [
+                        (s + v, seq + [i])
+                        for s, seq in slot_beams
+                        for i, v in zip(top.indices.tolist(), top.values.tolist())
+                    ],
+                    key=lambda x: -x[0],
                 )
-                
+
                 filtered = []
                 for s, seq in expanded:
                     word = tok.decode(seq).replace(" ", "").replace("##", "")
@@ -116,18 +122,18 @@ def beam_autoregressive(model, input_ids, gap_token_positions, tok, dev, pattern
                             filtered.append((s, seq))
                     else:
                         filtered.append((s, seq))
-                
+
                 slot_beams = filtered[:beam_width]
-                
+
             for slot_score, seq in slot_beams:
                 word = tok.decode(seq).replace(" ", "").replace("##", "")
                 new_ids = current_ids.clone()
                 for i, p in enumerate(ps):
                     new_ids[p] = seq[i]
                 new_beams.append((score + slot_score, new_ids, pred_words + [word]))
-                
+
         beams = sorted(new_beams, key=lambda x: -x[0])[:beam_width]
-        
+
     out = []
     for _, _, pred_words in beams:
         if pred_words not in out:
@@ -244,14 +250,16 @@ def collect_items(model, tok, dev):
                 continue
             signs = L.d(word_node, "sign")
             glyph = "".join(F.glyph.v(sign) or "" for sign in signs)
-            words.append({
-                "node": word_node,
-                "glyph": glyph,
-                "full": F.full.v(word_node) or glyph,
-                "unc": F.unc.v(word_node),
-                "vac": F.vac.v(word_node),
-                "rem": F.rem.v(word_node),
-            })
+            words.append(
+                {
+                    "node": word_node,
+                    "glyph": glyph,
+                    "full": F.full.v(word_node) or glyph,
+                    "unc": F.unc.v(word_node),
+                    "vac": F.vac.v(word_node),
+                    "rem": F.rem.v(word_node),
+                }
+            )
 
         idx = 0
         while idx < len(words):
@@ -278,7 +286,13 @@ def collect_items(model, tok, dev):
                     if is_hebrew_word(glyph):
                         context_words.append(glyph)
 
-            enc = tok(context_words, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+            enc = tok(
+                context_words,
+                is_split_into_words=True,
+                return_tensors="pt",
+                truncation=True,
+                max_length=512,
+            )
             word_map = {}
             for pos_in_tokens, word_id in enumerate(enc.word_ids(0)):
                 if word_id is not None:
@@ -299,20 +313,36 @@ def collect_items(model, tok, dev):
                     logits = model(ids.unsqueeze(0).to(dev)).logits[0].cpu()
 
                 # Get raw autoregressive predictions
-                ranked_raw = beam_autoregressive(model, ids, gap_token_positions, tok, dev, patterns=None, beam_width=5)
-                
+                ranked_raw = beam_autoregressive(
+                    model,
+                    ids,
+                    gap_token_positions,
+                    tok,
+                    dev,
+                    patterns=None,
+                    beam_width=5,
+                )
+
                 # Get patterns for all slots
                 patterns = []
                 for slot_index in range(1, len(gap_token_positions) + 1):
                     slot_word = words[idx + slot_index - 1]
                     patterns.append(get_pattern(slot_word["full"]))
-                
+
                 # Get constrained autoregressive predictions
-                ranked_constrained = beam_autoregressive(model, ids, gap_token_positions, tok, dev, patterns=patterns, beam_width=5)
-                
+                ranked_constrained = beam_autoregressive(
+                    model,
+                    ids,
+                    gap_token_positions,
+                    tok,
+                    dev,
+                    patterns=patterns,
+                    beam_width=5,
+                )
+
                 for slot_index, positions in enumerate(gap_token_positions, start=1):
                     j = slot_index - 1
-                    
+
                     raw_preds = []
                     for phrase in ranked_raw:
                         if len(phrase) > j:
@@ -320,7 +350,7 @@ def collect_items(model, tok, dev):
                             if w not in raw_preds:
                                 raw_preds.append(w)
                     raw_preds = raw_preds[:5]
-                    
+
                     constrained_preds = []
                     for phrase in ranked_constrained:
                         if len(phrase) > j:
@@ -329,12 +359,14 @@ def collect_items(model, tok, dev):
                                 constrained_preds.append(w)
                     constrained_preds = constrained_preds[:5]
 
-                    slot_details.append({
-                        "slot_index": slot_index,
-                        "raw_candidates": raw_preds,
-                        "constrained_candidates": constrained_preds,
-                        "pattern": patterns[j],
-                    })
+                    slot_details.append(
+                        {
+                            "slot_index": slot_index,
+                            "raw_candidates": raw_preds,
+                            "constrained_candidates": constrained_preds,
+                            "pattern": patterns[j],
+                        }
+                    )
 
                     if raw_preds:
                         top1_words.append(raw_preds[0])
@@ -346,26 +378,32 @@ def collect_items(model, tok, dev):
             top1_phrase = " ".join(top1_words)
             top1_constrained_phrase = " ".join(top1_constrained_words)
 
-            items.append({
-                "scroll": scroll,
-                "start_index": idx,
-                "end_index": end,
-                "run_length": end - idx,
-                "context_for_display": context_for_display(words, idx, end),
-                "context_for_reading": context_for_reading(words, idx, end),
-                "raw_run_text": raw_run_text(run),
-                "flags": sorted({flag for entry in run for flag in marker_flags(entry)}),
-                "category": classify_run(run),
-                "split": split_label,
-                "book_filter": book_filter_label,
-                "top1_phrase": top1_phrase,
-                "top1_constrained_phrase": top1_constrained_phrase,
-                "slot_details": slot_details,
-            })
+            items.append(
+                {
+                    "scroll": scroll,
+                    "start_index": idx,
+                    "end_index": end,
+                    "run_length": end - idx,
+                    "context_for_display": context_for_display(words, idx, end),
+                    "context_for_reading": context_for_reading(words, idx, end),
+                    "raw_run_text": raw_run_text(run),
+                    "flags": sorted(
+                        {flag for entry in run for flag in marker_flags(entry)}
+                    ),
+                    "category": classify_run(run),
+                    "split": split_label,
+                    "book_filter": book_filter_label,
+                    "top1_phrase": top1_phrase,
+                    "top1_constrained_phrase": top1_constrained_phrase,
+                    "slot_details": slot_details,
+                }
+            )
             idx = end
 
             if len(items) % 500 == 0:
-                print(f"Collected and predicted {len(items)} unknown items...", flush=True)
+                print(
+                    f"Collected and predicted {len(items)} unknown items...", flush=True
+                )
     return items
 
 
@@ -382,31 +420,47 @@ def main():
     out_path = Path(CSV_OUT)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
-        "row_id", "scroll", "start_index", "end_index", "run_length",
-        "context_for_display", "context_for_reading", "raw_run_text", "flags", "category",
-        "split", "book_filter", "top1_phrase", "top1_constrained_phrase", "slot_details_json",
+        "row_id",
+        "scroll",
+        "start_index",
+        "end_index",
+        "run_length",
+        "context_for_display",
+        "context_for_reading",
+        "raw_run_text",
+        "flags",
+        "category",
+        "split",
+        "book_filter",
+        "top1_phrase",
+        "top1_constrained_phrase",
+        "slot_details_json",
     ]
     with out_path.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=fieldnames)
         writer.writeheader()
         for row_id, item in enumerate(items, start=1):
-            writer.writerow({
-                "row_id": row_id,
-                "scroll": item["scroll"],
-                "start_index": item["start_index"],
-                "end_index": item["end_index"],
-                "run_length": item["run_length"],
-                "context_for_display": item["context_for_display"],
-                "context_for_reading": item["context_for_reading"],
-                "raw_run_text": item["raw_run_text"],
-                "flags": " | ".join(item["flags"]),
-                "category": item["category"],
-                "split": item["split"],
-                "book_filter": item["book_filter"],
-                "top1_phrase": item["top1_phrase"],
-                "top1_constrained_phrase": item["top1_constrained_phrase"],
-                "slot_details_json": json.dumps(item["slot_details"], ensure_ascii=False),
-            })
+            writer.writerow(
+                {
+                    "row_id": row_id,
+                    "scroll": item["scroll"],
+                    "start_index": item["start_index"],
+                    "end_index": item["end_index"],
+                    "run_length": item["run_length"],
+                    "context_for_display": item["context_for_display"],
+                    "context_for_reading": item["context_for_reading"],
+                    "raw_run_text": item["raw_run_text"],
+                    "flags": " | ".join(item["flags"]),
+                    "category": item["category"],
+                    "split": item["split"],
+                    "book_filter": item["book_filter"],
+                    "top1_phrase": item["top1_phrase"],
+                    "top1_constrained_phrase": item["top1_constrained_phrase"],
+                    "slot_details_json": json.dumps(
+                        item["slot_details"], ensure_ascii=False
+                    ),
+                }
+            )
     print(f"wrote {out_path}")
     print(f"rows={len(items)}")
 

@@ -6,6 +6,7 @@ NON-target words is additionally replaced with [MASK] as corrupted input (label 
 never predicted). This simulates the damaged surrounding text of real fragments and
 discourages the model from leaning on a single adjacent word.
 """
+
 import math
 import os
 import sys
@@ -33,7 +34,9 @@ BATCH = int(os.environ.get("BATCH", "16"))
 LR = float(os.environ.get("LR", "2e-5"))
 MASK_FRAC, SPAN_P, SPAN_MAX = 0.15, 0.3, 10
 MIN_TARGET_LEN = 2
-NOISE_FRAC = float(os.environ.get("NOISE_FRAC", "0.15"))  # fraction of non-target words masked as noise
+NOISE_FRAC = float(
+    os.environ.get("NOISE_FRAC", "0.15")
+)  # fraction of non-target words masked as noise
 TRAIN_PARTITION = os.environ.get("TRAIN_PARTITION", "fit")
 rng = np.random.default_rng(0)
 
@@ -73,13 +76,15 @@ def make_batch(batch_texts, tok, mask_id, vocab_size):
     labels = torch.full((len(encoded), max_len), -100, dtype=torch.long)
 
     for batch_idx, (ids, wids, words) in enumerate(encoded):
-        input_ids[batch_idx, :len(ids)] = torch.tensor(ids)
-        attn[batch_idx, :len(ids)] = 1
+        input_ids[batch_idx, : len(ids)] = torch.tensor(ids)
+        attn[batch_idx, : len(ids)] = 1
         groups = {}
         for pos, word_id in enumerate(wids):
             if word_id is not None and word_id < len(words):
                 groups.setdefault(word_id, []).append(pos)
-        eligible = [word_id for word_id in groups if len(words[word_id]) >= MIN_TARGET_LEN]
+        eligible = [
+            word_id for word_id in groups if len(words[word_id]) >= MIN_TARGET_LEN
+        ]
         if not eligible:
             continue
 
@@ -120,14 +125,17 @@ def finetune():
         order = rng.permutation(len(texts))
         total_loss = 0.0
         for step in range(steps_per_epoch):
-            batch = [texts[i] for i in order[step * BATCH:(step + 1) * BATCH]]
+            batch = [texts[i] for i in order[step * BATCH : (step + 1) * BATCH]]
             input_ids, attn, labels = make_batch(batch, tok, mask_id, vocab_size)
             out = model(input_ids=input_ids, attention_mask=attn, labels=labels)
             out.loss.backward()
             opt.step()
             opt.zero_grad()
             total_loss += out.loss.item()
-        print(f"  epoch {epoch+1}/{EPOCHS}  loss={total_loss/steps_per_epoch:.3f}", flush=True)
+        print(
+            f"  epoch {epoch + 1}/{EPOCHS}  loss={total_loss / steps_per_epoch:.3f}",
+            flush=True,
+        )
 
     model.save_pretrained(str(OUTDIR))
     tok.save_pretrained(str(OUTDIR))

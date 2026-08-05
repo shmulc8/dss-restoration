@@ -38,9 +38,7 @@ from utils.preserved_corpus import GAP_TOKEN, load_chunks
 DEFAULT_INPUT = ROOT / "data" / "derived" / "qd_researcher_variants.jsonl"
 DEFAULT_MODEL = ROOT / "ft_msbert_span_preserved_nonbib"
 DEFAULT_REPORT = ROOT / "analysis" / "reports" / "qd_researcher_comparison.json"
-DEFAULT_MARKDOWN = (
-    ROOT / "analysis" / "reports" / "QD_RESEARCHER_BENCHMARK.md"
-)
+DEFAULT_MARKDOWN = ROOT / "analysis" / "reports" / "QD_RESEARCHER_BENCHMARK.md"
 HEBREW_RE = re.compile(r"[\u05d0-\u05ea]")
 UNSUPPORTED_READING_MARKUP = set("/{}()〈〉⟨⟩«»")
 GAP_MARKERS = set("[]○")
@@ -275,9 +273,7 @@ def fit_rag_alpha(
             top = torch.topk(logits[row_index, position], RAG_CANDIDATE_TOPN)
             candidates: list[tuple[str, float, float]] = []
             seen: set[str] = set()
-            for token_id, model_score in zip(
-                top.indices.tolist(), top.values.tolist()
-            ):
+            for token_id, model_score in zip(top.indices.tolist(), top.values.tolist()):
                 candidate = normalized_token_by_id[token_id]
                 if len(candidate) < 2 or candidate in seen:
                     continue
@@ -298,9 +294,7 @@ def fit_rag_alpha(
         for record in records:
             reranked = sorted(
                 record["candidates"],
-                key=lambda candidate: -(
-                    candidate[1] + alpha * candidate[2]
-                ),
+                key=lambda candidate: -(candidate[1] + alpha * candidate[2]),
             )
             gold = record["gold"]
             rank = next(
@@ -422,9 +416,7 @@ def _visible_segments(value: str) -> tuple[tuple[str, ...], bool, bool]:
         first_close >= 0 and first_close < first_visible_position
     )
     trailing_open = value.rfind("[")
-    anchored_right = not (
-        trailing_open >= 0 and trailing_open > last_visible_position
-    )
+    anchored_right = not (trailing_open >= 0 and trailing_open > last_visible_position)
     return tuple(pieces), anchored_left, anchored_right
 
 
@@ -509,8 +501,7 @@ def bootstrap_top10_ci(
     estimates = []
     for _ in range(samples):
         resample = [
-            target_ranks[generator.randrange(len(target_ranks))]
-            for _ in target_ranks
+            target_ranks[generator.randrange(len(target_ranks))] for _ in target_ranks
         ]
         estimates.append(
             100
@@ -562,22 +553,22 @@ This experiment evaluates the reconstruction-free preserved-only model on
 single-word lacunae from the stored Qumran Digital snapshot. Unlike the
 superseded whole-word-mask experiment, it retains visibly preserved letters
 and an approximate lacuna-derived word length
-(±{report['protocol']['length_tolerance']} character).
+(±{report["protocol"]["length_tolerance"]} character).
 
 | Unit | N | Top-1 | Top-5 | Top-10 | Top-20 |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| Target: constrained MLM | {target['n']} | {target['top1']:.1f}% | {target['top5']:.1f}% | {target['top10']:.1f}% | {target['top20']:.1f}% |
-| Target: constrained MLM + train-only RAG | {rag_target['n']} | {rag_target['top1']:.1f}% | {rag_target['top5']:.1f}% | {rag_target['top10']:.1f}% | {rag_target['top20']:.1f}% |
-| Unique target-reading pair: constrained MLM | {reading['n']} | {reading['top1']:.1f}% | {reading['top5']:.1f}% | {reading['top10']:.1f}% | {reading['top20']:.1f}% |
-| Unique target-reading pair: MLM + RAG | {rag_reading['n']} | {rag_reading['top1']:.1f}% | {rag_reading['top5']:.1f}% | {rag_reading['top10']:.1f}% | {rag_reading['top20']:.1f}% |
-| QD initial reading control | {qd['n']} | {qd['top1']:.1f}% | {qd['top5']:.1f}% | {qd['top10']:.1f}% | {qd['top20']:.1f}% |
+| Target: constrained MLM | {target["n"]} | {target["top1"]:.1f}% | {target["top5"]:.1f}% | {target["top10"]:.1f}% | {target["top20"]:.1f}% |
+| Target: constrained MLM + train-only RAG | {rag_target["n"]} | {rag_target["top1"]:.1f}% | {rag_target["top5"]:.1f}% | {rag_target["top10"]:.1f}% | {rag_target["top20"]:.1f}% |
+| Unique target-reading pair: constrained MLM | {reading["n"]} | {reading["top1"]:.1f}% | {reading["top5"]:.1f}% | {reading["top10"]:.1f}% | {reading["top20"]:.1f}% |
+| Unique target-reading pair: MLM + RAG | {rag_reading["n"]} | {rag_reading["top1"]:.1f}% | {rag_reading["top5"]:.1f}% | {rag_reading["top10"]:.1f}% | {rag_reading["top20"]:.1f}% |
+| QD initial reading control | {qd["n"]} | {qd["top1"]:.1f}% | {qd["top5"]:.1f}% | {qd["top10"]:.1f}% | {qd["top20"]:.1f}% |
 
 Baseline target-level Top-10 95% cluster-bootstrap interval:
 **{ci[0]:.1f}%–{ci[1]:.1f}%**. The RAG weight
-({report['protocol']['rag']['weight_fit']['alpha']}) was selected on preserved
+({report["protocol"]["rag"]["weight_fit"]["alpha"]}) was selected on preserved
 non-biblical dev scrolls only; held-out targets were not used for tuning.
 Without manuscript constraints, the same target-level Top-10 is
-{unconstrained['top10']:.1f}%. The difference measures the value of physical
+{unconstrained["top10"]:.1f}%. The difference measures the value of physical
 evidence supplied to the decoder, not an improvement in the language model.
 
 ### Length-tolerance sensitivity
@@ -601,7 +592,7 @@ publication rows and duplicate readings do not receive extra weight.
 
 ## Scope and exclusions
 
-- Cached source snapshot: Qumran Digital {report['protocol']['source_snapshot']};
+- Cached source snapshot: Qumran Digital {report["protocol"]["source_snapshot"]};
   the scorer performs no network requests.
 - Corpus: held-out non-biblical DSS scrolls only.
 - Training: preserved letters only; square-bracket scholarly restorations are
@@ -609,9 +600,9 @@ publication rows and duplicate readings do not receive extra weight.
 - Primary unit: one manuscript target. Success means any distinct,
   bibliographically attributed restoration compatible with the physical
   pattern is in Top-K.
-- Input rows: {quality['input_publication_rows']}; eligible targets:
-  {quality['eligible_targets']}; unique compatible target-reading pairs:
-  {quality['unique_compatible_target_readings']}.
+- Input rows: {quality["input_publication_rows"]}; eligible targets:
+  {quality["eligible_targets"]}; unique compatible target-reading pairs:
+  {quality["unique_compatible_target_readings"]}.
 - Multiword readings, scribal corrections, modern alternatives, incomplete
   readings, non-lacuna variants, and readings contradicting visible letters
   are reported as exclusions rather than concatenated into fake words.
@@ -803,9 +794,7 @@ def main() -> None:
             for candidate, model_score in scored_predictions
             if item["constraint"].matches(candidate, args.length_tolerance)
         ]
-        constrained_predictions = [
-            candidate for candidate, _ in constrained_scored
-        ]
+        constrained_predictions = [candidate for candidate, _ in constrained_scored]
         rag_left, rag_right = contiguous_context(
             item["context_words"], item["target_index"]
         )
@@ -851,21 +840,19 @@ def main() -> None:
             for source in source_names:
                 source_target_ranks[source][key].append(constrained_rank)
         if not readings:
-            exclusions[
-                "no_compatible_reading_at_primary_tolerance_targets"
-            ] += 1
+            exclusions["no_compatible_reading_at_primary_tolerance_targets"] += 1
             continue
 
-        finite_target = [record["rank"] for record in readings if record["rank"] is not None]
+        finite_target = [
+            record["rank"] for record in readings if record["rank"] is not None
+        ]
         finite_unconstrained = [
             record["unconstrained_rank"]
             for record in readings
             if record["unconstrained_rank"] is not None
         ]
         finite_rag = [
-            record["rag_rank"]
-            for record in readings
-            if record["rag_rank"] is not None
+            record["rag_rank"] for record in readings if record["rag_rank"] is not None
         ]
         qd_initial = hebrew_letters(str(item["qd_initial_reading"]))
         qd_rank = (
@@ -903,9 +890,7 @@ def main() -> None:
         )
 
     target_ranks = [record["rank_any_attributed"] for record in target_records]
-    rag_target_ranks = [
-        record["rag_rank_any_attributed"] for record in target_records
-    ]
+    rag_target_ranks = [record["rag_rank_any_attributed"] for record in target_records]
     unconstrained_target_ranks = [
         record["unconstrained_rank_any_attributed"] for record in target_records
     ]
@@ -999,9 +984,7 @@ def main() -> None:
         "qd_initial_control": summarize_ranks(qd_ranks),
         "length_tolerance_sensitivity": sensitivity,
         "diagnostics": {
-            "unconstrained_target_level": summarize_ranks(
-                unconstrained_target_ranks
-            ),
+            "unconstrained_target_level": summarize_ranks(unconstrained_target_ranks),
             "rag_top10_change_points": (
                 rag_target_summary["top10"] - target_summary["top10"]
             ),

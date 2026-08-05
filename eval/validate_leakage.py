@@ -4,16 +4,16 @@
 2. Verifies that the gold word is completely masked and does not leak into the model input.
 3. Checks for any subtoken length leakage for MsBERT.
 """
-import os
+
 import sys
 from pathlib import Path
-import torch
 from transformers import AutoTokenizer
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from utils.dss_split import load_split
+
 
 def check_split_leakage():
     print("=== Check 1: Split Leakage ===")
@@ -26,6 +26,7 @@ def check_split_leakage():
     print(f"Intersection: {intersection}")
     assert len(intersection) == 0, "ERROR: Scroll overlap between train and test sets!"
     print("SUCCESS: Train and test sets are completely disjoint at the scroll level.\n")
+
 
 def check_masking_leakage():
     print("=== Check 2: Masking Leakage ===")
@@ -45,7 +46,7 @@ def check_masking_leakage():
     for pos, wid in enumerate(enc.word_ids(0)):
         if wid is not None:
             wmap.setdefault(wid, []).append(pos)
-    
+
     ps = wmap.get(tpos)
     assert ps is not None, "ERROR: Target word position not found in word_ids!"
 
@@ -64,22 +65,30 @@ def check_masking_leakage():
     print(f"Decoded target position: '{decoded_target}'")
     print(f"Decoded full context: '{decoded_full}'")
 
-    assert decoded_target == "[MASK]", f"ERROR: Target not fully masked! Found: {decoded_target}"
+    assert decoded_target == "[MASK]", (
+        f"ERROR: Target not fully masked! Found: {decoded_target}"
+    )
     assert gold not in decoded_full, "ERROR: Gold word leaked into the decoded input!"
     print("SUCCESS: Target is completely masked and no gold word content leaked.\n")
+
 
 def check_subtoken_leakage():
     print("=== Check 3: Subtoken Length Leakage ===")
     repo = "dicta-il/MsBERT"
     tok = AutoTokenizer.from_pretrained(repo, use_fast=True)
-    
+
     # Check if MsBERT is indeed whole-word (no subword splitting for standard words)
     words = ["ומשפט", "וצדקה", "בארץ", "הכוהנים", "יכין"]
     for w in words:
         tokens = tok.tokenize(w)
         print(f"Word: {w:10s} -> Tokens: {tokens}")
-        assert len(tokens) == 1, f"ERROR: MsBERT split '{w}' into multiple subtokens: {tokens}"
-    print("SUCCESS: MsBERT tokenizes all standard words as a single token (no subtoken length leak).\n")
+        assert len(tokens) == 1, (
+            f"ERROR: MsBERT split '{w}' into multiple subtokens: {tokens}"
+        )
+    print(
+        "SUCCESS: MsBERT tokenizes all standard words as a single token (no subtoken length leak).\n"
+    )
+
 
 if __name__ == "__main__":
     check_split_leakage()

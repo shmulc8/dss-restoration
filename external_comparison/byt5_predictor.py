@@ -8,8 +8,8 @@ external schema so score_run_dir scores it bit-identically.
 Candidate "tokens" are the candidate's whitespace words (no "##" prefixes), so
 the external split_candidate_words aligns multi-word spans correctly.
 """
+
 import json
-import sys
 from pathlib import Path
 
 import torch
@@ -82,7 +82,15 @@ for uid, sent in sentences.items():
         print(f"{n_done}/{len(sentences)} sentences", flush=True)
 
 out.close()
-manifest = json.loads((HERE / "merged_results" / "tavbert-base" / "manifest.json").read_text())
-manifest["model"] = {"id": str(MODEL_DIR), "family": "byt5-seq2seq", "adapter": "byt5_predictor.py"}
-(OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
+manifest = json.loads(
+    (HERE / "merged_results" / "tavbert-base" / "manifest.json").read_text()
+)
+manifest["model"] = {
+    "id": str(MODEL_DIR),
+    "family": "byt5-seq2seq",
+    "adapter": "byt5_predictor.py",
+}
+(OUT_DIR / "manifest.json").write_text(
+    json.dumps(manifest, indent=2, ensure_ascii=False)
+)
 print("DONE, predictions at", OUT_DIR)

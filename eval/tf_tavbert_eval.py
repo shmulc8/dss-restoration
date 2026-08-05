@@ -3,6 +3,7 @@
 TavBERT is Omri Keren et al.'s character-level Masked Language Model for Hebrew.
 This script tests TavBERT on held-out non-biblical DSS lacunae spans.
 """
+
 import os
 import sys
 from pathlib import Path
@@ -19,7 +20,6 @@ if str(ROOT) not in sys.path:
 
 from utils import morph_dss
 from utils.eval_split import resolve_scroll_filter
-from utils.paths import repo_path
 
 MODEL_ID = "tau/tavbert-he"
 WINDOW = 40
@@ -30,6 +30,7 @@ FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 rng = np.random.default_rng(0)
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
+
 
 def norm(w):
     if not w:
@@ -46,11 +47,24 @@ def norm(w):
         return "כל"
     return lem
 
+
 def heb(g):
     return len(g) >= 2 and all(ch in HEB for ch in g)
 
+
 def bucket(n):
-    return "1" if n == 1 else "2" if n == 2 else "3" if n == 3 else "4-5" if n <= 5 else "6+"
+    return (
+        "1"
+        if n == 1
+        else "2"
+        if n == 2
+        else "3"
+        if n == 3
+        else "4-5"
+        if n <= 5
+        else "6+"
+    )
+
 
 TF_DIR = Path("/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0")
 TF = Fabric(locations=str(TF_DIR), silent="deep")
@@ -59,11 +73,17 @@ if api is False:
     raise RuntimeError(f"Could not load cached DSS corpus from {TF_DIR}")
 F, L = api.F, api.L
 
+
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 allowed_scrolls, split_label = resolve_scroll_filter("heldout")
 
@@ -96,7 +116,9 @@ for ws in scrolls.values():
                     g, fr, pr = ws[k]
                     if i <= k < j:
                         if k in gap_targets:
-                            gap_pos.append(len(ctx)); golds.append(g); ctx.append(g)
+                            gap_pos.append(len(ctx))
+                            golds.append(g)
+                            ctx.append(g)
                     elif heb(g):
                         ctx.append(g)
                         if pr:
@@ -147,7 +169,7 @@ for span_idx, (ctx, gap_pos, golds, N) in enumerate(sample, start=1):
             # Tokenize regular context word into characters
             chars = tok.tokenize(word)
             full_text_tokens.extend(chars)
-        full_text_tokens.append(" ") # space separator
+        full_text_tokens.append(" ")  # space separator
 
     # Encode full character sequence
     input_ids = tok.convert_tokens_to_ids(full_text_tokens)
@@ -172,10 +194,15 @@ for span_idx, (ctx, gap_pos, golds, N) in enumerate(sample, start=1):
         for pos in char_positions:
             lp = torch.log_softmax(logits[pos], -1)
             top = torch.topk(lp, 20)
-            beams = sorted([(s + v, seq + [i]) for s, seq in beams
-                            for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                           key=lambda x: -x[0])[:50]
-        
+            beams = sorted(
+                [
+                    (s + v, seq + [i])
+                    for s, seq in beams
+                    for i, v in zip(top.indices.tolist(), top.values.tolist())
+                ],
+                key=lambda x: -x[0],
+            )[:50]
+
         candidates = []
         for _, seq in beams:
             cand_chars = tok.convert_ids_to_tokens(seq)
@@ -205,7 +232,7 @@ for metric_idx, metric_name in enumerate(["Top-1", "Top-5", "Top-10", "Top-20"])
     row = f"{metric_name:16s}"
     for b in order:
         c = slot_cells.get(b)
-        acc = (c[metric_idx]/c[4]*100) if c and c[4] else 0.0
+        acc = (c[metric_idx] / c[4] * 100) if c and c[4] else 0.0
         row += f"{acc:8.1f}%"
     print(f"{'bucket':16s}" + "".join(f"{b:>9s}" for b in order))
     print(row)

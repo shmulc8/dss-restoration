@@ -29,4 +29,6 @@ def resolve_scroll_filter(mode: str):
         return scroll_sets()["heldout"], "heldout-scrolls"
     if normalized == "train":
         return scroll_sets()["train"], "train-scrolls"
-    raise ValueError(f"Unknown EVAL_SCROLL_SPLIT={mode!r}; expected all|fit|train|dev|heldout")
+    raise ValueError(
+        f"Unknown EVAL_SCROLL_SPLIT={mode!r}; expected all|fit|train|dev|heldout"
+    )

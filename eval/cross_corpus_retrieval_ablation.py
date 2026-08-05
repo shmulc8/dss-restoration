@@ -21,12 +21,10 @@ Each retrieval weight is selected on development spans and frozen for heldout.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import math
 import sys
 from collections import Counter, defaultdict
-from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -108,26 +106,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--candidate-cache",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "cache"
-        / "external_retrieval_candidates.json",
+        default=ROOT / "analysis" / "cache" / "external_retrieval_candidates.json",
     )
     parser.add_argument(
         "--output-json",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "reports"
-        / "cross_corpus_retrieval_ablation.json",
+        default=ROOT / "analysis" / "reports" / "cross_corpus_retrieval_ablation.json",
     )
     parser.add_argument(
         "--output-markdown",
         type=Path,
-        default=ROOT
-        / "analysis"
-        / "reports"
-        / "CROSS_CORPUS_RETRIEVAL_ABLATION.md",
+        default=ROOT / "analysis" / "reports" / "CROSS_CORPUS_RETRIEVAL_ABLATION.md",
     )
     parser.add_argument("--bootstrap", type=int, default=5000)
     return parser.parse_args()
@@ -248,21 +237,29 @@ def load_or_generate_candidates(
             raise ValueError(
                 f"candidate cache does not match the frozen protocol: {cache_path}"
             )
-        return payload["dev"], payload["heldout"], {
-            **expected,
-            "cache": str(cache_path),
-            "cache_hit": True,
-        }
+        return (
+            payload["dev"],
+            payload["heldout"],
+            {
+                **expected,
+                "cache": str(cache_path),
+                "cache_hit": True,
+            },
+        )
 
     tokenizer = AutoTokenizer.from_pretrained(
         str(model_path),
         use_fast=True,
         local_files_only=True,
     )
-    model = AutoModelForMaskedLM.from_pretrained(
-        str(model_path),
-        local_files_only=True,
-    ).to(device).eval()
+    model = (
+        AutoModelForMaskedLM.from_pretrained(
+            str(model_path),
+            local_files_only=True,
+        )
+        .to(device)
+        .eval()
+    )
     dev_records = generate_candidate_records(
         dev_items,
         tokenizer=tokenizer,
@@ -299,11 +296,15 @@ def load_or_generate_candidates(
         torch.mps.empty_cache()
     elif device == "cuda":
         torch.cuda.empty_cache()
-    return dev_records, heldout_records, {
-        **expected,
-        "cache": str(cache_path),
-        "cache_hit": False,
-    }
+    return (
+        dev_records,
+        heldout_records,
+        {
+            **expected,
+            "cache": str(cache_path),
+            "cache_hit": False,
+        },
+    )
 
 
 def dss_train_passages() -> list[Passage]:
@@ -349,9 +350,7 @@ def load_shelves(
         min_words=max(20, chunk_words // 2),
         excluded_books=QUMRAN_EXTRA_BOOKS,
     )
-    inscriptions = [
-        row for row in extra if row.book in HEBREW_EPIGRAPHIC_BOOKS
-    ]
+    inscriptions = [row for row in extra if row.book in HEBREW_EPIGRAPHIC_BOOKS]
     rabbinic = [row for row in extra if row.book in RABBINIC_BOOKS]
     dss = dss_train_passages()
     external = [*bible, *inscriptions, *rabbinic]
@@ -386,9 +385,10 @@ def contains_phrase(tokens: Sequence[str], phrase: Sequence[str]) -> bool:
         return False
     width = len(phrase)
     target = tuple(phrase)
-    return any(tuple(tokens[start : start + width]) == target for start in range(
-        len(tokens) - width + 1
-    ))
+    return any(
+        tuple(tokens[start : start + width]) == target
+        for start in range(len(tokens) - width + 1)
+    )
 
 
 def phrase_document_frequency(
@@ -446,11 +446,7 @@ def retrieve_documents(
     for row in scores:
         indices = np.argsort(-row, kind="stable")[:limit]
         rankings.append(
-            [
-                (int(index), float(row[index]))
-                for index in indices
-                if row[index] > 0
-            ]
+            [(int(index), float(row[index])) for index in indices if row[index] > 0]
         )
     return rankings, {
         "word_weight": WORD_WEIGHT,
@@ -487,7 +483,9 @@ def rerank_candidates(
     alpha: float,
 ) -> list[tuple[str, float]]:
     base = rank_scores(list(baseline_rows))
-    original_rank = {candidate: rank for rank, (candidate, _) in enumerate(baseline_rows)}
+    original_rank = {
+        candidate: rank for rank, (candidate, _) in enumerate(baseline_rows)
+    }
     return sorted(
         (
             (candidate, score + alpha * supports.get(candidate, 0.0))
@@ -513,9 +511,7 @@ def build_support_records(
 ) -> list[dict[str, Any]]:
     if len(candidate_records) != len(rankings):
         raise ValueError("candidate records and retrieval rankings differ in length")
-    phrase_lengths = [
-        len(record["item"]["gold"]) for record in candidate_records
-    ]
+    phrase_lengths = [len(record["item"]["gold"]) for record in candidate_records]
     frequencies = phrase_document_frequency(documents, phrase_lengths)
     output = []
     for record, ranking in zip(candidate_records, rankings):
@@ -575,10 +571,7 @@ def build_support_records(
                     "gold_in_candidate_pool": any(
                         candidate == record["gold"] for candidate, _ in baseline
                     ),
-                    "gold_candidate_has_support": standard.get(
-                        record["gold"], 0.0
-                    )
-                    > 0,
+                    "gold_candidate_has_support": standard.get(record["gold"], 0.0) > 0,
                 },
             }
         )
@@ -648,14 +641,26 @@ def summarize_condition(
     def metrics(local_ranks: Sequence[int]) -> dict[str, Any]:
         return {
             "n": len(local_ranks),
-            "exact_top1": 100 * sum(rank == 0 for rank in local_ranks) / len(local_ranks),
-            "exact_top5": 100 * sum(rank < 5 for rank in local_ranks) / len(local_ranks),
-            "exact_top10": 100 * sum(rank < 10 for rank in local_ranks) / len(local_ranks),
-            "exact_top20": 100 * sum(rank < 20 for rank in local_ranks) / len(local_ranks),
+            "exact_top1": 100
+            * sum(rank == 0 for rank in local_ranks)
+            / len(local_ranks),
+            "exact_top5": 100
+            * sum(rank < 5 for rank in local_ranks)
+            / len(local_ranks),
+            "exact_top10": 100
+            * sum(rank < 10 for rank in local_ranks)
+            / len(local_ranks),
+            "exact_top20": 100
+            * sum(rank < 20 for rank in local_ranks)
+            / len(local_ranks),
             "mean_reciprocal_rank": float(
-                np.mean([1.0 / (rank + 1) if rank != 999 else 0.0 for rank in local_ranks])
+                np.mean(
+                    [1.0 / (rank + 1) if rank != 999 else 0.0 for rank in local_ranks]
+                )
             ),
-            "candidate_pool_recall": 100 * sum(rank != 999 for rank in local_ranks) / len(local_ranks),
+            "candidate_pool_recall": 100
+            * sum(rank != 999 for rank in local_ranks)
+            / len(local_ranks),
         }
 
     return {
@@ -671,7 +676,9 @@ def retrieval_summary(records: Sequence[dict[str, Any]]) -> dict[str, Any]:
     rows = [record["retrieval"] for record in records]
     return {
         "n": len(rows),
-        "queries_with_any_documents": sum(row["documents_returned"] > 0 for row in rows),
+        "queries_with_any_documents": sum(
+            row["documents_returned"] > 0 for row in rows
+        ),
         "gold_exists_in_shelf": sum(row["gold_document_frequency"] > 0 for row in rows),
         "gold_recall_at_5": 100 * np.mean([row["gold_recall_at_5"] for row in rows]),
         "gold_recall_at_10": 100 * np.mean([row["gold_recall_at_10"] for row in rows]),
@@ -714,9 +721,7 @@ def paired_cluster_statistics(
         bootstraps[iteration] = 100 * np.mean(sampled_values)
         signs = rng.choice((-1.0, 1.0), size=len(names))
         null_values = [
-            sign * value
-            for sign, name in zip(signs, names)
-            for value in clusters[name]
+            sign * value for sign, name in zip(signs, names) for value in clusters[name]
         ]
         null[iteration] = 100 * np.mean(null_values)
     return {
@@ -876,16 +881,14 @@ def main() -> None:
         raise RuntimeError(f"retrieval leakage: heldout scrolls in train: {overlap}")
 
     device = choose_device(args.device)
-    dev_candidates, heldout_candidates, candidate_receipt = (
-        load_or_generate_candidates(
-            cache_path=args.candidate_cache,
-            model_path=model_path,
-            dev_items=dev_items,
-            heldout_items=heldout_items,
-            device=device,
-            beam_width=args.beam_width,
-            top_k_per_step=args.top_k_per_step,
-        )
+    dev_candidates, heldout_candidates, candidate_receipt = load_or_generate_candidates(
+        cache_path=args.candidate_cache,
+        model_path=model_path,
+        dev_items=dev_items,
+        heldout_items=heldout_items,
+        device=device,
+        beam_width=args.beam_width,
+        top_k_per_step=args.top_k_per_step,
     )
     word_penalty = fit_penalty(dev_candidates, "word")
     shelves, shelf_metadata = load_shelves(

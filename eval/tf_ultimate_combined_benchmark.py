@@ -9,6 +9,7 @@ For every checkpoint, evaluates both raw MLM ranking and the Track A learned
 RAG ranking on the same held-out sample. The reranker weights must have been
 fit on the disjoint dev-scroll partition by tf_learned_rag_reranker.py.
 """
+
 from collections import Counter
 import json
 import sys
@@ -41,6 +42,7 @@ FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
 
+
 def norm(w):
     if not w:
         return ""
@@ -56,21 +58,22 @@ def norm(w):
         return "כל"
     return lem
 
+
 def heb(g):
     return len(g) >= 2 and all(ch in HEB for ch in g)
+
 
 # Build retrieval features from training data only.
 ngram_db = {}
 train_rows = load_partition("train")
 train_words = [
-    [word for word in row["text"].strip().split() if heb(word)]
-    for row in train_rows
+    [word for word in row["text"].strip().split() if heb(word)] for row in train_rows
 ]
 morph_dss.lemmas(sorted({word for words in train_words for word in words}))
 for clean in train_words:
     for n in range(3, 7):
         for i in range(len(clean) - n + 1):
-            gram = tuple(norm(word) for word in clean[i:i + n])
+            gram = tuple(norm(word) for word in clean[i : i + n])
             ngram_db.setdefault(gram[:-1], Counter())[gram[-1]] += 1
 
 
@@ -96,16 +99,23 @@ def rag_features(left_context, candidate_norm):
 
 
 from tf.fabric import Fabric
+
 TF_DIR = Path("/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0")
 TF = Fabric(locations=str(TF_DIR), silent="deep")
 api = TF.load("otype glyph rec biblical scroll", silent="deep")
 F, L = api.F, api.L
 
+
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 allowed_scrolls, _ = resolve_scroll_filter("heldout")
 
@@ -141,6 +151,7 @@ for ws in scrolls.values():
 np.random.default_rng(42).shuffle(single_word_test_items)
 sampled_items = single_word_test_items[:300]
 
+
 def summarize_ranks(ranks):
     total = len(ranks)
     return {
@@ -161,7 +172,7 @@ def eval_model_dir(mdir, name, coefficients, intercept):
     records = []
     inference_batch = 16
     for start in range(0, len(sampled_items), inference_batch):
-        batch_items = sampled_items[start:start + inference_batch]
+        batch_items = sampled_items[start : start + inference_batch]
         enc = tok(
             [ctx for ctx, _, _ in batch_items],
             is_split_into_words=True,
@@ -214,7 +225,11 @@ def eval_model_dir(mdir, name, coefficients, intercept):
         gold_norm = norm(gold)
         baseline_ranks.append(
             next(
-                (i for i, prediction in enumerate(predictions) if norm(prediction) == gold_norm),
+                (
+                    i
+                    for i, prediction in enumerate(predictions)
+                    if norm(prediction) == gold_norm
+                ),
                 999,
             )
         )
@@ -253,6 +268,7 @@ def print_row(label, result, baseline_top10):
         f"{result['top10']:7.1f}%  {result['top20']:7.1f}%  {delta:+7.1f}"
     )
 
+
 if __name__ == "__main__":
     weights_path = ROOT / "analysis" / "reports" / "learned_rag_weights.json"
     if not weights_path.is_file():
@@ -261,7 +277,10 @@ if __name__ == "__main__":
             "run eval/tf_learned_rag_reranker.py first."
         )
     weights = json.loads(weights_path.read_text())
-    if weights.get("dev_split") != "dev-scrolls" or weights.get("test_split") != "heldout-scrolls":
+    if (
+        weights.get("dev_split") != "dev-scrolls"
+        or weights.get("test_split") != "heldout-scrolls"
+    ):
         raise RuntimeError(
             "Reranker weights do not record the required disjoint dev/heldout protocol; "
             "rerun eval/tf_learned_rag_reranker.py."
@@ -293,7 +312,9 @@ if __name__ == "__main__":
             base_top10,
         )
     print("=" * 88)
-    print(f"Held-out items: {len(sampled_items)}; deltas are percentage points vs base MLM.")
+    print(
+        f"Held-out items: {len(sampled_items)}; deltas are percentage points vs base MLM."
+    )
 
     report_path = ROOT / "analysis" / "reports" / "ultimate_combined_benchmark.json"
     report_path.write_text(

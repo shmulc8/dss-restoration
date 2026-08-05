@@ -36,9 +36,7 @@ ROOT = Path(__file__).resolve().parents[1]
 API_BASE = "https://lexicon.qumran-digital.org/v1/qumran"
 ALLOWED_HOST = "lexicon.qumran-digital.org"
 DEFAULT_OUTPUT = ROOT / "data" / "derived" / "qd_researcher_variants.jsonl"
-DEFAULT_MANIFEST = (
-    ROOT / "data" / "derived" / "qd_researcher_variants_manifest.json"
-)
+DEFAULT_MANIFEST = ROOT / "data" / "derived" / "qd_researcher_variants_manifest.json"
 SPLIT_MANIFEST = ROOT / "data" / "derived" / "preserved_nonbib_manifest.json"
 HEBREW_RE = re.compile(r"[\u05d0-\u05ea]")
 SQUARE_RECONSTRUCTION_RE = re.compile(r"\[[^\]]*[\u05d0-\u05ea][^\]]*\]")
@@ -258,9 +256,7 @@ def fetch_scroll_targets(
     targets: list[dict[str, Any]] = []
     for column in parsed_columns:
         words = column["words"]
-        index_by_id = {
-            word["word_id"]: index for index, word in enumerate(words)
-        }
+        index_by_id = {word["word_id"]: index for index, word in enumerate(words)}
         for word_id in sorted(column["target_ids"]):
             if word_id not in index_by_id:
                 continue
@@ -367,9 +363,9 @@ def main() -> None:
 
     rows: list[dict[str, Any]] = []
     bibliography: dict[int, dict[str, Any]] = {}
-    for index, target in enumerate(sorted(
-        all_targets, key=lambda item: (item["siglum"], item["word_id"])
-    )):
+    for index, target in enumerate(
+        sorted(all_targets, key=lambda item: (item["siglum"], item["word_id"]))
+    ):
         payload = safe_get_json(
             session,
             f"/word-variants/{target['word_id']}",
@@ -394,12 +390,8 @@ def main() -> None:
                     "reading": variant["reading"],
                     "reading_hebrew": hebrew_letters(variant["reading"]),
                     "bibliography_id": source["bibliographyId"],
-                    "bibliography_abbreviation": source[
-                        "bibliographicAbbreviation"
-                    ],
-                    "bibliography_formatted": source[
-                        "formattedBibliographicString"
-                    ],
+                    "bibliography_abbreviation": source["bibliographicAbbreviation"],
+                    "bibliography_formatted": source["formattedBibliographicString"],
                     "page": variant.get("page"),
                     "comment": variant.get("comment"),
                     "reading_is_assumed": False,

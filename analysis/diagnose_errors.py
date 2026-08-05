@@ -5,7 +5,8 @@
 3. Bigger context window: does WINDOW=40 help vs WINDOW=20?
 4. Error categorization: what fraction of errors are (a) a synonym, (b) wrong inflection, (c) totally wrong?
 """
-import os, sys
+
+import sys
 from pathlib import Path
 import numpy as np
 import torch
@@ -26,6 +27,7 @@ FINAL = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
 DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 rng = np.random.default_rng(0)
 
+
 def norm(w):
     lem = morph_dss.lemma(w)
     lem = "".join(FINAL.get(c, c) for c in lem)
@@ -39,14 +41,21 @@ def norm(w):
         return "כל"
     return lem
 
+
 A = use("etcbc/dss", silent="deep")
 F, L = A.api.F, A.api.L
+
 
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 scrolls = {}
 for w in F.otype.s("word"):
@@ -81,14 +90,20 @@ print(f"Test items: {len(items)}")
 # Pre-lemmatize gold
 morph_dss.lemmas([g for _, _, g in items])
 
+
 def beam_words(logits, ps, tok, topn=20, beam=25, k=10):
     beams = [(0.0, [])]
     for p in ps:
         lp = torch.log_softmax(logits[p], -1)
         top = torch.topk(lp, topn)
-        beams = sorted([(s + v, seq + [i]) for s, seq in beams
-                        for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                       key=lambda x: -x[0])[:beam]
+        beams = sorted(
+            [
+                (s + v, seq + [i])
+                for s, seq in beams
+                for i, v in zip(top.indices.tolist(), top.values.tolist())
+            ],
+            key=lambda x: -x[0],
+        )[:beam]
     out = []
     for _, seq in beams:
         w = tok.decode(seq).replace(" ", "").replace("##", "")
@@ -98,13 +113,20 @@ def beam_words(logits, ps, tok, topn=20, beam=25, k=10):
             break
     return out
 
+
 def get_predictions(items, repo, topn=20, beam=25, k=10):
     """Returns list of (gold, ranked_list) for each item."""
     tok = AutoTokenizer.from_pretrained(repo, use_fast=True)
     model = AutoModelForMaskedLM.from_pretrained(repo).eval()
     results = []
     for ctx, tpos, gold in items:
-        enc = tok(ctx, is_split_into_words=True, return_tensors="pt", truncation=True, max_length=512)
+        enc = tok(
+            ctx,
+            is_split_into_words=True,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+        )
         wmap = {}
         for pos, wid in enumerate(enc.word_ids(0)):
             if wid is not None:
@@ -122,14 +144,18 @@ def get_predictions(items, repo, topn=20, beam=25, k=10):
         results.append((gold, ranked))
     return results
 
+
 def score(results, label=""):
     n = len(results)
     e1 = sum(1 for g, r in results if r and g == r[0])
     e10 = sum(1 for g, r in results if g in r)
     n1 = sum(1 for g, r in results if r and norm(r[0]) == norm(g))
     n10 = sum(1 for g, r in results if any(norm(w) == norm(g) for w in r))
-    print(f"  {label:35s} EXACT Top-1: {e1/n*100:4.1f}% Top-10: {e10/n*100:4.1f}% | NORM Top-1: {n1/n*100:4.1f}% Top-10: {n10/n*100:4.1f}%")
+    print(
+        f"  {label:35s} EXACT Top-1: {e1 / n * 100:4.1f}% Top-10: {e10 / n * 100:4.1f}% | NORM Top-1: {n1 / n * 100:4.1f}% Top-10: {n10 / n * 100:4.1f}%"
+    )
     return n10
+
 
 # === Test 1: Wider beam (TOPN=50, BEAM=50, K=20) ===
 print("\n=== Test 1: Wider beam (TOPN=50, BEAM=50, K=20) vs default (20/25/10) ===")
@@ -147,7 +173,7 @@ model_dir = repo_path("ft_msbert_span")
 if model_dir.is_dir():
     res_ft = get_predictions(items, str(model_dir), topn=20, beam=25, k=10)
     score(res_ft, "MsBERT+span-ft alone")
-    
+
     # Reciprocal Rank Fusion (RRF)
     K_RRF = 60  # standard RRF constant
     ensemble = []
@@ -164,10 +190,10 @@ if model_dir.is_dir():
 # === Test 3: Error categories on MsBERT base ===
 print("\n=== Test 3: Error categories (MsBERT base, top-10 misses) ===")
 total_miss = 0
-cat_same_lemma = 0     # right lemma, wrong inflection
-cat_same_length = 0    # same consonant count
-cat_short_pred = 0     # predicted word is shorter (particle leak)
-cat_total_miss = 0     # no overlap at all
+cat_same_lemma = 0  # right lemma, wrong inflection
+cat_same_length = 0  # same consonant count
+cat_short_pred = 0  # predicted word is shorter (particle leak)
+cat_total_miss = 0  # no overlap at all
 
 for gold, ranked in res_default:
     ng = norm(gold)
@@ -186,9 +212,15 @@ for gold, ranked in res_default:
         cat_total_miss += 1
 
 print(f"  Total norm-misses: {total_miss}")
-print(f"  Short prediction (particle leak): {cat_short_pred} ({cat_short_pred/max(total_miss,1)*100:.0f}%)")
-print(f"  Same length (semantic miss):      {cat_same_length} ({cat_same_length/max(total_miss,1)*100:.0f}%)")
-print(f"  Other:                            {cat_total_miss} ({cat_total_miss/max(total_miss,1)*100:.0f}%)")
+print(
+    f"  Short prediction (particle leak): {cat_short_pred} ({cat_short_pred / max(total_miss, 1) * 100:.0f}%)"
+)
+print(
+    f"  Same length (semantic miss):      {cat_same_length} ({cat_same_length / max(total_miss, 1) * 100:.0f}%)"
+)
+print(
+    f"  Other:                            {cat_total_miss} ({cat_total_miss / max(total_miss, 1) * 100:.0f}%)"
+)
 
 # Show some near-misses: cases where top-1 prediction has the same lemma as a different gold word
 print("\n=== Sample errors (first 15 norm-misses, MsBERT base) ===")

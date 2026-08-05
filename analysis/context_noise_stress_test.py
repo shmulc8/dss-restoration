@@ -3,13 +3,13 @@
 Simulates Pythia-style manuscript damage by randomly masking 10%, 25%, and 40%
 of the surrounding context words, measuring how accuracy decays under context loss.
 """
-import os
+
 import sys
-import json
 import numpy as np
 import torch
 from pathlib import Path
 from transformers import AutoTokenizer, AutoModelForMaskedLM, logging as tlog
+
 tlog.set_verbosity_error()
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +36,7 @@ DIVINE = {"יי", "ייי", "ה'", "יהו", "יהוה", "אדני"}
 rng = np.random.default_rng(42)
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
 
+
 def norm(w):
     lem = morph_dss.lemma(w)
     lem = "".join(FINAL.get(c, c) for c in lem)
@@ -49,24 +50,44 @@ def norm(w):
         return "כל"
     return lem
 
+
 def heb(g):
     return len(g) >= 2 and all(ch in HEB for ch in g)
 
+
 def bucket(n):
-    return "1" if n == 1 else "2" if n == 2 else "3" if n == 3 else "4-5" if n <= 5 else "6+"
+    return (
+        "1"
+        if n == 1
+        else "2"
+        if n == 2
+        else "3"
+        if n == 3
+        else "4-5"
+        if n <= 5
+        else "6+"
+    )
+
 
 # Load TF
 from tf.fabric import Fabric
+
 TF_DIR = Path("/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0")
 TF = Fabric(locations=str(TF_DIR), silent="deep")
 api = TF.load("otype glyph rec biblical scroll", silent="deep")
 F, L = api.F, api.L
 
+
 def winfo(w):
     signs = L.d(w, "sign")
     g = "".join(F.glyph.v(s) or "" for s in signs)
     recs = [F.rec.v(s) for s in signs]
-    return g, (bool(signs) and all(r == 1 for r in recs)), (bool(signs) and all(r != 1 for r in recs))
+    return (
+        g,
+        (bool(signs) and all(r == 1 for r in recs)),
+        (bool(signs) and all(r != 1 for r in recs)),
+    )
+
 
 # Load scrolls
 allowed_scrolls, _ = resolve_scroll_filter(SPLIT_MODE)
@@ -103,7 +124,9 @@ for ws in scrolls.values():
                     g, fr, pr = ws[k]
                     if i <= k < j:
                         if k in gap_targets:
-                            gap_pos.append(len(ctx)); golds.append(g); ctx.append(g)
+                            gap_pos.append(len(ctx))
+                            golds.append(g)
+                            ctx.append(g)
                     elif heb(g):
                         ctx.append(g)
                         if pr:
@@ -132,6 +155,7 @@ print(f"Loading model from {MODEL_DIR}...")
 tok = AutoTokenizer.from_pretrained(str(MODEL_DIR))
 model = AutoModelForMaskedLM.from_pretrained(str(MODEL_DIR)).to(dev).eval()
 
+
 def beam_autoregressive(model, input_ids, gap_token_positions, tok, beam_width=5):
     beams = [(0.0, input_ids.clone().to(dev), [])]
     for slot_idx, ps in enumerate(gap_token_positions):
@@ -144,9 +168,12 @@ def beam_autoregressive(model, input_ids, gap_token_positions, tok, beam_width=5
                 lp = torch.log_softmax(logits[p], -1)
                 top = torch.topk(lp, TOPN)
                 slot_beams = sorted(
-                    [(s + v, seq + [i]) for s, seq in slot_beams
-                     for i, v in zip(top.indices.tolist(), top.values.tolist())],
-                    key=lambda x: -x[0]
+                    [
+                        (s + v, seq + [i])
+                        for s, seq in slot_beams
+                        for i, v in zip(top.indices.tolist(), top.values.tolist())
+                    ],
+                    key=lambda x: -x[0],
                 )[:beam_width]
             for slot_score, seq in slot_beams:
                 word = tok.decode(seq).replace(" ", "").replace("##", "")
@@ -157,15 +184,16 @@ def beam_autoregressive(model, input_ids, gap_token_positions, tok, beam_width=5
         beams = sorted(new_beams, key=lambda x: -x[0])[:beam_width]
     return beams[0][2] if beams else []
 
+
 # Stress Test Loop
 noise_levels = [0.0, 0.10, 0.25, 0.40]
 results = {}
 
 for noise in noise_levels:
-    print(f"Running evaluation with {int(noise*100)}% context noise...", flush=True)
+    print(f"Running evaluation with {int(noise * 100)}% context noise...", flush=True)
     slot_hits, slot_total = 0, 0
     seq_hits, seq_total = 0, 0
-    
+
     for ctx_words, gap_pos_idx, golds, N in sampled_items:
         # Construct input sequence
         # We need to tokenize with word mapping
@@ -174,19 +202,19 @@ for noise in noise_levels:
         for pos, word_id in enumerate(enc.word_ids(0)):
             if word_id is not None:
                 word_map.setdefault(word_id, []).append(pos)
-                
+
         # Define slots
         gap_token_positions = [word_map.get(gp) for gp in gap_pos_idx]
         if any(positions is None for positions in gap_token_positions):
             continue
-            
+
         ids = enc["input_ids"][0].clone()
-        
+
         # Mask target gap
         for positions in gap_token_positions:
             for pos in positions:
                 ids[pos] = tok.mask_token_id
-                
+
         # Apply noise: randomly mask other context words with probability `noise`
         for w_idx in range(len(ctx_words)):
             if w_idx not in gap_pos_idx:
@@ -195,10 +223,10 @@ for noise in noise_levels:
                     if positions:
                         for pos in positions:
                             ids[pos] = tok.mask_token_id
-                            
+
         # Predict
         preds = beam_autoregressive(model, ids, gap_token_positions, tok, beam_width=5)
-        
+
         # Eval
         is_seq_hit = True
         for j, (gold, pred) in enumerate(zip(golds, preds)):
@@ -208,11 +236,11 @@ for noise in noise_levels:
             else:
                 is_seq_hit = False
             slot_total += 1
-            
+
         if is_seq_hit:
             seq_hits += 1
         seq_total += 1
-        
+
     results[noise] = {
         "slot_acc": (slot_hits / slot_total) * 100 if slot_total else 0,
         "seq_acc": (seq_hits / seq_total) * 100 if seq_total else 0,
@@ -229,7 +257,9 @@ lines = [
 ]
 for noise in noise_levels:
     res = results[noise]
-    lines.append(f"| {int(noise*100)}% noise | {res['slot_acc']:.1f}% | {res['seq_acc']:.1f}% |")
+    lines.append(
+        f"| {int(noise * 100)}% noise | {res['slot_acc']:.1f}% | {res['seq_acc']:.1f}% |"
+    )
 
 report = "\n".join(lines) + "\n"
 out = ROOT / "analysis" / "reports" / "context_noise_ablation.md"

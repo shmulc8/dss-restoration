@@ -25,9 +25,7 @@ def test_masking_removes_all_words_in_overlapping_external_trigrams() -> None:
 
 def test_masking_keeps_nonmatching_passage_unchanged() -> None:
     query = passage("א ב ג ד")
-    residual, audit = mask_external_ngrams(
-        query, {("ה", "ו", "ז")}, n=3
-    )
+    residual, audit = mask_external_ngrams(query, {("ה", "ו", "ז")}, n=3)
     assert residual.tokens == query.tokens
     assert residual.text == query.text
     assert audit["masked_fraction"] == 0
@@ -36,9 +34,7 @@ def test_masking_keeps_nonmatching_passage_unchanged() -> None:
 def test_match_audit_does_not_bridge_quote_gap() -> None:
     inventory = {("א", "ב", "ג")}
     assert surviving_inventory_matches("א ב ג", inventory, n=3) == 1
-    assert surviving_inventory_matches(
-        f"א ב {QUOTE_GAP} ג", inventory, n=3
-    ) == 0
+    assert surviving_inventory_matches(f"א ב {QUOTE_GAP} ג", inventory, n=3) == 0
 
 
 def test_benjamini_hochberg_is_monotone_in_p_value_order() -> None:

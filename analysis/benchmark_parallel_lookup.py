@@ -12,6 +12,7 @@ Two conditions are reported:
 
 This separates clean evidence from reconstruction-assisted evidence.
 """
+
 import csv
 import json
 import os
@@ -30,15 +31,23 @@ from utils.composition_lookup import composition_group_for_scroll
 from utils.eval_split import resolve_scroll_filter
 
 REPORTS = ROOT / "analysis" / "reports"
-CASES_CSV = Path(os.environ.get(
-    "CASES_CSV",
-    REPORTS / "full_single_word_cases_refined_hebrew_only.csv",
-))
-OUT_JSON = Path(os.environ.get(
-    "OUT_JSON",
-    REPORTS / "parallel_lookup_benchmark_single_word.json",
-))
-WINDOWS = [int(part) for part in os.environ.get("WINDOWS", "5,4,3,2").split(",") if part.strip()]
+CASES_CSV = Path(
+    os.environ.get(
+        "CASES_CSV",
+        REPORTS / "full_single_word_cases_refined_hebrew_only.csv",
+    )
+)
+OUT_JSON = Path(
+    os.environ.get(
+        "OUT_JSON",
+        REPORTS / "parallel_lookup_benchmark_single_word.json",
+    )
+)
+WINDOWS = [
+    int(part)
+    for part in os.environ.get("WINDOWS", "5,4,3,2").split(",")
+    if part.strip()
+]
 BOOK_FILTER_MODE = os.environ.get("BOOK_FILTER_MODE", "no-aram")
 
 HEB = set(chr(c) for c in range(0x05D0, 0x05EB))
@@ -82,15 +91,20 @@ def load_fit_scroll_words():
         glyph, reconstructed, preserved = winfo(word_node)
         if len(glyph) < 1 or any(ch not in HEB for ch in glyph):
             continue
-        bucket = scrolls.setdefault(scroll_name, {
-            "group": composition_group_for_scroll(scroll_name),
-            "words": [],
-        })
-        bucket["words"].append({
-            "word": glyph,
-            "reconstructed": reconstructed,
-            "preserved": preserved,
-        })
+        bucket = scrolls.setdefault(
+            scroll_name,
+            {
+                "group": composition_group_for_scroll(scroll_name),
+                "words": [],
+            },
+        )
+        bucket["words"].append(
+            {
+                "word": glyph,
+                "reconstructed": reconstructed,
+                "preserved": preserved,
+            }
+        )
     return scrolls
 
 
@@ -107,8 +121,8 @@ def build_indexes(scrolls):
             for window in WINDOWS:
                 if i - window < 0 or i + window >= len(words):
                     continue
-                left_items = words[i - window:i]
-                right_items = words[i + 1:i + 1 + window]
+                left_items = words[i - window : i]
+                right_items = words[i + 1 : i + 1 + window]
                 left = tuple(entry["word"] for entry in left_items)
                 right = tuple(entry["word"] for entry in right_items)
                 relaxed[window][(left, right)][group][item["word"]] += 1
@@ -127,8 +141,8 @@ def predict(indexes, words, target_pos, excluded_group=None):
     for window in WINDOWS:
         if target_pos - window < 0 or target_pos + window >= len(words):
             continue
-        left = tuple(words[target_pos - window:target_pos])
-        right = tuple(words[target_pos + 1:target_pos + 1 + window])
+        left = tuple(words[target_pos - window : target_pos])
+        right = tuple(words[target_pos + 1 : target_pos + 1 + window])
         hits_by_group = indexes[window].get((left, right))
         if not hits_by_group:
             continue
@@ -183,19 +197,21 @@ def evaluate(name, indexes, cases, exclude_same_group=False):
         hit = result["predicted"] == row["target_word"]
         correct += int(hit)
         if len(examples) < 12:
-            examples.append({
-                "row_id": row["row_id"],
-                "scroll": row["scroll"],
-                "excluded_group": case_group if exclude_same_group else None,
-                "gold": row["target_word"],
-                "predicted": result["predicted"],
-                "hit": hit,
-                "window": result["window"],
-                "support_count": result["support_count"],
-                "candidate_counts": result["candidate_counts"],
-                "source_groups": result["source_groups"],
-                "context": row["context_for_reading"],
-            })
+            examples.append(
+                {
+                    "row_id": row["row_id"],
+                    "scroll": row["scroll"],
+                    "excluded_group": case_group if exclude_same_group else None,
+                    "gold": row["target_word"],
+                    "predicted": result["predicted"],
+                    "hit": hit,
+                    "window": result["window"],
+                    "support_count": result["support_count"],
+                    "candidate_counts": result["candidate_counts"],
+                    "source_groups": result["source_groups"],
+                    "context": row["context_for_reading"],
+                }
+            )
 
     return {
         "condition": name,
@@ -206,8 +222,14 @@ def evaluate(name, indexes, cases, exclude_same_group=False):
         "correct_pct_over_all": round(pct(correct, total), 1),
         "correct_pct_over_matched": round(pct(correct, matched), 1),
         "window_counts": dict(by_window),
-        "mean_support_count": round(sum(support_counts) / len(support_counts), 2) if support_counts else 0.0,
-        "mean_source_groups": round(sum(source_group_counts) / len(source_group_counts), 2) if source_group_counts else 0.0,
+        "mean_support_count": round(sum(support_counts) / len(support_counts), 2)
+        if support_counts
+        else 0.0,
+        "mean_source_groups": round(
+            sum(source_group_counts) / len(source_group_counts), 2
+        )
+        if source_group_counts
+        else 0.0,
         "examples": examples,
     }
 
@@ -218,19 +240,38 @@ def main():
     strict, relaxed = build_indexes(scrolls)
 
     results = {
-        "strict_preserved_any_composition": evaluate("strict_preserved_any_composition", strict, cases),
-        "strict_preserved_cross_composition": evaluate("strict_preserved_cross_composition", strict, cases, exclude_same_group=True),
-        "relaxed_preserved_target_any_composition": evaluate("relaxed_preserved_target_any_composition", relaxed, cases),
-        "relaxed_preserved_target_cross_composition": evaluate("relaxed_preserved_target_cross_composition", relaxed, cases, exclude_same_group=True),
+        "strict_preserved_any_composition": evaluate(
+            "strict_preserved_any_composition", strict, cases
+        ),
+        "strict_preserved_cross_composition": evaluate(
+            "strict_preserved_cross_composition", strict, cases, exclude_same_group=True
+        ),
+        "relaxed_preserved_target_any_composition": evaluate(
+            "relaxed_preserved_target_any_composition", relaxed, cases
+        ),
+        "relaxed_preserved_target_cross_composition": evaluate(
+            "relaxed_preserved_target_cross_composition",
+            relaxed,
+            cases,
+            exclude_same_group=True,
+        ),
     }
 
-    OUT_JSON.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
+    OUT_JSON.write_text(
+        json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
 
     for key, result in results.items():
         print(f"=== {key} ===")
-        print(f"matched exact-parallel cases: {result['matched_cases']}/{result['total_cases']} = {result['matched_pct']:4.1f}%")
-        print(f"correct over all cases:       {result['correct_cases']}/{result['total_cases']} = {result['correct_pct_over_all']:4.1f}%")
-        print(f"correct over matched cases:   {result['correct_cases']}/{result['matched_cases']} = {result['correct_pct_over_matched']:4.1f}%")
+        print(
+            f"matched exact-parallel cases: {result['matched_cases']}/{result['total_cases']} = {result['matched_pct']:4.1f}%"
+        )
+        print(
+            f"correct over all cases:       {result['correct_cases']}/{result['total_cases']} = {result['correct_pct_over_all']:4.1f}%"
+        )
+        print(
+            f"correct over matched cases:   {result['correct_cases']}/{result['matched_cases']} = {result['correct_pct_over_matched']:4.1f}%"
+        )
         print(f"window counts: {result['window_counts']}")
         print(f"mean support count: {result['mean_support_count']}")
         print(f"mean source groups: {result['mean_source_groups']}")

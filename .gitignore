@@ -21,7 +21,11 @@ dss_chunks.csv
 node_modules/
 demo/node_modules/
 
+# Local model checkpoints
+models/*
+!models/README.md
+ft_*
+
 # Large local artifacts (unification work)
-ft_byt5_span_*/
 analysis/cache/
 scratch/

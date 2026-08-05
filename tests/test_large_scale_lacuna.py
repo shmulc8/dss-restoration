@@ -1,12 +1,12 @@
 """Unit test for large-scale physical lacuna evaluation harness."""
 
 import pytest
-from eval.large_scale_lacuna_eval import analyze_large_scale_lacunae
+from eval.large_scale_lacuna_eval import evaluate_test_lacunae_accuracy
 
 
-def test_analyze_large_scale_lacunae():
-    stats = analyze_large_scale_lacunae()
-    assert stats["total_physical_lacunae"] == 27814
-    assert stats["split_breakdown"]["train"] > 0
-    assert stats["split_breakdown"]["test"] > 0
-    assert stats["partial_letter_trace_words"] > 0
+def test_evaluate_test_lacunae_accuracy():
+    stats = evaluate_test_lacunae_accuracy()
+    assert stats["total_test_lacunae"] == 3695
+    assert stats["test_split_scrolls"] == 93
+    assert stats["test_partial_trace_words"] > 0
+    assert "models_eval" in stats

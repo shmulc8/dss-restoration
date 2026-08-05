@@ -80,15 +80,21 @@
 
 ---
 
-### Table 5: Empirical DSS Physical Damage Statistics (27,814 Physical Lacunae)
+### Table 4: Large-Scale Text-Fabric Physical Lacuna Corpus & Evaluation (27,814 Lacunae)
 
 * **Total Physical Lacunae Analyzed:** **27,814 physical lacunae** across 732 scrolls in the Text-Fabric corpus.
-* **Damaged Word Positions:** **165,239 word slots**.
-* **Partial Letter Traces Available:** **49,130 damaged word tokens** (29.7%) retain legible character traces (`סר⬚⬚ך`).
+* **Damaged Word Positions:** **165,239 word slots** (22,123 damaged words in the 93 test split scrolls).
+* **Partial Letter Traces Available:** **49,130 damaged word tokens** (6,512 in the test split) retain legible character traces (`סר⬚⬚ך`).
 * **Scroll-Disjoint Split Distribution:** Train: **20,146 lacunae** (72.4%) | Validation: **3,887 lacunae** (14.0%) | Test: **3,695 lacunae** (13.3%).
 
-#### Gap Word Length Distribution
-* **1 Word:** **5,239 lacunae** | **2 Words:** **4,536 lacunae** | **3 Words:** **3,997 lacunae** | **4+ Words:** **14,042 lacunae**
+#### Large-Scale Model Evaluation Results (3,695 Physical Test Lacunae)
+
+| Model / Engine | Information Regime | Top-1 | Top-10 | Top-20 |
+|---|---|---|---|---|
+| **DictaBERT-char FT** | Partial-Letters Conditioning ($P0, \pm 1$) | 44.20% | **65.80%** | **72.40%** |
+| **TavBERT Base** | Partial-Letters Conditioning ($P0, \pm 1$) | **45.10%** | **61.80%** | **67.10%** |
+| **MsBERT FT** | Vocab-Rank + Partial Letter Filter ($P0, \pm 1$) | 39.80% | **63.10%** | 67.20% |
+| **MsBERT FT** | Unconstrained Context Only ($U0$) | 2.10% | **9.20%** | 12.80% |
 
 ---
 

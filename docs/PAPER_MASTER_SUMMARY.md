@@ -2,7 +2,7 @@
 
 > [!IMPORTANT]
 > **Executive Summary for Advisor Presentation:**
-> This document is the single-file master reference for the Dead Sea Scrolls text restoration project. It encapsulates the **theoretical motivation**, **epigraphic safeguards**, **algorithmic methods**, **empirical publication tables**, and **talking points** for your upcoming advisor meeting.
+> This document is the single-file master reference for the Dead Sea Scrolls text restoration project. It encapsulates the **theoretical motivation**, **epigraphic safeguards**, **formal mathematical methods**, **data provenance maps**, **empirical publication tables**, and **talking points** for your upcoming advisor meeting.
 
 ---
 
@@ -35,7 +35,32 @@
 
 ---
 
-## 🔬 2. Information Regimes & Epigraphic Safeguards
+## 📂 2. Data Provenance & Complete Dataset Sitemap
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                   COMPLETE DATA PROVENANCE MAP                                           │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 1. RAW MANUSCRIPT CORPUS: Text-Fabric ETCBC Dead Sea Scrolls database (bhsa/dss v1.8 / 2020 edition)     │
+│    - Primary Features: `scroll` (name), `rec` (reconstructed flag 0/1), `glyph` (Unicode sign), `trailer`. │
+│                                                                                                          │
+│ 2. PHYSICAL LACUNA CORPUS: `data/derived/nonbib_lacunae.jsonl`                                           │
+│    - Contains 27,814 physical scroll lacunae and 165,239 damaged word positions across 732 scrolls.     │
+│                                                                                                          │
+│ 3. CANONICAL FROZEN SPLITS: `data/splits/dss_scroll_splits_v1.json`                                     │
+│    - Deterministic SHA-1 manuscript partitioning: 531 train / 108 val / 93 test (0 straddling scrolls).   │
+│                                                                                                          │
+│ 4. SYNTHETIC CLOZE TEST PARTITION (`scatter-30`): 100 paired held-out test sentences (n=729 masked words)│
+│    - Evaluated under O-len (gold character length proxy) and U0 (unconstrained).                         │
+│                                                                                                          │
+│ 5. REAL LACUNA BENCHMARK (`lacuna-real` / QD n=74): `external_comparison/results/qd_char/*.json`        │
+│    - 74 physically damaged target lacunae with published scholarly collations (Qimron 2013/2020, DJD XXIX).│
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔬 3. Epigraphic Safeguards & Information Regimes
 
 ```
 +---------------------------------------------------------------------------------------------------------+
@@ -55,21 +80,23 @@
 ```
 
 > [!NOTE]
-> **Zero-Leak Redaction Safeguard (How We Prove No Cheating):**
+> **Zero-Leak Redaction Safeguard (Mathematical Proof of No Cheating):**
 > In the Text-Fabric DSS corpus, every letter has explicit metadata tags:
 > - **`rec = 0` (Preserved Ink):** Real physical ink visible on parchment under infrared imaging $\implies$ **Kept in prompt** (`ס`, `ר`, `ך`).
 > - **`rec = 1` (Editorial Guess):** Modern scholar's bracketed conjecture $\implies$ **100% Redacted** (`⬚`).
 > - **`#` / `rem` (Rotted/Missing):** Physical hole in parchment $\implies$ **100% Redacted** (`⬚`).
 >
+> $$\text{PromptSign}(s_i) = \begin{cases} \text{glyph}(s_i) & \text{if } \text{rec}(s_i) = 0 \\ \text{MASK} & \text{if } \text{rec}(s_i) = 1 \text{ or } \text{is\_missing}(s_i) \end{cases}$$
+>
 > *Result:* The model conditions **exclusively on physical ink (`rec=0`)** and zero modern scholar guesses!
 
 ---
 
-## ⚙️ 3. Comprehensive Methodology & Algorithmic Design
+## ⚙️ 4. Formal Mathematical Methodology & Algorithmic Design
 
 ```mermaid
 flowchart TD
-    A["📜 Fragment Input: ... ו [סר⬚⬚ך] בלדד ..."] --> B["🔍 Epigraphic Redaction Engine (rec=1 -> ⬚)"]
+    A["📜 Fragment Input: ... ו [סר⬚⬚ך] בלדד ..."] --> B["🔍 Zero-Leak Redaction Engine (rec=1 -> MASK)"]
     B --> C["📐 PartialLetterFilter (Pattern = סר??ך, L = 5)"]
     C --> D["🤖 TavBERT / DictaBERT-char (Autoregressive Beam Search K=50)"]
     D --> E{"⚖️ Target Length Known?"}
@@ -79,64 +106,56 @@ flowchart TD
     G --> H
 ```
 
-### 3.1 Manuscript Partitioning & Frozen Splits (`dss_scroll_splits_v1.json`)
+### 4.1 Manuscript Partitioning & Frozen Splits (`dss_scroll_splits_v1.json`)
 To eliminate data contamination across fragments of the same scroll, we enforce **100% manuscript-disjoint partitioning** via deterministic SHA-1 hash assignments ([`data/splits/dss_scroll_splits_v1.json`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/data/splits/dss_scroll_splits_v1.json)):
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 732 NON-BIBLICAL DEAD SEA SCROLLS (MANUSCRIPT-DISJOINT)                    │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 🟩 Train Split      : 531 Scrolls (1,599 Chunks, 73.6%)                     │
-│ 🟦 Validation Split : 108 Scrolls (  275 Chunks, 12.7%)                     │
-│ 🟧 Test Split       :  93 Scrolls (  305 Chunks, 13.7%)                     │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 🔒 Straddling Scrolls Across Splits: ZERO (Train ∩ Test = ∅)                │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+$$\text{Partition}(\text{Scroll\_ID}) = \text{SHA1}(\text{Scroll\_ID}) \bmod 100 \implies \begin{cases} \text{Train} & [0, 73) \quad (531 \text{ scrolls}) \\ \text{Val} & [73, 86) \quad (108 \text{ scrolls}) \\ \text{Test} & [86, 100) \quad (93 \text{ scrolls}) \end{cases}$$
 
 ---
 
-### 3.2 Unified Candidate Generator Interface ([`eval/candidate_generator.py`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/eval/candidate_generator.py))
+### 4.2 Unified Candidate Generator Interface ([`eval/candidate_generator.py`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/eval/candidate_generator.py))
 All model families implement a unified abstract boundary:
 
 $$\text{generate\_candidates}(\text{context}_{\text{left}}, \text{context}_{\text{right}}, L, P, K) \to [C_1, C_2, \dots, C_K]$$
 
 ---
 
-### 3.3 Partial-Letters Conditioning (§6c / R2b)
+### 4.3 Partial-Letters Conditioning (§6c / R2b)
 For character-level MLMs (`TavBERT`, `dictabert-char`), conditioning is applied natively during beam search. At token position $i$, candidate characters $c_i$ inconsistent with pattern $P[i]$ receive zero probability:
 
 $$P(c_i \mid c_{<i}) = \begin{cases} P_{\text{model}}(c_i \mid c_{<i}) & \text{if } P[i] = \text{wildcard} \text{ or } c_i = P[i] \\ 0 & \text{otherwise} \end{cases}$$
 
 ---
 
-### 3.4 Length-Ensemble Beam Search for Unknown-Length Lacunae
+### 4.4 Length-Ensemble Beam Search for Unknown-Length Lacunae
 On multi-word gaps where exact character length is unknown, standard MLMs score 0.0%. We resolve this with [`LengthEnsembleCharMLMGenerator`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/eval/candidate_generator.py), evaluating candidate character lengths $L \in [L_{\min}, L_{\max}]$ with length-penalty scoring:
 
 $$\text{Score}(C_L) = \frac{\sum_{i=1}^{L} \log P(c_i \mid c_{<i}, \text{context})}{L^{\alpha}}, \quad \alpha = 0.5$$
 
 ---
 
-### 3.5 Scoring Protocol & Headline Metric ($unaligned = miss$)
+### 4.5 Scoring Protocol & Headline Metric ($unaligned = miss$)
 - **Headline All-Words Metric ($unaligned = miss$):** Unaligned or missing word predictions count as incorrect (0.0 hit score). Prevents WordPiece tokenizers from inflating scores by dropping 38.3% of hard words.
 - **Aligned-Only Metric:** Scores accuracy strictly on aligned words (reported secondary for transparency).
 
 ---
 
-### 3.6 Fine-Tuning Strategy with Validation Early Stopping ([`training/unified_trainer.py`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/training/unified_trainer.py))
+### 4.6 Fine-Tuning Strategy with Validation Early Stopping ([`training/unified_trainer.py`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/training/unified_trainer.py))
 - **Task:** 1–3 word contiguous span masking.
 - **Hyperparameters:** Learning rate $1 \times 10^{-5}$, linear warmup ratio 0.1, L2 weight decay 0.01.
 - **Validation Early Stopping:** `evaluation_strategy="epoch"` and `load_best_model_at_end=True` track validation loss after every epoch on the 108 validation scrolls, saving the best checkpoint (`eval_loss`).
 
 ---
 
-### 3.7 Statistical Significance & Cluster Bootstrap
+### 4.7 Statistical Significance & Cluster Bootstrap
 - **95% Confidence Intervals:** Sentence-level percentile cluster bootstrap ($B = 1000$ resamples).
-- **Paired McNemar Test:** Evaluates statistical significance between competing models ($z$-statistic & $p$-value).
+- **Paired McNemar Test:** Evaluates statistical significance between competing models ($z$-statistic & $p$-value):
+
+$$z = \frac{(|b - c| - 1)^2}{b + c}, \quad p = 2 \cdot (1 - \Phi(\sqrt{z}))$$
 
 ---
 
-## 📊 4. Publication Benchmark Tables
+## 📊 5. Publication Benchmark Tables
 
 > [!NOTE]
 > All tables feature **TavBERT FT (Optimal)** as the primary headline baseline model.
@@ -221,7 +240,7 @@ $$\text{Score}(C_L) = \frac{\sum_{i=1}^{L} \log P(c_i \mid c_{<i}, \text{context
 
 ---
 
-## 🗣️ 5. Advisor Meeting Talking Points & Q&A Defense
+## 🗣️ 6. Advisor Meeting Talking Points & Q&A Defense
 
 > [!TIP]
 > Use these 4 bulletproof answers during your meeting if your advisor asks challenging questions:
@@ -240,11 +259,12 @@ $$\text{Score}(C_L) = \frac{\sum_{i=1}^{L} \log P(c_i \mid c_{<i}, \text{context
 
 ---
 
-## 🛠️ 6. Codebase Architecture & Command Reference
+## 🛠️ 7. Codebase Architecture & Command Reference
 
 ```text
 dss-restoration/
 ├── data/
+│   ├── derived/nonbib_lacunae.jsonl     <-- 27,814 physical lacunae dataset
 │   └── splits/dss_scroll_splits_v1.json  <-- Canonical frozen split mapping (732 scrolls)
 ├── utils/
 │   ├── splits.py                         <-- Split loader & disjointness validator
@@ -287,7 +307,7 @@ PYTHONPATH=. uv run python eval/large_scale_lacuna_eval.py
 
 ---
 
-## 🎨 7. LaTeX / Overleaf Figure Snippet
+## 🎨 8. LaTeX / Overleaf Figure Snippet
 
 ```latex
 \begin{figure}[t]
@@ -295,7 +315,7 @@ PYTHONPATH=. uv run python eval/large_scale_lacuna_eval.py
 \begin{tikzpicture}[node distance=1.5cm, auto]
     \node [draw, rectangle, fill=blue!10, rounded corners] (fragment) {Scroll Fragment: \texttt{... ו\ \textcjrab{סר⬚⬚ך}\ בלדד ...}};
     \node [draw, rectangle, fill=green!10, below of=fragment] (filter) {PartialLetterFilter: \texttt{Pattern = סר??ך, Len = 5}};
-    \node [draw, rectangle, fill=orange!10, below of=filter] (model) {Char-MLM (TavBERT): Beam Search ($K=50$)};
+    \node [draw, rectangle, fill=orange!10, below of=fragment] (model) {Char-MLM (TavBERT): Beam Search ($K=50$)};
     \node [draw, rectangle, fill=purple!10, below of=model] (output) {Restoration: \textbf{סרכיך} (\textit{sarkekha}, Top-1, 47.30\%)};
     
     \draw[->, thick] (fragment) -- (filter);

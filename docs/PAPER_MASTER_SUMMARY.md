@@ -361,13 +361,17 @@ $$z = \frac{(|b - c| - 1)^2}{b + c}, \quad p = 2 \cdot (1 - \Phi(\sqrt{z}))$$
 
 ---
 
-## 📊 8. Publication Benchmark Tables
+## 📊 8. Publication Benchmark Tables & Scope Structuring
 
 > [!NOTE]
-> All tables feature **TavBERT FT (Optimal)** as the primary headline baseline model.
+> All tables feature **TavBERT FT (Optimal)** as the primary headline baseline model. Per our publication scope audit, tables are grouped into **Main Paper Body (Tables 1–4)** and **Appendix / Supplementary Material (Tables A1–A3)**.
 
-### Table 1: Main Synthetic Benchmark — Cloze Restoration (`scatter-30`)
-*Evaluated on the 100-sentence paired test split ($n=729$ masked words) under gold-length $O\text{-len}$ with beam search ($10 \times 6$).*
+---
+
+### 📌 SECTION 1: MAIN PAPER BODY TABLES (Core Restoration Narrative)
+
+#### Table 1: Main Synthetic Benchmark — Cloze Restoration (`scatter-30`)
+*Evaluated on the 100-sentence paired test split ($n=729$ masked words) under gold-length $O\text{-len}$ with beam search ($10 \times 6$). [📌 Main Paper Body]*
 
 | Model Family | Model Variant | Headline Hit@10 ($unaligned = miss$) | Headline Hit@1 (95% CI) | Aligned-Only Hit@10 | Char Sim | MRR | Unaligned Misses |
 |---|---|---|---|---|---|---|---|
@@ -380,8 +384,8 @@ $$z = \frac{(|b - c| - 1)^2}{b + c}, \quad p = 2 \cdot (1 - \Phi(\sqrt{z}))$$
 
 ---
 
-### Table 2: Real Lacuna Literature Agreement Benchmark (Qumran-Digital, $n=74$)
-*Evaluated at physically damaged locations against published scholarly restorations (Qimron 2013/2020, DJD XXIX).*
+#### Table 2: Real Lacuna Literature Agreement Benchmark (Qumran-Digital, $n=74$)
+*Evaluated at physically damaged locations against published scholarly restorations (Qimron 2013/2020, DJD XXIX). [📌 Main Paper Body]*
 
 | Model / Engine | Information Regime | Top-1 | Top-10 | Top-20 |
 |---|---|---|---|---|
@@ -394,19 +398,8 @@ $$z = \frac{(|b - c| - 1)^2}{b + c}, \quad p = 2 \cdot (1 - \Phi(\sqrt{z}))$$
 
 ---
 
-### Table 3: Model Selection & Pretraining Scale Ablation ($n=30$ Sentences, 250 Words)
-
-| Model Name | Parameters | Fine-Tuned? | Hit@10 | 95% Confidence Interval |
-|---|---|---|---|---|
-| **TavBERT (Optimal)** | 110M | **Yes (FT-Optimal)** | **24.80%** | [18.50%, 32.10%] |
-| **TavBERT Base** | 110M | No (Base) | **24.40%** | [18.09%, 31.94%] |
-| **DictaBERT-char** | 88M | **Yes (FT)** | **22.80%** | [17.03%, 29.03%] |
-| **DictaBERT-char** | 88M | No (Base) | **17.60%** | [12.16%, 23.29%] |
-| **DictaBERT-Large-char** | 400M | No (Base) | **17.60%** | [11.60%, 23.14%] |
-
----
-
-### Table 4: Unknown-Length Multi-Word Lacuna Restoration
+#### Table 3: Unknown-Length Multi-Word Lacuna Restoration
+*Evaluates multi-word lacunae of unknown character length ($L \in [3, 15]$). [📌 Main Paper Body]*
 
 | Model / Strategy | Gap Length Condition | Hit@10 |
 |---|---|---|
@@ -416,7 +409,8 @@ $$z = \frac{(|b - c| - 1)^2}{b + c}, \quad p = 2 \cdot (1 - \Phi(\sqrt{z}))$$
 
 ---
 
-### Table 5: Large-Scale Text-Fabric Physical Lacuna Evaluation (3,695 Test Lacunae)
+#### Table 4: Large-Scale Text-Fabric Physical Lacuna Evaluation (3,695 Test Lacunae)
+*Scales physical evaluation across all 93 test scrolls (3,695 physical lacunae). [📌 Main Paper Body]*
 
 | Model Family / Engine | Information Regime | Top-1 | Top-10 | Top-20 |
 |---|---|---|---|---|
@@ -428,14 +422,33 @@ $$z = \frac{(|b - c| - 1)^2}{b + c}, \quad p = 2 \cdot (1 - \Phi(\sqrt{z}))$$
 
 ---
 
-### Table 6: Pesher / Quote-Aware Source Retrieval (35 Passages)
+### 📁 SECTION 2: APPENDIX / SUPPLEMENTARY TABLES (Secondary Ablations)
 
-* **Source Book Recovery:** **86.57% Top-1** | **99.14% Top-3**
-* **Trigram Ablation Baseline:** 52.41% Top-1 ($p = 0.0008$)
+#### Table A1: Model Selection & Pretraining Scale Ablation ($n=30$ Sentences, 250 Words)
+*Small dev subset model selection ablation. [📁 Appendix Table A1]*
+
+| Model Name | Parameters | Fine-Tuned? | Hit@10 | 95% Confidence Interval |
+|---|---|---|---|---|
+| **TavBERT (Optimal)** | 110M | **Yes (FT-Optimal)** | **24.80%** | [18.50%, 32.10%] |
+| **TavBERT Base** | 110M | No (Base) | **24.40%** | [18.09%, 31.94%] |
+| **DictaBERT-char** | 88M | **Yes (FT)** | **22.80%** | [17.03%, 29.03%] |
+| **DictaBERT-char** | 88M | No (Base) | **17.60%** | [12.16%, 23.29%] |
+| **DictaBERT-Large-char** | 400M | No (Base) | **17.60%** | [11.60%, 23.14%] |
 
 ---
 
-### Table 7: Canonical Dataset Split (`dss_scroll_splits_v1.json`)
+#### Table A2: Pesher / Quote-Aware Source Retrieval (35 Passages)
+*Biblical book recovery on Pesher commentary passages. [📁 Appendix Table A2]*
+
+| Retrieval Engine | Target Metric | Top-1 Score | Top-3 Score | p-value |
+|---|---|---|---|---|
+| **Quote-Aware Pesher Engine** | Biblical Source Book Recovery | **86.57%** | **99.14%** | — |
+| **Trigram Baseline Ablation** | Biblical Source Book Recovery | 52.41% | — | $p = 0.0008$ |
+
+---
+
+#### Table A3: Canonical Dataset Split (`dss_scroll_splits_v1.json`)
+*SHA-1 manuscript-disjoint partition breakdown. [📁 Dataset Methods / Appendix Table A3]*
 
 | Split | Scroll Count | Chunks | Share | Straddling Scrolls |
 |---|---|---|---|---|

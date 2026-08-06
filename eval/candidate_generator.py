@@ -70,10 +70,10 @@ class EpigraphicStrokeFilter:
     """Point 4 Roadmap: Evaluates character stroke similarity across paleographically ambiguous Qumran hands."""
 
     STROKE_CONFUSION_GROUPS = [
-        {"ר", "ד", "ו", "ן", "י"},  # Vertical / head stroke ambiguity
-        {"ה", "ח", "ת"},            # Corner roof stroke ambiguity
-        {"מ", "ס"},                # Loop closure ambiguity
-        {"ב", "כ"},                # Lower base stroke ambiguity
+        {"ר", "ד", "ו", "ן", "נ", "י"},  # Vertical / head stroke ambiguity (including medial/final nun)
+        {"ה", "ח", "ת"},                # Corner roof stroke ambiguity
+        {"מ", "ס"},                    # Loop closure ambiguity
+        {"ב", "כ"},                    # Lower base stroke ambiguity
     ]
 
     @classmethod

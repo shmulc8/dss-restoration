@@ -721,7 +721,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 1 (Cloze scatter-30) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Simulates an epigrapher trying to fill in 1-word missing slots when 30% of words across a line are physically missing simultaneously.<br>
-                <strong>How Calculated:</strong> Evaluates 100 paired held-out test sentences (729 masked words). Beam search ($K=50$, beam width $10 \times 6$) predicts candidate words under $O\text{-len}$ gold character length proxy. Headline All-Words metric treats unaligned word predictions as 0.0 hit score. 95% Confidence Intervals computed via sentence-level percentile cluster bootstrap ($B=1000$).
+                <strong>How Calculated:</strong> Evaluates 100 paired held-out test sentences (729 masked words). Beam search (P0K=50P0, beam width P010 \times 6P0) predicts candidate words under P0O\text{-len}P0 gold character length proxy. Headline All-Words metric treats unaligned word predictions as 0.0 hit score. 95% Confidence Intervals computed via sentence-level percentile cluster bootstrap (P0B=1000P0).
             </div>
         </div>
         <div class="table-container">
@@ -777,7 +777,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 2 (QD Literature Agreement) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Measures how often our AI model top predictions match final published scholarly restorations (Qimron 2013/2020 & DJD XXIX) on actual torn physical scroll fragments.<br>
-                <strong>How Calculated:</strong> Evaluates 74 physically damaged target lacunae with published scholarly collations. Models condition on surviving physical ink traces ($P0$) with length tolerance $\pm 1$. Top-K accuracy measures whether any attributed reading appears in the model's Top-1, Top-10, or Top-20 candidates.
+                <strong>How Calculated:</strong> Evaluates 74 physically damaged target lacunae with published scholarly collations. Models condition on surviving physical ink traces (P0P0P0) with length tolerance P0\pm 1P0. Top-K accuracy measures whether any attributed reading appears in the model's Top-1, Top-10, or Top-20 candidates.
             </div>
         </div>
         <div class="table-container">
@@ -833,7 +833,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 3 (Multi-Word Gaps) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Tests how to restore long torn physical holes where the epigrapher does not even know how many words or characters are missing.<br>
-                <strong>How Calculated:</strong> <code>LengthEnsembleCharMLMGenerator</code> loops candidate character lengths $L \in [3, 15]$, scoring candidate sequences with length-penalty log-probability scoring $\text{Score}(C_L) = \frac{\sum \log P}{L^{0.5}}$, breaking the 0.0% failure wall of single-length MLMs.
+                <strong>How Calculated:</strong> <code>LengthEnsembleCharMLMGenerator</code> loops candidate character lengths L ∈ [3, 15], scoring candidate sequences with length-penalty log-probability scoring Score(C_L) = (Sum log P) / L<sup>0.5</sup>, breaking the 0.0% failure wall of single-length MLMs.
             </div>
         </div>
         <div class="table-container">
@@ -874,7 +874,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 4 (Large-Scale Lacunae) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Scales real-world physical lacuna evaluation across the entire 93 test scroll corpus (3,695 physical lacunae).<br>
-                <strong>How Calculated:</strong> Parsed all 27,814 physical lacunae across 732 non-biblical scrolls in Text-Fabric. Evaluates the 3,695 test lacunae under $P0$ (with partial ink) vs $U0$ (unconstrained context only).
+                <strong>How Calculated:</strong> Parsed all 27,814 physical lacunae across 732 non-biblical scrolls in Text-Fabric. Evaluates the 3,695 test lacunae under P0P0P0 (with partial ink) vs P0U0P0 (unconstrained context only).
             </div>
         </div>
         <div class="table-container">
@@ -1005,7 +1005,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table A2 (Pesher Source Retrieval) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Tests if the model can identify which biblical book a Qumran commentary (Pesher) is quoting when the quote itself is partially damaged.<br>
-                <strong>How Calculated:</strong> Evaluates 35 Pesher commentary passages. Uses TF-IDF cosine similarity + quote-aware character matching over the 24 Hebrew Bible books. Evaluated using Top-1/Top-3 book recovery accuracy and paired McNemar $p$-values.
+                <strong>How Calculated:</strong> Evaluates 35 Pesher commentary passages. Uses TF-IDF cosine similarity + quote-aware character matching over the 24 Hebrew Bible books. Evaluated using Top-1/Top-3 book recovery accuracy and paired McNemar P0pP0-values.
             </div>
         </div>
         <div class="table-container">
@@ -1047,7 +1047,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table A3 (SHA-1 Disjoint Splits) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Proves that our train/val/test splits are 100% manuscript-disjoint so the model cannot cheat by memorizing duplicate scroll fragments.<br>
-                <strong>How Calculated:</strong> Deterministic SHA-1 hash of manuscript ID ($\text{SHA1}(\text{scroll\_id}) \bmod 100$). Allocates 531 train (73.6%), 108 val (12.7%), and 93 test scrolls (13.7%) with zero straddling scrolls.
+                <strong>How Calculated:</strong> Deterministic SHA-1 hash of manuscript ID (P0\text{SHA1}(\text{scroll\_id}) \bmod 100P0). Allocates 531 train (73.6%), 108 val (12.7%), and 93 test scrolls (13.7%) with zero straddling scrolls.
             </div>
         </div>
         <div class="table-container">
@@ -1269,7 +1269,7 @@
     const totalSlides = 8;
 
     function updateSlideBadge() {
-        document.getElementById('slide-num-badge').innerText = `Slide ${currentSlide + 1} of ${totalSlides}`;
+        document.getElementById('slide-num-badge').innerText = `Slide P0{currentSlide + 1} of P0{totalSlides}`;
     }
 
     function switchTab(index) {

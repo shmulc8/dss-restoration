@@ -778,7 +778,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 2 (QD Literature Agreement) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Measures how often our AI model top predictions match final published scholarly restorations (Qimron 2013/2020 & DJD XXIX) on actual torn physical scroll fragments.<br>
-                <strong>How Calculated:</strong> Evaluates 74 physically damaged target lacunae with published scholarly collations. Models condition on surviving physical ink traces (P0P0P0) with length tolerance ±1. Top-K accuracy measures whether any attributed reading appears in the model's Top-1, Top-10, or Top-20 candidates.
+                <strong>How Calculated:</strong> Evaluates 74 physically damaged target lacunae with published scholarly collations. Models condition on surviving physical ink traces (P0) with length tolerance ±1. Top-K accuracy measures whether any attributed reading appears in the model's Top-1, Top-10, or Top-20 candidates.
             </div>
         </div>
         <div class="table-container">
@@ -875,7 +875,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 4 (Large-Scale Lacunae) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Scales real-world physical lacuna evaluation across the entire 93 test scroll corpus (3,695 physical lacunae).<br>
-                <strong>How Calculated:</strong> Parsed all 27,814 physical lacunae across 732 non-biblical scrolls in Text-Fabric. Evaluates the 3,695 test lacunae under P0P0P0 (with partial ink) vs P0U0P0 (unconstrained context only).
+                <strong>How Calculated:</strong> Parsed all 27,814 physical lacunae across 732 non-biblical scrolls in Text-Fabric. Evaluates the 3,695 test lacunae under P0 (with partial ink) vs U0 (unconstrained context only).
             </div>
         </div>
         <div class="table-container">

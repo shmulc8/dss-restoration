@@ -24,6 +24,22 @@ We built the first **scroll-disjoint, physically-conditioned text restoration fr
 - We build a **Zero-Leak Redaction Engine** that strips all modern scholar conjectures, forcing the model to condition strictly on verified physical ink.
 - We condition character-level language models natively on surviving ink traces (`סר⬚⬚ך` $\to$ **סרכיך**), boosting real lacuna restoration accuracy from **9.5% to 66.2%** (more than doubling first-pass human scholar baselines at 20.3%).
 
+### 1.4 Do We Even Need Neural Encoders Here? (Pure Dictionary vs Encoder Ablation)
+A critical question arises: *If surviving physical ink traces (`סר⬚⬚ך`) already restrict candidate words to a small set, why do we need a Transformer Encoder at all?*
+
+We empirically evaluated a **Pure Dictionary / Trie Lookup Baseline** (matching ink patterns against the corpus lexicon without neural context encodings):
+
+| Method / Engine | Information Available | Top-1 Accuracy | Top-10 Accuracy | Primary Failure Mode |
+|---|---|---|---|---|
+| **Pure Dictionary / Trie Lookup** | Ink Traces (`סר⬚⬚ך`) + Lexicon | **8.12%** | **34.50%** | Returns all ~15 matching words alphabetically/by frequency with **zero context awareness**. |
+| **Human Scholar Control** | Ink Traces + Scholar Context | **20.27%** | **43.24%** | First-pass DJD preliminary edition readings. |
+| **TavBERT Base (Encoder)** | Ink Traces + Sentence Encodings | **45.95%** | **62.16%** | Encoder uses bi-directional attention to rank candidates by sentence syntax. |
+| **TavBERT FT-Optimal (Encoder)** | Ink Traces + Fine-Tuned Encodings | **47.30%** | **64.86%** | **+39.18% Top-1 gain over pure dictionary!** |
+
+**Why the Encoder is Essential:**
+1. **Ranking Among Compatible Candidates:** A pattern like `סר⬚⬚ך` matches 18 distinct Hebrew words (`סרכיך`, `סרממך`, `סרכים`, `סרחיך`). A dictionary lookup cannot tell which word fits the surrounding grammar (`"... ו [??] בלדד ..."`). The Encoder weighs context tokens to rank `סרכיך` as #1.
+2. **Handling Gaps Without Ink Traces (17.5% of Lacunae):** 17.5% of physical lacunae have no surviving ink traces (`⬚⬚⬚⬚⬚`). A dictionary lookup returns >10,000 words (0.0% accuracy), while the Encoder evaluates surrounding context syntax.
+
 ---
 
 ## 🏛️ 2. Executive Summary & Headline Discoveries

@@ -522,7 +522,26 @@ PYTHONPATH=. uv run python eval/score_qd_researcher_benchmark.py
 
 # 5. Analyze 27,814 physical lacunae across Text-Fabric corpus
 PYTHONPATH=. uv run python eval/large_scale_lacuna_eval.py
-```
+---
+
+## 📚 10. Dead Sea Scrolls NLP Lexicon & Terminology Glossary
+
+Below is the definitive reference glossary defining all 12 novel epigraphic NLP terms and methodological concepts introduced in this research:
+
+| Term / Methodological Concept | Epigraphic & Technical Definition | Impact / Usage in Paper |
+|---|---|---|
+| **Zero-Leak Redaction Filter** | Automated stripping of modern scholar bracketed guesses (`rec=1` in Text-Fabric, e.g. `ס[רכי]ך` $\to$ `ס⬚⬚ך`) before model input. | Guarantees 100% leak-free conditioning strictly on verified physical parchment ink (`rec=0`). |
+| **Dual-Track Evaluation Architecture** | Framework separating synthetic cloze testing under 30% word masking (Track A: `scatter-30`) from physical manuscript ink dropouts (Track B: `lacuna-real`). | Prevents mixing synthetic toy benchmarks with real manuscript restoration tasks. |
+| **Headline All-Words Metric** ($unaligned = miss$) | Scoring rule where any sub-word prediction that fails to align with character-bounded physical gaps counts as 0.0 hit accuracy. | Penalizes WordPiece tokenizers (MsBERT) for dropping 38.3% of hard words (13.31% headline score). |
+| **Information Regimes** ($U0, O\text{-len}, P0$) | Epigraphic input constraint levels: **$U0$** (unconstrained context only), **$O\text{-len}$** (gold character length proxy), and **$P0$** (physical ink budget + partial stroke traces). | Tracks exact accuracy jumps: 9.5% ($U0$) $\to$ 23.6% ($O\text{-len}$) $\to$ 66.2% ($P0$ Top-10). |
+| **`LengthEnsembleCharMLMGenerator`** | Ensemble beam search generator for unknown-length multi-word lacunae that loops character lengths $L \in [3, 15]$ with length-penalty scoring $\text{Score} = \frac{\sum \log P}{L^{0.5}}$. | Breaks the 0.0% failure wall of single-length MLMs on multi-word gaps (14.2% Hit@10). |
+| **Pesher-Specific Source Retrieval Module** | Quote-aware RAG engine that detects ancient commentary citation formulas (`פשרו על`) and retrieves the quoted biblical book via character n-gram TF-IDF matching. | Recovers the correct biblical source book 86.57% Top-1 / 99.14% Top-3 times on Pesher commentary lacunae (Table A2). |
+| **Morpho-Lemmatic Scoring** (`normalize_hebrew_lemma()`) | Relaxed evaluation metric that strips Hebrew prepositions (`ב,כ,ל,מ`), conjunctions (`ו`), articles (`ה`), and suffix inflections (`-ים, -ות`), scoring underlying root lemmas. | Proves that 45% of model "errors" are valid morphological synonyms (e.g. `סרכים` vs `סרך`). |
+| **Manuscript-Disjoint SHA-1 Partitioning** | Deterministic algorithm ($\text{SHA1}(\text{scroll\_id}) \bmod 100$) partitioning 732 non-biblical scrolls into 531 train / 108 val / 93 test with zero straddling scrolls. | Eliminates text memorization across fragments of identical manuscripts. |
+| **Character-Level MLM (Char-MLM)** | Transformer encoder architecture (TavBERT, DictaBERT-char) operating directly on single-character vocabularies ($|V| \approx 30\text{--}50$). | Enables arbitrary character-length lacuna masking without WordPiece alignment failures. |
+| **Physical Ink Trace Budget ($P0$ Filter)** | Character probability filter $P(c_i \mid c_{<i}) = P_{\text{model}}(c_i \mid c_{<i})$ if $c_i = P[i]$ else 0, constraining beam search directly to surviving ink strokes. | Pushes TavBERT accuracy from 23.65% to 64.86% Top-10 on real Dead Sea Scroll fragments. |
+| **Un-aligned WordPiece Dropping** | The systematic failure of sub-word tokenizers (MsBERT) to generate token sequences matching character-bounded physical gaps (38.3% of test words). | Exposes why standard sub-word NLP models fail for physical epigraphy. |
+| **Hapax Legomena Recovery Gap** | Diagnostic failure mode (15% of errors) where lacuna target words occur only once in the entire Qumran corpus. | Identifies rare sectarian vocabulary requiring dynamic IDF score boosting. |
 
 ---
 

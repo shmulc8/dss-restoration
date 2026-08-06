@@ -436,8 +436,9 @@
             <button class="tab-btn" onclick="switchTab(3)">📜 4. Real Scroll Examples</button>
             <button class="tab-btn" onclick="switchTab(4)">📊 5. Benchmark Tables</button>
             <button class="tab-btn" onclick="switchTab(5)">🔍 6. Error Analysis & Roadmap</button>
-            <button class="tab-btn" onclick="switchTab(6)">🗣️ 7. Advisor Q&A Defense</button>
-            <button class="tab-btn" onclick="switchTab(7)">📂 8. Data Provenance Map</button>
+            <button class="tab-btn" onclick="switchTab(6)">📚 7. Project Lexicon & Glossary</button>
+            <button class="tab-btn" onclick="switchTab(7)">🗣️ 8. Advisor Q&A Defense</button>
+            <button class="tab-btn" onclick="switchTab(8)">📂 9. Data Provenance Map</button>
         </div>
         <div class="slide-controls">
             <button class="ctrl-btn" onclick="prevSlide()">← Prev</button>
@@ -1168,9 +1169,89 @@
         </div>
     </div>
 
-    <!-- Slide 7: Advisor Q&A Defense -->
+    <!-- Slide 7: Project Lexicon & Glossary -->
     <div class="tab-content" id="tab-6">
-        <h2>🗣️ Slide 7: Advisor Q&A Defense</h2>
+        <h2>📚 Slide 7: Dead Sea Scrolls NLP Lexicon & Terminology Glossary</h2>
+        <p>A reference guide to the 12 novel epigraphic NLP terms and methodological concepts introduced in this research:</p>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Term / Methodological Concept</th>
+                        <th>Epigraphic & Technical Definition</th>
+                        <th>Impact / Usage in Paper</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight">
+                        <td><strong>Zero-Leak Redaction Filter</strong></td>
+                        <td>Automated stripping of modern scholar bracketed guesses (<code>rec=1</code> in Text-Fabric, e.g. <code>ס[רכי]ך</code> → <code>ס⬚⬚ך</code>) before model input.</td>
+                        <td>Guarantees 100% leak-free conditioning strictly on verified physical parchment ink (<code>rec=0</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dual-Track Evaluation Architecture</strong></td>
+                        <td>Framework separating synthetic cloze testing under 30% word masking (Track A: <code>scatter-30</code>) from physical manuscript ink dropouts (Track B: <code>lacuna-real</code>).</td>
+                        <td>Prevents mixing synthetic toy benchmarks with real manuscript restoration tasks.</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td><strong>Headline All-Words Metric</strong> (<code>unaligned = miss</code>)</td>
+                        <td>Scoring rule where any sub-word prediction that fails to align with character-bounded physical gaps counts as 0.0 hit accuracy.</td>
+                        <td>Penalizes WordPiece tokenizers (MsBERT) for dropping 38.3% of hard words (13.31% headline score).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Information Regimes</strong> (U0, O-len, P0)</td>
+                        <td>Epigraphic input constraint levels: <strong>U0</strong> (unconstrained context only), <strong>O-len</strong> (gold character length proxy), and <strong>P0</strong> (physical ink budget + partial stroke traces).</td>
+                        <td>Tracks exact accuracy jumps: 9.5% (U0) → 23.6% (O-len) → 66.2% (P0 Top-10).</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td><strong>LengthEnsembleCharMLMGenerator</strong></td>
+                        <td>Ensemble beam search generator for unknown-length multi-word lacunae that loops character lengths L ∈ [3, 15] with length-penalty scoring <code>Score = (Sum log P) / L<sup>0.5</sup></code>.</td>
+                        <td>Breaks the 0.0% failure wall of single-length MLMs on multi-word gaps (14.2% Hit@10).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pesher-Specific Source Retrieval Module</strong></td>
+                        <td>Quote-aware RAG engine that detects ancient commentary citation formulas (<code>פשרו על</code>) and retrieves the quoted biblical book via character n-gram TF-IDF matching.</td>
+                        <td>Recovers the correct biblical source book 86.57% Top-1 / 99.14% Top-3 times on Pesher commentary lacunae (Table A2).</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td><strong>Morpho-Lemmatic Scoring</strong> (<code>normalize_hebrew_lemma()</code>)</td>
+                        <td>Relaxed evaluation metric that strips Hebrew prepositions (<code>ב,כ,ל,מ</code>), conjunctions (<code>ו</code>), articles (<code>ה</code>), and suffix inflections (<code>-ים, -ות</code>), scoring underlying root lemmas.</td>
+                        <td>Proves that 45% of model "errors" are valid morphological synonyms (e.g. <code>סרכים</code> vs <code>סרך</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Manuscript-Disjoint SHA-1 Partitioning</strong></td>
+                        <td>Deterministic algorithm (<code>SHA1(scroll_id) mod 100</code>) partitioning 732 non-biblical scrolls into 531 train / 108 val / 93 test with zero straddling scrolls.</td>
+                        <td>Eliminates text memorization across fragments of identical manuscripts.</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td><strong>Character-Level MLM (Char-MLM)</strong></td>
+                        <td>Transformer encoder architecture (TavBERT, DictaBERT-char) operating directly on single-character vocabularies (|V| ≈ 30–50).</td>
+                        <td>Enables arbitrary character-length lacuna masking without WordPiece alignment failures.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Physical Ink Trace Budget (P0 Filter)</strong></td>
+                        <td>Character probability filter <code>P(c_i | c_&lt;i) = P_model(c_i | c_&lt;i)</code> if <code>c_i = P[i]</code> else 0, constraining beam search directly to surviving ink strokes.</td>
+                        <td>Pushes TavBERT accuracy from 23.65% to 64.86% Top-10 on real Dead Sea Scroll fragments.</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td><strong>Un-aligned WordPiece Dropping</strong></td>
+                        <td>The systematic failure of sub-word tokenizers (MsBERT) to generate token sequences matching character-bounded physical gaps (38.3% of test words).</td>
+                        <td>Exposes why standard sub-word NLP models fail for physical epigraphy.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hapax Legomena Recovery Gap</strong></td>
+                        <td>Diagnostic failure mode (15% of errors) where lacuna target words occur only once in the entire Qumran corpus.</td>
+                        <td>Identifies rare sectarian vocabulary requiring dynamic IDF score boosting.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Slide 8: Advisor Q&A Defense -->
+    <div class="tab-content" id="tab-7">
+        <h2>🗣️ Slide 8: Advisor Q&A Defense</h2>
         <p>Click any card to review bulletproof answers for tough advisor questions during your presentation:</p>
 
         <div class="qa-card">
@@ -1202,9 +1283,9 @@
         </div>
     </div>
 
-    <!-- Slide 8: Data Provenance Map -->
-    <div class="tab-content" id="tab-7">
-        <h2>📂 Slide 8: Data Provenance Map & Source Acquisition Timeline</h2>
+    <!-- Slide 9: Data Provenance Map -->
+    <div class="tab-content" id="tab-8">
+        <h2>📂 Slide 9: Data Provenance Map & Source Acquisition Timeline</h2>
         <p>Every metric, split, and lacuna in this project traces directly back to authoritative, timestamped digital humanities databases:</p>
 
         <div class="table-container">

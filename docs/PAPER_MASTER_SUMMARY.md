@@ -334,9 +334,19 @@ $$P(c_i \mid c_{<i}) = \begin{cases} P_{\text{model}}(c_i \mid c_{<i}) & \text{i
 ---
 
 ### 7.4 Length-Ensemble Beam Search for Unknown-Length Lacunae
-On multi-word gaps where exact character length is unknown, standard MLMs score 0.0%. We resolve this with [`LengthEnsembleCharMLMGenerator`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/eval/candidate_generator.py), evaluating candidate character lengths $L \in [L_{\min}, L_{\max}]$ with length-penalty scoring:
+#### Why Standard BERT Models Fail on Multi-Word Gaps
+1. **Fixed Token Count Requirement:** Standard BERT MLMs (e.g. WordPiece MsBERT or fixed-length character MLMs) require inserting an exact, fixed number of `[MASK]` tokens upfront. BERT cannot dynamically alter sequence length during inference.
+2. **WordPiece Token-to-Character Disconnect:** In WordPiece tokenization (MsBERT), 1 token can represent 1 character (`ו`), 3 characters (`אמר`), or an entire word. A physical hole of unknown length cannot be mapped to a fixed WordPiece token count without causing alignment failures (Table 1: 38.3% unaligned misses).
+3. **Catastrophic Failure (0.0% Hit@10):** When forced to predict multi-word lacunae under a single fixed token length, standard BERT models collapse to **0.0% Hit@10**.
+
+#### How `LengthEnsembleCharMLMGenerator` Solves It
+We overcome this limitation using a Character-Level MLM (TavBERT / DictaBERT-char) where 1 token = exactly 1 character:
+- **Character Length Ensembling ($L \in [3, 15]$):** We iterate candidate character gap lengths $L$ from 3 to 15 characters, running character-level beam search for each candidate length.
+- **Length-Penalty Log-Probability Scoring:** Candidates across all lengths $L$ are unified and re-ranked using length-normalized log-probability scoring:
 
 $$\text{Score}(C_L) = \frac{\sum_{i=1}^{L} \log P(c_i \mid c_{<i}, \text{context})}{L^{\alpha}}, \quad \alpha = 0.5$$
+
+- **Empirical Result (Table 3):** Breaks the 0.0% failure wall of single-length MLMs, achieving **14.2% Hit@10** on unknown-length multi-word lacunae (approaching the 16.7% Oracle Length $O\text{-len}$ upper bound).
 
 ---
 

@@ -831,10 +831,10 @@
             <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Paper Body</span>
         </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 3 (Multi-Word Gaps) <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 3 (Why Standard BERT Fails & LengthEnsemble Solution) <span>▼</span></div>
             <div class="qa-body">
-                <strong>Philological Intuition:</strong> Tests how to restore long torn physical holes where the epigrapher does not even know how many words or characters are missing.<br>
-                <strong>How Calculated:</strong> <code>LengthEnsembleCharMLMGenerator</code> loops candidate character lengths L ∈ [3, 15], scoring candidate sequences with length-penalty log-probability scoring Score(C_L) = (Sum log P) / L<sup>0.5</sup>, breaking the 0.0% failure wall of single-length MLMs.
+                <strong>Why Standard BERT Models Fail (0.0% Hit@10):</strong> Standard BERT models (WordPiece MsBERT & fixed-length MLMs) require an exact, fixed number of <code>[MASK]</code> tokens upfront. They cannot dynamically alter output length during inference. In physical lacunae of unknown character length, guessing a fixed token length causes single-length BERT MLMs to collapse to 0.0% accuracy.<br><br>
+                <strong>How Our LengthEnsemble Works (14.2% Hit@10):</strong> <code>LengthEnsembleCharMLMGenerator</code> operates on Character MLMs (TavBERT) where 1 token = 1 character. It loops candidate character lengths L ∈ [3, 15], running beam search for each length, and re-ranks all candidates using length-penalty log-probability scoring <code>Score = (Sum log P) / L<sup>0.5</sup></code>, breaking the 0.0% failure wall (approaching the 16.7% Oracle Length upper bound).
             </div>
         </div>
         <div class="table-container">
@@ -1279,6 +1279,13 @@
             <div class="qa-header" onclick="toggleQA(this)">Q4: "How do we get the Human Scholar Baseline (20.3% Top-1 / 43.2% Top-10)?" <span>▼</span></div>
             <div class="qa-body">
                 "On the 74 Qumran-Digital targets, we evaluated initial preliminary DJD edition readings against final Qimron collated restorations. Initial human scholar readings match final restoration 20.3% Top-1. TavBERT FT-Optimal reaches 47.30% Top-1—more than doubling first-pass human retrieval rates."
+            </div>
+        </div>
+
+        <div class="qa-card">
+            <div class="qa-header" onclick="toggleQA(this)">Q5: "Why couldn't standard BERT models handle unknown-length multi-word lacunae?" <span>▼</span></div>
+            <div class="qa-body">
+                "Standard BERT models require inserting a fixed number of <code>[MASK]</code> tokens upfront and cannot alter output sequence length during inference. In WordPiece BERT (MsBERT), 1 token does not equal 1 character, so guessing token counts causes total alignment failure. Standard single-length BERT MLMs collapse to 0.0% Hit@10. We solved this with <code>LengthEnsembleCharMLMGenerator</code>, which loops character lengths L ∈ [3, 15] in TavBERT and re-ranks candidates with length-penalty scoring (Score = (Sum log P) / L<sup>0.5</sup>), achieving 14.2% Hit@10."
             </div>
         </div>
     </div>

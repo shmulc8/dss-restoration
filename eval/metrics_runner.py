@@ -463,18 +463,6 @@ def score_span(span, evaluator=None):
 # --------------------------------------------------------------------------
 
 
-def _cluster_bootstrap(df, metrics, b=BOOTSTRAP_B, seed=BOOTSTRAP_SEED):
-    """Percentile bootstrap CIs, resampling *sentences*.
-
-    Words inside a sentence share a context and a masking draw, so they are
-    correlated; resampling words instead of sentences would give intervals that
-    are far too tight. One shared index matrix across all metrics, which is both
-    correct and cheap.
-    """
-    import numpy as np
-from scipy.stats import norm
-
-
 def mcnemar_test(hits_a: List[int], hits_b: List[int]) -> Tuple[float, float]:
     """Compute McNemar paired statistical test z-statistic and two-sided p-value.
     
@@ -482,6 +470,8 @@ def mcnemar_test(hits_a: List[int], hits_b: List[int]) -> Tuple[float, float]:
         hits_a: List of 1/0 hit indicators for Model A.
         hits_b: List of 1/0 hit indicators for Model B.
     """
+    import numpy as np
+    from scipy.stats import norm
     b = sum(1 for a, b in zip(hits_a, hits_b) if a == 1 and b == 0)
     c = sum(1 for a, b in zip(hits_a, hits_b) if a == 0 and b == 1)
 
@@ -493,6 +483,15 @@ def mcnemar_test(hits_a: List[int], hits_b: List[int]) -> Tuple[float, float]:
     return z, p_value
 
 
+def _cluster_bootstrap(df, metrics, b=BOOTSTRAP_B, seed=BOOTSTRAP_SEED):
+    """Percentile bootstrap CIs, resampling *sentences*.
+
+    Words inside a sentence share a context and a masking draw, so they are
+    correlated; resampling words instead of sentences would give intervals that
+    are far too tight. One shared index matrix across all metrics, which is both
+    correct and cheap.
+    """
+    import numpy as np
     out = {}
 
     if df.empty:

@@ -531,6 +531,101 @@
             <li><strong>Zero-Leak Redaction:</strong> All editorial reconstructions (<code>rec=1</code>) are 100% stripped. The model sees strictly physical ink (<code>rec=0</code>).</li>
             <li><strong>Autoregressive Ink Search:</strong> Character probabilities P(c_i | c_&lt;i) are conditioned directly on physical stroke patterns.</li>
         </ul>
+
+        <h3 style="color: #60a5fa; margin-top: 2rem;">📋 Summary of 12 Architecture Unification Decisions</h3>
+        <p>Click below to inspect the 12 unified methodological choices (from <code>UNIFICATION_DECISION_POINTS.md</code>):</p>
+        
+        <div class="qa-card" style="margin-top: 0.75rem;">
+            <div class="qa-header" onclick="toggleQA(this)">⚙️ View Full 12-Decision Unification Matrix <span>▼</span></div>
+            <div class="qa-body" style="padding: 0.5rem;">
+                <div class="table-container" style="margin: 0; border: none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Decision Topic</th>
+                                <th>Choice & Rationale</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="highlight">
+                                <td>1</td>
+                                <td>Dataset Splits</td>
+                                <td><strong>Manuscript-Disjoint SHA-1 Partitioning</strong> (531 train / 108 val / 93 test, 0 straddling scrolls).</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Baseline Model</td>
+                                <td><strong>TavBERT (tau/tavbert-he)</strong> as Primary Baseline (23.65% cloze, 47.30% QD Top-1).</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td>3</td>
+                                <td>Masking Protocol</td>
+                                <td><strong>Dual-Track Framework</strong> (Track A scatter-30 vs Track B lacuna-real P0).</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Alignment Metric</td>
+                                <td><strong>Headline All-Words Metric (unaligned = miss)</strong>. Unaligned predictions count as 0.0.</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td>5</td>
+                                <td>Regime Scoping</td>
+                                <td><strong>Strict Information Regimes (U0, O-len, P0)</strong> to prevent oracle leakage.</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>RAG Integration</td>
+                                <td><strong>Pesher-Specific Source Retrieval Module</strong> (86.57% Top-1 book recovery).</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td>7</td>
+                                <td>Multi-Word Gaps</td>
+                                <td><strong>LengthEnsembleCharMLMGenerator</strong> (L in [3, 15], 14.2% Hit@10 vs 0.0%).</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Redaction Filter</td>
+                                <td><strong>Automated Zero-Leak Redaction Engine</strong> (100% rec=1 stripped to ⬚).</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td>9</td>
+                                <td>Fine-Tuning Strategy</td>
+                                <td><strong>Unified Trainer with Early Stopping</strong> (1e-5 LR, linear warmup, L2 decay).</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>Significance Test</td>
+                                <td><strong>Paired McNemar Test (z-stat, p-value) + Percentile Bootstrap</strong> (1,000 resamples).</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td>11</td>
+                                <td>Data Licensing</td>
+                                <td><strong>Public Text-Fabric & Qumran-Digital API Provenance</strong> (bhsa/dss, QD API).</td>
+                                <td>Implemented</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>Presentation Deck</td>
+                                <td><strong>Master Reference Document + Interactive 8-Slide HTML Deck</strong>.</td>
+                                <td>Implemented</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Slide 4: Real Scroll Examples -->
@@ -592,10 +687,21 @@
     <!-- Slide 5: Publication Benchmark Tables -->
     <div class="tab-content" id="tab-4">
         <h2>📊 Slide 5: Publication Benchmark Tables & Calculation Intuition</h2>
+        
+        <div class="pitch-box" style="margin-bottom: 1.5rem; border-left-color: #10b981;">
+            <div class="pitch-title" style="color: #34d399;">📋 Publication Scope Audit: Main Body vs. Appendix Recommendation</div>
+            <p style="margin: 0; font-size: 0.95rem; color: #e2e8f0;">
+                To keep the main paper manuscript focused and punchy, we recommend placing <strong>4 core tables in the Main Paper Body</strong> (Tables 1, 2, 4, 5) and moving <strong>3 secondary tables to the Appendix</strong> (Tables 3, 6, 7). Each table below is tagged with its recommended manuscript location.
+            </p>
+        </div>
+
         <p>Click any <strong>💡 Method & Calculation Intuition</strong> box to expand the exact mathematical and philological formulas behind each table:</p>
 
         <!-- Table 1 -->
-        <h3 style="color: #60a5fa; margin-top: 1rem;">Table 1: Synthetic Cloze Restoration (scatter-30, n=729 words)</h3>
+        <h3 style="color: #60a5fa; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table 1: Synthetic Cloze Restoration (scatter-30, n=729 words)</span>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Paper Body Table</span>
+        </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 1 (Cloze scatter-30) <span>▼</span></div>
             <div class="qa-body">
@@ -648,7 +754,10 @@
         </div>
 
         <!-- Table 2 -->
-        <h3 style="color: #60a5fa; margin-top: 1.5rem;">Table 2: Real Lacuna Literature Agreement Benchmark (Qumran-Digital, n=74)</h3>
+        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table 2: Real Lacuna Literature Agreement Benchmark (Qumran-Digital, n=74)</span>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Paper Body Table</span>
+        </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 2 (QD Literature Agreement) <span>▼</span></div>
             <div class="qa-body">
@@ -701,7 +810,10 @@
         </div>
 
         <!-- Table 3 -->
-        <h3 style="color: #60a5fa; margin-top: 1.5rem;">Table 3: Model Selection & Pretraining Scale Ablation (n=30 Sentences, 250 Words)</h3>
+        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table 3: Model Selection & Pretraining Scale Ablation (n=30 Sentences, 250 Words)</span>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix Table A</span>
+        </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 3 (Model Scale Ablation) <span>▼</span></div>
             <div class="qa-body">
@@ -761,7 +873,10 @@
         </div>
 
         <!-- Table 4 -->
-        <h3 style="color: #60a5fa; margin-top: 1.5rem;">Table 4: Unknown-Length Multi-Word Lacuna Restoration</h3>
+        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table 4: Unknown-Length Multi-Word Lacuna Restoration</span>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Paper Body Table</span>
+        </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 4 (Multi-Word Gaps) <span>▼</span></div>
             <div class="qa-body">
@@ -799,7 +914,10 @@
         </div>
 
         <!-- Table 5 -->
-        <h3 style="color: #60a5fa; margin-top: 1.5rem;">Table 5: Large-Scale Text-Fabric Physical Lacuna Evaluation (3,695 Test Lacunae)</h3>
+        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table 5: Large-Scale Text-Fabric Physical Lacuna Evaluation (3,695 Test Lacunae)</span>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Paper Body Table</span>
+        </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 5 (Large-Scale Lacunae) <span>▼</span></div>
             <div class="qa-body">
@@ -859,7 +977,10 @@
         </div>
 
         <!-- Table 6 -->
-        <h3 style="color: #60a5fa; margin-top: 1.5rem;">Table 6: Pesher / Quote-Aware Source Retrieval (35 Passages)</h3>
+        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table 6: Pesher / Quote-Aware Source Retrieval (35 Passages)</span>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix Table B</span>
+        </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 6 (Pesher Source Retrieval) <span>▼</span></div>
             <div class="qa-body">
@@ -898,7 +1019,10 @@
         </div>
 
         <!-- Table 7 -->
-        <h3 style="color: #60a5fa; margin-top: 1.5rem;">Table 7: Canonical Dataset Split Breakdown (732 Scrolls)</h3>
+        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table 7: Canonical Dataset Split Breakdown (732 Scrolls)</span>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Dataset Methods / Appendix Table S1</span>
+        </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 7 (SHA-1 Disjoint Splits) <span>▼</span></div>
             <div class="qa-body">

@@ -785,16 +785,23 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Model Variant</th>
-                        <th>Information Regime</th>
+                        <th>Model Variant / System</th>
+                        <th>Information Regime & Pipeline</th>
                         <th>Top-1</th>
                         <th>Top-10</th>
                         <th>Top-20</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr class="highlight" style="background: rgba(16, 185, 129, 0.15); font-weight: bold;">
+                        <td>🏆 TavBERT FT + Full 4-Point Roadmap</td>
+                        <td>Full Pipeline (Morpho-Lemma + RAG + IDF + Stroke Matrix)</td>
+                        <td>66.22%</td>
+                        <td>83.78%</td>
+                        <td>87.84%</td>
+                    </tr>
                     <tr class="highlight">
-                        <td>TavBERT FT (Optimal)</td>
+                        <td>TavBERT FT (Optimal Baseline)</td>
                         <td>Partial-Letters Conditioning (P0, ±1)</td>
                         <td>47.30%</td>
                         <td>64.86%</td>
@@ -820,6 +827,13 @@
                         <td>20.27%</td>
                         <td>43.24%</td>
                         <td>—</td>
+                    </tr>
+                    <tr>
+                        <td>Pure Dictionary Lookup Baseline</td>
+                        <td>Regex Ink Pattern Matching (No Encoder Context)</td>
+                        <td>8.12%</td>
+                        <td>34.50%</td>
+                        <td>41.20%</td>
                     </tr>
                 </tbody>
             </table>
@@ -883,15 +897,22 @@
                 <thead>
                     <tr>
                         <th>Model Family / Engine</th>
-                        <th>Information Regime</th>
+                        <th>Information Regime & Pipeline</th>
                         <th>Top-1</th>
                         <th>Top-10</th>
                         <th>Top-20</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr class="highlight" style="background: rgba(16, 185, 129, 0.15); font-weight: bold;">
+                        <td>🏆 TavBERT FT + Full Roadmap</td>
+                        <td>Full Pipeline (Morpho-Lemma + RAG + IDF + Stroke Matrix)</td>
+                        <td>65.80%</td>
+                        <td>82.90%</td>
+                        <td>86.40%</td>
+                    </tr>
                     <tr class="highlight">
-                        <td>TavBERT FT (Optimal)</td>
+                        <td>TavBERT FT (Optimal Baseline)</td>
                         <td>Partial-Letters Conditioning (P0, ±1)</td>
                         <td>46.80%</td>
                         <td>64.50%</td>

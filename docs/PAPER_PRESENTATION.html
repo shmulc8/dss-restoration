@@ -394,6 +394,84 @@
             color: var(--text-muted);
             font-size: 0.85rem;
         }
+
+        /* Evidence-status banner */
+        .evidence-banner {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-left: 4px solid var(--accent-gold);
+            border-radius: 14px;
+            padding: 1.1rem 1.4rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.92rem;
+            color: #e2e8f0;
+            line-height: 1.65;
+        }
+
+        .evidence-banner strong { color: #fbbf24; }
+
+        /* Claim-status tags */
+        .tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            padding: 0.15rem 0.55rem;
+            border-radius: 9999px;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .tag-measured {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        .tag-pilot {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .tag-unmeasured {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.7rem;
+            border-radius: 9999px;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        /* Artifact source citation */
+        .src {
+            display: block;
+            margin-top: 0.3rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #7c8798;
+            word-break: break-word;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.92em;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 0.1rem 0.35rem;
+            border-radius: 5px;
+        }
+
+        .error-item .error-label { align-items: flex-start; gap: 1.5rem; }
     </style>
 </head>
 <body>
@@ -402,28 +480,39 @@
     <header>
         <div class="header-title">
             <h1>Dead Sea Scrolls Text Restoration</h1>
-            <p>Unified Epigraphic & Character-Level Language Modeling Framework (Advisor Presentation Deck)</p>
+            <p>Physical-Evidence Conditioning for Character-Level Restoration — Evidence Register Deck</p>
         </div>
-        <div class="slide-counter" id="slide-num-badge">Slide 1 of 8</div>
+        <div class="slide-counter" id="slide-num-badge">Slide 1 of 9</div>
     </header>
+
+    <div class="evidence-banner">
+        <strong>Evidence status.</strong> Every number on these slides is traceable to a generated artifact under
+        <code>analysis/reports/</code>, <code>external_comparison/results/</code>, or <code>data/</code>, and the source file is
+        named beside it. Per <code>docs/RESULTS.md</code>, <strong>no result here is yet a frozen paper result</strong>:
+        the real-lacuna benchmark is a literature-agreement pilot at <em>n</em>=74, the cloze benchmark is a
+        synthetic-damage diagnostic, and several pipeline components are implemented but not yet evaluated.
+        Claims are labelled <span class="tag tag-measured">measured</span>,
+        <span class="tag tag-pilot">pilot</span>, or
+        <span class="tag tag-unmeasured">not yet measured</span>.
+    </div>
 
     <!-- Key Metrics Grid -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-value emerald">+56.76%</div>
-            <div class="stat-label">Physical Evidence Gain (9.46% → 66.22%)</div>
+            <div class="stat-value emerald">9.5% → 63.5%</div>
+            <div class="stat-label">Real-lacuna Top-10, unconstrained (U0) vs. physical conditioning (P0), n=74</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">23.65%</div>
-            <div class="stat-label">TavBERT FT-Optimal Cloze Hit@10</div>
+            <div class="stat-value">29.7%</div>
+            <div class="stat-label">Damaged words retaining visible ink (49,130 / 165,239)</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value purple">47.30%</div>
-            <div class="stat-label">Real Lacuna Top-1 Accuracy (QD n=74)</div>
+            <div class="stat-value purple">21.1%</div>
+            <div class="stat-label">Best measured synthetic cloze Hit@10 (scatter-30, n=729)</div>
         </div>
         <div class="stat-card">
             <div class="stat-value gold">27,814</div>
-            <div class="stat-label">Physical Scroll Lacunae Evaluated</div>
+            <div class="stat-label">Physical lacunae parsed from Text-Fabric (3,695 in test split)</div>
         </div>
     </div>
 
@@ -431,14 +520,14 @@
     <div class="nav-bar">
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab(0)">🏁 1. Problem & Primer</button>
-            <button class="tab-btn" onclick="switchTab(1)">💡 2. Why Standard MLMs Fail</button>
-            <button class="tab-btn" onclick="switchTab(2)">⚡ 3. Core Innovation & Safeguards</button>
-            <button class="tab-btn" onclick="switchTab(3)">📜 4. Real Scroll Examples</button>
+            <button class="tab-btn" onclick="switchTab(1)">💡 2. Where Standard MLMs Break</button>
+            <button class="tab-btn" onclick="switchTab(2)">⚡ 3. Safeguards & Decisions</button>
+            <button class="tab-btn" onclick="switchTab(3)">📜 4. Real Scroll Cases</button>
             <button class="tab-btn" onclick="switchTab(4)">📊 5. Benchmark Tables</button>
-            <button class="tab-btn" onclick="switchTab(5)">🔍 6. Error Analysis & Roadmap</button>
-            <button class="tab-btn" onclick="switchTab(6)">📚 7. Project Lexicon & Glossary</button>
-            <button class="tab-btn" onclick="switchTab(7)">🗣️ 8. Advisor Q&A Defense</button>
-            <button class="tab-btn" onclick="switchTab(8)">📂 9. Data Provenance Map</button>
+            <button class="tab-btn" onclick="switchTab(5)">🔍 6. Diagnostics & Roadmap</button>
+            <button class="tab-btn" onclick="switchTab(6)">📚 7. Lexicon & Glossary</button>
+            <button class="tab-btn" onclick="switchTab(7)">🗣️ 8. Advisor Q&A</button>
+            <button class="tab-btn" onclick="switchTab(8)">📂 9. Data Provenance</button>
         </div>
         <div class="slide-controls">
             <button class="ctrl-btn" onclick="prevSlide()">← Prev</button>
@@ -449,95 +538,151 @@
     <!-- Slide 1: Problem & Primer -->
     <div class="tab-content active" id="tab-0">
         <h2>🏁 Slide 1: What Problem Are We Solving?</h2>
-        <p>The Dead Sea Scrolls (2,000-year-old manuscripts) are among humanity's greatest cultural treasures, but their parchment fragments are severely damaged by rot and tearing.</p>
+        <p>The Dead Sea Scrolls are 2,000-year-old manuscripts whose parchment has decayed and torn, leaving
+        gaps ("lacunae") in the text. Editors fill these gaps by hand, over decades.</p>
 
         <div class="pipeline-flow">
             <div class="flow-step">
                 <div class="flow-num">A</div>
                 <div class="flow-text">
-                    <h4>The Philological Challenge (Lacuna Restoration)</h4>
-                    <p>Editors spend decades attempting to fill in missing manuscript gaps ("lacunae"). Manual reconstruction is slow and subject to scholarly bias.</p>
+                    <h4>The Philological Task (Lacuna Restoration)</h4>
+                    <p>Reconstructing a missing word is slow, and competing proposals by different editors are
+                    common — the Qumran-Digital variant database records 1,811 published reading proposals for
+                    the sites we sampled.</p>
                 </div>
             </div>
             <div class="flow-step">
                 <div class="flow-num">B</div>
                 <div class="flow-text">
-                    <h4>The Unconstrained AI Pitfall (&lt;10% Accuracy)</h4>
-                    <p>Previous AI models treated scroll restoration as open-ended text generation, ignoring physical hole sizes and surviving partial ink traces.</p>
+                    <h4>Unconstrained Language Modeling Is Weak Here <span class="tag tag-pilot">pilot</span></h4>
+                    <p>Asked to fill a real lacuna from context alone (regime U0), a fine-tuned MLM places an
+                    attributed scholarly reading in its Top-10 for <strong>9.5%</strong> of targets (n=74).</p>
                 </div>
             </div>
             <div class="flow-step">
                 <div class="flow-num">C</div>
                 <div class="flow-text">
-                    <h4>Our Solution (66.2% Accuracy)</h4>
-                    <p>We built the first manuscript-disjoint benchmark conditioning character language models directly on physical ink traces (e.g. <code>סר⬚⬚ך</code> → <strong>סרכיך</strong>).</p>
+                    <h4>Physical Evidence Is What Moves the Needle <span class="tag tag-pilot">pilot</span></h4>
+                    <p>Conditioning the same model on the surviving ink of the damaged word plus an approximate
+                    gap length (regime P0, ±1 char) raises Top-10 to <strong>63.5%</strong> on the same 74 targets
+                    — a <strong>+54.0 pp</strong> gain. This measures the value of the physical evidence supplied
+                    to the decoder, <em>not</em> an improvement in the language model.</p>
                 </div>
             </div>
         </div>
+
+        <div class="pitch-box">
+            <div class="pitch-title">Why the physical channel exists at all</div>
+            <p style="margin:0;">Across the 27,814 parsed lacunae, <strong>85.0%</strong> contain at least one
+            damaged word that still shows ink, and <strong>29.7%</strong> of individual damaged words carry a
+            partial trace (49,130 / 165,239). Roughly seven in ten damaged words show nothing — the P0 regime
+            simply does not apply to them, which bounds how far this approach can reach.
+            <span class="src">data/derived/nonbib_lacunae.jsonl</span></p>
+        </div>
     </div>
 
-    <!-- Slide 2: Why Standard MLMs Fail -->
+    <!-- Slide 2: Where Standard MLMs Break -->
     <div class="tab-content" id="tab-1">
-        <h2>💡 Slide 2: Why Do Standard Masked Language Models Fail (&lt;10% Accuracy)?</h2>
-        <p>Standard language models fail on real manuscript lacunae due to fundamental architectural mismatches:</p>
+        <h2>💡 Slide 2: Where Standard Model Families Break</h2>
+        <p>Measured on the synthetic cloze benchmark (Track A, <code>scatter-30</code>): 100 held-out sentences,
+        729 masked words, gold character length supplied as a proxy (regime O-len).
+        <span class="tag tag-measured">measured</span></p>
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>Model Family & Example</th>
-                        <th>Tokenizer Architecture</th>
-                        <th>Why Unconstrained U0 Fails (&lt;10%)</th>
-                        <th>Unconstrained Top-10</th>
+                        <th>Tokenizer</th>
+                        <th>Failure Mode on Character-Bounded Gaps</th>
+                        <th>Cloze Hit@10<br><span style="font-weight:400;">(all-words, unaligned = miss)</span></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>Sub-Word MLMs</strong> (MsBERT)</td>
-                        <td>WordPiece / BPE Tokens</td>
-                        <td>Predicts tokens from a 30,000+ vocabulary without constraining character length or partial letter ink traces inside tokens.</td>
-                        <td style="color: #f87171; font-weight: 700;">9.20%</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Seq2Seq Models</strong> (ByT5)</td>
-                        <td>Raw Byte Streams</td>
-                        <td>Generates byte streams auto-regressively without physical gap length budget constraints.</td>
+                        <td><strong>Seq2Seq byte models</strong> (ByT5, fine-tuned)</td>
+                        <td>Raw byte stream</td>
+                        <td>Generates bytes autoregressively; no gap-length budget is enforced during decoding.</td>
                         <td style="color: #f87171; font-weight: 700;">5.35%</td>
                     </tr>
+                    <tr>
+                        <td><strong>Sub-word MLMs</strong> (MsBERT, fine-tuned)</td>
+                        <td>WordPiece (|V| = 128,000)</td>
+                        <td>Cannot emit a token sequence matching a character-bounded gap for
+                        <strong>279 / 729 words (38.3%)</strong>. Aligned-only scoring reports 21.56%; all-words
+                        scoring counts those 279 as misses.</td>
+                        <td style="color: #f87171; font-weight: 700;">13.31%</td>
+                    </tr>
                     <tr class="highlight">
-                        <td><strong>Character MLMs</strong> (TavBERT / DictaBERT-char)</td>
-                        <td>Character-Level Tokens</td>
-                        <td>Enables native character beam search conditioned directly on physical ink traces (P0).</td>
-                        <td style="color: #34d399; font-weight: 700;">66.22%</td>
+                        <td><strong>Character MLMs</strong> (TavBERT, base)</td>
+                        <td>Character-level (|V| ≈ 30–50)</td>
+                        <td>1 token = 1 character, so any gap length is directly expressible and
+                        <strong>0 / 729</strong> words go unaligned. This is what makes ink-trace conditioning
+                        possible at all.</td>
+                        <td style="color: #34d399; font-weight: 700;">21.12%</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+
+        <div class="pitch-box" style="border-left-color:#f59e0b;">
+            <div class="pitch-title" style="color:#fbbf24;">⚠️ What this table does and does not show</div>
+            <p style="margin:0;">All three rows are the <em>same</em> task under the <em>same</em> regime, so they
+            are comparable. What they do <strong>not</strong> show is the effect of physical conditioning — that is
+            a different benchmark on different data (Slide 5, Table 2), and the two must not be chained into a
+            single "9.5% → 63.5% → 21.1%" narrative. Character-level tokenization is an <em>enabling</em>
+            property here, not a large accuracy win: 21.12% vs. 13.31% is a modest gap with overlapping
+            confidence intervals.
+            <span class="src">external_comparison/results/summary_with_subsets.json</span></p>
+        </div>
     </div>
 
-    <!-- Slide 3: Core Innovation & Safeguards -->
+    <!-- Slide 3: Safeguards & Decisions -->
     <div class="tab-content" id="tab-2">
-        <h2>⚡ Slide 3: Core Innovation & Zero-Leak Redaction Engine</h2>
-        <p>To ensure rigorous, zero-cheat evaluation, our pipeline implements three core epigraphic safeguards:</p>
+        <h2>⚡ Slide 3: Leakage Safeguards & Unification Decisions</h2>
+        <p>Three safeguards govern every evaluation in this project:</p>
 
         <div class="redaction-box">
-            <div style="color: #94a3b8; font-weight: 600;">Interactive Redaction Visualizer</div>
-            <div class="hebrew-text" id="demo-hebrew">ס [ ר כ י ] ך</div>
-            <div id="demo-label" style="color: #f87171; font-size: 0.9rem; margin-bottom: 1rem;">Scholar Conjectures Present in Bracketed Edition (rec=1)</div>
-            <button class="toggle-btn" onclick="toggleRedaction()">Apply Zero-Leak Redaction Filter</button>
+            <div style="color: #94a3b8; font-weight: 600;">Redaction, on a real target (4Q303 frg. 1, l. 10)</div>
+            <div class="hebrew-text" id="demo-hebrew">כ [ נ ג ד ו</div>
+            <div id="demo-label" style="color: #f87171; font-size: 0.9rem; margin-bottom: 1rem;">Bracketed editorial reconstruction as printed in the digital edition (rec=1)</div>
+            <button class="toggle-btn" onclick="toggleRedaction()">Apply redaction filter</button>
         </div>
 
         <ul style="margin-left: 1.5rem; color: #d1d5db; line-height: 1.8;">
-            <li><strong>SHA-1 Scroll-Disjoint Splits:</strong> 732 scrolls partitioned by manuscript ID (531 train / 108 val / 93 test, 0 straddling scrolls).</li>
-            <li><strong>Zero-Leak Redaction:</strong> All editorial reconstructions (<code>rec=1</code>) are 100% stripped. The model sees strictly physical ink (<code>rec=0</code>).</li>
-            <li><strong>Autoregressive Ink Search:</strong> Character probabilities P(c_i | c_&lt;i) are conditioned directly on physical stroke patterns.</li>
+            <li><strong>Manuscript-disjoint splits:</strong> 732 scrolls partitioned by manuscript ID via
+            <code>SHA1(scroll_id) mod 100</code> — 531 train (72.5%) / 108 val (14.8%) / 93 test (12.7%),
+            0 straddling scrolls, verified by <code>utils/splits.py:validate_split_disjointness</code>.
+            <span class="tag tag-measured">measured</span>
+            <span class="src">data/splits/dss_scroll_splits_v1.json</span></li>
+            <li><strong>Reconstruction redaction:</strong> every sign flagged <code>rec=1</code> in Text-Fabric is
+            an editorial reconstruction and is dropped before the text reaches the model, which sees only
+            <code>rec=0</code> physical ink. The corpus builder never emits reconstruction text
+            (<code>modern_reconstruction_text_emitted: false</code>).
+            <span class="src">data/derived/preserved_nonbib_manifest.json</span></li>
+            <li><strong>Physical conditioning (P0):</strong> beam search over character candidates is filtered
+            against the surviving ink pattern and an approximate gap length (tolerance ±1 character).</li>
         </ul>
 
-        <h3 style="color: #60a5fa; margin-top: 2rem;">📋 Summary of 12 Architecture Unification Decisions</h3>
-        <p>Click below to inspect the 12 unified methodological choices (from <code>UNIFICATION_DECISION_POINTS.md</code>):</p>
-        
+        <div class="pitch-box" style="border-left-color:#f59e0b;">
+            <div class="pitch-title" style="color:#fbbf24;">⚠️ Open issue: two split registries coexist</div>
+            <p style="margin:0;">Two incompatible split definitions exist in the repository:
+            <code>dss_scroll_splits_v1.json</code> (canonical, 732 scrolls, 531/108/93) and the corpus manifest's
+            <code>scroll_splits</code> (736 scrolls, 413 train / 103 dev / 220 heldout). The QD real-lacuna
+            benchmark was run against the <em>manifest</em> registry, so 40 of its 74 targets fall in the
+            canonical registry's <strong>train</strong> split. Slide 5, Table 2 reports the canonical-clean
+            subsets alongside the headline figure. <strong>This must be consolidated before submission.</strong>
+            Separately, only 374 of the 732 registry scrolls yield a text chunk at all — the rest are too fragmentary
+            to reach the 20-preserved-word minimum, and a further 3 chunk-bearing scrolls are absent from the
+            registry entirely.</p>
+        </div>
+
+        <h3 style="color: #60a5fa; margin-top: 2rem;">📋 12 Unification Decisions — Implementation vs. Evidence</h3>
+        <p>"Implemented" means the code exists and is unit-tested. It does <strong>not</strong> mean the component
+        has been evaluated end-to-end; those two columns are kept separate deliberately.</p>
+
         <div class="qa-card" style="margin-top: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">⚙️ View Full 12-Decision Unification Matrix <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">⚙️ View the 12-decision matrix <span>▼</span></div>
             <div class="qa-body" style="padding: 0.5rem;">
                 <div class="table-container" style="margin: 0; border: none;">
                     <table>
@@ -545,95 +690,108 @@
                             <tr>
                                 <th>#</th>
                                 <th>Decision Topic</th>
-                                <th>State Before (Legacy Approach)</th>
-                                <th>Chosen Unified State & Rationale</th>
-                                <th>Status</th>
+                                <th>State Before</th>
+                                <th>Chosen State</th>
+                                <th>Code</th>
+                                <th>Evidence</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="highlight">
                                 <td>1</td>
-                                <td>Dataset Splits</td>
-                                <td>Random splits leaked fragments of same scroll across train/test.</td>
-                                <td><strong>Manuscript-Disjoint SHA-1 Partitioning</strong> (531 train / 108 val / 93 test, 0 straddling scrolls).</td>
+                                <td>Dataset splits</td>
+                                <td>Random splits leaked fragments of the same scroll across train/test.</td>
+                                <td><strong>Manuscript-disjoint SHA-1 partitioning</strong> (531 / 108 / 93, 0 straddling).</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">verified</span> but see two-registry issue above</td>
                             </tr>
                             <tr>
                                 <td>2</td>
-                                <td>Baseline Model</td>
-                                <td>DictaBERT-char was assumed default baseline; TavBERT un-evaluated.</td>
-                                <td><strong>TavBERT (tau/tavbert-he)</strong> as Primary Baseline (23.65% cloze, 47.30% QD Top-1).</td>
+                                <td>Baseline model</td>
+                                <td>DictaBERT-char assumed default; TavBERT un-evaluated.</td>
+                                <td><strong>TavBERT FT (Optimal)</strong> as the primary headline baseline model (23.65% Cloze Hit@10, 47.30% Real Lacuna Top-1).</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">measured</span> verified primary baseline</td>
                             </tr>
                             <tr class="highlight">
                                 <td>3</td>
-                                <td>Masking Protocol</td>
-                                <td>Literature mixed toy 15% word masking vs real physical scroll damage.</td>
-                                <td><strong>Dual-Track Framework</strong> (Track A scatter-30 vs Track B lacuna-real P0).</td>
+                                <td>Masking protocol</td>
+                                <td>Literature mixed 15% toy word masking with real physical damage.</td>
+                                <td><strong>Dual-track framework</strong> — Track A <code>scatter-30</code> (synthetic) vs. Track B <code>lacuna-real</code> (physical).</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">measured</span> both tracks</td>
                             </tr>
                             <tr>
                                 <td>4</td>
-                                <td>Alignment Metric</td>
-                                <td>MsBERT dropped 38.3% of words; earlier scripts scored aligned-only (21.56%).</td>
-                                <td><strong>Headline All-Words Metric (unaligned = miss)</strong>. Unaligned predictions count as 0.0 (MsBERT 13.31%).</td>
+                                <td>Alignment metric</td>
+                                <td>MsBERT drops 38.3% of words; earlier scripts scored aligned-only (21.56%).</td>
+                                <td><strong>All-words headline metric</strong> — unaligned predictions score 0.0, giving MsBERT 13.31%.</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">measured</span></td>
                             </tr>
                             <tr class="highlight">
                                 <td>5</td>
-                                <td>Regime Scoping</td>
-                                <td>Mixed gold lengths, ink traces, and context without clear boundaries.</td>
-                                <td><strong>Strict Information Regimes (U0, O-len, P0)</strong> to prevent oracle leakage.</td>
+                                <td>Regime scoping</td>
+                                <td>Gold lengths, ink traces and context mixed without boundaries.</td>
+                                <td><strong>Explicit regimes U0 / O-len / P0</strong> so that oracle information is never silently supplied.</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">measured</span></td>
                             </tr>
                             <tr>
                                 <td>6</td>
-                                <td>RAG Integration</td>
-                                <td>RAG across all texts caused hallucinated biblicisms on non-biblical texts.</td>
-                                <td><strong>Pesher-Specific Source Retrieval Module</strong> (86.57% Top-1 book recovery).</td>
+                                <td>Retrieval scope</td>
+                                <td>Retrieval across all texts produced biblicisms on non-biblical texts.</td>
+                                <td><strong>Quote-aware Pesher source retrieval</strong> (86.6% Top-1 book recovery on 35 known-source passages).</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">measured</span> (86.57% Top-1 book recovery, Table A2)</td>
                             </tr>
                             <tr class="highlight">
                                 <td>7</td>
-                                <td>Multi-Word Gaps</td>
-                                <td>Fixed-length MLMs collapsed to 0.0% on long gaps of unknown length.</td>
-                                <td><strong>LengthEnsembleCharMLMGenerator</strong> (L in [3, 15], 14.2% Hit@10 vs 0.0%).</td>
-                                <td>Implemented</td>
+                                <td>Multi-word gaps</td>
+                                <td>Fixed-length MLMs cannot vary output length (0.0% accuracy).</td>
+                                <td><strong>LengthEnsembleCharMLMGenerator</strong> — loops L ∈ [3, 15] with length-penalty re-ranking.</td>
+                                <td>Implemented, unit-tested</td>
+                                <td><span class="tag tag-measured">measured</span> (14.2% Hit@10 vs 0.0% single-length MLM, Table 3)</td>
                             </tr>
                             <tr>
                                 <td>8</td>
-                                <td>Redaction Filter</td>
-                                <td>Parser read bracketed scholar guesses ס[רכי]ך in digital editions.</td>
-                                <td><strong>Automated Zero-Leak Redaction Engine</strong> (100% rec=1 stripped to ⬚).</td>
+                                <td>Redaction filter</td>
+                                <td>Parser read bracketed editorial guesses from digital editions.</td>
+                                <td><strong>Reconstruction redaction</strong> — <code>rec=1</code> signs never emitted.</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">verified</span> 100% zero-leak redaction</td>
                             </tr>
                             <tr class="highlight">
                                 <td>9</td>
-                                <td>Fine-Tuning Strategy</td>
-                                <td>Fixed-epoch fine-tuning caused severe overfitting (20.58% FT vs 21.12% Base).</td>
-                                <td><strong>Unified Trainer with Validation Early Stopping</strong> (1e-5 LR, linear warmup, L2 decay, 23.65% FT).</td>
+                                <td>Fine-tuning strategy</td>
+                                <td>Fixed-epoch fine-tuning overfits.</td>
+                                <td><strong>Validation early stopping</strong> (1e-5 LR, linear warmup, weight decay).</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">measured</span> (TavBERT FT 23.65% vs TavBERT Base 21.12%)</td>
                             </tr>
                             <tr>
                                 <td>10</td>
-                                <td>Significance Test</td>
-                                <td>Point estimates reported without error bars or statistical tests.</td>
-                                <td><strong>Paired McNemar Test (z-stat, p-value) + Percentile Bootstrap</strong> (1,000 resamples).</td>
+                                <td>Uncertainty</td>
+                                <td>Point estimates without intervals.</td>
+                                <td><strong>Percentile cluster bootstrap</strong> (1,000 resamples) + paired <strong>McNemar significance test</strong> (p &lt; 0.01).</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">measured</span> (all model leads statistically significant, p &lt; 0.01)</td>
                             </tr>
                             <tr class="highlight">
                                 <td>11</td>
-                                <td>Data Licensing</td>
-                                <td>Loose data descriptions raised questions about license freshness.</td>
-                                <td><strong>Public Text-Fabric & Qumran-Digital API Provenance</strong> (bhsa/dss, QD API).</td>
+                                <td>Data licensing</td>
+                                <td>Loose provenance descriptions.</td>
+                                <td><strong>ETCBC/dss via Text-Fabric (CC BY-NC 4.0)</strong> + cached Qumran-Digital snapshot.</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">verified</span> — note the <strong>non-commercial</strong> licence</td>
                             </tr>
                             <tr>
                                 <td>12</td>
-                                <td>Presentation Deck</td>
-                                <td>Results scattered across dozens of individual scripts and notebooks.</td>
-                                <td><strong>Master Reference Document + Interactive 8-Slide HTML Deck</strong>.</td>
+                                <td>Reporting</td>
+                                <td>Results scattered across scripts and notebooks.</td>
+                                <td><strong>Evidence register (<code>docs/RESULTS.md</code>) + this 9-slide deck</strong>, both covered by <code>tests/test_public_claims.py</code>.</td>
                                 <td>Implemented</td>
+                                <td><span class="tag tag-measured">verified</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -642,87 +800,108 @@
         </div>
     </div>
 
-    <!-- Slide 4: Real Scroll Examples -->
+    <!-- Slide 4: Real Scroll Cases -->
     <div class="tab-content" id="tab-3">
-        <h2>📜 Slide 4: Five Real-World Dead Sea Scroll Restoration Examples</h2>
+        <h2>📜 Slide 4: Real Lacunae from the Canonical Test Split</h2>
+        <p>Five actual targets from the Qumran-Digital benchmark, all from scrolls in the
+        <strong>canonical test split</strong>, with the model's real ranked output. Predictions are from
+        <code>ft_msbert_span_preserved_nonbib</code> under P0 (±1 char). Two of the five are not Top-1 hits —
+        this is a representative sample, not a highlight reel.
+        <span class="tag tag-pilot">pilot</span></p>
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>Manuscript & Location</th>
-                        <th>Context & Ink Trace Pattern</th>
-                        <th>Model Top-1 Prediction</th>
-                        <th>Philological Translation</th>
-                        <th>Status</th>
+                        <th>Surviving Ink & Context</th>
+                        <th>Model Top-1</th>
+                        <th>Attributed Reading</th>
+                        <th>Outcome</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="highlight">
-                        <td>1QS Col. V, l. 1 (Community Rule)</td>
-                        <td><code>... וזה [הס⬚⬚ך] לאנשי ...</code></td>
-                        <td><strong>הסרך</strong></td>
-                        <td><em>ha-serek</em> ("the rule / order")</td>
-                        <td>✅ Top-1 Match</td>
+                        <td>4Q303 frg. 1, l. 10<br><span class="src">Meditation on Creation A</span></td>
+                        <td><code dir="rtl">... לו עזר כ⬚⬚⬚⬚</code><br><span class="src">visible כ, est. length 5</span></td>
+                        <td><strong>כנגדו</strong></td>
+                        <td><em>ke-negdo</em> ("corresponding to him")</td>
+                        <td>✅ Top-1</td>
                     </tr>
                     <tr>
-                        <td>1QH Col. XII, l. 6 (Hymns)</td>
-                        <td><code>... [או⬚⬚כה] אדוני כי ...</code></td>
-                        <td><strong>אודכה</strong></td>
-                        <td><em>odekha</em> ("I thank thee")</td>
-                        <td>✅ Top-1 Match</td>
+                        <td>4Q185 frg. 1-2 i, l. 14<br><span class="src">Sapiential Work</span></td>
+                        <td><code dir="rtl">... תמו מן ⬚בורת אלהים וזכרו</code><br><span class="src">visible בורת, est. length 5</span></td>
+                        <td><strong>גבורת</strong></td>
+                        <td><em>gevurat</em> ("the might of")</td>
+                        <td>✅ Top-1</td>
                     </tr>
                     <tr class="highlight">
-                        <td>4Q258 Frg. 1, l. 3 (Rule Frg)</td>
-                        <td><code>... ללכת לפניו [בת⬚⬚ם] ...</code></td>
-                        <td><strong>בתמים</strong></td>
-                        <td><em>be-tamim</em> ("in perfection / integrity")</td>
-                        <td>✅ Top-1 Match</td>
+                        <td>4Q185 frg. 1-2 i, l. 9</td>
+                        <td><code dir="rtl">... באש להבה ישפט⬚</code><br><span class="src">visible ישפט, est. length 5</span></td>
+                        <td><strong>ישפט</strong></td>
+                        <td><em>yishpot / yishpetu</em> ("he/they will judge")</td>
+                        <td>✅ Top-1</td>
                     </tr>
                     <tr>
-                        <td>CD Col. I, l. 4 (Damascus Doc)</td>
-                        <td><code>... [וב⬚⬚דו] פקד אותם ...</code></td>
-                        <td><strong>ובחסדו</strong></td>
-                        <td><em>u-ve-hasdo</em> ("and in His lovingkindness")</td>
-                        <td>✅ Top-1 Match</td>
+                        <td>1QpHab col. IV, l. 11<br><span class="src">Pesher Habakkuk</span></td>
+                        <td><code dir="rtl">... בעצת בית אשמ⬚⬚</code><br><span class="src">visible אשמ, est. length 5</span></td>
+                        <td>אשמות</td>
+                        <td><em>ashmim / ashmatam</em> ("their guilt")</td>
+                        <td>⚠️ Rank 2 — Top-1 was a different inflection</td>
                     </tr>
                     <tr class="highlight">
-                        <td>11Q11 Col. I, l. 2 (Apocryphal Ps)</td>
-                        <td><code>... שבועה ... [וב⬚⬚הו] ...</code></td>
-                        <td><strong>ובוכהו</strong></td>
-                        <td><em>u-vokhohu</em> ("and in his weeping")</td>
-                        <td>✅ Top-1 Match</td>
+                        <td>4Q163 frg. 4-7 i, l. 7<br><span class="src">Pesher Isaiah C</span></td>
+                        <td><code dir="rtl">... ⬚⬚לעים על כנ ...</code><br><span class="src">visible לעים, est. length 6</span></td>
+                        <td>הקלעים</td>
+                        <td><em>mevalim</em> — מבלעים ("swallowing")</td>
+                        <td>❌ Miss — model proposed קלעים / סלעים / תולעים</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+
+        <div class="pitch-box" style="border-left-color:#f59e0b;">
+            <div class="pitch-title" style="color:#fbbf24;">How to read these</div>
+            <p style="margin:0;">"Attributed reading" is a <em>modern published proposal</em> recorded by
+            Qumran-Digital, not physical ground truth — the original wording is lost. A hit means the model
+            agreed with a bibliographically attributed restoration. The last row shows the characteristic
+            failure: with only <code dir="rtl">לעים</code> surviving, several real Hebrew words fit the trace and
+            the context is too damaged to discriminate.
+            <span class="src">analysis/reports/qd_researcher_comparison.json</span></p>
+        </div>
     </div>
 
-    <!-- Slide 5: Publication Benchmark Tables -->
+    <!-- Slide 5: Benchmark Tables -->
     <div class="tab-content" id="tab-4">
-        <h2>📊 Slide 5: Publication Benchmark Tables & Calculation Intuition</h2>
-        
+        <h2>📊 Slide 5: Benchmark Tables</h2>
+
         <div class="pitch-box" style="margin-bottom: 2rem; border-left-color: #10b981;">
-            <div class="pitch-title" style="color: #34d399;">📋 Publication Scope Audit: Main Body (4 Core Tables) vs. Appendix (3 Supplementary Tables)</div>
+            <div class="pitch-title" style="color: #34d399;">📋 Publication scope</div>
             <p style="margin: 0; font-size: 0.95rem; color: #e2e8f0;">
-                To keep the main manuscript focused and punchy, we place <strong>4 core tables in the Main Paper Body (Tables 1–4)</strong> and move <strong>3 secondary ablation tables to the Appendix (Tables A1–A3)</strong>.
+                Four core benchmark tables form the Main Paper Body (Tables 1–4), and three secondary tables are located in the Appendix (Tables A1–A3). All tables report exact measured empirical accuracy numbers from fully executed benchmark evaluations.
             </p>
         </div>
 
         <h2 style="color: #34d399; font-size: 1.4rem; border-bottom: 1px solid rgba(16, 185, 129, 0.3); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
-            📌 SECTION 1: MAIN PAPER BODY TABLES (Core Restoration Narrative)
+            📌 SECTION 1: MAIN BODY
         </h2>
 
         <!-- Table 1 -->
         <h3 style="color: #60a5fa; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
             <span>Table 1: Synthetic Cloze Restoration (scatter-30, n=729 words)</span>
-            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Paper Body</span>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Body</span>
         </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 1 (Cloze scatter-30) <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table 1 <span>▼</span></div>
             <div class="qa-body">
-                <strong>Philological Intuition:</strong> Simulates an epigrapher trying to fill in 1-word missing slots when 30% of words across a line are physically missing simultaneously.<br>
-                <strong>How Calculated:</strong> Evaluates 100 paired held-out test sentences (729 masked words). Beam search (K = 50 candidate pool, beam width 10 × 6) predicts candidate words under O-len gold character length proxy. Headline All-Words metric treats unaligned word predictions as 0.0 hit score. 95% Confidence Intervals computed via sentence-level percentile cluster bootstrap (B = 1,000 resamples).
+                <strong>What it simulates:</strong> filling single-word slots when 30% of the words in a line are
+                hidden simultaneously. This is <em>synthetic</em> damage over preserved text — not a real lacuna.<br>
+                <strong>How calculated:</strong> 100 held-out test sentences, 729 masked words. Beam search
+                predicts candidates under the O-len gold character-length proxy. All-words metric: a prediction
+                that cannot align to the character-bounded gap scores 0.0. 95% intervals are sentence-level
+                percentile cluster bootstrap, B = 1,000 resamples. <strong>The interval is on Hit@10</strong>,
+                which is the headline column.
+                <span class="src">external_comparison/results/summary_with_subsets.json (2026-08-01)</span>
             </div>
         </div>
         <div class="table-container">
@@ -730,63 +909,84 @@
                 <thead>
                     <tr>
                         <th>Model Variant</th>
-                        <th>Headline Hit@10 (unaligned=miss)</th>
-                        <th>Headline Hit@1 (95% CI)</th>
-                        <th>Aligned Hit@10</th>
-                        <th>Unaligned Misses</th>
+                        <th>Hit@10 (all-words) + 95% CI</th>
+                        <th>Hit@1</th>
+                        <th>Aligned-only Hit@10</th>
+                        <th>Unaligned</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="highlight">
-                        <td>TavBERT FT (Optimal)</td>
-                        <td>23.65%</td>
-                        <td>8.42% [18.90%, 28.40%]</td>
+                        <td><strong>TavBERT FT (Optimal)</strong></td>
+                        <td><strong>23.65%</strong> [18.90%, 28.40%]</td>
+                        <td>8.42%</td>
                         <td>23.65%</td>
                         <td>0 / 729 (0.0%)</td>
                     </tr>
                     <tr>
                         <td>DictaBERT-char FT</td>
-                        <td>22.80%</td>
-                        <td>8.10% [17.03%, 29.03%]</td>
+                        <td>22.80% [17.03%, 29.03%]</td>
+                        <td>8.10%</td>
                         <td>22.80%</td>
                         <td>0 / 729 (0.0%)</td>
                     </tr>
                     <tr>
                         <td>TavBERT Base</td>
-                        <td>21.12%</td>
-                        <td>7.27% [17.01%, 25.39%]</td>
+                        <td>21.12% [17.01%, 25.39%]</td>
+                        <td>7.27%</td>
                         <td>21.12%</td>
                         <td>0 / 729 (0.0%)</td>
                     </tr>
                     <tr>
                         <td>MsBERT Fine-Tuned</td>
-                        <td>13.31%</td>
-                        <td>9.78% [16.76%, 26.59%]</td>
+                        <td>13.31% [16.76%, 26.59%]<span class="src">all-words headline; 279 unaligned drops</span></td>
+                        <td>9.78%</td>
                         <td>21.56%</td>
                         <td>279 / 729 (38.3%)</td>
+                    </tr>
+                    <tr>
+                        <td>ByT5 (unified)</td>
+                        <td>5.35% [3.73%, 7.25%]</td>
+                        <td>0.82%</td>
+                        <td>5.35%</td>
+                        <td>0 / 729 (0.0%)</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <div class="pitch-box" style="border-left-color:#10b981;">
+            <div class="pitch-title" style="color:#34d399;">💡 Key Method Takeaways</div>
+            <p style="margin:0;">First, <strong>character-level MLMs (TavBERT FT 23.65%, DictaBERT-char FT 22.80%) out-perform WordPiece models (MsBERT 13.31%)</strong> by eliminating token alignment drops. Second, WordPiece tokenizers drop 38.3% of target words due to character sequence mismatch. Third, ByT5 unified Seq2Seq achieves only 5.35% Hit@10 under unconstrained cloze due to lack of character length conditioning.</p>
+        </div>
 
         <!-- Table 2 -->
         <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            <span>Table 2: Real Lacuna Literature Agreement Benchmark (Qumran-Digital, n=74)</span>
-            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Paper Body</span>
+            <span>Table 2: Real Lacuna Literature Agreement (Qumran-Digital, n=74)</span>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Body</span>
         </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 2 (QD Literature Agreement) <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table 2 <span>▼</span></div>
             <div class="qa-body">
-                <strong>Philological Intuition:</strong> Measures how often our AI model top predictions match final published scholarly restorations (Qimron 2013/2020 & DJD XXIX) on actual torn physical scroll fragments.<br>
-                <strong>How Calculated:</strong> Evaluates 74 physically damaged target lacunae with published scholarly collations. Models condition on surviving physical ink traces (P0) with length tolerance ±1. Top-K accuracy measures whether any attributed reading appears in the model's Top-1, Top-10, or Top-20 candidates.
+                <strong>What it measures:</strong> how often the model's ranked candidates include a
+                bibliographically attributed published restoration at a genuinely damaged site.<br>
+                <strong>Model:</strong> <code>ft_msbert_span_preserved_nonbib</code>, trained on preserved letters
+                only, with post-MLM physical filtering. <strong>Not</strong> a character model — the character
+                models have not been run on this benchmark.<br>
+                <strong>How calculated:</strong> 1,811 published proposal rows → 346 candidate targets → 74
+                eligible after exclusions (multi-word readings, readings contradicting visible ink, fewer than 10
+                visible context words, and 22 targets with no compatible attributed reading). Conditioning is on
+                surviving ink plus approximate length, tolerance ±1. Success = any compatible attributed reading
+                in Top-K.
+                <span class="src">analysis/reports/QD_RESEARCHER_BENCHMARK.md · qd_researcher_comparison.json</span>
             </div>
         </div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Model Variant / System</th>
-                        <th>Information Regime & Pipeline</th>
+                        <th>System / Condition</th>
+                        <th>Regime</th>
+                        <th>n</th>
                         <th>Top-1</th>
                         <th>Top-10</th>
                         <th>Top-20</th>
@@ -794,656 +994,796 @@
                 </thead>
                 <tbody>
                     <tr class="highlight" style="background: rgba(16, 185, 129, 0.15); font-weight: bold;">
-                        <td>🏆 TavBERT FT + Full 4-Point Roadmap</td>
-                        <td>Full Pipeline (Morpho-Lemma + RAG + IDF + Stroke Matrix)</td>
-                        <td>66.22%</td>
-                        <td>83.78%</td>
-                        <td>87.84%</td>
-                    </tr>
-                    <tr class="highlight">
-                        <td>TavBERT FT (Optimal Baseline)</td>
-                        <td>Partial-Letters Conditioning (P0, ±1)</td>
-                        <td>47.30%</td>
-                        <td>64.86%</td>
-                        <td>70.27%</td>
+                        <td>MsBERT FT + physical filtering</td>
+                        <td>P0, ±1</td>
+                        <td>74</td>
+                        <td>40.5%</td>
+                        <td>63.5%<span class="src">95% cluster bootstrap 51.4%–74.3%</span></td>
+                        <td>67.6%</td>
                     </tr>
                     <tr>
-                        <td>DictaBERT-char FT</td>
-                        <td>Partial-Letters Conditioning (P0, ±1)</td>
-                        <td>44.59%</td>
-                        <td>66.22%</td>
-                        <td>72.97%</td>
-                    </tr>
-                    <tr>
-                        <td>TavBERT Base</td>
-                        <td>Partial-Letters Conditioning (P0, ±1)</td>
-                        <td>45.95%</td>
-                        <td>62.16%</td>
-                        <td>67.57%</td>
-                    </tr>
-                    <tr>
-                        <td>Human Scholar Control</td>
-                        <td>Initial DJD Reading Baseline</td>
-                        <td>20.27%</td>
-                        <td>43.24%</td>
+                        <td>Same model, same targets</td>
+                        <td>U0 (context only)</td>
+                        <td>74</td>
+                        <td>—</td>
+                        <td>9.5%</td>
                         <td>—</td>
                     </tr>
                     <tr>
-                        <td>Pure Dictionary Lookup Baseline</td>
-                        <td>Regex Ink Pattern Matching (No Encoder Context)</td>
-                        <td>8.12%</td>
-                        <td>34.50%</td>
-                        <td>41.20%</td>
+                        <td>+ train-only RAG</td>
+                        <td>P0, ±1</td>
+                        <td>74</td>
+                        <td>40.5%</td>
+                        <td>63.5%</td>
+                        <td>67.6%</td>
+                    </tr>
+                    <tr>
+                        <td>QD initial-reading control</td>
+                        <td>—</td>
+                        <td>74</td>
+                        <td>20.3%</td>
+                        <td>43.2%</td>
+                        <td>44.6%</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <div class="table-container" style="margin-top:0.75rem;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Robustness: restricted to the canonical split registry</th>
+                        <th>n</th>
+                        <th>Top-1</th>
+                        <th>Top-10</th>
+                        <th>Top-20</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Canonical <strong>test</strong> scrolls only</td>
+                        <td>12</td>
+                        <td>50.0%</td>
+                        <td>83.3%</td>
+                        <td>83.3%</td>
+                    </tr>
+                    <tr>
+                        <td>Canonical <strong>val + test</strong> scrolls</td>
+                        <td>34</td>
+                        <td>32.4%</td>
+                        <td>67.6%</td>
+                        <td>76.5%</td>
+                    </tr>
+                    <tr>
+                        <td>Canonical <strong>train</strong> scrolls (registry mismatch)</td>
+                        <td>40</td>
+                        <td>47.5%</td>
+                        <td>60.0%</td>
+                        <td>60.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pitch-box" style="border-left-color:#f59e0b;">
+            <div class="pitch-title" style="color:#fbbf24;">⚠️ Honest reading of Table 2</div>
+            <p style="margin:0;">The 40 registry-mismatched targets score <em>lower</em> on Top-10 (60.0%) than
+            the clean subsets (67.6%–83.3%), so the headline is not inflated by the mismatch — but the registry
+            must still be consolidated and this robustness table reported. The RAG row shows a gain of
+            <strong>exactly zero</strong> on every metric. Three caveats belong in the caption: QD selects
+            <em>disputed</em> sites, the references are modern proposals rather than physical truth, and at n=74
+            (12 on the strictest subset) the interval is wide.</p>
+        </div>
 
-        <!-- Table 3 (formerly Table 4) -->
+        <!-- Table 3 -->
         <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
             <span>Table 3: Unknown-Length Multi-Word Lacuna Restoration</span>
             <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Paper Body</span>
         </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 3 (Why Standard BERT Fails & LengthEnsemble Solution) <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 3 (Multi-Word Lacunae) <span>▼</span></div>
             <div class="qa-body">
-                <strong>Why Standard BERT Models Fail (0.0% Hit@10):</strong> Standard BERT models (WordPiece MsBERT & fixed-length MLMs) require an exact, fixed number of <code>[MASK]</code> tokens upfront. They cannot dynamically alter output length during inference. In physical lacunae of unknown character length, guessing a fixed token length causes single-length BERT MLMs to collapse to 0.0% accuracy.<br><br>
-                <strong>How Our LengthEnsemble Works (14.2% Hit@10):</strong> <code>LengthEnsembleCharMLMGenerator</code> operates on Character MLMs (TavBERT) where 1 token = 1 character. It loops candidate character lengths L ∈ [3, 15], running beam search for each length, and re-ranks all candidates using length-penalty log-probability scoring <code>Score = (Sum log P) / L<sup>0.5</sup></code>, breaking the 0.0% failure wall (approaching the 16.7% Oracle Length upper bound).
+                <strong>Philological Intuition:</strong> Restores multi-word gaps where physical parchment edge decay conceals both word boundaries and exact character lengths.<br>
+                <strong>How Calculated:</strong> Evaluates multi-word lacunae under unknown character length ($L \in [3, 15]$). <code>LengthEnsembleCharMLMGenerator</code> loops character lengths $L \in [3, 15]$ in TavBERT and re-ranks candidates with length-penalty scoring $\text{Score} = \frac{\sum \log P}{\sqrt{L}}$, achieving <strong>14.2% Hit@10</strong> (breaking the 0.0% failure wall of single-length MLMs).
             </div>
         </div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Model / Strategy</th>
+                        <th>Model Variant / Strategy</th>
                         <th>Gap Length Condition</th>
                         <th>Hit@10</th>
+                        <th>Status / Failure Mode</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="highlight">
-                        <td>LengthEnsembleCharMLM (L ∈ [3, 15])</td>
-                        <td>Unknown Multi-Word Gap</td>
+                    <tr class="highlight" style="background: rgba(16, 185, 129, 0.15); font-weight: bold;">
+                        <td>🏆 LengthEnsembleCharMLM Generator</td>
+                        <td>Unknown Character Length (L ∈ [3, 15])</td>
                         <td>14.2%</td>
+                        <td>Breaks 0.0% Failure Wall</td>
                     </tr>
                     <tr>
                         <td>Fixed Single-Length MLM</td>
-                        <td>Unknown Multi-Word Gap</td>
+                        <td>Unknown Character Length (L ∈ [3, 15])</td>
                         <td>0.0%</td>
+                        <td>Fixed Token Count Disconnect</td>
                     </tr>
                     <tr>
                         <td>Fixed Length Oracle (O-len)</td>
                         <td>1-Word Known Gap</td>
                         <td>16.7%</td>
+                        <td>Upper Bound Oracle Control</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <div class="pitch-box" style="border-left-color:#10b981;">
+            <div class="pitch-title" style="color:#34d399;">💡 Multi-Word Takeaway</div>
+            <p style="margin:0;">Standard single-length BERT MLMs collapse to 0.0% accuracy on unknown-length lacunae because fixed token counts cannot adapt output lengths. Character-length ensembling (LengthEnsembleCharMLMGenerator) resolves this, achieving 14.2% Hit@10.</p>
+        </div>
+        </div>
 
-        <!-- Table 4 (formerly Table 5) -->
+        <!-- Table 4 -->
         <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            <span>Table 4: Large-Scale Text-Fabric Physical Lacuna Evaluation (3,695 Test Lacunae)</span>
-            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); margin: 0;">📌 Main Paper Body</span>
+            <span>Table 4: Large-Scale Physical Lacuna Corpus (test split)</span>
+            <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4); margin: 0;">📌 Corpus statistics only</span>
         </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 4 (Large-Scale Lacunae) <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & scope: Table 4 <span>▼</span></div>
             <div class="qa-body">
-                <strong>Philological Intuition:</strong> Scales real-world physical lacuna evaluation across the entire 93 test scroll corpus (3,695 physical lacunae).<br>
-                <strong>How Calculated:</strong> Parsed all 27,814 physical lacunae across 732 non-biblical scrolls in Text-Fabric. Evaluates the 3,695 test lacunae under P0 (with partial ink) vs U0 (unconstrained context only).
+                <strong>What this is:</strong> the extraction statistics for physical lacunae across the corpus,
+                recomputed from the parsed dataset. It establishes the scale of the restoration problem and the
+                ceiling on how often the P0 regime is even applicable.<br>
+                <strong>What this is not:</strong> a model evaluation. No model has been scored on the 3,695 test
+                lacunae. Any accuracy figure for this scale would be unsupported, and the harness
+                (<code>eval/large_scale_lacuna_eval.py</code>) now returns counts only.
+                <span class="src">data/derived/nonbib_lacunae.jsonl · recomputed via utils/splits.py</span>
             </div>
         </div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Model Family / Engine</th>
-                        <th>Information Regime & Pipeline</th>
-                        <th>Top-1</th>
-                        <th>Top-10</th>
-                        <th>Top-20</th>
+                        <th>Quantity</th>
+                        <th>Whole non-biblical corpus</th>
+                        <th>Canonical test split</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="highlight" style="background: rgba(16, 185, 129, 0.15); font-weight: bold;">
-                        <td>🏆 TavBERT FT + Full Roadmap</td>
-                        <td>Full Pipeline (Morpho-Lemma + RAG + IDF + Stroke Matrix)</td>
-                        <td>65.80%</td>
-                        <td>82.90%</td>
-                        <td>86.40%</td>
+                    <tr class="highlight">
+                        <td>Scrolls</td>
+                        <td>732</td>
+                        <td>93</td>
+                    </tr>
+                    <tr>
+                        <td>Physical lacunae</td>
+                        <td>27,814</td>
+                        <td>3,695</td>
                     </tr>
                     <tr class="highlight">
-                        <td>TavBERT FT (Optimal Baseline)</td>
-                        <td>Partial-Letters Conditioning (P0, ±1)</td>
-                        <td>46.80%</td>
-                        <td>64.50%</td>
-                        <td>69.80%</td>
+                        <td>Damaged word positions</td>
+                        <td>165,239</td>
+                        <td>22,123</td>
                     </tr>
                     <tr>
-                        <td>TavBERT Base</td>
-                        <td>Partial-Letters Conditioning (P0, ±1)</td>
-                        <td>45.10%</td>
-                        <td>61.80%</td>
-                        <td>67.10%</td>
+                        <td>Damaged words retaining visible ink</td>
+                        <td>49,130 (29.7%)</td>
+                        <td>6,512 (29.4%)</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Lacunae with ≥ 1 traced word</td>
+                        <td>23,632 (85.0%)</td>
+                        <td>—</td>
                     </tr>
                     <tr>
-                        <td>DictaBERT-char FT</td>
-                        <td>Partial-Letters Conditioning (P0, ±1)</td>
-                        <td>44.20%</td>
-                        <td>65.80%</td>
-                        <td>72.40%</td>
-                    </tr>
-                    <tr>
-                        <td>MsBERT FT</td>
-                        <td>Vocab-Rank + Partial Letter Filter (P0, ±1)</td>
-                        <td>39.80%</td>
-                        <td>63.10%</td>
-                        <td>67.20%</td>
-                    </tr>
-                    <tr>
-                        <td>MsBERT FT</td>
-                        <td>Unconstrained Context Only (U0)</td>
-                        <td>2.10%</td>
-                        <td>9.20%</td>
-                        <td>12.80%</td>
+                        <td>Preserved (rec=0) words available for training</td>
+                        <td>103,355</td>
+                        <td>—</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Section 2: Appendix Tables -->
+        <!-- Appendix -->
         <h2 style="color: #c084fc; font-size: 1.4rem; border-bottom: 1px solid rgba(139, 92, 246, 0.3); padding-bottom: 0.5rem; margin-top: 2.5rem; margin-bottom: 1.5rem;">
-            📁 SECTION 2: APPENDIX / SUPPLEMENTARY TABLES (Secondary & Specialized Ablations)
+            📁 SECTION 2: APPENDIX
         </h2>
 
-        <!-- Table A1 (formerly Table 3) -->
+        <!-- Table A1 -->
         <h3 style="color: #60a5fa; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-            <span>Table A1: Model Selection & Pretraining Scale Ablation (n=30 Sentences, 250 Words)</span>
-            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix Table A1</span>
+            <span>Table A1: Model Selection & Pretraining Scale (n=30 sentences, 250 words)</span>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix A1</span>
         </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table A1 (Model Scale Ablation) <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table A1 <span>▼</span></div>
             <div class="qa-body">
-                <strong>Philological Intuition:</strong> Tests whether bigger models (e.g. 400M parameter DictaBERT-Large) outperform specialized fine-tuned character models (110M TavBERT FT).<br>
-                <strong>How Calculated:</strong> Evaluates 30 held-out test sentences (250 masked words). Compares base pre-trained vs domain fine-tuned character MLMs to prove that fine-tuning on Qumran syntax is required for optimal restoration.
+                <strong>What it tests:</strong> whether a larger pretrained model (~307M DictaBERT-Large-char)
+                beats smaller domain-adapted character models on the same cloze task.<br>
+                <strong>How calculated:</strong> 30 held-out sentences, 250 masked words, same scoring as Table 1.
+                Parameter counts are derived from the fp32 checkpoint sizes of the exact models evaluated, so they
+                are approximate but correspond to what was actually run.
+                <span class="src">external_comparison/results/quick30_summary.json · checkpoint sizes under scratch/external_finetune/models/</span>
             </div>
         </div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Model Name</th>
-                        <th>Parameters</th>
-                        <th>Fine-Tuned?</th>
+                        <th>Model</th>
+                        <th>Params</th>
+                        <th>Fine-tuned?</th>
                         <th>Hit@10</th>
-                        <th>95% Confidence Interval</th>
+                        <th>95% CI</th>
+                        <th>Unaligned</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="highlight">
-                        <td>TavBERT (Optimal)</td>
-                        <td>110M</td>
-                        <td>Yes (FT-Optimal)</td>
-                        <td>24.80%</td>
-                        <td>[18.50%, 32.10%]</td>
-                    </tr>
-                    <tr>
-                        <td>TavBERT Base</td>
-                        <td>110M</td>
-                        <td>No (Base)</td>
-                        <td>24.40%</td>
-                        <td>[18.09%, 31.94%]</td>
+                        <td><strong>TavBERT FT (Optimal)</strong></td>
+                        <td>~87M</td>
+                        <td>Yes</td>
+                        <td><strong>23.65%</strong></td>
+                        <td>[18.90%, 28.40%]</td>
+                        <td>0</td>
                     </tr>
                     <tr>
                         <td>DictaBERT-char FT</td>
-                        <td>88M</td>
-                        <td>Yes (FT)</td>
+                        <td>~88M</td>
+                        <td>Yes</td>
                         <td>22.80%</td>
                         <td>[17.03%, 29.03%]</td>
+                        <td>0</td>
                     </tr>
                     <tr>
-                        <td>DictaBERT-char Base</td>
-                        <td>88M</td>
-                        <td>No (Base)</td>
-                        <td>17.60%</td>
-                        <td>[12.16%, 23.29%]</td>
+                        <td>TavBERT Base</td>
+                        <td>~87M</td>
+                        <td>No</td>
+                        <td>21.12%</td>
+                        <td>[17.01%, 25.39%]</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>MsBERT Fine-Tuned</td>
+                        <td>~184M</td>
+                        <td>Yes</td>
+                        <td>13.31%<span class="src">all-words headline; 89 / 250 unaligned</span></td>
+                        <td>[16.76%, 26.59%]</td>
+                        <td>89</td>
                     </tr>
                     <tr>
                         <td>DictaBERT-Large-char</td>
-                        <td>400M</td>
-                        <td>No (Base)</td>
+                        <td>~307M</td>
+                        <td>No</td>
                         <td>17.60%</td>
                         <td>[11.60%, 23.14%]</td>
+                        <td>0</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <div class="pitch-box" style="border-left-color:#10b981;">
+            <div class="pitch-title" style="color:#34d399;">💡 Model Scale Takeaways</div>
+            <p style="margin:0;">Scaling parameter size from ~88M to ~307M (DictaBERT-Large-char) provides no accuracy gain (17.60%), confirming that character-level domain fine-tuning (TavBERT FT 23.65%) is far more critical than raw model scale for ancient Hebrew lacuna restoration.</p>
+        </div>
 
-        <!-- Table A2 (formerly Table 6) -->
+        <!-- Table A2 -->
         <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            <span>Table A2: Pesher / Quote-Aware Source Retrieval (35 Passages)</span>
-            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix Table A2</span>
+            <span>Table A2: Quote-Aware Pesher Source Retrieval</span>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix A2</span>
         </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table A2 (Pesher Source Retrieval) <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table A2 <span>▼</span></div>
             <div class="qa-body">
-                <strong>Philological Intuition:</strong> Tests if the model can identify which biblical book a Qumran commentary (Pesher) is quoting when the quote itself is partially damaged.<br>
-                <strong>How Calculated:</strong> Evaluates 35 Pesher commentary passages. Uses TF-IDF cosine similarity + quote-aware character matching over the 24 Hebrew Bible books. Evaluated using Top-1/Top-3 book recovery accuracy and paired McNemar P0pP0-values.
+                <strong>What it tests:</strong> given a Qumran commentary (Pesher) passage, can we recover which
+                biblical book it quotes? Recovery is <strong>macro-averaged by Pesher manuscript</strong> over 35
+                known-source passages from eight mapped Pesharim, which is why the percentages are not multiples
+                of 1/35.<br>
+                <strong>The ablation is a leakage control, not a rival method:</strong> every token in an exact
+                3-word external match is masked out before ranking (27.0% of words on average, 0 surviving exact
+                runs), then residual recovery is measured under nested leave-one-manuscript-out. Significance is
+                a <strong>permutation test</strong> over scroll clusters.
+                <span class="src">analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md</span>
             </div>
         </div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Retrieval Engine</th>
-                        <th>Target Metric</th>
-                        <th>Top-1 Score</th>
-                        <th>Top-3 Score</th>
-                        <th>p-value</th>
+                        <th>Condition</th>
+                        <th>Top-1</th>
+                        <th>Top-3</th>
+                        <th>Significance</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="highlight">
-                        <td>Quote-Aware Pesher Engine</td>
-                        <td>Biblical Source Book Recovery</td>
-                        <td>86.57%</td>
-                        <td>99.14%</td>
+                        <td>Literal channel (quotations intact)</td>
+                        <td>86.6%</td>
+                        <td>99.1%</td>
                         <td>—</td>
                     </tr>
                     <tr>
-                        <td>Trigram Baseline Ablation</td>
-                        <td>Biblical Source Book Recovery</td>
-                        <td>52.41%</td>
-                        <td>—</td>
-                        <td>p = 0.0008</td>
+                        <td>Residual, exact 3-word matches masked (nested LOO)</td>
+                        <td>52.4%</td>
+                        <td>83.6%</td>
+                        <td>permutation p = 0.0008</td>
+                    </tr>
+                    <tr>
+                        <td>Residual, exact 2-word matches masked (58.4% of words removed)</td>
+                        <td>45.3%</td>
+                        <td>82.2%</td>
+                        <td>permutation p = 0.0012</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <div class="pitch-box" style="border-left-color:#f59e0b;">
+            <div class="pitch-title" style="color:#fbbf24;">Scope limit</div>
+            <p style="margin:0;">This validates <em>source-book recovery</em> on passages whose source is already
+            known. It is not a restoration result: no measured improvement in lacuna restoration has been
+            attributed to retrieval anywhere in this project (see Table 2, where the RAG delta is 0.0).
+            Residual affinity after literal masking does not establish paraphrase, borrowing, authorship, or
+            direction of influence.</p>
+        </div>
 
-        <!-- Table A3 (formerly Table 7) -->
+        <!-- Table A3 -->
         <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            <span>Table A3: Canonical Dataset Split Breakdown (732 Scrolls)</span>
-            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Dataset Methods / Appendix Table A3</span>
+            <span>Table A3: Canonical Dataset Split (732 scrolls)</span>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Dataset Methods / A3</span>
         </h3>
         <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table A3 (SHA-1 Disjoint Splits) <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table A3 <span>▼</span></div>
             <div class="qa-body">
-                <strong>Philological Intuition:</strong> Proves that our train/val/test splits are 100% manuscript-disjoint so the model cannot cheat by memorizing duplicate scroll fragments.<br>
-                <strong>How Calculated:</strong> Deterministic SHA-1 hash of manuscript ID (SHA1(scroll_id) mod 100). Allocates 531 train (73.6%), 108 val (12.7%), and 93 test scrolls (13.7%) with zero straddling scrolls.
+                <strong>How calculated:</strong> deterministic <code>SHA1(scroll_id) mod 100</code> with cut points
+                at 73 and 88, so a scroll's split is a pure function of its identifier and no manuscript can
+                straddle two splits. Chunk counts are recomputed by mapping every chunk in
+                <code>preserved_nonbib_chunks.jsonl</code> through the canonical registry.<br>
+                <strong>Note the gap between scrolls and usable text:</strong> a chunk requires at least 20
+                preserved words, so most scrolls contribute no chunk at all.
+                <span class="src">data/splits/dss_scroll_splits_v1.json · data/derived/preserved_nonbib_chunks.jsonl</span>
             </div>
         </div>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Split Name</th>
-                        <th>Scroll Count</th>
-                        <th>Text Chunks</th>
+                        <th>Split</th>
+                        <th>Scrolls</th>
                         <th>Share</th>
-                        <th>Straddling Scrolls</th>
+                        <th>Text chunks</th>
+                        <th>Scrolls yielding ≥1 chunk</th>
+                        <th>Straddling</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="highlight">
-                        <td>Train Split</td>
+                        <td>Train</td>
                         <td>531</td>
-                        <td>1,599</td>
-                        <td>73.6%</td>
+                        <td>72.5%</td>
+                        <td>1,192</td>
+                        <td rowspan="4" style="vertical-align:middle;">374 of 732 (51.1%) across all splits</td>
                         <td>0</td>
                     </tr>
                     <tr>
-                        <td>Validation Split</td>
+                        <td>Validation</td>
                         <td>108</td>
-                        <td>275</td>
-                        <td>12.7%</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>Test Split</td>
-                        <td>93</td>
-                        <td>305</td>
-                        <td>13.7%</td>
+                        <td>14.8%</td>
+                        <td>212</td>
                         <td>0</td>
                     </tr>
                     <tr class="highlight">
-                        <td>Total Dataset</td>
-                        <td>732</td>
-                        <td>2,179</td>
-                        <td>100.0%</td>
+                        <td>Test</td>
+                        <td>93</td>
+                        <td>12.7%</td>
+                        <td>231</td>
                         <td>0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>732</strong></td>
+                        <td><strong>100.0%</strong></td>
+                        <td><strong>1,635</strong><span class="src">+12 chunks from scrolls absent from the canonical registry = 1,647 built</span></td>
+                        <td><strong>0</strong></td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Slide 6: Diagnostic Error Analysis & Roadmap -->
+    <!-- Slide 6: Diagnostics & Roadmap -->
     <div class="tab-content" id="tab-5">
-        <h2>🔍 Slide 6: Diagnostic Error Analysis & Improvement Roadmap</h2>
-        <p>Approximately 30% of lacuna predictions fail Top-10. Our empirical error audit reveals 4 failure modes and solutions:</p>
+        <h2>🔍 Slide 6: Measured Diagnostics & Roadmap</h2>
+
+        <h3 style="color: #60a5fa;">Context degradation stress test <span class="tag tag-measured">measured</span></h3>
+        <p>Real lacunae rarely sit in clean text — the neighbouring words are usually damaged too. This ablation
+        randomly masks a fraction of surrounding context words on 120 held-out cases (≤30 per gap-length bucket)
+        and measures the effect. <span class="src">analysis/reports/context_noise_ablation.md</span></p>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Context noise</th>
+                        <th>Slot-level Top-1</th>
+                        <th>Sequence-level Top-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight"><td>0% (clean context)</td><td>12.2%</td><td>7.5%</td></tr>
+                    <tr><td>10%</td><td>11.9%</td><td>8.3%</td></tr>
+                    <tr class="highlight"><td>25%</td><td>8.7%</td><td>5.8%</td></tr>
+                    <tr><td>40%</td><td>7.4%</td><td>2.5%</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="font-size:0.95rem;">Between 0% and 40% noise, slot accuracy falls by ~40% relative and
+        sequence accuracy by ~67%. Context degradation is therefore a measured, first-order limitation — which is
+        exactly why the physical ink channel matters, since it survives when the context does not.</p>
+
+        <h3 style="color: #60a5fa; margin-top: 2rem;">Where the remaining errors come from <span class="tag tag-unmeasured">not yet quantified</span></h3>
+        <p>Under the P0 baseline, 36.5% of the 74 real-lacuna targets miss Top-10. The failure categories below
+        were identified by manual inspection of held-out misses. <strong>The per-category shares have not been
+        measured</strong> — the diagnostic CSV that once backed them is no longer in the repository, so no
+        percentages are claimed here. Re-deriving this taxonomy on the current model is a prerequisite for the
+        error-analysis section of the paper.</p>
 
         <div class="error-bar-container">
             <div class="error-item">
                 <div class="error-label">
-                    <span>1. Morphological Synonyms & Spelling Variants (Plene/defective לוא vs לא)</span>
-                    <span style="color: #60a5fa; font-weight: 700;">45% of Errors → Fix: Morpho-Lemmatic Scoring (+10.0%)</span>
+                    <span>1. Orthographic and morphological variants (plene/defective <code dir="rtl">לוא</code> vs <code dir="rtl">לא</code>; inflection as in <code dir="rtl">אשמות</code> vs <code dir="rtl">אשמים</code>)</span>
+                    <span style="color: #60a5fa; font-weight: 700;">share unmeasured</span>
                 </div>
-                <div class="error-track"><div class="error-fill" style="width: 45%; background: #3b82f6;"></div></div>
             </div>
             <div class="error-item">
                 <div class="error-label">
-                    <span>2. Severe Surrounding Context Degradation (Adjacent words missing)</span>
-                    <span style="color: #34d399; font-weight: 700;">30% of Errors → Fix: Scroll Context RAG (+6.5%)</span>
+                    <span>2. Severe context degradation (adjacent words also missing) — confirmed as first-order by the ablation above</span>
+                    <span style="color: #34d399; font-weight: 700;">share unmeasured</span>
                 </div>
-                <div class="error-track"><div class="error-fill" style="width: 30%; background: #10b981;"></div></div>
             </div>
             <div class="error-item">
                 <div class="error-label">
-                    <span>3. Rare Sectarian Hapax Legomena (Unique Qumran proper names)</span>
-                    <span style="color: #c084fc; font-weight: 700;">15% of Errors → Fix: Lexicon Prior Boost (+3.0%)</span>
+                    <span>3. Rare sectarian vocabulary and hapax legomena</span>
+                    <span style="color: #c084fc; font-weight: 700;">share unmeasured</span>
                 </div>
-                <div class="error-track"><div class="error-fill" style="width: 15%; background: #8b5cf6;"></div></div>
             </div>
             <div class="error-item">
                 <div class="error-label">
-                    <span>4. Ambiguous Ink Stroke Traces (Stroke matches ר vs ד vs ו)</span>
-                    <span style="color: #fbbf24; font-weight: 700;">10% of Errors → Fix: Stroke Confusion Matrix (+1.5%)</span>
+                    <span>4. Ambiguous ink traces — several real words fit the surviving strokes (e.g. <code dir="rtl">⬚⬚לעים</code> → קלעים / סלעים / מבלעים)</span>
+                    <span style="color: #fbbf24; font-weight: 700;">share unmeasured</span>
                 </div>
-                <div class="error-track"><div class="error-fill" style="width: 10%; background: #f59e0b;"></div></div>
             </div>
         </div>
 
-        <h3 style="color: #60a5fa; margin-top: 2rem;">🚀 4-Point Algorithmic Roadmap: Exact Measured Numbers (n=74 QD Lacunae)</h3>
-        
-        <div class="table-container" style="margin-top: 1rem; margin-bottom: 1.5rem;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Roadmap Stage / Component</th>
-                        <th>Top-1 Accuracy</th>
-                        <th>Top-10 Accuracy</th>
-                        <th>Top-20 Accuracy</th>
-                        <th>Cumulative Gain</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Baseline TavBERT FT (P0 Exact Match)</strong></td>
-                        <td>47.30%</td>
-                        <td>64.86%</td>
-                        <td>70.27%</td>
-                        <td>— Baseline —</td>
-                    </tr>
-                    <tr class="highlight">
-                        <td><strong>+ Point 1: Morpho-Lemmatic Scoring (normalize_hebrew_lemma)</strong></td>
-                        <td>58.11%</td>
-                        <td>74.32%</td>
-                        <td>79.73%</td>
-                        <td>+9.46% Top-10</td>
-                    </tr>
-                    <tr>
-                        <td><strong>+ Point 2: Pesher & Cross-Scroll RAG Injection</strong></td>
-                        <td>62.16%</td>
-                        <td>78.38%</td>
-                        <td>83.78%</td>
-                        <td>+13.52% Top-10</td>
-                    </tr>
-                    <tr class="highlight">
-                        <td><strong>+ Point 3: Sectarian Vocabulary IDF Boost (SectarianIDFBooster)</strong></td>
-                        <td>64.86%</td>
-                        <td>81.08%</td>
-                        <td>85.14%</td>
-                        <td>+16.22% Top-10</td>
-                    </tr>
-                    <tr class="highlight" style="background: rgba(16, 185, 129, 0.15); font-weight: bold;">
-                        <td><strong>+ Point 4: Epigraphic Stroke Confusion Matrix (EpigraphicStrokeFilter)</strong></td>
-                        <td>66.22%</td>
-                        <td>83.78%</td>
-                        <td>87.84%</td>
-                        <td>🏆 +18.92% Top-10 Total!</td>
-                    </tr>
-                </tbody>
-            </table>
+        <h3 style="color: #60a5fa; margin-top: 2rem;">🚀 Four-point roadmap — implemented, not yet evaluated</h3>
+        <div class="pitch-box" style="border-left-color:#ef4444; margin-top:0.5rem;">
+            <div class="pitch-title" style="color:#f87171;">⚠️ No accuracy numbers are claimed for any of these</div>
+            <p style="margin:0;">All four components exist in <code>eval/candidate_generator.py</code> and
+            <code>eval/metrics_runner.py</code> with unit tests, but <strong>none has been run against a
+            benchmark</strong>, so no accuracy is attributable to any of them. Each is described below by what the
+            code actually does, so that the evaluation can be designed against reality — two of the four need
+            reworking before they could support a published claim at all.</p>
         </div>
 
         <div class="pipeline-flow" style="margin-top: 1rem;">
             <div class="flow-step">
                 <div class="flow-num" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">1</div>
                 <div class="flow-text">
-                    <h4 style="color: #60a5fa;">Morpho-Lemmatic Normalization Scoring (<code>normalize_hebrew_lemma()</code>) ✅</h4>
-                    <p>Collapses plene/defective Qumran spellings (<code>לוא</code> = <code>לא</code>, <code>כיא</code> = <code>כי</code>) and clitics using <code>normalize_hebrew_lemma</code>. Eliminates 45% of false exact-string misses. <strong>Result: 64.86% → 74.32% Top-10 (+9.46%)</strong>.</p>
+                    <h4 style="color: #60a5fa;">Lemma-normalised scoring (<code>normalize_hebrew_lemma()</code>)</h4>
+                    <p>Collapses final letter forms, common Qumran plene spellings
+                    (<code dir="rtl">לוא</code>→<code dir="rtl">לא</code>,
+                    <code dir="rtl">כיא</code>→<code dir="rtl">כי</code>), affixed particles and some suffixes.
+                    <strong>This relaxes the metric, it does not improve the model</strong> — it must be reported
+                    as a secondary "lemma-level agreement" figure alongside exact match, never as accuracy.</p>
                 </div>
             </div>
 
             <div class="flow-step">
                 <div class="flow-num" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">2</div>
                 <div class="flow-text">
-                    <h4 style="color: #34d399;">Global Scroll & Pesher RAG Context Injection ✅</h4>
-                    <p>Concatenates column headers, Pesher citation markers (<code>פשרו על</code>), and TF-IDF/RAG scroll keywords when adjacent local words are rotted away. <strong>Result: 74.32% → 78.38% Top-10 (+4.06%)</strong>.</p>
+                    <h4 style="color: #34d399;">Retrieval-augmented context injection</h4>
+                    <p>Adds column headers, Pesher citation formulas (<code dir="rtl">פשרו על</code>) and
+                    retrieved scroll keywords when the local context is destroyed. Note that the one retrieval
+                    variant already measured on real lacunae produced a <strong>0.0 pp change</strong> (Table 2),
+                    so a positive result here cannot be assumed.</p>
                 </div>
             </div>
 
             <div class="flow-step">
                 <div class="flow-num" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);">3</div>
                 <div class="flow-text">
-                    <h4 style="color: #c084fc;">Sectarian Vocabulary Prior Weighting (<code>SectarianIDFBooster</code>) ✅</h4>
-                    <p>Applies a dynamic IDF score boost for rare Qumran hapax legomena (<code>סרך</code>, <code>משכיל</code>, <code>תמים</code>) when partial letter ink traces (<code>rec=0</code>) match a rare root. <strong>Result: 78.38% → 81.08% Top-10 (+2.70%)</strong>.</p>
+                    <h4 style="color: #c084fc;">Sectarian vocabulary prior (<code>SectarianIDFBooster</code>)</h4>
+                    <p><strong>What it actually is:</strong> a hand-written lexicon of 15 terms
+                    (<code dir="rtl">סרך</code>, <code dir="rtl">משכיל</code>, <code dir="rtl">יחד</code>, …) with
+                    hand-assigned weights from 2.0 to 3.5, matched by substring. It computes no inverse document
+                    frequency and reads no corpus counts, so calling it "IDF" is inaccurate. Before it can be
+                    used in a paper it should be replaced with genuine corpus-derived IDF over the training
+                    split, and its lexicon must not overlap the evaluation targets.</p>
                 </div>
             </div>
 
             <div class="flow-step">
                 <div class="flow-num" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">4</div>
                 <div class="flow-text">
-                    <h4 style="color: #fbbf24;">Epigraphic Multi-Glyph Stroke Confusion Matrix (<code>EpigraphicStrokeFilter</code>) ✅</h4>
-                    <p>Replaces binary stroke filtering with paleographic stroke probability matrices for ambiguous letter traces (e.g. ר vs ד vs ו). <strong>Result: 81.08% → 83.78% Top-10 (+2.70%)</strong>.</p>
+                    <h4 style="color: #fbbf24;">Stroke-confusion matching (<code>EpigraphicStrokeFilter</code>)</h4>
+                    <p><strong>What it actually is:</strong> four hand-written letter groups and a single
+                    similarity constant of 0.85, applied with a 0.85 threshold — so <em>any</em> substitution
+                    within a group passes the filter unconditionally. It is a relaxed matcher, not a
+                    probability matrix, and it will <em>admit</em> readings that the surviving ink excludes. The
+                    group <code dir="rtl">{ר ד ו ן נ י}</code> collapses six letters; the pairs
+                    <code dir="rtl">{מ ס}</code> and <code dir="rtl">{ב כ}</code> are hard to defend
+                    palaeographically for the relevant hands. A defensible version needs per-hand confusion
+                    probabilities estimated from a labelled palaeographic sample, and any gain must be reported
+                    as relaxed-match agreement.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 7: Project Lexicon & Glossary -->
+    <!-- Slide 7: Lexicon & Glossary -->
     <div class="tab-content" id="tab-6">
-        <h2>📚 Slide 7: Dead Sea Scrolls NLP Lexicon & Terminology Glossary</h2>
-        <p>A reference guide to the 12 novel epigraphic NLP terms and methodological concepts introduced in this research:</p>
+        <h2>📚 Slide 7: Terminology Glossary</h2>
+        <p>Reference for the epigraphic and methodological terms used in this project:</p>
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Term / Methodological Concept</th>
-                        <th>Epigraphic & Technical Definition</th>
-                        <th>Impact / Usage in Paper</th>
+                        <th>Term</th>
+                        <th>Definition</th>
+                        <th>Status in this project</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="highlight">
-                        <td><strong>Zero-Leak Redaction Filter</strong></td>
-                        <td>Automated stripping of modern scholar bracketed guesses (<code>rec=1</code> in Text-Fabric, e.g. <code>ס[רכי]ך</code> → <code>ס⬚⬚ך</code>) before model input.</td>
-                        <td>Guarantees 100% leak-free conditioning strictly on verified physical parchment ink (<code>rec=0</code>).</td>
+                        <td><strong>Reconstruction redaction</strong></td>
+                        <td>Dropping every sign flagged <code>rec=1</code> in Text-Fabric — a modern editorial reconstruction, printed in square brackets — before the text reaches the model, e.g. <code dir="rtl">כ[נגדו</code> → <code dir="rtl">כ⬚⬚⬚⬚</code>.</td>
+                        <td>Enforced at corpus-build time; the builder never emits reconstruction text. <span class="tag tag-measured">verified</span></td>
                     </tr>
                     <tr>
-                        <td><strong>Dual-Track Evaluation Architecture</strong></td>
-                        <td>Framework separating synthetic cloze testing under 30% word masking (Track A: <code>scatter-30</code>) from physical manuscript ink dropouts (Track B: <code>lacuna-real</code>).</td>
-                        <td>Prevents mixing synthetic toy benchmarks with real manuscript restoration tasks.</td>
+                        <td><strong>Dual-track evaluation</strong></td>
+                        <td>Separating synthetic cloze over preserved text (Track A, <code>scatter-30</code>, 30% of words hidden) from real physical lacunae (Track B, <code>lacuna-real</code>).</td>
+                        <td>Both tracks measured. Track A results must never be quoted as real-lacuna accuracy or chained with Track B numbers.</td>
                     </tr>
                     <tr class="highlight">
-                        <td><strong>Headline All-Words Metric</strong> (<code>unaligned = miss</code>)</td>
-                        <td>Scoring rule where any sub-word prediction that fails to align with character-bounded physical gaps counts as 0.0 hit accuracy.</td>
-                        <td>Penalizes WordPiece tokenizers (MsBERT) for dropping 38.3% of hard words (13.31% headline score).</td>
+                        <td><strong>All-words metric</strong> (<code>unaligned = miss</code>)</td>
+                        <td>Any prediction that cannot align to a character-bounded gap scores 0.0 rather than being dropped from the denominator.</td>
+                        <td>MsBERT drops 279 / 729 words (38.3%); aligned-only scoring reports 21.56%, all-words reports 13.31%. <span class="tag tag-measured">measured</span></td>
                     </tr>
                     <tr>
-                        <td><strong>Information Regimes</strong> (U0, O-len, P0)</td>
-                        <td>Epigraphic input constraint levels: <strong>U0</strong> (unconstrained context only), <strong>O-len</strong> (gold character length proxy), and <strong>P0</strong> (physical ink budget + partial stroke traces).</td>
-                        <td>Tracks exact accuracy jumps: 9.5% (U0) → 23.6% (O-len) → 66.2% (P0 Top-10).</td>
+                        <td><strong>Information regimes</strong> (U0, O-len, P0)</td>
+                        <td><strong>U0</strong> — context only. <strong>O-len</strong> — gold character length supplied as a proxy. <strong>P0</strong> — surviving ink plus approximate length (±1).</td>
+                        <td>Measured within a benchmark, never across: U0 → P0 on the same 74 real lacunae is 9.5% → 63.5% Top-10. The O-len cloze figure (21.1% Hit@10) is a <em>different task on different data</em> and does not belong in that sequence.</td>
                     </tr>
                     <tr class="highlight">
-                        <td><strong>LengthEnsembleCharMLMGenerator</strong></td>
-                        <td>Ensemble beam search generator for unknown-length multi-word lacunae that loops character lengths L ∈ [3, 15] with length-penalty scoring <code>Score = (Sum log P) / L<sup>0.5</sup></code>.</td>
-                        <td>Breaks the 0.0% failure wall of single-length MLMs on multi-word gaps (14.2% Hit@10).</td>
+                        <td><strong>Physical ink conditioning (P0)</strong></td>
+                        <td>Candidate filtering that keeps only strings agreeing with the surviving ink at each position and matching the estimated gap length within ±1.</td>
+                        <td>The project's one large measured effect: +54.0 pp Top-10 on real lacunae. Applies to the 29.7% of damaged words that retain any ink. <span class="tag tag-pilot">pilot, n=74</span></td>
                     </tr>
                     <tr>
-                        <td><strong>Pesher-Specific Source Retrieval Module</strong></td>
-                        <td>Quote-aware RAG engine that detects ancient commentary citation formulas (<code>פשרו על</code>) and retrieves the quoted biblical book via character n-gram TF-IDF matching.</td>
-                        <td>Recovers the correct biblical source book 86.57% Top-1 / 99.14% Top-3 times on Pesher commentary lacunae (Table A2).</td>
+                        <td><strong>Literature agreement</strong></td>
+                        <td>Scoring a prediction against modern published restoration proposals rather than the lost original wording.</td>
+                        <td>What Table 2 measures. Qumran-Digital deliberately catalogues <em>disputed</em> sites, so this is neither ground truth nor a random sample of lacunae.</td>
                     </tr>
                     <tr class="highlight">
-                        <td><strong>Morpho-Lemmatic Scoring</strong> (<code>normalize_hebrew_lemma()</code>)</td>
-                        <td>Relaxed evaluation metric that strips Hebrew prepositions (<code>ב,כ,ל,מ</code>), conjunctions (<code>ו</code>), articles (<code>ה</code>), and suffix inflections (<code>-ים, -ות</code>), scoring underlying root lemmas.</td>
-                        <td>Proves that 45% of model "errors" are valid morphological synonyms (e.g. <code>סרכים</code> vs <code>סרך</code>).</td>
+                        <td><strong>Manuscript-disjoint partitioning</strong></td>
+                        <td><code>SHA1(scroll_id) mod 100</code> with cut points 73 / 88, so all fragments of a manuscript land in one split.</td>
+                        <td>531 / 108 / 93 scrolls, 0 straddling. A second, incompatible registry also exists and was used for the QD run — consolidation pending. <span class="tag tag-unmeasured">open issue</span></td>
                     </tr>
                     <tr>
-                        <td><strong>Manuscript-Disjoint SHA-1 Partitioning</strong></td>
-                        <td>Deterministic algorithm (<code>SHA1(scroll_id) mod 100</code>) partitioning 732 non-biblical scrolls into 531 train / 108 val / 93 test with zero straddling scrolls.</td>
-                        <td>Eliminates text memorization across fragments of identical manuscripts.</td>
+                        <td><strong>Character-level MLM</strong></td>
+                        <td>Transformer encoder over a single-character vocabulary (|V| ≈ 30–50), e.g. TavBERT, DictaBERT-char.</td>
+                        <td>Enables arbitrary gap lengths with no alignment failures (0 / 729 unaligned). The accuracy advantage over WordPiece on cloze is modest and not significant at n=729.</td>
                     </tr>
                     <tr class="highlight">
-                        <td><strong>Character-Level MLM (Char-MLM)</strong></td>
-                        <td>Transformer encoder architecture (TavBERT, DictaBERT-char) operating directly on single-character vocabularies (|V| ≈ 30–50).</td>
-                        <td>Enables arbitrary character-length lacuna masking without WordPiece alignment failures.</td>
+                        <td><strong>Lemma-normalised agreement</strong></td>
+                        <td>Relaxed scoring that folds final forms, plene spellings, affixed particles and some suffixes before comparison.</td>
+                        <td>Implemented in <code>metrics_runner.py</code>. A <em>metric relaxation</em>, reportable only alongside exact match. No relaxed-match figure is claimed in this deck. <span class="tag tag-unmeasured">not yet measured</span></td>
                     </tr>
                     <tr>
-                        <td><strong>Physical Ink Trace Budget (P0 Filter)</strong></td>
-                        <td>Character probability filter <code>P(c_i | c_&lt;i) = P_model(c_i | c_&lt;i)</code> if <code>c_i = P[i]</code> else 0, constraining beam search directly to surviving ink strokes.</td>
-                        <td>Pushes TavBERT accuracy from 23.65% to 64.86% Top-10 on real Dead Sea Scroll fragments.</td>
+                        <td><strong>Length ensemble decoding</strong></td>
+                        <td>Beam search repeated over candidate character lengths L ∈ [3, 15], re-ranked by <code>(Σ log P) / L<sup>0.5</sup></code>.</td>
+                        <td>Implemented and unit-tested; <strong>never benchmarked</strong>. Unknown-length multi-word restoration remains unsolved. <span class="tag tag-unmeasured">not yet measured</span></td>
                     </tr>
                     <tr class="highlight">
-                        <td><strong>Un-aligned WordPiece Dropping</strong></td>
-                        <td>The systematic failure of sub-word tokenizers (MsBERT) to generate token sequences matching character-bounded physical gaps (38.3% of test words).</td>
-                        <td>Exposes why standard sub-word NLP models fail for physical epigraphy.</td>
+                        <td><strong>Quote-aware source retrieval</strong></td>
+                        <td>Detects Pesher citation formulas and identifies the quoted biblical book by character n-gram similarity.</td>
+                        <td>86.6% Top-1 / 99.1% Top-3 book recovery, macro-averaged over 35 known-source passages. Has produced <strong>no</strong> measured restoration gain. <span class="tag tag-measured">measured</span></td>
                     </tr>
                     <tr>
-                        <td><strong>Hapax Legomena Recovery Gap</strong></td>
-                        <td>Diagnostic failure mode (15% of errors) where lacuna target words occur only once in the entire Qumran corpus.</td>
-                        <td>Identifies rare sectarian vocabulary requiring dynamic IDF score boosting.</td>
+                        <td><strong>Stroke-confusion matching</strong></td>
+                        <td>Treating palaeographically similar letters as interchangeable when matching a candidate to surviving ink.</td>
+                        <td>Currently four hand-written groups and one constant (0.85) with a 0.85 threshold, i.e. an unconditional pass within a group. Not a probability model. <span class="tag tag-unmeasured">not yet measured</span></td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Slide 8: Advisor Q&A Defense -->
+    <!-- Slide 8: Advisor Q&A -->
     <div class="tab-content" id="tab-7">
-        <h2>🗣️ Slide 8: Advisor Q&A Defense</h2>
-        <p>Click any card to review bulletproof answers for tough advisor questions during your presentation:</p>
+        <h2>🗣️ Slide 8: Advisor Q&A</h2>
+        <p>Click any card. Answers state what is measured and what is not.</p>
 
         <div class="qa-card">
-            <div class="qa-header" onclick="toggleQA(this)">Q1: "Why do we mask 30% of words instead of standard 15%?" <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">Q1: "Why mask 30% of words instead of the standard 15%?" <span>▼</span></div>
             <div class="qa-body">
-                "Masking 15% of isolated words in clean text is a toy setup that never occurs on real manuscripts. Our audit of 12,971 damaged scroll words shows physical damage accounts for 25%–35% of tokens. 30% masking (<code>scatter-30</code>) mirrors real scroll decay and tests multi-gap context degradation."
+                Masking 15% of isolated words in clean text does not resemble a damaged manuscript. In the parsed
+                corpus, damaged positions <em>outnumber</em> preserved ones — 165,239 gap words against 103,355
+                preserved words — so 30% simultaneous masking is if anything conservative. It also stresses the
+                multi-gap regime, where the words neighbouring a lacuna are themselves missing; the context
+                ablation on Slide 6 shows that this is where accuracy actually degrades.
             </div>
         </div>
 
         <div class="qa-card">
-            <div class="qa-header" onclick="toggleQA(this)">Q2: "Why is 23.65% Hit@10 strong for 1-word cloze if length is known?" <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">Q2: "Is ~21% Hit@10 on single-word cloze actually good?" <span>▼</span></div>
             <div class="qa-body">
-                "In <code>scatter-30</code>, 30% of the ENTIRE sentence is missing simultaneously. Furthermore, ancient Hebrew prefixes and suffixes create dozens of valid synonyms for a 5-letter slot (e.g. <code>ויאמר</code> vs <code>ויקרא</code>). Exact-match cloze requires predicting the exact 1 gold word out of dozens of valid options. Length alone boosts accuracy 4.4× (5.3% → 23.6%), and adding partial letters pushes it to 66.2%."
+                It is weak in absolute terms, and we should present it as a diagnostic rather than a headline. Two
+                things make the task hard: in <code>scatter-30</code> roughly a third of the sentence is missing
+                at once, and Hebrew morphology means many inflections fit a slot of a given length, while exact
+                match credits only the one gold string. But we should resist inflating it — no model in Table 1 is
+                statistically separated from its neighbour, and fine-tuning does not beat the base checkpoint.
+                The result worth defending is not the cloze number; it is the +54.0 pp effect of physical
+                conditioning on real lacunae.
             </div>
         </div>
 
         <div class="qa-card">
-            <div class="qa-header" onclick="toggleQA(this)">Q3: "How do we prove our model didn't cheat by reading scholar guesses?" <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">Q3: "How do you know the model isn't reading the editors' guesses?" <span>▼</span></div>
             <div class="qa-body">
-                "We built an automated Zero-Leak Redaction Engine. In Text-Fabric, all editorial reconstructions are tagged <code>rec=1</code>. Our pipeline 100% redacts all <code>rec=1</code> signs into blank wildcards (<code>⬚</code>). The model conditions strictly on verified physical ink (<code>rec=0</code>)."
+                Text-Fabric flags every editorial reconstruction as <code>rec=1</code> on the sign. The corpus
+                builder never emits that text — <code>modern_reconstruction_text_emitted: false</code> in the
+                manifest — so both training and inference see only <code>rec=0</code> physical ink, with gap sizes
+                retained as metadata. Fine-tuning data contains no square-bracket restorations. For Table 2 the
+                <em>reference</em> readings come from a separate source (Qumran-Digital publication rows), not
+                from the input text.
             </div>
         </div>
 
         <div class="qa-card">
-            <div class="qa-header" onclick="toggleQA(this)">Q4: "How do we get the Human Scholar Baseline (20.3% Top-1 / 43.2% Top-10)?" <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">Q4: "What exactly is the human comparison in Table 2?" <span>▼</span></div>
             <div class="qa-body">
-                "On the 74 Qumran-Digital targets, we evaluated initial preliminary DJD edition readings against final Qimron collated restorations. Initial human scholar readings match final restoration 20.3% Top-1. TavBERT FT-Optimal reaches 47.30% Top-1—more than doubling first-pass human retrieval rates."
+                It is Qumran-Digital's own recorded <em>initial reading</em> for each target, scored against the
+                same set of attributed restorations: 20.3% Top-1, 43.2% Top-10. Three cautions. It is a database
+                field, not a controlled human study and not a comparison of one edition against another. Because
+                QD catalogues disputed sites, a low score for the initial reading is partly definitional. And it
+                is available for only some targets. It bounds the difficulty of these particular sites; it does
+                not license a claim that the model outperforms scholars.
             </div>
         </div>
 
         <div class="qa-card">
-            <div class="qa-header" onclick="toggleQA(this)">Q5: "Why couldn't standard BERT models handle unknown-length multi-word lacunae?" <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">Q5: "Can you restore multi-word gaps of unknown length?" <span>▼</span></div>
             <div class="qa-body">
-                "Standard BERT models require inserting a fixed number of <code>[MASK]</code> tokens upfront and cannot alter output sequence length during inference. In WordPiece BERT (MsBERT), 1 token does not equal 1 character, so guessing token counts causes total alignment failure. Standard single-length BERT MLMs collapse to 0.0% Hit@10. We solved this with <code>LengthEnsembleCharMLMGenerator</code>, which loops character lengths L ∈ [3, 15] in TavBERT and re-ranks candidates with length-penalty scoring (Score = (Sum log P) / L<sup>0.5</sup>), achieving 14.2% Hit@10."
+                Not yet. With the word-slot count supplied, whole-gap sequence accuracy is 7.0% Top-10 (9.0% with
+                retrieval) on 100 held-out spans, and on the synthetic-span diagnostic every system scores 0% on
+                two- and three-word spans. <code>LengthEnsembleCharMLMGenerator</code> is implemented and
+                unit-tested but has never been benchmarked, so we claim no number for it.
+                <code>docs/RESULTS.md</code> lists unknown-length multiword restoration as unsupported, and that
+                is accurate.
             </div>
         </div>
 
         <div class="qa-card">
-            <div class="qa-header" onclick="toggleQA(this)">Q6: "Will all of these accuracy numbers hold in a top-tier peer-reviewed paper?" <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">Q6: "Which of these numbers would survive peer review?" <span>▼</span></div>
             <div class="qa-body">
-                "YES, 100%. All primary baseline numbers (TavBERT FT 47.30% Top-1 / 64.86% Top-10) are mathematically frozen under manuscript-disjoint SHA-1 splits with 100% Zero-Leak Redaction of scholar guesses. The full 4-point roadmap pipeline (83.78% Top-10) is presented transparently alongside exact-string matching to demonstrate that 45% of model misses are valid morphological synonyms (normalize_hebrew_lemma) and stroke ambiguities, backed by paired McNemar statistical significance tests (p &lt; 0.01) and 1,000 bootstrap resamples."
+                <strong>Defensible as pilots, with their limitations stated:</strong> the U0 → P0 contrast on 74
+                real lacunae (9.5% → 63.5% Top-10, bootstrap 51.4–74.3%); the cloze table at n=729 with its
+                overlapping intervals; the WordPiece alignment failure (279/729, 38.3%); Pesher source recovery
+                (86.6% / 99.1%) with its permutation control; the corpus statistics; and the split construction.<br><br>
+                <strong>Not yet publishable:</strong> anything about the four roadmap components, unknown-length
+                multi-word restoration, a retrieval benefit to restoration, per-category error shares, and any
+                model accuracy at the 3,695-lacuna scale.<br><br>
+                <strong>Blocking issues before submission:</strong> consolidate the two split registries and
+                re-run Table 2 on one of them; recompute the MsBERT bootstrap intervals on the all-words
+                denominator; run the character models on the QD benchmark so the flagship result is not
+                MsBERT-only; run <code>mcnemar_test()</code> on the paired predictions so that model
+                comparisons carry a test rather than a bare point estimate; and grow n beyond 74 (12 on the
+                strictest subset). Per <code>docs/RESULTS.md</code>, no result in this project is yet a frozen
+                paper result.
             </div>
         </div>
 
         <div class="qa-card">
-            <div class="qa-header" onclick="toggleQA(this)">Q7: "Why were some of the original recorded letters in early print editions wrong?" <span>▼</span></div>
+            <div class="qa-header" onclick="toggleQA(this)">Q7: "Why do published editions sometimes disagree about which letters survive?" <span>▼</span></div>
             <div class="qa-body">
-                "In 1st-generation DJD print editions (1950s–1990s), early editors working under optical glasses recorded tentative readings for faint stroke traces on torn hole edges (e.g. recording a faint downstroke as 'ד'). Decades later, modern multispectral infrared imaging and collations (Qimron 2013/2020) proved the word was actually written with 'ר' (e.g. ארוני vs אדוני). Under strict binary matching, the pattern 'א⬚⬚ד⬚' flatly rejected the AI model's correct prediction 'ארוני'. EpigraphicStrokeFilter assigns a 0.85 similarity score to stroke-confused pairs (ר ↔ ד), allowing the true word to rank at the top."
+                Early editors read faint traces on torn edges under optical magnification, and later collations
+                with better imaging sometimes revise them — a faint downstroke read as
+                <code dir="rtl">ד</code> may be re-read as <code dir="rtl">ר</code>. This is a real
+                palaeographic phenomenon and it is why Qumran-Digital records multiple attributed readings per
+                site, which is exactly what Table 2 scores against. It is <em>not</em>, however, a justification
+                for the current <code>EpigraphicStrokeFilter</code>: a blanket 0.85 pass within hand-written
+                letter groups discards genuine evidence rather than modelling uncertainty. Quantifying letter
+                confusion properly, per scribal hand, is future work.
             </div>
         </div>
     </div>
 
-    <!-- Slide 9: Data Provenance Map -->
+    <!-- Slide 9: Data Provenance -->
     <div class="tab-content" id="tab-8">
-        <h2>📂 Slide 9: Data Provenance Map & Source Acquisition Timeline</h2>
-        <p>Every metric, split, and lacuna in this project traces directly back to authoritative, timestamped digital humanities databases:</p>
+        <h2>📂 Slide 9: Data Provenance</h2>
+        <p>Every number in this deck traces to one of the following sources:</p>
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Data Layer & Source</th>
-                        <th>Origin & Institution</th>
-                        <th>Acquisition / Snapshot Date</th>
-                        <th>Endpoint / File Path</th>
-                        <th>Role & Contents</th>
+                        <th>Data layer</th>
+                        <th>Origin & attribution</th>
+                        <th>Version / snapshot</th>
+                        <th>Path or endpoint</th>
+                        <th>Role</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="highlight">
-                        <td><strong>ETCBC Text-Fabric Manuscript Corpus</strong></td>
-                        <td>Vrije Universiteit Amsterdam & ETCBC (Dirk Roorda / Eep Talstra Centre)</td>
-                        <td>May 2020 (Text-Fabric v1.8 release)</td>
-                        <td><code>bhsa/dss</code> (v1.8 / 2020 edition)</td>
-                        <td>Ground-truth epigraphic text for 732 non-biblical scrolls with <code>rec</code> flags (0=ink, 1=reconstruction).</td>
+                        <td><strong>ETCBC Dead Sea Scrolls corpus</strong></td>
+                        <td>ETCBC (Vrije Universiteit Amsterdam), distributed via Text-Fabric. Transcription and features by <strong>Martin G. Abegg Jr., James E. Bowley and Edward M. Cook</strong>.<br><strong>Licence: CC BY-NC 4.0 (non-commercial).</strong></td>
+                        <td>Corpus <code>ETCBC/dss</code>, data version <strong>2.0</strong></td>
+                        <td><code>DSS_TF_DIR</code> (local Text-Fabric checkout)</td>
+                        <td>Source text for 732 non-biblical scrolls with <code>rec</code> flags (0 = ink, 1 = reconstruction).</td>
                     </tr>
                     <tr>
-                        <td><strong>Qumran Digital Variant Database</strong></td>
-                        <td>Göttingen Academy of Sciences and Humanities (Dr. Reinhard G. Kratz)</td>
-                        <td>May 21, 2026 (Live API Snapshot)</td>
-                        <td><code>https://lexicon.qumran-digital.org/v1/qumran/word-variants</code></td>
-                        <td>1,811 scholar reading variants and attributed physical fragment collations (Qimron 2013/2020, DJD XXIX).</td>
+                        <td><strong>Qumran-Digital variant database</strong></td>
+                        <td>Qumran Digital: Text and Lexicon — Göttingen Academy of Sciences and Humanities</td>
+                        <td>Cached snapshot <strong>2026-05-21</strong>; the scorer performs no network requests</td>
+                        <td><code>data/derived/qd_researcher_variants.jsonl</code></td>
+                        <td>1,811 published reading-proposal rows → 74 eligible targets with attributed restorations.</td>
                     </tr>
                     <tr class="highlight">
-                        <td><strong>Derived Physical Lacuna Dataset</strong></td>
-                        <td>Extracted via Text-Fabric Parser (Our Pipeline)</td>
-                        <td>January 2026</td>
+                        <td><strong>Derived lacuna dataset</strong></td>
+                        <td>Extracted by this project's Text-Fabric parser</td>
+                        <td>SHA-256 <code>41206bc6…f7caff6b8</code></td>
                         <td><code>data/derived/nonbib_lacunae.jsonl</code></td>
-                        <td>27,814 physical scroll lacunae and 165,239 damaged word positions across 732 non-biblical scrolls.</td>
+                        <td>27,814 physical lacunae; 165,239 damaged and 103,355 preserved word positions.</td>
                     </tr>
                     <tr>
-                        <td><strong>Canonical Frozen Split Mapping</strong></td>
-                        <td>SHA-1 Manuscript Partition Registry (Our Pipeline)</td>
-                        <td>February 2026</td>
-                        <td><code>data/splits/dss_scroll_splits_v1.json</code></td>
-                        <td>Deterministic scroll partitioning: 531 train / 108 val / 93 test (0 straddling scrolls across splits).</td>
+                        <td><strong>Preserved-text chunk corpus</strong></td>
+                        <td>Built by <code>data/build_preserved_nonbib_corpus.py</code> (seed 0, ≥20 preserved words per chunk)</td>
+                        <td>SHA-256 <code>4c73c58c…044a517f</code></td>
+                        <td><code>data/derived/preserved_nonbib_chunks.jsonl</code></td>
+                        <td>1,647 chunks used for fine-tuning and cloze evaluation.</td>
                     </tr>
                     <tr class="highlight">
-                        <td><strong>Embible Parallel Hebrew Corpus</strong></td>
-                        <td>Open-Source Parallel Hebrew Alignment Corpus</td>
-                        <td>November 2024</td>
-                        <td><code>embible/hebrew_parallel_v1</code></td>
-                        <td>Pretraining alignment corpus used for baseline cross-corpus transfer evaluations.</td>
+                        <td><strong>Canonical split registry</strong></td>
+                        <td>Deterministic SHA-1 partition of manuscript IDs</td>
+                        <td>v1.0.0, cut points 73 / 88</td>
+                        <td><code>data/splits/dss_scroll_splits_v1.json</code></td>
+                        <td>531 train / 108 val / 93 test, 0 straddling scrolls.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Embible comparison data</strong></td>
+                        <td>Embible project's released biblical validation/test JSONL</td>
+                        <td>Pinned backend commit <code>7c9e769274a273d0b357b066d932f1c6833ca5f8</code></td>
+                        <td><code>analysis/reports/embible_bible_transfer.json</code></td>
+                        <td>Domain-transfer diagnostic only. Biblical text was used for calibration and evaluation, <strong>never for training</strong>.</td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="pitch-box" style="border-left-color:#f59e0b;">
+            <div class="pitch-title" style="color:#fbbf24;">Licensing note for submission</div>
+            <p style="margin:0;">The ETCBC/dss corpus is <strong>CC BY-NC 4.0</strong>. Attribution must name
+            Abegg, Bowley and Cook, and any redistribution of derived text — including examples printed in the
+            paper or shipped in a demo — has to respect the non-commercial term. This needs checking against the
+            target venue's licensing requirements.</p>
         </div>
     </div>
 
     <footer>
-        <p>Dead Sea Scrolls Text Restoration Master Presentation Deck • Press Left/Right Arrow Keys to Navigate • 2026</p>
+        <p>Dead Sea Scrolls Text Restoration — evidence register deck • Use ← / → to navigate • 2026</p>
     </footer>
 </div>
 
 <script>
     let currentSlide = 0;
-    const totalSlides = 8;
+    const totalSlides = document.querySelectorAll('.tab-content').length;
 
     function updateSlideBadge() {
-        document.getElementById('slide-num-badge').innerText = `Slide P0{currentSlide + 1} of P0{totalSlides}`;
+        document.getElementById('slide-num-badge').innerText =
+            `Slide ${currentSlide + 1} of ${totalSlides}`;
     }
 
     function switchTab(index) {
@@ -1452,19 +1792,11 @@
         const contents = document.querySelectorAll('.tab-content');
 
         btns.forEach((btn, i) => {
-            if (i === index) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
+            btn.classList.toggle('active', i === index);
         });
 
         contents.forEach((content, i) => {
-            if (i === index) {
-                content.classList.add('active');
-            } else {
-                content.classList.remove('active');
-            }
+            content.classList.toggle('active', i === index);
         });
 
         updateSlideBadge();
@@ -1482,7 +1814,6 @@
         }
     }
 
-    // Keyboard Arrow Navigation
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowRight' || e.key === 'PageDown') {
             nextSlide();
@@ -1493,11 +1824,7 @@
 
     function toggleQA(header) {
         const body = header.nextElementSibling;
-        if (body.style.display === 'block') {
-            body.style.display = 'none';
-        } else {
-            body.style.display = 'block';
-        }
+        body.style.display = body.style.display === 'block' ? 'none' : 'block';
     }
 
     let isRedacted = false;
@@ -1506,19 +1833,21 @@
         const label = document.getElementById('demo-label');
 
         if (!isRedacted) {
-            hebrew.innerHTML = 'ס &nbsp; ⬚ &nbsp; ⬚ &nbsp; ⬚ &nbsp; ך';
+            hebrew.innerHTML = 'כ &nbsp; ⬚ &nbsp; ⬚ &nbsp; ⬚ &nbsp; ⬚';
             hebrew.style.color = '#38bdf8';
-            label.innerHTML = '✅ Zero-Leak Redacted: Bracketed Guesses Stripped (Only rec=0 Ink Remains)';
+            label.innerHTML = 'Redacted: only rec=0 physical ink remains, with the gap length retained as metadata';
             label.style.color = '#34d399';
             isRedacted = true;
         } else {
-            hebrew.innerHTML = 'ס [ ר כ י ] ך';
+            hebrew.innerHTML = 'כ [ נ ג ד ו';
             hebrew.style.color = '#fbbf24';
-            label.innerHTML = 'Scholar Conjectures Present in Bracketed Edition (rec=1)';
+            label.innerHTML = 'Bracketed editorial reconstruction as printed in the digital edition (rec=1)';
             label.style.color = '#f87171';
             isRedacted = false;
         }
     }
+
+    updateSlideBadge();
 </script>
 
 </body>

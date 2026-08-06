@@ -1,629 +1,709 @@
-# 📜 Dead Sea Scrolls Text Restoration — Master Reference & First-Time Skeptical Reader Guide
+# 📜 Dead Sea Scrolls Text Restoration — Master Reference & Skeptical Reader Guide
 
 > [!IMPORTANT]
-> **Orientation for First-Time Readers & Critical Reviewers:**
-> If you have never heard about this project before, this document is designed for you. It explains **what problem we solve**, **why standard AI fails**, **how our system works step-by-step**, **how we prove we didn't cheat**, and **why our results are trustworthy**.
+> **Orientation.** This document explains what problem the project solves, where standard models break, how
+> the pipeline works, what safeguards prevent leakage, and — section by section — exactly which numbers are
+> measured and which are not.
+
+> [!WARNING]
+> **Evidence status.** Every figure below is traceable to a generated artifact, named at the point of use.
+> Per [`docs/RESULTS.md`](RESULTS.md), **no result in this project is yet a frozen paper result**. The
+> real-lacuna benchmark is a literature-agreement pilot at $n=74$; the cloze benchmark is a synthetic-damage
+> diagnostic; several pipeline components are implemented but have never been benchmarked. Claims are tagged
+> **[measured]**, **[pilot]**, or **[not yet measured]**.
 
 ---
 
-## 🧭 1. Project Primer for First-Time Readers
+## 🧭 1. Project Primer
 
 ### 1.1 What Problem Are We Solving?
-The Dead Sea Scrolls (discovered in 11 Qumran caves) are among the most important historical manuscripts in existence. However, after 2,000 years in caves, the leather and parchment scrolls are severely damaged by rot, moisture, and tearing. 
+The Dead Sea Scrolls, discovered in the caves around Qumran, are among the most important surviving
+manuscripts of antiquity. After two thousand years the parchment and leather have decayed and torn, leaving
+gaps — *lacunae* — in the text. Editors fill these gaps by scholarly conjecture, a process that has taken
+decades and often leaves competing proposals: the Qumran-Digital variant database records **1,811 published
+reading-proposal rows** across the sites we sampled.
 
-Modern epigraphers and editors attempt to fill in these missing gaps ("lacunae"). Traditionally, this is done through manual scholarly conjecture. Recently, researchers tried using language models (like WordPiece MLMs or Seq2Seq architectures), but **standard unconstrained language models fail on real scroll gaps, getting less than 10% of missing words right**.
+The question this project asks is narrow and answerable: **how much does the surviving physical evidence at a
+lacuna — the partial ink still on the parchment, and the size of the hole — improve automatic restoration?**
 
-### 1.2 Why Do Standard Masked Language Models (MLMs) Fail on Ancient Manuscripts?
-1. **Unconstrained Sub-Word Tokenization:** Standard Sub-Word MLMs (like MsBERT) tokenize text into BPE/WordPiece sub-words. They predict tokens without constraining physical character length, predicting words that physically cannot fit the parchment hole.
-2. **Ignoring Surviving Ink Traces:** On real torn scrolls, **82.5% of damaged words retain partial letter strokes** (e.g., the top curve of a Resh or bottom line of a Final Kaf). Sub-word tokenizers operate on fixed vocabulary IDs and cannot enforce character-level ink trace constraints inside tokens.
-3. **Data Contamination:** Previous studies evaluated models on random sentence splits. Because fragments of the same scroll were split across train and test sets, models simply memorized duplicate sentences from the training set.
+### 1.2 Where Do Standard Masked Language Models Break?
+1. **Sub-word tokenization cannot express a character-bounded gap.** A WordPiece model predicts vocabulary
+   entries, not characters. On the cloze benchmark, MsBERT cannot emit a token sequence matching the gap for
+   **279 of 729 words (38.3%)**. **[measured]**
+2. **Byte-level generation ignores the length budget.** A fine-tuned ByT5 decodes autoregressively with no
+   gap-length constraint and reaches **5.35% Hit@10**. **[measured]**
+3. **Random splits leak manuscripts.** Fragments of one scroll landing in both train and test let a model
+   memorize rather than restore. This project partitions strictly by manuscript ID.
 
-### 1.3 What Is Our Core Contribution?
-We built the first **scroll-disjoint, physically-conditioned text restoration framework**:
-- We enforce **100% manuscript-disjoint splits** (0 straddling scrolls between train and test).
-- We build a **Zero-Leak Redaction Engine** that strips all modern scholar conjectures, forcing the model to condition strictly on verified physical ink.
-- We condition character-level language models natively on surviving ink traces (`סר⬚⬚ך` $\to$ **סרכיך**), boosting real lacuna restoration accuracy from **9.5% to 66.2%** (more than doubling first-pass human scholar baselines at 20.3%).
+A character-level MLM avoids the first two problems structurally — 1 token = 1 character, so any gap length is
+expressible and **0 of 729** words go unaligned. That is an *enabling* property, not a large accuracy win:
+TavBERT base reaches 21.12% against MsBERT's 13.31% all-words score, with overlapping intervals.
 
-### 1.4 Do We Even Need Neural Encoders Here? (Pure Dictionary vs Encoder Ablation)
-A critical question arises: *If surviving physical ink traces (`סר⬚⬚ך`) already restrict candidate words to a small set, why do we need a Transformer Encoder at all?*
+### 1.3 What Is the Core Contribution?
+- **Manuscript-disjoint partitioning** of 732 non-biblical scrolls, 0 straddling scrolls. **[measured]**
+- **Reconstruction redaction**: every sign flagged `rec=1` in Text-Fabric is an editorial reconstruction and is
+  never emitted into model input, so the model conditions only on `rec=0` physical ink. **[verified]**
+- **Physical conditioning of a character decoder** on surviving ink plus approximate gap length, which on 74
+  real lacunae raises Top-10 literature agreement from **9.5% to 63.5%** — a **+54.0 pp** effect. **[pilot]**
 
-We empirically evaluated a **Pure Dictionary / Trie Lookup Baseline** (matching ink patterns against the corpus lexicon without neural context encodings):
+That last figure is the project's one large measured effect, and it should be framed for what it is: a
+measurement of how much the *physical evidence* contributes, not of how good the language model is.
 
-| Method / Engine | Information Available | Top-1 Accuracy | Top-10 Accuracy | Primary Failure Mode |
-|---|---|---|---|---|
-| **Pure Dictionary / Trie Lookup** | Ink Traces (`סר⬚⬚ך`) + Lexicon | **8.12%** | **34.50%** | Returns all ~15 matching words alphabetically/by frequency with **zero context awareness**. |
-| **Human Scholar Control** | Ink Traces + Scholar Context | **20.27%** | **43.24%** | First-pass DJD preliminary edition readings. |
-| **TavBERT Base (Encoder)** | Ink Traces + Sentence Encodings | **45.95%** | **62.16%** | Encoder uses bi-directional attention to rank candidates by sentence syntax. |
-| **TavBERT FT-Optimal (Encoder)** | Ink Traces + Fine-Tuned Encodings | **47.30%** | **64.86%** | **+39.18% Top-1 gain over pure dictionary!** |
+### 1.4 Do We Need a Neural Encoder At All?
+A fair challenge: if the ink pattern already restricts candidates to a small set, why not just look them up?
 
-**Why the Encoder is Essential:**
-1. **Ranking Among Compatible Candidates:** A pattern like `סר⬚⬚ך` matches 18 distinct Hebrew words (`סרכיך`, `סרממך`, `סרכים`, `סרחיך`). A dictionary lookup cannot tell which word fits the surrounding grammar (`"... ו [??] בלדד ..."`). The Encoder weighs context tokens to rank `סרכיך` as #1.
-2. **Handling Gaps Without Ink Traces (17.5% of Lacunae):** 17.5% of physical lacunae have no surviving ink traces (`⬚⬚⬚⬚⬚`). A dictionary lookup returns >10,000 words (0.0% accuracy), while the Encoder evaluates surrounding context syntax.
+The argument for the encoder is structural rather than empirical at this stage:
 
-### 1.5 Why Do Synthetic Tests Mask Words While Physical Tests Mask Letters? (Dual-Track Design)
-A key methodological question: *Why does Track A mask complete words while Track B masks individual letters?*
+1. **Ranking among ink-compatible candidates.** A pattern such as `⬚⬚לעים` is satisfied by several real Hebrew
+   words — in the observed test case the model's ranked output was `הקלעים`, `קלעים`, `סלעים`, `הסלעים`,
+   `תולעים`, while the attributed reading was `מבלעים`. A lexicon lookup has no way to order these; an encoder
+   can at least condition on the surrounding syntax.
+2. **Gaps with no surviving ink.** **70.3% of damaged word positions retain no ink at all** (and 15.0% of
+   lacunae contain no traced word anywhere). For those, pattern matching is vacuous and context is the only
+   available signal.
 
-Our research utilizes a **Dual-Track Evaluation Architecture**:
-- **Track A: Synthetic Cloze Benchmark (`scatter-30`):** Masks 30% of complete content words to evaluate pure syntactic and semantic cloze capacity under standard NLP benchmarking protocols.
-- **Track B: Physical Real Lacuna Benchmark (`lacuna-real` & $n=3,695$):** Evaluates real manuscript tearing where physical damage cuts directly through words, dropping individual letters and preserving partial letter ink traces (`סר⬚⬚ך` $\to$ **סרכיך**).
+> [!NOTE]
+> **[not yet measured]** No dictionary/trie baseline has been run against the QD benchmark, so this section
+> claims no comparative numbers. Building that baseline is a cheap and worthwhile addition — it is the natural
+> control a reviewer will ask for, and the encoder's value is currently argued rather than demonstrated.
 
-When letter-level dropouts are evaluated under Track B ($P0$), accuracy jumps from **23.65% (Word Cloze)** to **64.86% Top-10 / 70.27% Top-20 (Letter Traces)**!
+### 1.5 Why Does the Synthetic Track Mask Words and the Physical Track Mask Letters?
+Two tracks measure two different things and must never be chained into one narrative.
 
----
+- **Track A — synthetic cloze (`scatter-30`).** Hides 30% of complete content words in *preserved* text.
+  Measures cloze capacity under heavy context loss. This is synthetic damage, not a real lacuna.
+- **Track B — real lacunae (`lacuna-real`).** Real manuscript damage cuts *through* words, dropping some
+  letters and leaving others. Measures restoration where partial ink survives.
 
-## 🏛️ 2. Executive Summary & Headline Discoveries
-
-```
-┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   HEADLINE DISCOVERIES AT A GLANCE                                      │
-├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ ⚡ 1. PHYSICAL EVIDENCE DOMINANCE: Conditioning on physical gap budgets (P0) + surviving partial traces │
-│       (סר⬚⬚ך) increases real-lacuna Top-10 restoration accuracy from 9.46% to 66.22% (+56.76% gain).     │
-│                                                                                                         │
-│ 🎯 2. PRIMARY HEADLINE MODEL (TavBERT FT-Optimal): With validation early-stopping, TavBERT FT-Optimal  │
-│       achieves SOTA across all benchmarks: 23.65% Hit@10 (scatter-30) & 47.30% Top-1 (QD real lacunae).  │
-│                                                                                                         │
-│ 📈 3. DOMAIN ADAPTATION GUARANTEE: Regularized fine-tuning on Qumran text recovers Modern Hebrew gaps,  │
-│       boosting TavBERT (+2.53%) and DictaBERT-char (+5.20% gain, 17.60% -> 22.80% Hit@10).             │
-│                                                                                                         │
-│ ⚖️ 4. THE SCORING TRAP EXPOSED: Scoring aligned-only words artificially inflates WordPiece models       │
-│       (MsBERT 21.56%), but under fair all-words scoring (unaligned = miss), MsBERT crashes to 13.31%.  │
-│                                                                                                         │
-│ 🧩 5. SOLVING MULTI-WORD UNKNOWN GAPS: LengthEnsembleCharMLMGenerator evaluates candidate lengths       │
-│       L in [3, 15] with length-penalty scoring, breaking the 0.0% multi-word wall (14.2% Hit@10).       │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-> [!TIP]
-> **The 1-Minute Pitch to Your Advisor:**
-> *"Restoring damaged Dead Sea Scroll lacunae is usually framed as a pure AI text generation task. But unconstrained models get real lacunae right less than 10% of the time. We audited 12,971 damaged scroll words and proved that 82.5% of lacunae actually retain visible partial letter ink traces (`סר⬚⬚ך`). We built the first scroll-disjoint benchmark that conditions character MLMs directly on physical ink traces—boosting real lacuna restoration accuracy from **9.5% to 66.2%** (more than doubling first-pass human scholar baselines at 20.3%)."*
-
-### 2.1 Publication Scope Audit: Main Body vs. Appendix Recommendation
-To keep the manuscript focused and concise, we recommend splitting our 7 benchmark tables between the **Main Paper Body** and the **Appendix**:
-
-```
-┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ MAIN PAPER BODY TABLES (Core Restoration Narrative - 4 Tables)                                           │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ • Table 1: Synthetic Cloze Restoration (scatter-30, n=729) --> Primary headline cloze benchmark (23.65%). │
-│ • Table 2: Real Lacuna Literature Agreement (QD n=74)    --> Flagship physical lacuna result (47.30% Top-1)│
-│ • Table 4: Unknown-Length Multi-Word Restoration          --> Solves long unknown multi-word gaps (14.2%)│
-│ • Table 5: Large-Scale Physical Lacuna Eval (n=3,695)    --> Confirms physical P0 scale across test set │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ APPENDIX / SUPPLEMENTARY TABLES (Secondary & Specialized Ablations - 3 Tables)                            │
-│ • Table 3: Model Selection & Pretraining Scale (n=30)     --> Small dev subset model selection (Move to App A)│
-│ • Table 6: Pesher Quote-Aware Source Retrieval (n=35)     --> Specialized commentary retrieval (Move to App B)│
-│ • Table 7: Canonical Dataset Split Breakdown (n=732)      --> Split statistics (Move to Dataset Methods/App S1)│
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+The masking unit differs because the damage does. Track A numbers (≈21% Hit@10) and Track B numbers (63.5%
+Top-10) are different tasks on different data and are not comparable.
 
 ---
 
-### 2.2 Summary of 12 Architecture Unification Decisions (`UNIFICATION_DECISION_POINTS.md`)
+## 🏛️ 2. Executive Summary
 
-Below is the detailed **State Before vs. Chosen Unified State** breakdown for all 12 architectural decisions:
-
-| Decision # | Decision Topic | State Before (Fragmented / Legacy Approach) | Chosen Unified State & Philological Rationale | Codebase Status |
-|---|---|---|---|---|
-| **#1** | **Dataset Split Strategy** | Random sentence splits leaked fragments of the same scroll (e.g. 4Q258) into both train and test sets, causing artificial text memorization. | **Manuscript-Disjoint SHA-1 Partitioning (`dss_scroll_splits_v1.json`)**: 732 scrolls split strictly by manuscript ID ($\text{SHA1} \bmod 100$). **Zero straddling scrolls**. | Implemented & Frozen |
-| **#2** | **Headline Baseline Model** | DictaBERT-char was assumed to be the default headline baseline; TavBERT was un-evaluated under optimal fine-tuning. | **TavBERT (`tau/tavbert-he`) as Primary Headline Baseline**: Reached top empirical accuracy (**23.65% Hit@10** cloze, **47.30% Top-1** QD real lacunae). | Implemented in PR #2 |
-| **#3** | **Lacuna Masking Protocol** | Literature used toy 15% random word masking in clean text vs real scroll damage without synthetic controls. | **Dual-Track Framework**: Track A (`scatter-30`, 30% word masking) for synthetic cloze; Track B (`lacuna-real`, QD $n=74$ & $n=3,695$) for physical ink traces ($P0$). | Implemented & Frozen |
-| **#4** | **WordPiece Alignment Failure** | WordPiece MsBERT failed to align on 38.3% of words. Previous scripts scored aligned-only words (21.56%), hiding 38.3% missed words. | **Headline All-Words Metric ($unaligned = miss$)**: Unaligned predictions count as 0.0 hit score. Drops MsBERT to **13.31%**, reflecting true usability. | Implemented & Frozen |
-| **#5** | **Track Asymmetry Regimes** | Mixed gold lengths, ink traces, and context without clear epigraphic boundaries. | **Three Explicit Regimes**: $[U0]$ Unconstrained (9.46% Top-10), $[O\text{-len}]$ Oracle Length (23.65% Hit@10), $[P0]$ Physical Ink Traces (64.86% Top-10). | Implemented & Frozen |
-| **#6** | **RAG Integration Scope** | Attempted RAG across all texts, causing hallucinated biblicisms on non-biblical sectarian texts. | **Pesher-Specific Source Retrieval Module**: RAG restricted to Pesher commentaries, reaching **86.57% Top-1** biblical book recovery. | Implemented & Frozen |
-| **#7** | **Multi-Word Unknown-Length Gaps** | Standard fixed-length MLMs collapsed to 0.0% accuracy on long physical holes of unknown character length. | **`LengthEnsembleCharMLMGenerator`**: Loops lengths $L \in [3, 15]$ with length-penalty scoring $\frac{\sum \log P}{L^{0.5}}$ (**14.2% Hit@10**). | Implemented & Frozen |
-| **#8** | **Redaction & Leakage Rules** | Digital editions contained modern scholar bracketed guesses (`ס[רכי]ך`), allowing models to cheat by reading guesses. | **Automated Zero-Leak Redaction Engine**: 100% of `rec=1` editorial reconstructions stripped to `⬚`. Model sees strictly `rec=0` physical ink. | Implemented & Frozen |
-| **#9** | **Fine-Tuning Strategy** | Fixed-epoch TavBERT fine-tuning caused severe overfitting (20.58% FT vs 21.12% Base). | **Unified Trainer with Validation Early Stopping**: `evaluation_strategy="epoch"`, `load_best_model_at_end=True`, $1 \times 10^{-5}$ LR. Boosts TavBERT to **23.65%**. | Implemented in `unified_trainer.py` |
-| **#10** | **Statistical Significance** | Accuracy numbers reported as simple point estimates without confidence intervals or significance tests. | **Paired McNemar Test ($z$-stat, $p$-value) + Percentile Bootstrap (1,000 resamples)**: Formally verifies 95% CIs and significance ($p < 0.01$). | Implemented in `metrics_runner.py` |
-| **#11** | **Dataset Licensing & Provenance** | Loose data provenance descriptions raised questions about data origins and license freshness. | **Public Text-Fabric & Qumran-Digital API Provenance**: Open sources: ETCBC `bhsa/dss` (v1.8) and Göttingen QD API (snapshot May 21, 2026). | Implemented & Verified |
-| **#12** | **Publication & Presentation Strategy** | Results scattered across dozens of individual scripts and notebooks. | **Master Reference Document (`PAPER_MASTER_SUMMARY.md`) + Interactive 8-Slide HTML Deck (`PAPER_PRESENTATION.html`)**: Centralized presentation deck. | Implemented in `PAPER_PRESENTATION.html` |
-
----
-
-### 2.3 Deep-Dive: What Is the Pesher-Specific Source Retrieval Module? (Table 6)
-
-#### What is a "Pesher"? (פֶּשֶׁר)
-In the Dead Sea Scrolls, a **Pesher** (e.g. 1QpHab Pesher Habakkuk, 4QpPs Pesher Psalms) is an ancient sectarian commentary. It follows a strict structural formula:
-1. **Biblical Citation (Lemma):** The scroll quotes a verse from a Biblical book (e.g. Habakkuk or Psalms).
-2. **Introductory Formula:** The scroll writes `פשרו על` (*pishro 'al*, "its interpretation concerns...").
-3. **Sectarian Commentary:** The author interprets the quote as a prophetic prediction about the Qumran community.
-
-#### Why Standard RAG Fails vs. Our Pesher Solution
-- **The Trap:** Applying generic RAG across all scroll fragments forces false biblicisms onto non-commentary sectarian texts (like 1QS Rule of the Community).
-- **Our Solution:** We restrict RAG retrieval strictly to **Pesher commentary passages**.
-- **How It Works:** 
-  1. Detects introductory formulas (`פשרו על`).
-  2. Runs quote-aware TF-IDF + character n-gram matching across the 24 books of the Hebrew Bible.
-  3. Injects the matched biblical verse as secondary context to TavBERT to fill in damaged biblical quotes.
-- **Empirical Performance (Table 6):** Reaches **86.57% Top-1 / 99.14% Top-3** biblical book recovery (vs 52.41% for standard trigram matching, $p = 0.0008$).
-
----
-
-## 📜 3. Real-World Dead Sea Scroll Manuscripts & Error Analysis
-
-### 3.1 Five Real-World Dead Sea Scroll Restoration Examples
-
-Here are 5 concrete examples from famous non-biblical Dead Sea Scrolls evaluated in our study:
-
-```
-┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ EXAMPLE 1: 1QS Col. V, l. 1 (Rule of the Community)                                                     │
-│ Context : "... וזה הסרך לאנשי ..."                                                                       │
-│ Pattern : "הס⬚⬚ך"  (Length L = 5, Physical Ink Traces: 'ה', 'ס', 'ך')                                      │
-│ Model Top-1 Prediction : הסרך (ha-serek = "the rule / order")  [MATCHES GOLD - Top-1 Hit!]               │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ EXAMPLE 2: 1QH Col. XII, l. 6 (Thanksgiving Hymns)                                                      │
-│ Context : "... אודכה אדוני כי ..."                                                                       │
-│ Pattern : "או⬚⬚כה"  (Length L = 6, Physical Ink Traces: 'א', 'ו', 'כ', 'ה')                                   │
-│ Model Top-1 Prediction : אודכה (odekha = "I thank thee")  [MATCHES GOLD - Top-1 Hit!]                      │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ EXAMPLE 3: 4Q258 Frg. 1, l. 3 (Community Rule Fragment)                                                 │
-│ Context : "... ללכת לפניו בתמים ..."                                                                      │
-│ Pattern : "בת⬚⬚ם"  (Length L = 5, Physical Ink Traces: 'ב', 'ת', 'ם')                                      │
-│ Model Top-1 Prediction : בתמים (be-tamim = "in perfection / integrity")  [MATCHES GOLD - Top-1 Hit!]        │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ EXAMPLE 4: CD Damascus Document Col. I, l. 4                                                            │
-│ Context : "... ובחסדו פקד אותם ..."                                                                       │
-│ Pattern : "וב⬚⬚דו"  (Length L = 6, Physical Ink Traces: 'ו', 'ב', 'ד', 'ו')                                  │
-│ Model Top-1 Prediction : ובחסדו (u-ve-hasdo = "and in His lovingkindness")  [MATCHES GOLD - Top-1 Hit!]     │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ EXAMPLE 5: 11Q11 (11Q PsApa Col. I, l. 2 - Apocryphal Psalms)                                            │
-│ Context : "... שבועה ... ביהוה ... הזואת ..."                                                            │
-│ Pattern : "וב⬚⬚הו"  (Length L = 6, Physical Ink Traces: 'ו', 'ב', 'ה', 'ו')                                 │
-│ Model Top-1 Prediction : ובוכהו (u-vokhohu = "and in his weeping")  [MATCHES GOLD - Top-1 Hit!]              │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-### 3.2 Error Analysis: Why Is Our Best Method Not 100% Perfect Yet?
-
-While TavBERT FT-Optimal under physical conditioning ($P0$) achieves **64.86% Top-10 / 70.27% Top-20** (a 7× improvement over unconstrained models), approximately **30% of lacunae still fail**. Our empirical error audit reveals **4 distinct failure modes**:
-
-```
-┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ DIAGNOSTIC ERROR BREAKDOWN ON FAILED TOP-10 LACUNAE                                                      │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ 🟦 1. Morphological & Orthographic Synonyms (45% of Errors):                                             │
-│    The model predicts a 100% grammatically and semantically valid word (e.g. 'הסרך' vs 'הסרכים', or    │
-│    plene/defective spelling 'לוא' vs 'לא'), but exact string scoring counts it as a miss against gold.   │
-│                                                                                                          │
-│ 🟩 2. Severe Surrounding Context Degradation (30% of Errors):                                            │
-│    When 2 or 3 adjacent words on BOTH sides of the gap are completely rotted away, local syntactic        │
-│    dependencies break down, flattening the probability distribution and dropping gold to rank 12-15.    │
-│                                                                                                          │
-│ 🟧 3. Rare Sectarian Hapax Legomena & Unique Proper Names (15% of Errors):                              │
-│    Rare proper names or unique Qumran jargon (e.g. 'מליצי', 'חביון') occur only once in the corpus.       │
-│    The model assigns higher prior probabilities to common sectarian words ('ישראל', 'אמת').              │
-│                                                                                                          │
-│ 🟨 4. Ambiguous Visual Ink Stroke Traces (10% of Errors):                                                 │
-│    A single surviving stroke trace matches multiple Hebrew letters (e.g. 'ר' vs 'ד' vs 'ו').             │
-│    The search space expands slightly, allowing false positives to outrank the gold word.                 │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-### 3.3 Algorithmic Roadmap: Exact Measured Empirical Numbers ($n=74$ QD Lacunae)
-
-We evaluated the exact empirical accuracy progression as each of the 4 Roadmap Points was activated on the Qumran Digital literature agreement benchmark ($n=74$ target lacunae):
-
-| Roadmap Stage / Algorithmic Component | Top-1 Accuracy | Top-10 Accuracy | Top-20 Accuracy | Cumulative Gain |
-|---|---|---|---|---|
-| **Baseline TavBERT FT (P0 Exact String Match)** | **47.30%** | **64.86%** | **70.27%** | — Baseline — |
-| **+ Point 1: Morpho-Lemmatic Scoring (`normalize_hebrew_lemma`)** | **58.11%** | **74.32%** | **79.73%** | **+9.46% Top-10** |
-| **+ Point 2: Pesher & Cross-Scroll RAG Injection** | **62.16%** | **78.38%** | **83.78%** | **+13.52% Top-10** |
-| **+ Point 3: Sectarian Vocabulary IDF Boost (`SectarianIDFBooster`)** | **64.86%** | **81.08%** | **85.14%** | **+16.22% Top-10** |
-| **+ Point 4: Epigraphic Stroke Confusion Matrix (`EpigraphicStrokeFilter`)** | **66.22%** | **83.78%** | **87.84%** | 🏆 **+18.92% Top-10 Total!** |
-
-```
-┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ FOUR-POINT ALGORITHMIC IMPROVEMENT ROADMAP & MEASURED RESULTS                                            │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ 🟦 1. Morpho-Lemmatic Normalization Scoring (`normalize_hebrew_lemma()`) ✅                              │
-│    Collapses plene/defective Qumran spellings (`לוא` = `לא`, `כיא` = `כי`) and clitic forms.                 │
-│    Result: 64.86% -> 74.32% Top-10 (+9.46% gain).                                                       │
-│                                                                                                          │
-│ 🟩 2. Global Scroll & Pesher RAG Context Injection ✅                                                     │
-│    Injects quote-aware biblical verse context on Pesher commentary passages ("פשרו על").                  │
-│    Result: 74.32% -> 78.38% Top-10 (+4.06% gain).                                                       │
-│                                                                                                          │
-│ 🟧 3. Sectarian Vocabulary Prior Weighting (`SectarianIDFBooster`) ✅                                     │
-│    Applies dynamic IDF score boost for rare Qumran hapax legomena (`סרך`, `משכיל`, `תמים`, `אביונים`).     │
-│    Result: 78.38% -> 81.08% Top-10 (+2.70% gain).                                                       │
-│                                                                                                          │
-│ 🟨 4. Epigraphic Multi-Glyph Stroke Confusion Matrix (`EpigraphicStrokeFilter`) ✅                       │
-│    Replaces binary stroke filtering with paleographic stroke matrices ('ר' <-> 'ד' <-> 'ו' <-> 'ן').       │
-│    Result: 81.08% -> 83.78% Top-10 (+2.70% gain). Total Cumulative Top-10 Gain: +18.92%!                 │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🔬 4. Concrete Walkthrough Example & Skeptic Defenses
-
-### 4.1 Step-by-Step Restoration Example (`סר⬚⬚ך` $\to$ `סרכיך`)
-
-To see how our system operates in practice, trace a single damaged word position through our pipeline:
-
-```
-STEP 1: RAW SCROLL FRAGMENT (Physical Parchment)
-Context Left  : "... ו "
-Damaged Word  : "ס [ ר כ י ] ך"  (Brackets indicate modern scholar guesses in edition)
-Context Right : " בלדד ..."
-
-STEP 2: ZERO-LEAK REDACTION FILTER
-Rule          : Strip all signs where rec=1 (editorial guesses) -> replace with wildcard ⬚
-Pattern Output: "ס  ⬚  ⬚  ⬚  ך"   (Length L = 5, Physical Ink Traces = 'ס' at pos 1, 'ך' at pos 5)
-
-STEP 3: AUTOREGRESSIVE CHARACTER BEAM SEARCH (TavBERT)
-Pos 1         : Forced 'ס'  (P = 1.0)
-Pos 2         : Forced 'ר'  (P = 1.0)
-Pos 3         : Evaluates Hebrew letters -> 'כ' (P = 0.82), 'מ' (P = 0.12), 'ל' (P = 0.04)
-Pos 4         : Evaluates Hebrew letters -> 'י' (P = 0.91), 'ם' (P = 0.06)
-Pos 5         : Forced Final Kaf 'ך' (P = 1.0, non-final 'כ' rejected by physical filter)
-
-STEP 4: FINAL RANKING & EVALUATION
-Top-1 Predict : סרכיך (sarkekha = "your rules") --> MATCHES GOLD RESTORATION (Top-1 Hit!)
-```
-
----
-
-### 4.2 Five Skeptical Reviewer Traps & How We Defeat Them
-
-| Skeptical Reviewer Question | Potential Concern | Our Bulletproof Defense & Proof |
+| # | Finding | Status |
 |---|---|---|
-| **Trap #1: "Did your model cheat by reading scholar guesses?"** | The model might simply memorize bracketed text `[כי]` in digital editions. | **Defeated by Zero-Leak Redaction Engine:** Every sign with `rec=1` is 100% stripped and replaced with blank wildcards (`⬚`). The model sees strictly `rec=0` physical ink. |
-| **Trap #2: "Did you leak training scrolls into test sets?"** | Fragments of 4Q258 might appear in train while other fragments of 4Q258 appear in test. | **Defeated by SHA-1 Scroll Splits:** All 732 scrolls are assigned to train/val/test by manuscript ID (`dss_scroll_splits_v1.json`). Zero straddling scrolls across splits. |
-| **Trap #3: "Why is WordPiece MsBERT's aligned score 21.56% but headline score 13.31%?"** | Sub-word tokenizers prefer aligned-only metrics to hide unaligned predictions. | **Defeated by All-Words Metric ($unaligned=miss$):** MsBERT fails to align on 38.3% of damaged words. An editor needs predictions for 100% of gaps, so missing words count as 0.0. |
-| **Trap #4: "Is 23.65% Hit@10 low if length is known?"** | 23.65% might sound low for 1-word cloze. | **Defeated by 30% Masking Context Challenge:** 30% of ALL words in the sentence are missing simultaneously. Hebrew morphology creates dozens of valid synonyms for a 5-letter slot. |
-| **Trap #5: "How do you handle multi-word gaps of unknown length?"** | Fixed-length MLMs score 0.0% when gap length is unknown. | **Defeated by `LengthEnsembleCharMLMGenerator`:** Ensembles candidate lengths $L \in [3, 15]$ with length-penalty scoring ($\frac{\sum \log P}{L^{0.5}}$), reaching **14.2% Hit@10**. |
+| 1 | **Physical evidence dominates.** On 74 real lacunae, the same model and targets go from **9.5% Top-10 (U0, context only)** to **63.5% Top-10 (P0, ink + approximate length)** — **+54.0 pp**. 95% cluster bootstrap on the P0 figure: **51.4%–74.3%**. | **[pilot]** |
+| 2 | **Sub-word tokenizers fail structurally on character-bounded gaps.** MsBERT cannot align on **279/729 (38.3%)** of masked words. Aligned-only scoring reports 21.56%; all-words scoring reports **13.31%**. | **[measured]** |
+| 3 | **Fine-tuning does not currently help.** On the 729-word cloze benchmark TavBERT base scores **21.12%** against **20.58%** fine-tuned; at $n=250$, 24.40% base against 22.40% fine-tuned. | **[measured]** |
+| 4 | **Scale does not help either.** DictaBERT-char at ~88M and DictaBERT-Large-char at ~307M both score **17.60%** Hit@10 at $n=250$. | **[measured]** |
+| 5 | **Retrieval has produced no restoration gain.** On the 74 real lacunae, adding train-only RAG changes Top-1, Top-10 and Top-20 by **exactly 0.0 pp**. It does recover the quoted biblical book on Pesher passages at **86.6% Top-1**, which is a different task. | **[measured]** |
+| 6 | **Unknown-length multi-word restoration is unsolved.** With the word-slot count supplied, whole-gap Top-10 is **7.0%** (9.0% with RAG). Without it, no benchmark has been run. | **[measured] / [not yet measured]** |
 
----
+### 2.1 Publication Scope
 
-## 📂 5. Data Provenance & Complete Dataset Sitemap
+**Main body**
 
-### 5.1 Authoritative Data Sources & Acquisition Timeline
+| Table | Content | Status |
+|---|---|---|
+| 1 | Synthetic cloze, `scatter-30`, $n=729$ words | **[measured]** |
+| 2 | Real lacuna literature agreement, QD $n=74$ | **[pilot]** |
+| 3 | Multi-word lacunae, known slot count | **[measured]** |
+| 4 | Physical lacuna corpus statistics | **[measured]** — counts only, no model evaluation |
 
-Every metric, dataset split, and lacuna in this project traces directly back to authoritative, timestamped digital humanities databases:
+**Appendix**
 
-| Data Layer & Source | Origin & Institution | Acquisition / Snapshot Date | Endpoint / File Path | Role & Contents |
+| Table | Content | Status |
+|---|---|---|
+| A1 | Model selection and pretraining scale, $n=250$ words | **[measured]** |
+| A2 | Quote-aware Pesher source retrieval | **[measured]** |
+| A3 | Canonical dataset split | **[measured]** |
+
+### 2.2 The 12 Unification Decisions — Implementation vs. Evidence
+
+"Implemented" means the code exists and is unit-tested. It does **not** mean the component has been evaluated
+end-to-end. The two columns are deliberately separate.
+
+| # | Topic | Chosen State | Code | Evidence |
 |---|---|---|---|---|
-| **ETCBC Text-Fabric Manuscript Corpus** | Vrije Universiteit Amsterdam & ETCBC (Dirk Roorda / Eep Talstra Centre) | May 2020 (Text-Fabric v1.8 release) | `bhsa/dss` (v1.8 / 2020 edition) | Ground-truth epigraphic text for 732 non-biblical scrolls with `rec` flags (0=ink, 1=reconstruction). |
-| **Qumran Digital Variant Database** | Göttingen Academy of Sciences and Humanities (Dr. Reinhard G. Kratz) | May 21, 2026 (Live API Snapshot) | `https://lexicon.qumran-digital.org/v1/qumran/word-variants` | 1,811 scholar reading variants and attributed physical fragment collations (Qimron 2013/2020, DJD XXIX). |
-| **Derived Physical Lacuna Dataset** | Extracted via Text-Fabric Parser (Our Pipeline) | January 2026 | `data/derived/nonbib_lacunae.jsonl` | 27,814 physical scroll lacunae and 165,239 damaged word positions across 732 non-biblical scrolls. |
-| **Canonical Frozen Split Mapping** | SHA-1 Manuscript Partition Registry (Our Pipeline) | February 2026 | `data/splits/dss_scroll_splits_v1.json` | Deterministic scroll partitioning: 531 train / 108 val / 93 test (0 straddling scrolls across splits). |
-| **Embible Parallel Hebrew Corpus** | Open-Source Parallel Hebrew Alignment Corpus | November 2024 | `embible/hebrew_parallel_v1` | Pretraining alignment corpus used for baseline cross-corpus transfer evaluations. |
+| 1 | Dataset splits | Manuscript-disjoint SHA-1 partitioning, 531 / 108 / 93, 0 straddling | Implemented | **[verified]**, but see the two-registry conflict in §6 |
+| 2 | Baseline model | TavBERT (`tau/tavbert-he`) as the cloze reference model | Implemented | **[measured]** — base leads fine-tuned |
+| 3 | Masking protocol | Dual-track: `scatter-30` synthetic vs. `lacuna-real` physical | Implemented | **[measured]** on both tracks |
+| 4 | Alignment metric | All-words headline metric ($unaligned = miss$) | Implemented | **[measured]** |
+| 5 | Regime scoping | Explicit U0 / O-len / P0 regimes | Implemented | **[measured]** |
+| 6 | Retrieval scope | Quote-aware Pesher source retrieval | Implemented | **[measured]** as source recovery; **no measured restoration gain** |
+| 7 | Multi-word gaps | `LengthEnsembleCharMLMGenerator`, $L \in [3,15]$ | Implemented, unit-tested | **[not yet measured]** — never benchmarked |
+| 8 | Redaction | `rec=1` signs never emitted into model input | Implemented | **[verified]** in the corpus manifest |
+| 9 | Fine-tuning strategy | Validation early stopping, $1\times10^{-5}$ LR | Implemented | **[not yet measured]** — no early-stopped run has been scored |
+| 10 | Uncertainty | Percentile cluster bootstrap, $B=1000$; permutation tests for the retrieval ablation | Implemented | **[measured]**. `mcnemar_test()` exists but has never been applied to a reported comparison |
+| 11 | Data licensing | `ETCBC/dss` via Text-Fabric (**CC BY-NC 4.0**) + cached QD snapshot | Implemented | **[verified]** — note the non-commercial term |
+| 12 | Reporting | Evidence register + presentation deck, both guarded by `tests/test_public_claims.py` | Implemented | **[verified]** |
+
+### 2.3 What Is the Pesher Source Retrieval Module?
+
+A **Pesher** (פֶּשֶׁר) is an ancient sectarian commentary following a fixed formula: quote a biblical verse,
+introduce the interpretation with `פשרו על` ("its interpretation concerns…"), then read the verse as a
+prophecy about the Qumran community.
+
+Generic retrieval across the whole corpus injects biblical language into non-commentary texts, so retrieval is
+restricted to Pesher passages. The module detects the citation formula and matches the quotation against the
+24 books of the Hebrew Bible by character n-gram similarity.
+
+**Result [measured]:** **86.6% Top-1 / 99.1% Top-3** book recovery, macro-averaged by Pesher manuscript over
+35 known-source passages from eight mapped Pesharim. See §8, Table A2 for the leakage control.
 
 ---
 
-## 🔬 6. Epigraphic Safeguards & Information Regimes
+## 📜 3. Real Lacunae & Error Analysis
+
+### 3.1 Five Real Targets from the Canonical Test Split
+
+All five scrolls below sit in the **canonical test split**, and every prediction is the model's actual ranked
+output from [`analysis/reports/qd_researcher_comparison.json`](../analysis/reports/qd_researcher_comparison.json).
+Predictions come from `ft_msbert_span_preserved_nonbib` under P0 (±1 character). Two of the five are not Top-1
+hits — this is a representative sample, not a highlight reel. **[pilot]**
 
 ```
-+---------------------------------------------------------------------------------------------------------+
-|                                    THREE INFORMATION REGIMES                                            |
-+---------------------------------------------------------------------------------------------------------+
-|                                                                                                         |
-|  [U0] Unconstrained    : Context only. No physical length or letter traces given.                       |
-|                          --> Simulates unassisted blind guessing (9.46% Top-10).                         |
-|                                                                                                         |
-|  [O-len] Oracle Length : Gold-derived word/character length proxy constraint.                            |
-|                          --> Synthetic benchmark control for 1-word slot filling (23.65% Hit@10).        |
-|                                                                                                         |
-|  [P0] Physical Budget  : Estimated physical char budget + verified partial ink traces (סר⬚⬚ך).           |
-|                          --> Real-world epigraphic setting on physical fragments (66.22% Top-10).       |
-|                                                                                                         |
-+---------------------------------------------------------------------------------------------------------+
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 1. 4Q303 frg. 1, l. 10  (Meditation on Creation A)                                               │
+│    Context  : "... לו עזר כ⬚⬚⬚⬚"          Surviving ink: 'כ',  estimated length 5                 │
+│    Top-1    : כנגדו   (ke-negdo, "corresponding to him")                    ✅ Top-1 hit          │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2. 4Q185 frg. 1-2 i, l. 14  (Sapiential Work)                                                    │
+│    Context  : "... תמו מן ⬚בורת אלהים וזכרו"   Surviving ink: 'בורת', estimated length 5           │
+│    Top-1    : גבורת   (gevurat, "the might of")                             ✅ Top-1 hit          │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 3. 4Q185 frg. 1-2 i, l. 9                                                                        │
+│    Context  : "... באש להבה ישפט⬚"          Surviving ink: 'ישפט', estimated length 5              │
+│    Top-1    : ישפט    (yishpot, "he will judge")                            ✅ Top-1 hit          │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 4. 1QpHab col. IV, l. 11  (Pesher Habakkuk)                                                      │
+│    Context  : "... בעצת בית אשמ⬚⬚"          Surviving ink: 'אשמ',  estimated length 5              │
+│    Top-1    : אשמות                       Attributed: אשמים / אשמתם                               │
+│                                                                    ⚠️ rank 2, wrong inflection    │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 5. 4Q163 frg. 4-7 i, l. 7  (Pesher Isaiah C)                                                     │
+│    Context  : "... ⬚⬚לעים על כנ ..."        Surviving ink: 'לעים', estimated length 6             │
+│    Top-1    : הקלעים                      Attributed: מבלעים                                      │
+│                                             ❌ miss — קלעים / סלעים / תולעים all fit the trace     │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+> [!NOTE]
+> "Attributed" means a *modern published proposal* recorded by Qumran-Digital, not physical ground truth — the
+> original wording is lost. A hit means the model agreed with a bibliographically attributed restoration.
+
+### 3.2 Where Do the Remaining Errors Come From?
+
+Under the P0 baseline, **36.5%** of the 74 targets miss Top-10. Four failure modes are identifiable by manual
+inspection of held-out misses:
+
+1. **Orthographic and morphological variants** — plene/defective spelling (`לוא` vs `לא`) or a different
+   inflection of the right root (`אשמות` vs `אשמים`, example 4 above).
+2. **Severe context degradation** — adjacent words also missing. Confirmed as first-order by the ablation in
+   §3.3.
+3. **Rare sectarian vocabulary and hapax legomena** — targets occurring once in the corpus, where the model
+   prefers common words.
+4. **Ambiguous ink traces** — several real words satisfy the surviving strokes and the context cannot
+   discriminate (example 5 above).
+
+> [!WARNING]
+> **[not yet measured]** The per-category *shares* are not known. The diagnostic CSV that once supported a
+> breakdown is no longer in the repository, so no percentages are claimed. Re-deriving this taxonomy on the
+> current model is a prerequisite for the paper's error-analysis section.
+
+### 3.3 Context Degradation Stress Test **[measured]**
+
+Real lacunae rarely sit in clean text. This ablation randomly masks a fraction of the surrounding context
+words on 120 held-out cases (≤30 per gap-length bucket).
+Artifact: [`analysis/reports/context_noise_ablation.md`](../analysis/reports/context_noise_ablation.md).
+
+| Context noise | Slot-level Top-1 | Sequence-level Top-1 |
+|---|---|---|
+| 0% | 12.2% | 7.5% |
+| 10% | 11.9% | 8.3% |
+| 25% | 8.7% | 5.8% |
+| 40% | 7.4% | 2.5% |
+
+From 0% to 40% noise, slot accuracy falls ~40% relative and sequence accuracy ~67%. Context degradation is a
+measured, first-order limitation — which is precisely why the physical ink channel matters: it survives when
+the context does not.
+
+### 3.4 Four-Point Roadmap — Implemented, Not Yet Evaluated
+
+> [!WARNING]
+> **[not yet measured]** All four components exist in `eval/candidate_generator.py` and
+> `eval/metrics_runner.py` with unit tests, but **none has been run against a benchmark**, so no accuracy is
+> attributable to any of them. Two of the four need rework before they could support a published claim.
+
+1. **Lemma-normalised scoring** (`normalize_hebrew_lemma()`) — collapses final letter forms, common plene
+   spellings and some affixes. This **relaxes the metric**; it does not improve the model, and must be
+   reported as secondary lemma-level agreement alongside exact match.
+2. **Retrieval-augmented context injection** — adds column headers, citation formulas and retrieved keywords
+   when local context is destroyed. The one retrieval variant already measured on real lacunae produced a
+   **0.0 pp** change, so a positive result cannot be assumed.
+3. **`SectarianIDFBooster`** — **needs rework.** It is a hand-written lexicon of 15 terms with hand-assigned
+   weights (2.0–3.5) matched by substring. It computes no inverse document frequency and reads no corpus
+   counts, so the name is inaccurate. A publishable version needs genuine IDF over the training split, and its
+   lexicon must not overlap the evaluation targets.
+4. **`EpigraphicStrokeFilter`** — **needs rework.** Four hand-written letter groups and a single similarity
+   constant of 0.85, applied with a 0.85 threshold, so *any* substitution within a group passes
+   unconditionally. It is a relaxed matcher, not a probability matrix, and it will admit readings the surviving
+   ink excludes. See §7.8.
+
 ---
 
-## ⚙️ 7. Formal Mathematical Methodology & Algorithmic Design
+## 🔬 4. Walkthrough & Reviewer Traps
 
-### 7.1 Manuscript Partitioning & Frozen Splits (`dss_scroll_splits_v1.json`)
-To eliminate data contamination across fragments of the same scroll, we enforce **100% manuscript-disjoint partitioning** via deterministic SHA-1 hash assignments ([`data/splits/dss_scroll_splits_v1.json`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/data/splits/dss_scroll_splits_v1.json)):
+### 4.1 One Target, End to End
 
-$$\text{Partition}(\text{Scroll\_ID}) = \text{SHA1}(\text{Scroll\_ID}) \bmod 100 \implies \begin{cases} \text{Train} & [0, 73) \quad (531 \text{ scrolls}) \\ \text{Val} & [73, 86) \quad (108 \text{ scrolls}) \\ \text{Test} & [86, 100) \quad (93 \text{ scrolls}) \end{cases}$$
+Traced through the pipeline using a real canonical-test target (4Q303 frg. 1, l. 10):
+
+```
+STEP 1: DIGITAL EDITION AS PRINTED
+  Context      : "... אעשה לו עזר"
+  Damaged word : "כ[נגדו"        Square brackets mark the editor's reconstruction (rec=1)
+
+STEP 2: RECONSTRUCTION REDACTION
+  Rule         : signs with rec=1 are never emitted; the gap length is kept as metadata
+  Model input  : "כ⬚⬚⬚⬚"         Surviving ink 'כ' at position 1; estimated length 5
+
+STEP 3: CONSTRAINED CANDIDATE GENERATION
+  Position 1   : forced to 'כ' by the surviving ink
+  Positions 2-5: ranked by the model, filtered to length 5 ± 1
+
+STEP 4: RANKED OUTPUT
+  1. כנגדו     <- matches the attributed reading (Gen 2:18 עזר כנגדו)
+  2. כנגדה
+  3. כמהו
+  4. כנגד
+  5. כאשר
+```
+
+Note what the physical channel does here: one surviving letter plus a length estimate reduces the space enough
+that the context can pick the right word. Note also what it does not do — for the 70.3% of damaged positions
+with no surviving ink, step 3 has nothing to constrain.
+
+### 4.2 Reviewer Traps
+
+| Question | Answer |
+|---|---|
+| **"Did the model read the editors' guesses?"** | No. Text-Fabric flags editorial reconstructions as `rec=1` and the corpus builder never emits that text (`modern_reconstruction_text_emitted: false`). Fine-tuning data contains no bracketed restorations. For Table 2 the *reference* readings come from a separate source (QD publication rows), not from the input text. |
+| **"Did training scrolls leak into test?"** | Not within the canonical registry: all 732 scrolls are assigned by manuscript ID, 0 straddling. **But** a second, incompatible registry exists and was used for the QD run, putting 40 of its 74 targets in the canonical train split. §6 and Table 2 report this and the clean subsets. |
+| **"Why is MsBERT's aligned score 21.56% but its headline 13.31%?"** | Because aligned-only scoring silently drops the 279/729 words (38.3%) where WordPiece cannot express the gap. An editor needs a proposal for every gap, so unaligned counts as a miss. |
+| **"Is ~21% Hit@10 good on single-word cloze?"** | It is weak, and it is presented as a diagnostic rather than a headline. Roughly a third of the sentence is missing at once and Hebrew morphology admits many valid inflections per slot. But no model in Table 1 is separated from its neighbour at 95%, and fine-tuning does not beat the base checkpoint. The result worth defending is the physical-conditioning effect, not the cloze number. |
+| **"Can you handle multi-word gaps of unknown length?"** | Not yet. With the slot count supplied, whole-gap Top-10 is 7.0% (9.0% with RAG); on the synthetic-span diagnostic every system scores 0% on two- and three-word spans. `LengthEnsembleCharMLMGenerator` is implemented and unit-tested but never benchmarked. |
 
 ---
 
-### 7.2 Unified Candidate Generator Interface ([`eval/candidate_generator.py`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/eval/candidate_generator.py))
-All model families implement a unified abstract boundary:
+## 📂 5. Data Provenance
 
-$$\text{generate\_candidates}(\text{context}_{\text{left}}, \text{context}_{\text{right}}, L, P, K) \to [C_1, C_2, \dots, C_K]$$
+| Data layer | Origin & attribution | Version / snapshot | Path | Role |
+|---|---|---|---|---|
+| **ETCBC Dead Sea Scrolls corpus** | ETCBC (Vrije Universiteit Amsterdam), distributed via Text-Fabric. Transcription and features by **Martin G. Abegg Jr., James E. Bowley, Edward M. Cook**. **Licence: CC BY-NC 4.0.** | Corpus `ETCBC/dss`, data version **2.0** | `DSS_TF_DIR` | Source text for 732 non-biblical scrolls with `rec` flags (0 = ink, 1 = reconstruction). |
+| **Qumran-Digital variant database** | Qumran Digital: Text and Lexicon — Göttingen Academy of Sciences and Humanities | Cached snapshot **2026-05-21**; the scorer makes no network requests | `data/derived/qd_researcher_variants.jsonl` | 1,811 proposal rows → 74 eligible targets with attributed restorations. |
+| **Derived lacuna dataset** | This project's Text-Fabric parser | SHA-256 `41206bc6…f7caff6b8` | `data/derived/nonbib_lacunae.jsonl` | 27,814 lacunae; 165,239 damaged and 103,355 preserved word positions. |
+| **Preserved-text chunk corpus** | `data/build_preserved_nonbib_corpus.py` (seed 0, ≥20 preserved words per chunk) | SHA-256 `4c73c58c…044a517f` | `data/derived/preserved_nonbib_chunks.jsonl` | 1,647 chunks for fine-tuning and cloze evaluation. |
+| **Canonical split registry** | Deterministic SHA-1 partition of manuscript IDs | v1.0.0, cut points 73 / 88 | `data/splits/dss_scroll_splits_v1.json` | 531 train / 108 val / 93 test, 0 straddling. |
+| **Embible comparison data** | Embible project's released biblical validation/test JSONL | Pinned backend commit `7c9e769274a273d0b357b066d932f1c6833ca5f8` | `analysis/reports/embible_bible_transfer.json` | Domain-transfer diagnostic. Biblical text was used for calibration and evaluation, **never training**. |
+
+> [!WARNING]
+> **Licensing.** `ETCBC/dss` is **CC BY-NC 4.0**. Attribution must name Abegg, Bowley and Cook, and any
+> redistribution of derived text — including examples printed in the paper or shipped in a demo — has to
+> respect the non-commercial term. This needs checking against the target venue's requirements.
 
 ---
 
-### 7.3 Partial-Letters Conditioning (§6c / R2b)
-For character-level MLMs (`TavBERT`, `dictabert-char`), conditioning is applied natively during beam search. At token position $i$, candidate characters $c_i$ inconsistent with pattern $P[i]$ receive zero probability:
+## 🔬 6. Safeguards & Information Regimes
 
-$$P(c_i \mid c_{<i}) = \begin{cases} P_{\text{model}}(c_i \mid c_{<i}) & \text{if } P[i] = \text{wildcard} \text{ or } c_i = P[i] \\ 0 & \text{otherwise} \end{cases}$$
+```
++---------------------------------------------------------------------------------------------------+
+|                                   THREE INFORMATION REGIMES                                       |
++---------------------------------------------------------------------------------------------------+
+|  [U0]    Context only. No length, no letter traces.                                               |
+|          Real lacunae, n=74 : 9.5% Top-10                                        [pilot]          |
+|                                                                                                   |
+|  [O-len] Gold character length supplied as a proxy. Synthetic cloze control.                       |
+|          scatter-30, n=729  : 21.12% Hit@10 (TavBERT base)                       [measured]        |
+|                                                                                                   |
+|  [P0]    Estimated character budget + surviving partial ink.                                       |
+|          Real lacunae, n=74 : 63.5% Top-10  [51.4%-74.3%]                        [pilot]          |
++---------------------------------------------------------------------------------------------------+
+```
+
+U0 and P0 are measured on the *same* 74 targets with the *same* model, so their difference is meaningful. The
+O-len row is a **different task on different data** and does not belong in that progression.
+
+### Open issue: two split registries
+
+Two incompatible split definitions coexist:
+
+| Registry | Scrolls | Partition |
+|---|---|---|
+| `data/splits/dss_scroll_splits_v1.json` (canonical) | 732 | 531 train / 108 val / 93 test |
+| `preserved_nonbib_manifest.json` → `scroll_splits` | 736 | 413 train / 103 dev / 220 heldout |
+
+The QD benchmark ran against the **manifest** registry, so **40 of its 74 targets fall in the canonical
+registry's train split**. Table 2 reports the canonical-clean subsets alongside the headline. The mismatched
+targets score *lower* (60.0% Top-10) than the clean ones, so the headline is not inflated — but the registries
+must be consolidated and the benchmark re-run on one of them before submission.
+
+Separately, **only 374 of the 732 registry scrolls yield any text chunk**: a chunk requires at least 20
+preserved words, and most scrolls are too fragmentary. A further 3 chunk-bearing scrolls are absent from the
+canonical registry entirely.
 
 ---
 
-### 7.4 Length-Ensemble Beam Search for Unknown-Length Lacunae
-#### Why Standard BERT Models Fail on Multi-Word Gaps
-1. **Fixed Token Count Requirement:** Standard BERT MLMs (e.g. WordPiece MsBERT or fixed-length character MLMs) require inserting an exact, fixed number of `[MASK]` tokens upfront. BERT cannot dynamically alter sequence length during inference.
-2. **WordPiece Token-to-Character Disconnect:** In WordPiece tokenization (MsBERT), 1 token can represent 1 character (`ו`), 3 characters (`אמר`), or an entire word. A physical hole of unknown length cannot be mapped to a fixed WordPiece token count without causing alignment failures (Table 1: 38.3% unaligned misses).
-3. **Catastrophic Failure (0.0% Hit@10):** When forced to predict multi-word lacunae under a single fixed token length, standard BERT models collapse to **0.0% Hit@10**.
+## ⚙️ 7. Methodology
 
-#### How `LengthEnsembleCharMLMGenerator` Solves It
-We overcome this limitation using a Character-Level MLM (TavBERT / DictaBERT-char) where 1 token = exactly 1 character:
-- **Character Length Ensembling ($L \in [3, 15]$):** We iterate candidate character gap lengths $L$ from 3 to 15 characters, running character-level beam search for each candidate length.
-- **Length-Penalty Log-Probability Scoring:** Candidates across all lengths $L$ are unified and re-ranked using length-normalized log-probability scoring:
+### 7.1 Manuscript Partitioning ([`data/splits/dss_scroll_splits_v1.json`](../data/splits/dss_scroll_splits_v1.json))
+
+$$\text{Partition}(\text{Scroll\_ID}) = \text{SHA1}(\text{Scroll\_ID}) \bmod 100 \implies \begin{cases} \text{Train} & [0, 73) \quad (531 \text{ scrolls},\ 72.5\%) \\ \text{Val} & [73, 88) \quad (108 \text{ scrolls},\ 14.8\%) \\ \text{Test} & [88, 100) \quad (93 \text{ scrolls},\ 12.7\%) \end{cases}$$
+
+A scroll's split is a pure function of its identifier, so no manuscript can straddle two splits.
+`utils/splits.py:validate_split_disjointness` asserts this.
+
+### 7.2 Unified Candidate Generator ([`eval/candidate_generator.py`](../eval/candidate_generator.py))
+
+$$\text{generate\_candidates}(\text{context}_{\text{left}}, \text{context}_{\text{right}}, L, P, K) \to [C_1, \dots, C_K]$$
+
+### 7.3 Partial-Letters Conditioning
+For character-level MLMs, candidate characters inconsistent with the surviving ink pattern receive zero
+probability at each position:
+
+$$P(c_i \mid c_{<i}) = \begin{cases} P_{\text{model}}(c_i \mid c_{<i}) & \text{if } P[i] = \text{wildcard or } c_i = P[i] \\ 0 & \text{otherwise} \end{cases}$$
+
+### 7.4 Length-Ensemble Decoding
+A fixed-length MLM must be told how many `[MASK]` tokens to emit and cannot vary output length during
+inference. For a character MLM, `LengthEnsembleCharMLMGenerator` runs beam search once per candidate length
+$L \in [3, 15]$ and re-ranks the union with a length penalty:
 
 $$\text{Score}(C_L) = \frac{\sum_{i=1}^{L} \log P(c_i \mid c_{<i}, \text{context})}{L^{\alpha}}, \quad \alpha = 0.5$$
 
-- **Empirical Result (Table 3):** Breaks the 0.0% failure wall of single-length MLMs, achieving **14.2% Hit@10** on unknown-length multi-word lacunae (approaching the 16.7% Oracle Length $O\text{-len}$ upper bound).
+> [!WARNING]
+> **[not yet measured]** This generator has never been run against a benchmark. No accuracy is claimed for it,
+> and unknown-length multi-word restoration remains an open problem.
 
----
+### 7.5 Scoring Protocol
+- **All-words headline metric ($unaligned = miss$).** A prediction that cannot align to the character-bounded
+  gap scores 0.0 rather than being dropped from the denominator.
+- **Aligned-only metric.** Reported alongside, for transparency about where the difference comes from.
 
-### 7.5 Scoring Protocol & Headline Metric ($unaligned = miss$)
-- **Headline All-Words Metric ($unaligned = miss$):** Unaligned or missing word predictions count as incorrect (0.0 hit score). Prevents WordPiece tokenizers from inflating scores by dropping 38.3% of hard words.
-- **Aligned-Only Metric:** Scores accuracy strictly on aligned words (reported secondary for transparency).
-
----
-
-### 7.6 Fine-Tuning Strategy with Validation Early Stopping ([`training/unified_trainer.py`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/training/unified_trainer.py))
-- **Task:** 1–3 word contiguous span masking.
-- **Hyperparameters:** Learning rate $1 \times 10^{-5}$, linear warmup ratio 0.1, L2 weight decay 0.01.
-- **Validation Early Stopping:** `evaluation_strategy="epoch"` and `load_best_model_at_end=True` track validation loss after every epoch on the 108 validation scrolls, saving the best checkpoint (`eval_loss`).
-
----
-
-### 7.7 Statistical Significance & Cluster Bootstrap
-- **95% Confidence Intervals:** Sentence-level percentile cluster bootstrap ($B = 1000$ resamples).
-- **Paired McNemar Test:** Evaluates statistical significance between competing models ($z$-statistic & $p$-value):
-
-$$z = \frac{(|b - c| - 1)^2}{b + c}, \quad p = 2 \cdot (1 - \Phi(\sqrt{z}))$$
-
----
-
-### 7.8 Epigraphic Multi-Glyph Stroke Confusion Filter (`EpigraphicStrokeFilter`)
-#### The Paleographic Ink Ambiguity Problem
-In torn 2,000-year-old scroll fragments, surviving ink strokes along physical hole edges are frequently eroded or ambiguous:
-- A single vertical downstroke can belong to **`ר` (resh), `ד` (dalet), `ו` (waw), `ן` (final nun), `נ` (medial nun), or `י` (yod)**.
-- A damaged roof stroke can belong to **`ה` (he), `ח` (het), or `ת` (taw)**.
-
-#### The Epigraphic Reality: Why Preliminary Edition Readings Were Ambiguous or "Wrong"
-1. **Preliminary Print Transcriptions vs. Final Collations:** Early editors (in 1950s–1990s DJD print volumes) transcribing torn fragments under optical glasses saw faint vertical strokes along torn hole edges and recorded tentative letter readings—e.g., recording a faint downstroke as **`ד` (dalet)**. Decades later, modern infrared multispectral imaging and scholarship (Qimron 2013/2020) proved the word was written with **`ר` (resh)** (e.g. `ארוני` vs `אדוני`).
-2. **Preventing Rejection of Gold Readings:** Under strict binary matching (`c_char == p_char`), pattern `א⬚⬚ד⬚` flatly rejects gold prediction `ארוני` because `ר != ד`. `EpigraphicStrokeFilter` assigns a similarity score of `0.85` to stroke-confused pairs (`ר` $\leftrightarrow$ `ד`), allowing the true word to pass through and rank at the top.
-3. **Three Categories of Scholarly Disagreement:**
-   - **Stroke Ambiguities (10% of cases):** Faint downstrokes (`ר` vs `ד`, `ו` vs `י`) in preliminary transcriptions.
-   - **Morphological Synonyms (45% of cases):** Plene/defective orthography (`לוא` vs `לא`) or clitics (`הסרך` vs `סרך`).
-   - **Attributed Scholarly Variants (45% of cases):** Collated readings across DJD XXIX vs Qimron 2020 vs DJD VI.
-
-#### Paleographic Matrix Solution & Mathematical Formula
-`EpigraphicStrokeFilter` ([`eval/candidate_generator.py`](file:///Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/eval/candidate_generator.py#L69-L100)) implements a paleographic similarity matrix $S(c_1, c_2) \in [0.0, 1.0]$:
-
-$$S(c_1, c_2) = \begin{cases} 1.0 & \text{if } c_1 = c_2 \text{ or } c_1 = \text{'⬚'} \\ 0.85 & \text{if } c_1, c_2 \text{ belong to same stroke confusion group} \\ 0.0 & \text{otherwise} \end{cases}$$
-
-- **Stroke Groups:** `{"ר", "ד", "ו", "ן", "נ", "י"}`, `{"ה", "ח", "ת"}`, `{"מ", "ס"}`, `{"ב", "כ"}`.
-- **Empirical Impact:** Prevents stroke rejection failures, pushing final pipeline accuracy to **66.22% Top-1 / 83.78% Top-10 / 87.84% Top-20**.
-
----
-
-## 📊 8. Publication Benchmark Tables & Scope Structuring
+### 7.6 Fine-Tuning ([`training/unified_trainer.py`](../training/unified_trainer.py))
+- Task: 1–3 word contiguous span masking.
+- Learning rate $1\times10^{-5}$, linear warmup ratio 0.1, weight decay 0.01.
+- `evaluation_strategy="epoch"`, `load_best_model_at_end=True`, tracking validation loss on the 108 validation
+  scrolls.
 
 > [!NOTE]
-> All tables feature **TavBERT FT (Optimal)** as the primary headline baseline model. Per our publication scope audit, tables are grouped into **Main Paper Body (Tables 1–4)** and **Appendix / Supplementary Material (Tables A1–A3)**.
+> **[not yet measured]** No early-stopped run has been scored on the cloze benchmark. The measured comparison
+> remains 20.58% fine-tuned against 21.12% base — that is, fine-tuning has not yet been shown to help.
+
+### 7.7 Uncertainty
+- **95% confidence intervals:** sentence-level percentile cluster bootstrap, $B = 1000$ resamples, resampling
+  *sentences* rather than words because words inside a sentence share a context and a masking draw.
+- **`mcnemar_test()`** is implemented in `metrics_runner.py` for paired model comparison:
+
+$$z = \frac{(|b - c| - 1)^2}{b + c}, \quad p = 2(1 - \Phi(\sqrt{z}))$$
+
+> [!WARNING]
+> `mcnemar_test()` has never been applied to a reported comparison, so **no model lead in this document is
+> established as significant**, and the overlapping intervals in Table 1 suggest several would not be. Running
+> it on the paired predictions is a prerequisite for any comparative claim.
+
+### 7.8 `EpigraphicStrokeFilter`
+
+On torn fragments, surviving strokes along a hole edge can be genuinely ambiguous: a single vertical downstroke
+may belong to `ר`, `ד`, `ו`, `ן`, `נ` or `י`, and a damaged roof stroke to `ה`, `ח` or `ת`. Early editors
+working under optical magnification recorded tentative readings that later collation with better imaging
+sometimes revised. This is why Qumran-Digital records multiple attributed readings per site — which is exactly
+what Table 2 scores against.
+
+The current implementation assigns similarity as:
+
+$$S(c_1, c_2) = \begin{cases} 1.0 & \text{if } c_1 = c_2 \text{ or either is the wildcard} \\ 0.85 & \text{if } c_1, c_2 \text{ share a stroke group} \\ 0.0 & \text{otherwise} \end{cases}$$
+
+with groups `{ר ד ו ן נ י}`, `{ה ח ת}`, `{מ ס}`, `{ב כ}` and an acceptance threshold of `0.85`.
+
+> [!WARNING]
+> **[not yet measured] and needs rework.** Because the threshold equals the in-group score, *any* substitution
+> within a group passes unconditionally — this is a relaxed matcher, not a probability model, and it will admit
+> readings the surviving ink excludes. The group `{ר ד ו ן נ י}` collapses six letters, and `{מ ס}` and
+> `{ב כ}` are hard to defend palaeographically for the relevant hands. A publishable version needs per-hand
+> confusion probabilities estimated from a labelled palaeographic sample, and any resulting gain must be
+> reported as relaxed-match agreement rather than accuracy.
 
 ---
 
-### 📌 SECTION 1: MAIN PAPER BODY TABLES (Core Restoration Narrative)
+## 📊 8. Benchmark Tables
 
-#### Table 1: Main Synthetic Benchmark — Cloze Restoration (`scatter-30`)
-*Evaluated on the 100-sentence paired test split ($n=729$ masked words) under gold-length $O\text{-len}$ with beam search ($10 \times 6$). [📌 Main Paper Body]*
+### 📌 SECTION 1: MAIN BODY
 
-| Model Family | Model Variant | Headline Hit@10 ($unaligned = miss$) | Headline Hit@1 (95% CI) | Aligned-Only Hit@10 | Char Sim | MRR | Unaligned Misses |
-|---|---|---|---|---|---|---|---|
-| **Char-MLM** | **TavBERT FT (Optimal)** | **23.65%** | **8.42%** [18.90%, 28.40%] | **23.65%** | **0.224** | **0.131** | **0 / 729 (0.0%)** |
-| **Char-MLM** | DictaBERT-char FT | **22.80%** | **8.10%** [17.03%, 29.03%] | **22.80%** | **0.215** | **0.124** | **0 / 729 (0.0%)** |
-| **Char-MLM** | TavBERT Base | **21.12%** | **7.27%** [17.01%, 25.39%] | **21.12%** | **0.176** | **0.117** | **0 / 729 (0.0%)** |
-| **WordPiece** | MsBERT Fine-Tuned | 13.31% | 9.78% [16.76%, 26.59%] | 21.56% | 0.242 | 0.134 | 279 / 729 (38.3%) |
-| **WordPiece** | MsBERT Base | 10.28% | 6.47% [11.66%, 21.56%] | 16.74% | 0.221 | 0.096 | 281 / 729 (38.5%) |
-| **Seq2Seq** | ByT5 Unified FT ($U0$) | 5.35% | 0.82% [3.73%, 7.25%] | 5.35% | 0.127 | 0.018 | **0 / 729 (0.0%)** |
+#### Table 1: Synthetic Cloze — `scatter-30` **[measured]**
+*100 held-out sentences, $n=729$ masked words, regime O-len. Intervals are sentence-level percentile cluster
+bootstrap, $B=1000$.*
+Artifact: [`external_comparison/results/summary_with_subsets.json`](../external_comparison/results/summary_with_subsets.json) (2026-08-01).
 
----
+| Model | Hit@10 (all-words) + 95% CI | Hit@1 | Aligned-only Hit@10 | Char sim | MRR | Unaligned |
+|---|---|---|---|---|---|---|
+| **TavBERT Base** | **21.12%** [17.01%, 25.39%] | 7.27% | 21.12% | 0.176 | 0.117 | 0 / 729 (0.0%) |
+| TavBERT Fine-Tuned | 20.58% [17.03%, 24.49%] | 7.96% | 20.58% | 0.209 | 0.118 | 0 / 729 (0.0%) |
+| MsBERT Fine-Tuned | 13.31% [16.76%, 26.59%] ⚠️ | 9.78% | 21.56% | 0.242 | 0.134 | 279 / 729 (38.3%) |
+| MsBERT Base | 10.29% [11.66%, 21.56%] ⚠️ | 6.47% | 16.74% | 0.221 | 0.096 | 281 / 729 (38.5%) |
+| ByT5 Unified FT | 5.35% [3.73%, 7.25%] | 0.82% | 5.35% | 0.127 | 0.018 | 0 / 729 (0.0%) |
 
-#### Table 2: Real Lacuna Literature Agreement Benchmark (Qumran-Digital, $n=74$)
-*Evaluated at physically damaged locations against published scholarly restorations (Qimron 2013/2020, DJD XXIX). [📌 Main Paper Body]*
+⚠️ For the two MsBERT rows the bootstrap interval was computed on the **aligned-only** subset ($n=450$ / 448),
+so it does not bracket the all-words headline. **This must be recomputed on the full denominator before
+submission.**
 
-| Model / Engine | Information Regime & Pipeline | Top-1 | Top-10 | Top-20 |
+Two further points a reviewer will press on: fine-tuning does not help (base 21.12% vs. FT 20.58%), and no
+model here is separated from its neighbour at 95%. DictaBERT-char was not run on this benchmark; it appears
+only in Table A1.
+
+#### Table 2: Real Lacuna Literature Agreement — Qumran-Digital, $n=74$ **[pilot]**
+*Model: `ft_msbert_span_preserved_nonbib`, trained on preserved letters only, with post-MLM physical
+filtering. **Not** a character model — the character models have not been run on this benchmark.*
+Artifacts: [`QD_RESEARCHER_BENCHMARK.md`](../analysis/reports/QD_RESEARCHER_BENCHMARK.md),
+[`qd_researcher_comparison.json`](../analysis/reports/qd_researcher_comparison.json).
+
+| System / condition | Regime | $n$ | Top-1 | Top-10 | Top-20 |
+|---|---|---|---|---|---|
+| **MsBERT FT + physical filtering** | P0, ±1 | 74 | **40.5%** | **63.5%** [51.4%, 74.3%] | **67.6%** |
+| Same model, same targets | U0 | 74 | — | 9.5% | — |
+| + train-only RAG | P0, ±1 | 74 | 40.5% | 63.5% | 67.6% |
+| QD initial-reading control | — | 74 | 20.3% | 43.2% | 44.6% |
+
+**Robustness to the split-registry conflict** (see §6):
+
+| Restricted to | $n$ | Top-1 | Top-10 | Top-20 |
 |---|---|---|---|---|
-| 🏆 **TavBERT FT + Full Roadmap** | Full Pipeline (Morpho-Lemma + RAG + IDF + Stroke Matrix) | **66.22%** | **83.78%** | **87.84%** |
-| **TavBERT FT (Optimal Baseline)** | Partial-Letters Conditioning ($P0, \pm 1$) | **47.30%** | **64.86%** | **70.27%** |
-| **DictaBERT-char FT** | Partial-Letters Conditioning ($P0, \pm 1$) | 44.59% | **66.22%** | **72.97%** |
-| **TavBERT Base** | Partial-Letters Conditioning ($P0, \pm 1$) | **45.95%** | **62.16%** | **67.57%** |
-| **MsBERT FT** | Vocab-Rank + Partial Letter Filter ($P0, \pm 1$) | 40.54% | **63.51%** | 67.57% |
-| **Human Scholar Control** | Initial DJD Reading Baseline | 20.27% | 43.24% | — |
-| **Pure Dictionary Baseline** | Regex Ink Pattern Matching (No Encoder Context) | 8.12% | 34.50% | 41.20% |
-| **MsBERT FT** | No Physical Constraints ($U0$) | — | **9.46%** | — |
+| Canonical **test** scrolls | 12 | 50.0% | 83.3% | 83.3% |
+| Canonical **val + test** | 34 | 32.4% | 67.6% | 76.5% |
+| Canonical **train** (mismatched) | 40 | 47.5% | 60.0% | 60.0% |
 
----
+Caption must state three limits: QD selects **disputed** sites, the references are modern proposals rather than
+physical truth, and at $n=74$ — 12 on the strictest subset — the interval is wide. The RAG row shows a gain of
+exactly zero.
 
-#### Table 3: Unknown-Length Multi-Word Lacuna Restoration
-*Evaluates multi-word lacunae of unknown character length ($L \in [3, 15]$). [📌 Main Paper Body]*
+**Length-tolerance sensitivity** (from the same artifact): ±0 → 52.5% / 69.5% / 71.2% on 59 eligible targets;
+±1 → 40.5% / 63.5% / 67.6% on 74; ±2 → 40.0% / 62.7% / 66.7% on 75. The conclusion is stable across
+tolerances; the eligible count changes because a proposal outside a tolerance is not physically compatible at
+that setting.
 
-| Model / Strategy | Gap Length Condition | Hit@10 |
+#### Table 3: Multi-Word Lacunae, Known Slot Count **[measured]**
+*The decoder knows the number of word slots but no gold character lengths. References are anonymous
+Text-Fabric editorial reconstructions used only as evaluation labels, excluded from input, training and
+retrieval.*
+Artifact: [`PRESERVED_RAG_LACUNA_LENGTHS.md`](../analysis/reports/PRESERVED_RAG_LACUNA_LENGTHS.md).
+
+| Condition | Unit | $n$ | Top-1 | Top-10 |
+|---|---|---|---|---|
+| Single-word lacuna, baseline | slot = sequence | 25 | 12.0% | 60.0% |
+| Multi-word, baseline | slot | 440 slots | 14.5% | 41.4% |
+| Multi-word, baseline | sequence (whole gap) | 100 spans | 4.0% | 7.0% |
+| Multi-word, + train-only RAG | sequence (whole gap) | 100 spans | 3.0% | 9.0% |
+
+Every row supplies the word-slot count. The genuinely unknown-length case is not represented — see §7.4.
+
+#### Table 4: Physical Lacuna Corpus Statistics **[measured — counts only]**
+*Recomputed from the parsed dataset via `eval/large_scale_lacuna_eval.py`. **No model has been scored at this
+scale**; any accuracy figure for 3,695 lacunae would be unsupported.*
+
+| Quantity | Whole non-biblical corpus | Canonical test split |
 |---|---|---|
-| **LengthEnsembleCharMLM** ($L \in [3, 15]$) | **Unknown Multi-Word Gap** | **14.2%** |
-| Fixed Single-Length MLM | Unknown Multi-Word Gap | **0.0%** |
-| Fixed Length Oracle ($O\text{-len}$) | 1-Word Known Gap | 16.7% |
+| Scrolls | 732 | 93 |
+| Physical lacunae | 27,814 | 3,695 |
+| Damaged word positions | 165,239 | 22,123 |
+| Damaged words retaining ink | 49,130 (29.7%) | 6,512 (29.4%) |
+| Lacunae with ≥1 traced word | 23,632 (85.0%) | — |
+| Preserved (`rec=0`) words | 103,355 | — |
 
----
+The trace rate is the ceiling on where P0 conditioning can apply at all: roughly seven in ten damaged words
+show no ink.
 
-#### Table 4: Large-Scale Text-Fabric Physical Lacuna Evaluation (3,695 Test Lacunae)
-*Scales physical evaluation across all 93 test scrolls (3,695 physical lacunae). [📌 Main Paper Body]*
+### 📁 SECTION 2: APPENDIX
 
-| Model Family / Engine | Information Regime & Pipeline | Top-1 | Top-10 | Top-20 |
+#### Table A1: Model Selection & Pretraining Scale **[measured]**
+*30 held-out sentences, 250 masked words, same scoring as Table 1. Parameter counts are derived from the fp32
+checkpoint sizes of the models actually evaluated.*
+Artifact: [`external_comparison/results/quick30_summary.json`](../external_comparison/results/quick30_summary.json).
+
+| Model | Params | Fine-tuned? | Hit@10 | 95% CI | Unaligned |
+|---|---|---|---|---|---|
+| **TavBERT Base** | ~87M | No | **24.40%** | [18.09%, 31.94%] | 0 |
+| DictaBERT-char FT | ~88M | Yes | 22.80% | [17.03%, 29.03%] | 0 |
+| TavBERT Fine-Tuned | ~87M | Yes | 22.40% | [15.99%, 30.33%] | 0 |
+| MsBERT Fine-Tuned | ~184M | Yes | 21.12% (aligned-only) | [13.00%, 29.17%] | 89 |
+| MsBERT Base | ~184M | No | 18.87% (aligned-only) | [9.56%, 27.21%] | 91 |
+| DictaBERT-char Base | ~88M | No | 17.60% | [12.16%, 23.29%] | 0 |
+| DictaBERT-Large-char | ~307M | No | 17.60% | [11.60%, 23.14%] | 0 |
+
+At $n=250$ every interval overlaps. The defensible conclusion is the negative one: scaling ~88M → ~307M buys
+nothing (17.60% both), and no fine-tuning benefit survives. Model selection should not be decided on 250 words.
+
+#### Table A2: Quote-Aware Pesher Source Retrieval **[measured]**
+*Recovery is macro-averaged by Pesher manuscript over 35 known-source passages from eight mapped Pesharim,
+which is why the percentages are not multiples of 1/35. The ablation is a **leakage control**, not a rival
+method: every token in an exact external match is masked before ranking, then residual recovery is measured
+under nested leave-one-manuscript-out. Significance is a **permutation test** over scroll clusters.*
+Artifacts: [`CROSS_CORPUS_QUOTE_ABLATION.md`](../analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md),
+[`CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md`](../analysis/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md).
+
+| Condition | Top-1 | Top-3 | Significance |
+|---|---|---|---|
+| Literal channel, quotations intact | 86.6% | 99.1% | — |
+| Residual, exact 3-word matches masked (27.0% of words) | 52.4% | 83.6% | permutation $p = 0.0008$ |
+| Residual, exact 2-word matches masked (58.4% of words) | 45.3% | 82.2% | permutation $p = 0.0012$ |
+
+This validates *source-book recovery* on passages whose source is already known. It is not a restoration
+result: no measured restoration gain has been attributed to retrieval anywhere in this project. Residual
+affinity after literal masking does not establish paraphrase, borrowing, authorship, or direction of influence.
+
+#### Table A3: Canonical Dataset Split **[measured]**
+*Chunk counts recomputed by mapping every chunk in `preserved_nonbib_chunks.jsonl` through the canonical
+registry.*
+
+| Split | Scrolls | Share | Text chunks | Straddling |
 |---|---|---|---|---|
-| 🏆 **TavBERT FT + Full Roadmap** | Full Pipeline (Morpho-Lemma + RAG + IDF + Stroke Matrix) | **65.80%** | **82.90%** | **86.40%** |
-| **TavBERT FT (Optimal Baseline)** | Partial-Letters Conditioning ($P0, \pm 1$) | **46.80%** | **64.50%** | **69.80%** |
-| **TavBERT Base** | Partial-Letters Conditioning ($P0, \pm 1$) | **45.10%** | **61.80%** | **67.10%** |
-| **DictaBERT-char FT** | Partial-Letters Conditioning ($P0, \pm 1$) | 44.20% | **65.80%** | **72.40%** |
-| **MsBERT FT** | Vocab-Rank + Partial Letter Filter ($P0, \pm 1$) | 39.80% | **63.10%** | 67.20% |
-| **MsBERT FT** | Unconstrained Context Only ($U0$) | 2.10% | 9.20% | 12.80% |
+| Train | 531 | 72.5% | 1,192 | 0 |
+| Validation | 108 | 14.8% | 212 | 0 |
+| Test | 93 | 12.7% | 231 | 0 |
+| **Total** | **732** | **100.0%** | **1,635** | **0** |
+
+A further 12 chunks come from scrolls absent from the canonical registry, giving 1,647 chunks built in total.
+Only **374 of the 732 registry scrolls (51.1%)** yield any chunk, because a chunk requires ≥20 preserved words.
 
 ---
 
-### 📁 SECTION 2: APPENDIX / SUPPLEMENTARY TABLES (Secondary Ablations)
+## 🗣️ 9. Advisor Talking Points
 
-#### Table A1: Model Selection & Pretraining Scale Ablation ($n=30$ Sentences, 250 Words)
-*Small dev subset model selection ablation. [📁 Appendix Table A1]*
+### 9.1 What Would Survive Peer Review?
 
-| Model Name | Parameters | Fine-Tuned? | Hit@10 | 95% Confidence Interval |
-|---|---|---|---|---|
-| **TavBERT (Optimal)** | 110M | **Yes (FT-Optimal)** | **24.80%** | [18.50%, 32.10%] |
-| **TavBERT Base** | 110M | No (Base) | **24.40%** | [18.09%, 31.94%] |
-| **DictaBERT-char** | 88M | **Yes (FT)** | **22.80%** | [17.03%, 29.03%] |
-| **DictaBERT-char** | 88M | No (Base) | **17.60%** | [12.16%, 23.29%] |
-| **DictaBERT-Large-char** | 400M | No (Base) | **17.60%** | [11.60%, 23.14%] |
+**Defensible as pilots, with limitations stated:**
+- The U0 → P0 contrast on 74 real lacunae: 9.5% → 63.5% Top-10, bootstrap 51.4%–74.3%.
+- The cloze table at $n=729$, presented with its overlapping intervals and the finding that fine-tuning does
+  not help.
+- The WordPiece alignment failure: 279/729 (38.3%).
+- Pesher source recovery (86.6% / 99.1%) with its permutation-tested leakage control.
+- The corpus statistics and the split construction.
 
----
+**Not yet publishable:**
+- Anything about the four roadmap components.
+- Unknown-length multi-word restoration.
+- Any retrieval benefit to restoration.
+- Per-category error shares.
+- Any model accuracy at the 3,695-lacuna scale.
+- Any claim that one model significantly beats another.
 
-#### Table A2: Pesher / Quote-Aware Source Retrieval (35 Passages)
-*Biblical book recovery on Pesher commentary passages. [📁 Appendix Table A2]*
+**Blocking issues before submission:**
+1. Consolidate the two split registries and re-run Table 2 on one of them.
+2. Recompute the MsBERT bootstrap intervals on the all-words denominator.
+3. Run the character models on the QD benchmark so the flagship result is not MsBERT-only.
+4. Run `mcnemar_test()` on the paired predictions so comparisons carry a test.
+5. Grow $n$ beyond 74 (12 on the strictest subset).
+6. Re-derive the error taxonomy on the current model.
 
-| Retrieval Engine | Target Metric | Top-1 Score | Top-3 Score | p-value |
-|---|---|---|---|---|
-| **Quote-Aware Pesher Engine** | Biblical Source Book Recovery | **86.57%** | **99.14%** | — |
-| **Trigram Baseline Ablation** | Biblical Source Book Recovery | 52.41% | — | $p = 0.0008$ |
+### 9.2 Four Questions to Expect
 
----
+**"Why mask 30% of words instead of 15%?"** — In the parsed corpus, damaged positions outnumber preserved ones
+(165,239 gap words against 103,355 preserved), so 30% simultaneous masking is if anything conservative. It also
+stresses the multi-gap regime, which §3.3 shows is where accuracy actually degrades.
 
-#### Table A3: Canonical Dataset Split (`dss_scroll_splits_v1.json`)
-*SHA-1 manuscript-disjoint partition breakdown. [📁 Dataset Methods / Appendix Table A3]*
+**"Is ~21% Hit@10 good?"** — It is weak, and it is a diagnostic rather than a headline. See §4.2.
 
-| Split | Scroll Count | Chunks | Share | Straddling Scrolls |
-|---|---|---|---|---|
-| **Train** | 531 | 1,599 | 73.6% | 0 |
-| **Validation** | 108 | 275 | 12.7% | 0 |
-| **Test** | 93 | 305 | 13.7% | 0 |
-| **Total** | **732** | **2,179** | **100.0%** | **0** |
+**"How do you know the model didn't read the editors' guesses?"** — `rec=1` signs are never emitted into model
+input; the manifest records `modern_reconstruction_text_emitted: false`. See §4.2.
 
----
-
-## 🗣️ 9. Advisor Meeting Talking Points & Peer-Review Defense
-
-### 9.1 Will These Numbers Hold in a Peer-Reviewed Paper? (100% Yes)
-
-Every metric in this paper is backed by **zero-leak epigraphic redaction, manuscript-disjoint splits, and reproducible code**:
-
-1. **Frozen Exact-String Baseline (Table 2):**
-   - TavBERT FT (Optimal Baseline $P0$): **47.30% Top-1 / 64.86% Top-10 / 70.27% Top-20**.
-   - *Peer-Review Defense:* More than **doubles initial human scholar recovery rates (20.27% Top-1)** under strict exact-string matching.
-2. **Full Roadmap Pipeline Extension (Table 2 / Slide 6):**
-   - TavBERT FT + Full Roadmap: **66.22% Top-1 / 83.78% Top-10 / 87.84% Top-20**.
-   - *Peer-Review Defense:* Demonstrates that 45% of exact-string misses are valid morphological synonyms (`normalize_hebrew_lemma()`), plene/defective variants (`לוא` vs `לא`), or stroke ambiguities (`ר` vs `ד`).
-3. **Four Bulletproof Epigraphic Safeguards:**
-   - **Zero-Leak Redaction:** 100% of `rec=1` scholar reconstructions stripped to `⬚`.
-   - **Manuscript-Disjoint SHA-1 Splits:** 531 train / 108 val / 93 test (0 straddling scrolls).
-   - **Headline All-Words Metric ($unaligned = miss$):** Penalizes MsBERT for dropping 38.3% of hard words.
-   - **McNemar Statistical Tests:** All model leads verified statistically significant ($p < 0.01$, 1,000 bootstrap resamples).
+**"What is the human comparison?"** — Qumran-Digital's own recorded *initial reading* per target, scored
+against the same attributed restorations: 20.3% Top-1, 43.2% Top-10. It is a database field, not a controlled
+human study, it is available for only some targets, and because QD catalogues disputed sites a low score is
+partly definitional. It bounds the difficulty of these sites; it does not license a claim that the model
+outperforms scholars.
 
 ---
 
-> [!TIP]
-> Use these 4 bulletproof answers during your meeting if your advisor asks challenging questions:
-
-### Q1: "Why do we mask 30% of words instead of standard 15%?"
-* **Answer:** *"Masking 15% of isolated words in clean text is a toy setup that never occurs on real manuscripts. Our audit of 12,971 damaged scroll words shows physical damage accounts for 25%–35% of tokens. 30% masking (`scatter-30`) mirrors real scroll decay and tests multi-gap context degradation."*
-
-### Q2: "Why is 23.65% Hit@10 strong for 1-word cloze if length is known?"
-* **Answer:** *"In `scatter-30`, 30% of the ENTIRE sentence is missing simultaneously. Furthermore, ancient Hebrew prefixes and suffixes create dozens of valid synonyms for a 5-letter slot (e.g. `ויאמר` vs `ויקרא`). Exact-match cloze requires predicting the exact 1 gold word out of dozens of valid options. Length alone boosts accuracy 4.4× (5.3% $\to$ 23.6%), and adding partial letters pushes it to 66.2%."*
-
-### Q3: "How do we prove our model didn't cheat by reading modern scholar guesses?"
-* **Answer:** *"We built an automated Zero-Leak Redaction Engine. In Text-Fabric, all editorial reconstructions are tagged `rec=1`. Our pipeline 100% redacts all `rec=1` signs into blank wildcards (`⬚`). The model conditions strictly on verified physical ink (`rec=0`)."*
-
-### Q4: "How do we get the Human Scholar Baseline (20.3% Top-1 / 43.2% Top-10)?"
-* **Answer:** *"On the 74 Qumran-Digital targets, we evaluated initial preliminary DJD edition readings against final Qimron collated restorations. Initial human scholar readings match the final restoration 20.3% Top-1. TavBERT FT-Optimal reaches 47.30% Top-1—more than doubling first-pass human retrieval rates."*
-
----
-
-## 🛠️ 10. Codebase Architecture & Command Reference
+## 🛠️ 10. Codebase & Commands
 
 ```text
 dss-restoration/
 ├── data/
-│   ├── derived/nonbib_lacunae.jsonl     <-- 27,814 physical lacunae dataset
-│   └── splits/dss_scroll_splits_v1.json  <-- Canonical frozen split mapping (732 scrolls)
+│   ├── derived/nonbib_lacunae.jsonl      <-- 27,814 physical lacunae
+│   ├── derived/preserved_nonbib_chunks.jsonl  <-- 1,647 preserved-text chunks
+│   └── splits/dss_scroll_splits_v1.json  <-- canonical split registry (732 scrolls)
 ├── utils/
-│   ├── splits.py                         <-- Split loader & disjointness validator
-│   └── tokenizer_compat.py             <-- Unified WordPiece/Char tokenizer helper
+│   ├── splits.py                         <-- split loader & disjointness validator
+│   └── tokenizer_compat.py               <-- WordPiece/char tokenizer helper
 ├── eval/
-│   ├── candidate_generator.py            <-- CandidateGenerator, PartialLetterFilter, LengthEnsemble
-│   ├── masking.py                        <-- Sentence masking engine (scatter-30 & lacuna-real)
-│   ├── metrics_runner.py                <-- Scoring, hit@k, MRR, bootstrap CIs, mcnemar_test
-│   ├── full_test_runner.py              <-- Full 338-sentence test split evaluator
-│   ├── large_scale_lacuna_eval.py       <-- Large-scale Text-Fabric physical lacuna evaluator
-│   └── score_qd_researcher_benchmark.py  <-- Literature agreement benchmark (QD targets)
+│   ├── candidate_generator.py            <-- CandidateGenerator, PartialLetterFilter,
+│   │                                         LengthEnsemble, EpigraphicStrokeFilter
+│   ├── masking.py                        <-- masking engine (scatter-30, lacuna-real)
+│   ├── metrics_runner.py                 <-- scoring, hit@k, MRR, cluster bootstrap, mcnemar_test
+│   ├── full_test_runner.py               <-- full test-split evaluator
+│   ├── large_scale_lacuna_eval.py        <-- physical lacuna corpus statistics (counts only)
+│   └── score_qd_researcher_benchmark.py  <-- QD literature-agreement benchmark
 ├── training/
-│   ├── unified_trainer.py                <-- Fine-tuning CLI & Trainer module with early stopping
-│   ├── run_multiseed_experiment.py       <-- Multi-seed local experiment runner
-│   └── run_optimal_tavbert.py            <-- TavBERT FT-Optimal runner
-├── models/
-│   └── README.md                         <-- Fine-tuned model checkpoints directory
-├── tests/                                <-- 69 unit tests passing via `uv run pytest` (5.5s)
-└── pytest.ini                          <-- Project test configuration
+│   ├── unified_trainer.py                <-- fine-tuning CLI with early stopping
+│   └── run_multiseed_experiment.py       <-- multi-seed runner
+├── analysis/reports/                     <-- generated artifacts; the source of every number here
+├── tests/                                <-- 79 tests, incl. test_public_claims.py claim guards
+└── pytest.ini
 ```
 
-### Essential Execution Commands
-
 ```bash
-# 1. Run full test suite (69/69 passing in 5.5s)
+# Full test suite, including the public-claim guards
 uv run pytest
 
-# 2. Run multi-seed local fine-tuning with validation early-stopping
+# Multi-seed fine-tuning with validation early stopping
 PYTHONPATH=. uv run python training/run_multiseed_experiment.py --model tau/tavbert-he --epochs 3
 
-# 3. Evaluate full test split benchmark
+# Score an existing prediction run against the cloze benchmark
 PYTHONPATH=. uv run python eval/full_test_runner.py --run-dir external_comparison/results/tavbert-base
 
-# 4. Score QD literature agreement benchmark
+# Score the QD literature-agreement benchmark (offline against the cached snapshot)
 PYTHONPATH=. uv run python eval/score_qd_researcher_benchmark.py
 
-# 5. Analyze 27,814 physical lacunae across Text-Fabric corpus
+# Physical lacuna corpus statistics
 PYTHONPATH=. uv run python eval/large_scale_lacuna_eval.py
+```
+
+`tests/test_public_claims.py` ties this document and `PAPER_PRESENTATION.html` to the generated artifacts: it
+fails if an unsupported figure reappears, if a significance claim is made without a test behind it, if the QD
+figures drift from the scorer's own report, or if the split-registry conflict stops being disclosed.
+
 ---
 
-## 📚 10. Dead Sea Scrolls NLP Lexicon & Terminology Glossary
+## 📚 11. Glossary
 
-Below is the definitive reference glossary defining all 12 novel epigraphic NLP terms and methodological concepts introduced in this research:
-
-| Term / Methodological Concept | Epigraphic & Technical Definition | Impact / Usage in Paper |
+| Term | Definition | Status |
 |---|---|---|
-| **Zero-Leak Redaction Filter** | Automated stripping of modern scholar bracketed guesses (`rec=1` in Text-Fabric, e.g. `ס[רכי]ך` $\to$ `ס⬚⬚ך`) before model input. | Guarantees 100% leak-free conditioning strictly on verified physical parchment ink (`rec=0`). |
-| **Dual-Track Evaluation Architecture** | Framework separating synthetic cloze testing under 30% word masking (Track A: `scatter-30`) from physical manuscript ink dropouts (Track B: `lacuna-real`). | Prevents mixing synthetic toy benchmarks with real manuscript restoration tasks. |
-| **Headline All-Words Metric** ($unaligned = miss$) | Scoring rule where any sub-word prediction that fails to align with character-bounded physical gaps counts as 0.0 hit accuracy. | Penalizes WordPiece tokenizers (MsBERT) for dropping 38.3% of hard words (13.31% headline score). |
-| **Information Regimes** ($U0, O\text{-len}, P0$) | Epigraphic input constraint levels: **$U0$** (unconstrained context only), **$O\text{-len}$** (gold character length proxy), and **$P0$** (physical ink budget + partial stroke traces). | Tracks exact accuracy jumps: 9.5% ($U0$) $\to$ 23.6% ($O\text{-len}$) $\to$ 66.2% ($P0$ Top-10). |
-| **`LengthEnsembleCharMLMGenerator`** | Ensemble beam search generator for unknown-length multi-word lacunae that loops character lengths $L \in [3, 15]$ with length-penalty scoring $\text{Score} = \frac{\sum \log P}{L^{0.5}}$. | Breaks the 0.0% failure wall of single-length MLMs on multi-word gaps (14.2% Hit@10). |
-| **Pesher-Specific Source Retrieval Module** | Quote-aware RAG engine that detects ancient commentary citation formulas (`פשרו על`) and retrieves the quoted biblical book via character n-gram TF-IDF matching. | Recovers the correct biblical source book 86.57% Top-1 / 99.14% Top-3 times on Pesher commentary lacunae (Table A2). |
-| **Morpho-Lemmatic Scoring** (`normalize_hebrew_lemma()`) | Relaxed evaluation metric that strips Hebrew prepositions (`ב,כ,ל,מ`), conjunctions (`ו`), articles (`ה`), and suffix inflections (`-ים, -ות`), scoring underlying root lemmas. | Proves that 45% of model "errors" are valid morphological synonyms (e.g. `סרכים` vs `סרך`). |
-| **Manuscript-Disjoint SHA-1 Partitioning** | Deterministic algorithm ($\text{SHA1}(\text{scroll\_id}) \bmod 100$) partitioning 732 non-biblical scrolls into 531 train / 108 val / 93 test with zero straddling scrolls. | Eliminates text memorization across fragments of identical manuscripts. |
-| **Character-Level MLM (Char-MLM)** | Transformer encoder architecture (TavBERT, DictaBERT-char) operating directly on single-character vocabularies ($|V| \approx 30\text{--}50$). | Enables arbitrary character-length lacuna masking without WordPiece alignment failures. |
-| **Physical Ink Trace Budget ($P0$ Filter)** | Character probability filter $P(c_i \mid c_{<i}) = P_{\text{model}}(c_i \mid c_{<i})$ if $c_i = P[i]$ else 0, constraining beam search directly to surviving ink strokes. | Pushes TavBERT accuracy from 23.65% to 64.86% Top-10 on real Dead Sea Scroll fragments. |
-| **Un-aligned WordPiece Dropping** | The systematic failure of sub-word tokenizers (MsBERT) to generate token sequences matching character-bounded physical gaps (38.3% of test words). | Exposes why standard sub-word NLP models fail for physical epigraphy. |
-| **Hapax Legomena Recovery Gap** | Diagnostic failure mode (15% of errors) where lacuna target words occur only once in the entire Qumran corpus. | Identifies rare sectarian vocabulary requiring dynamic IDF score boosting. |
+| **Reconstruction redaction** | Dropping every `rec=1` sign — a modern editorial reconstruction printed in square brackets — before the text reaches the model, e.g. `כ[נגדו` → `כ⬚⬚⬚⬚`. | Enforced at corpus-build time. **[verified]** |
+| **Dual-track evaluation** | Separating synthetic cloze over preserved text (Track A) from real physical lacunae (Track B). | Both measured. Track A must never be quoted as real-lacuna accuracy. |
+| **All-words metric** ($unaligned = miss$) | A prediction that cannot align to a character-bounded gap scores 0.0 rather than leaving the denominator. | MsBERT: 279/729 (38.3%) unaligned; 21.56% aligned-only vs. 13.31% all-words. **[measured]** |
+| **Information regimes** (U0, O-len, P0) | U0 = context only; O-len = gold character length proxy; P0 = surviving ink + approximate length (±1). | Compared within a benchmark, never across. **[measured]** |
+| **Physical ink conditioning (P0)** | Candidate filtering that keeps only strings agreeing with the surviving ink and matching the estimated length within ±1. | The project's one large measured effect: +54.0 pp Top-10. Applies to the 29.7% of damaged words retaining ink. **[pilot]** |
+| **Literature agreement** | Scoring against modern published proposals rather than the lost original wording. | What Table 2 measures. QD catalogues *disputed* sites, so this is neither ground truth nor a random sample. |
+| **Manuscript-disjoint partitioning** | `SHA1(scroll_id) mod 100`, cut points 73 / 88, so all fragments of a manuscript share a split. | 531 / 108 / 93, 0 straddling. A second registry also exists — see §6. **[verified]** |
+| **Character-level MLM** | Encoder over a single-character vocabulary ($\|V\| \approx 30\text{--}50$), e.g. TavBERT, DictaBERT-char. | Enables arbitrary gap lengths, 0/729 unaligned. Cloze advantage over WordPiece is modest and not significant. |
+| **Lemma-normalised agreement** | Relaxed scoring folding final forms, plene spellings and some affixes before comparison. | A metric relaxation, reportable only beside exact match. **[not yet measured]** |
+| **Length-ensemble decoding** | Beam search over candidate lengths $L \in [3,15]$, re-ranked by $(\sum \log P)/L^{0.5}$. | Implemented, unit-tested, never benchmarked. **[not yet measured]** |
+| **Quote-aware source retrieval** | Detects Pesher citation formulas and identifies the quoted biblical book by character n-gram similarity. | 86.6% / 99.1% book recovery. No measured restoration gain. **[measured]** |
+| **Stroke-confusion matching** | Treating palaeographically similar letters as interchangeable when matching against surviving ink. | Four hand-written groups, one constant (0.85), threshold 0.85 — an unconditional in-group pass. Not a probability model. **[not yet measured]** |
 
 ---
 
-## 🎨 11. LaTeX / Overleaf Figure Snippet
+## 🎨 12. LaTeX Figure Snippet
 
 ```latex
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=1.5cm, auto]
-    \node [draw, rectangle, fill=blue!10, rounded corners] (fragment) {Scroll Fragment: \texttt{... ו\ \textcjrab{סר⬚⬚ך}\ בלדד ...}};
-    \node [draw, rectangle, fill=green!10, below of=fragment] (filter) {PartialLetterFilter: \texttt{Pattern = סר??ך, Len = 5}};
-    \node [draw, rectangle, fill=orange!10, below of=fragment] (model) {Char-MLM (TavBERT): Beam Search ($K=50$)};
-    \node [draw, rectangle, fill=purple!10, below of=fragment] (output) {Restoration: \textbf{סרכיך} (\textit{sarkekha}, Top-1, 47.30\%)};
-    
-    \draw[->, thick] (fragment) -- (filter);
-    \draw[->, thick] (filter) -- (model);
-    \draw[->, thick] (model) -- (output);
+\begin{tikzpicture}[node distance=1.4cm, auto]
+    \node [draw, rectangle, fill=blue!10, rounded corners] (fragment)
+        {Digital edition: \texttt{... \textcjrab{לו עזר} \textcjrab{כ[נגדו}}};
+    \node [draw, rectangle, fill=green!10, below of=fragment] (redact)
+        {Redaction (\texttt{rec=1} dropped): \texttt{\textcjrab{כ⬚⬚⬚⬚}}};
+    \node [draw, rectangle, fill=orange!10, below of=redact] (filter)
+        {PartialLetterFilter: pattern \texttt{\textcjrab{כ}????}, $L = 5 \pm 1$};
+    \node [draw, rectangle, fill=purple!10, below of=filter] (output)
+        {Top-1: \textbf{\textcjrab{כנגדו}} \quad (4Q303 frg.~1, l.~10; test split)};
+
+    \draw[->, thick] (fragment) -- (redact);
+    \draw[->, thick] (redact) -- (filter);
+    \draw[->, thick] (filter) -- (output);
 \end{tikzpicture}
-\caption{Overview of the partial-letter character conditioning pipeline for Dead Sea Scroll text restoration.}
+\caption{Partial-letter conditioning pipeline. Surviving ink and an approximate gap length constrain the
+candidate set; the encoder ranks within it. Across 74 real lacunae this raises Top-10 literature agreement
+from 9.5\% to 63.5\% (95\% CI 51.4--74.3\%).}
 \label{fig:pipeline_overview}
 \end{figure}
 ```

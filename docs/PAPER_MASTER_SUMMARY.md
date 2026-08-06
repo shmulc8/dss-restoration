@@ -78,6 +78,44 @@ When letter-level dropouts are evaluated under Track B ($P0$), accuracy jumps fr
 > **The 1-Minute Pitch to Your Advisor:**
 > *"Restoring damaged Dead Sea Scroll lacunae is usually framed as a pure AI text generation task. But unconstrained models get real lacunae right less than 10% of the time. We audited 12,971 damaged scroll words and proved that 82.5% of lacunae actually retain visible partial letter ink traces (`סר⬚⬚ך`). We built the first scroll-disjoint benchmark that conditions character MLMs directly on physical ink traces—boosting real lacuna restoration accuracy from **9.5% to 66.2%** (more than doubling first-pass human scholar baselines at 20.3%)."*
 
+### 2.1 Publication Scope Audit: Main Body vs. Appendix Recommendation
+To keep the manuscript focused and concise, we recommend splitting our 7 benchmark tables between the **Main Paper Body** and the **Appendix**:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ MAIN PAPER BODY TABLES (Core Restoration Narrative - 4 Tables)                                           │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ • Table 1: Synthetic Cloze Restoration (scatter-30, n=729) --> Primary headline cloze benchmark (23.65%). │
+│ • Table 2: Real Lacuna Literature Agreement (QD n=74)    --> Flagship physical lacuna result (47.30% Top-1)│
+│ • Table 4: Unknown-Length Multi-Word Restoration          --> Solves long unknown multi-word gaps (14.2%)│
+│ • Table 5: Large-Scale Physical Lacuna Eval (n=3,695)    --> Confirms physical P0 scale across test set │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ APPENDIX / SUPPLEMENTARY TABLES (Secondary & Specialized Ablations - 3 Tables)                            │
+│ • Table 3: Model Selection & Pretraining Scale (n=30)     --> Small dev subset model selection (Move to App A)│
+│ • Table 6: Pesher Quote-Aware Source Retrieval (n=35)     --> Specialized commentary retrieval (Move to App B)│
+│ • Table 7: Canonical Dataset Split Breakdown (n=732)      --> Split statistics (Move to Dataset Methods/App S1)│
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 2.2 Summary of 12 Architecture Unification Decisions (`UNIFICATION_DECISION_POINTS.md`)
+
+| Decision # | Decision Topic | Selected Choice & Rationale | Status in Codebase |
+|---|---|---|---|
+| **#1** | **Dataset Split Strategy** | **Choice B: Manuscript-Disjoint SHA-1 Partitioning** (`dss_scroll_splits_v1.json`). 732 scrolls split by manuscript ID (531 train / 108 val / 93 test). Prevents fragment leakage. | Implemented & Frozen |
+| **#2** | **Primary Baseline Model Family** | **Choice B: TavBERT (`tau/tavbert-he`) as Primary Baseline**. Replaced DictaBERT-char as headline baseline due to TavBERT's top empirical performance (**23.65% Hit@10** cloze, **47.30% Top-1** QD real lacunae). | Implemented in PR #2 |
+| **#3** | **Lacuna Masking Protocol** | **Choice B: Dual-Track Framework**. Track A (`scatter-30`, $n=729$ words, 30% masking) for synthetic cloze; Track B (`lacuna-real`, QD $n=74$ & $n=3,695$) for physical ink traces ($P0$). | Implemented & Frozen |
+| **#4** | **WordPiece Alignment Failure Metric** | **Choice B: Headline All-Words Metric ($unaligned = miss$)**. Unaligned predictions count as incorrect (0.0). Prevents WordPiece tokenizers (MsBERT) from inflating scores by dropping 38.3% of hard words. | Implemented & Frozen |
+| **#5** | **Track Asymmetry Handling** | **Choice B: Strict Input Information Regimes ($U0, O\text{-len}, P0$)**. Clear epigraphic definitions prevent mixing oracle knowledge with blind context. | Implemented & Frozen |
+| **#6** | **RAG Retrieval Integration** | **Choice B: Pesher-Specific Retrieval Module**. RAG quote retrieval restricted to Pesher commentary passages (Table 6: 86.57% Top-1). | Implemented & Frozen |
+| **#7** | **Multi-Word Unknown-Length Gaps** | **Choice B: `LengthEnsembleCharMLMGenerator`**. Loops lengths $L \in [3, 15]$ with length-penalty scoring $\frac{\sum \log P}{L^{0.5}}$ (14.2% Hit@10 vs 0.0% single-length). | Implemented & Frozen |
+| **#8** | **Redaction & Leakage Rules** | **Choice B: Automated Zero-Leak Redaction Engine**. All `rec=1` (scholar reconstructions) stripped to `⬚`. Model sees strictly `rec=0` physical ink. | Implemented & Frozen |
+| **#9** | **Fine-Tuning Strategy & Trainer** | **Choice B: Unified Trainer with Validation Early Stopping**. `evaluation_strategy="epoch"`, `load_best_model_at_end=True`, $1 \times 10^{-5}$ LR, linear warmup, L2 decay. Prevents overfitting. | Implemented in `unified_trainer.py` |
+| **#10** | **Statistical Significance Methodology** | **Choice B: Paired McNemar Test ($z$-stat, $p$-value) + Percentile Cluster Bootstrap (1,000 resamples)**. Formally verifies significance of gains. | Implemented in `metrics_runner.py` |
+| **#11** | **Dataset Licensing & Reproduction** | **Choice B: Public Text-Fabric & Qumran-Digital API Provenance**. All data references open public humanities databases (`bhsa/dss`, QD API). | Implemented & Verified |
+| **#12** | **Publication & Presentation Strategy** | **Choice B: Master Reference Document + Interactive 8-Slide HTML Presentation Deck**. Full transparency for advisor presentation. | Implemented in `PAPER_PRESENTATION.html` |
+
 ---
 
 ## 📜 3. Real-World Dead Sea Scroll Manuscripts & Error Analysis

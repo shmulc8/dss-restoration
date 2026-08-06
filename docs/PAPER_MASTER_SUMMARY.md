@@ -116,7 +116,26 @@ Below is the detailed **State Before vs. Chosen Unified State** breakdown for al
 | **#9** | **Fine-Tuning Strategy** | Fixed-epoch TavBERT fine-tuning caused severe overfitting (20.58% FT vs 21.12% Base). | **Unified Trainer with Validation Early Stopping**: `evaluation_strategy="epoch"`, `load_best_model_at_end=True`, $1 \times 10^{-5}$ LR. Boosts TavBERT to **23.65%**. | Implemented in `unified_trainer.py` |
 | **#10** | **Statistical Significance** | Accuracy numbers reported as simple point estimates without confidence intervals or significance tests. | **Paired McNemar Test ($z$-stat, $p$-value) + Percentile Bootstrap (1,000 resamples)**: Formally verifies 95% CIs and significance ($p < 0.01$). | Implemented in `metrics_runner.py` |
 | **#11** | **Dataset Licensing & Provenance** | Loose data provenance descriptions raised questions about data origins and license freshness. | **Public Text-Fabric & Qumran-Digital API Provenance**: Open sources: ETCBC `bhsa/dss` (v1.8) and Göttingen QD API (snapshot May 21, 2026). | Implemented & Verified |
-| **#12** | **Publication & Deck Strategy** | Results scattered across dozens of individual scripts, JSON log files, and Jupyter notebooks. | **Master Summary Document (`PAPER_MASTER_SUMMARY.md`) + Interactive 8-Slide HTML Deck (`PAPER_PRESENTATION.html`)**: Centralized presentation deck. | Implemented in `PAPER_PRESENTATION.html` |
+| **#12** | **Publication & Presentation Strategy** | Results scattered across dozens of individual scripts and notebooks. | **Master Reference Document (`PAPER_MASTER_SUMMARY.md`) + Interactive 8-Slide HTML Deck (`PAPER_PRESENTATION.html`)**: Centralized presentation deck. | Implemented in `PAPER_PRESENTATION.html` |
+
+---
+
+### 2.3 Deep-Dive: What Is the Pesher-Specific Source Retrieval Module? (Table 6)
+
+#### What is a "Pesher"? (פֶּשֶׁר)
+In the Dead Sea Scrolls, a **Pesher** (e.g. 1QpHab Pesher Habakkuk, 4QpPs Pesher Psalms) is an ancient sectarian commentary. It follows a strict structural formula:
+1. **Biblical Citation (Lemma):** The scroll quotes a verse from a Biblical book (e.g. Habakkuk or Psalms).
+2. **Introductory Formula:** The scroll writes `פשרו על` (*pishro 'al*, "its interpretation concerns...").
+3. **Sectarian Commentary:** The author interprets the quote as a prophetic prediction about the Qumran community.
+
+#### Why Standard RAG Fails vs. Our Pesher Solution
+- **The Trap:** Applying generic RAG across all scroll fragments forces false biblicisms onto non-commentary sectarian texts (like 1QS Rule of the Community).
+- **Our Solution:** We restrict RAG retrieval strictly to **Pesher commentary passages**.
+- **How It Works:** 
+  1. Detects introductory formulas (`פשרו על`).
+  2. Runs quote-aware TF-IDF + character n-gram matching across the 24 books of the Hebrew Bible.
+  3. Injects the matched biblical verse as secondary context to TavBERT to fill in damaged biblical quotes.
+- **Empirical Performance (Table 6):** Reaches **86.57% Top-1 / 99.14% Top-3** biblical book recovery (vs 52.41% for standard trigram matching, $p = 0.0008$).
 
 ---
 

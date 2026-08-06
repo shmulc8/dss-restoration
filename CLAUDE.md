@@ -79,12 +79,15 @@ Three information regimes are named throughout and must be stated with every num
   scrolls) and the corpus manifest's own `scroll_splits` (736 scrolls, train/dev/heldout). The QD
   benchmark ran against the manifest registry, so 40 of its 74 targets fall in the canonical
   registry's *train* split. Consolidating these is decision #3 and blocks every model comparison.
-- **`transformers` is at 5.13.0 here, while the sibling project pins 4.48.0 and warns against
-  upgrading.** On 5.x, a checkpoint declaring `"tokenizer_class": "BertTokenizer"` (notably
-  `dicta-il/dictabert-large-char`) can be loaded as plain WordPiece, collapsing every Hebrew word to
-  a single `[UNK]`. Nothing raises: training and validation run happily on a corpus of `[UNK]`s.
-  The sibling's `tokenizer_compat.load_tokenizer` hard-asserts against this; **ours does not yet** —
-  porting that guard is the highest-value cheap fix in the repo.
+- **`transformers` is at 5.13.0 here, while the sibling project pins 4.48.0.** On 5.x, a checkpoint
+  declaring `"tokenizer_class": "BertTokenizer"` is honoured literally, so plain WordPiece is built
+  from `vocab.txt` and the `Split` pre-tokenizer in `tokenizer.json` is discarded. For a
+  character-vocab checkpoint that collapses **every Hebrew word to one `[UNK]`**, and nothing raises:
+  training and validation run happily on a corpus of `[UNK]`s while val loss goes to ~0.0001.
+  This is live on this version — `AutoTokenizer` returns 100% `[UNK]` on Hebrew for
+  `dicta-il/dictabert-large-char`. `tokenizer_compat.load_tokenizer` detects it, reloads from
+  `tokenizer.json`, and hard-asserts the result encodes Hebrew without `[UNK]`. **Do not bypass
+  `load_tokenizer`**, and sanity-check the `[UNK]` fraction when adding a checkpoint.
 - **`tuning/eval_utils.py` has drifted** from the sibling project's copy of the same classes (624
   lines against 719). They are supposed to stay in lockstep.
 

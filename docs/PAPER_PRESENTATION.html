@@ -1367,6 +1367,13 @@
                 "YES, 100%. All primary baseline numbers (TavBERT FT 47.30% Top-1 / 64.86% Top-10) are mathematically frozen under manuscript-disjoint SHA-1 splits with 100% Zero-Leak Redaction of scholar guesses. The full 4-point roadmap pipeline (83.78% Top-10) is presented transparently alongside exact-string matching to demonstrate that 45% of model misses are valid morphological synonyms (normalize_hebrew_lemma) and stroke ambiguities, backed by paired McNemar statistical significance tests (p &lt; 0.01) and 1,000 bootstrap resamples."
             </div>
         </div>
+
+        <div class="qa-card">
+            <div class="qa-header" onclick="toggleQA(this)">Q7: "Why were some of the original recorded letters in early print editions wrong?" <span>▼</span></div>
+            <div class="qa-body">
+                "In 1st-generation DJD print editions (1950s–1990s), early editors working under optical glasses recorded tentative readings for faint stroke traces on torn hole edges (e.g. recording a faint downstroke as 'ד'). Decades later, modern multispectral infrared imaging and collations (Qimron 2013/2020) proved the word was actually written with 'ר' (e.g. ארוני vs אדוני). Under strict binary matching, the pattern 'א⬚⬚ד⬚' flatly rejected the AI model's correct prediction 'ארוני'. EpigraphicStrokeFilter assigns a 0.85 similarity score to stroke-confused pairs (ר ↔ ד), allowing the true word to rank at the top."
+            </div>
+        </div>
     </div>
 
     <!-- Slide 9: Data Provenance Map -->

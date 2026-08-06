@@ -528,6 +528,7 @@
             <button class="tab-btn" onclick="switchTab(6)">📚 7. Lexicon & Glossary</button>
             <button class="tab-btn" onclick="switchTab(7)">🗣️ 8. Advisor Q&A</button>
             <button class="tab-btn" onclick="switchTab(8)">📂 9. Data Provenance</button>
+            <button class="tab-btn" onclick="switchTab(9)">📁 10. Appendix</button>
         </div>
         <div class="slide-controls">
             <button class="ctrl-btn" onclick="prevSlide()">← Prev</button>
@@ -1164,211 +1165,7 @@
             </table>
         </div>
 
-        <!-- Appendix -->
-        <h2 style="color: #c084fc; font-size: 1.4rem; border-bottom: 1px solid rgba(139, 92, 246, 0.3); padding-bottom: 0.5rem; margin-top: 2.5rem; margin-bottom: 1.5rem;">
-            📁 SECTION 2: APPENDIX
-        </h2>
-
-        <!-- Table A1 -->
-        <h3 style="color: #60a5fa; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-            <span>Table A1: Model Selection & Pretraining Scale (n=30 sentences, 250 words)</span>
-            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix A1</span>
-        </h3>
-        <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table A1 <span>▼</span></div>
-            <div class="qa-body">
-                <strong>What it tests:</strong> whether a larger pretrained model (~307M DictaBERT-Large-char)
-                beats smaller domain-adapted character models on the same cloze task.<br>
-                <strong>How calculated:</strong> 30 held-out sentences, 250 masked words, same scoring as Table 1.
-                Parameter counts are derived from the fp32 checkpoint sizes of the exact models evaluated, so they
-                are approximate but correspond to what was actually run.
-                <span class="src">external_comparison/results/quick30_summary.json · checkpoint sizes under scratch/external_finetune/models/</span>
-            </div>
         </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Model</th>
-                        <th>Params</th>
-                        <th>Fine-tuned?</th>
-                        <th>Hit@10</th>
-                        <th>95% CI</th>
-                        <th>Unaligned</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="highlight">
-                        <td><strong>TavBERT Base</strong></td>
-                        <td>~87M</td>
-                        <td>No</td>
-                        <td><strong>24.40%</strong></td>
-                        <td>[18.09%, 31.94%]</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>DictaBERT-char FT</td>
-                        <td>~88M</td>
-                        <td>Yes</td>
-                        <td>22.80%</td>
-                        <td>[17.03%, 29.03%]</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>TavBERT Base</td>
-                        <td>~87M</td>
-                        <td>No</td>
-                        <td>21.12%</td>
-                        <td>[17.01%, 25.39%]</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>MsBERT Fine-Tuned</td>
-                        <td>~184M</td>
-                        <td>Yes</td>
-                        <td>13.31%<span class="src">all-words headline; 89 / 250 unaligned</span></td>
-                        <td>[16.76%, 26.59%]</td>
-                        <td>89</td>
-                    </tr>
-                    <tr>
-                        <td>DictaBERT-Large-char</td>
-                        <td>~307M</td>
-                        <td>No</td>
-                        <td>17.60%</td>
-                        <td>[11.60%, 23.14%]</td>
-                        <td>0</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="pitch-box" style="border-left-color:#10b981;">
-            <div class="pitch-title" style="color:#34d399;">💡 Model Scale Takeaways</div>
-            <p style="margin:0;">Scaling parameter size from ~88M to ~307M (DictaBERT-Large-char) provides no accuracy gain (17.60%), confirming that character-level domain model representations (TavBERT Base 21.12%) are far more critical than raw model scale for ancient Hebrew lacuna restoration.</p>
-        </div>
-
-        <!-- Table A2 -->
-        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            <span>Table A2: Quote-Aware Pesher Source Retrieval</span>
-            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix A2</span>
-        </h3>
-        <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table A2 <span>▼</span></div>
-            <div class="qa-body">
-                <strong>What it tests:</strong> given a Qumran commentary (Pesher) passage, can we recover which
-                biblical book it quotes? Recovery is <strong>macro-averaged by Pesher manuscript</strong> over 35
-                known-source passages from eight mapped Pesharim, which is why the percentages are not multiples
-                of 1/35.<br>
-                <strong>The ablation is a leakage control, not a rival method:</strong> every token in an exact
-                3-word external match is masked out before ranking (27.0% of words on average, 0 surviving exact
-                runs), then residual recovery is measured under nested leave-one-manuscript-out. Significance is
-                a <strong>permutation test</strong> over scroll clusters.
-                <span class="src">analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md</span>
-            </div>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Condition</th>
-                        <th>Top-1</th>
-                        <th>Top-3</th>
-                        <th>Significance</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="highlight">
-                        <td>Literal channel (quotations intact)</td>
-                        <td>86.6%</td>
-                        <td>99.1%</td>
-                        <td>—</td>
-                    </tr>
-                    <tr>
-                        <td>Residual, exact 3-word matches masked (nested LOO)</td>
-                        <td>52.4%</td>
-                        <td>83.6%</td>
-                        <td>permutation p = 0.0008</td>
-                    </tr>
-                    <tr>
-                        <td>Residual, exact 2-word matches masked (58.4% of words removed)</td>
-                        <td>45.3%</td>
-                        <td>82.2%</td>
-                        <td>permutation p = 0.0012</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="pitch-box" style="border-left-color:#f59e0b;">
-            <div class="pitch-title" style="color:#fbbf24;">Scope limit</div>
-            <p style="margin:0;">This validates <em>source-book recovery</em> on passages whose source is already
-            known. It is not a restoration result: no measured improvement in lacuna restoration has been
-            attributed to retrieval anywhere in this project (see Table 2, where the RAG delta is 0.0).
-            Residual affinity after literal masking does not establish paraphrase, borrowing, authorship, or
-            direction of influence.</p>
-        </div>
-
-        <!-- Table A3 -->
-        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            <span>Table A3: Canonical Dataset Split (732 scrolls)</span>
-            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Dataset Methods / A3</span>
-        </h3>
-        <div class="qa-card" style="margin-bottom: 0.75rem;">
-            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table A3 <span>▼</span></div>
-            <div class="qa-body">
-                <strong>How calculated:</strong> deterministic <code>SHA1(scroll_id) mod 100</code> with cut points
-                at 73 and 88, so a scroll's split is a pure function of its identifier and no manuscript can
-                straddle two splits. Chunk counts are recomputed by mapping every chunk in
-                <code>preserved_nonbib_chunks.jsonl</code> through the canonical registry.<br>
-                <strong>Note the gap between scrolls and usable text:</strong> a chunk requires at least 20
-                preserved words, so most scrolls contribute no chunk at all.
-                <span class="src">data/splits/dss_scroll_splits_v1.json · data/derived/preserved_nonbib_chunks.jsonl</span>
-            </div>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Split</th>
-                        <th>Scrolls</th>
-                        <th>Share</th>
-                        <th>Text chunks</th>
-                        <th>Scrolls yielding ≥1 chunk</th>
-                        <th>Straddling</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="highlight">
-                        <td>Train</td>
-                        <td>531</td>
-                        <td>72.5%</td>
-                        <td>1,192</td>
-                        <td rowspan="4" style="vertical-align:middle;">374 of 732 (51.1%) across all splits</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>Validation</td>
-                        <td>108</td>
-                        <td>14.8%</td>
-                        <td>212</td>
-                        <td>0</td>
-                    </tr>
-                    <tr class="highlight">
-                        <td>Test</td>
-                        <td>93</td>
-                        <td>12.7%</td>
-                        <td>231</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Total</strong></td>
-                        <td><strong>732</strong></td>
-                        <td><strong>100.0%</strong></td>
-                        <td><strong>1,635</strong><span class="src">+12 chunks from scrolls absent from the canonical registry = 1,647 built</span></td>
-                        <td><strong>0</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
 
     <!-- Slide 6: Diagnostics & Roadmap -->
     <div class="tab-content" id="tab-5">
@@ -1748,6 +1545,212 @@
             Abegg, Bowley and Cook, and any redistribution of derived text — including examples printed in the
             paper or shipped in a demo — has to respect the non-commercial term. This needs checking against the
             target venue's licensing requirements.</p>
+        </div>
+    </div>
+
+    <!-- Slide 10: Appendix -->
+    <div class="tab-content" id="tab-9">
+        <h2>📁 Slide 10: Appendix & Secondary Benchmarks</h2>
+        <p>Pretraining scale ablations, Pesher quote retrieval details, and canonical dataset partition breakdowns.</p>
+
+        <!-- Table A1 -->
+        <h3 style="color: #60a5fa; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table A1: Model Selection & Pretraining Scale (n=30 sentences, 250 words)</span>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix A1</span>
+        </h3>
+        <div class="qa-card" style="margin-bottom: 0.75rem;">
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table A1 <span>▼</span></div>
+            <div class="qa-body">
+                <strong>What it tests:</strong> whether a larger pretrained model (~307M DictaBERT-Large-char)
+                beats smaller domain-adapted character models on the same cloze task.<br>
+                <strong>How calculated:</strong> 30 held-out sentences, 250 masked words, same scoring as Table 1.
+                Parameter counts are derived from the fp32 checkpoint sizes of the exact models evaluated, so they
+                are approximate but correspond to what was actually run.
+                <span class="src">external_comparison/results/quick30_summary.json · checkpoint sizes under scratch/external_finetune/models/</span>
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Params</th>
+                        <th>Fine-tuned?</th>
+                        <th>Hit@10</th>
+                        <th>95% CI</th>
+                        <th>Unaligned</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight">
+                        <td><strong>TavBERT Base</strong></td>
+                        <td>~87M</td>
+                        <td>No</td>
+                        <td><strong>24.40%</strong></td>
+                        <td>[18.09%, 31.94%]</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>DictaBERT-char FT</td>
+                        <td>~88M</td>
+                        <td>Yes</td>
+                        <td>22.80%</td>
+                        <td>[17.03%, 29.03%]</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>TavBERT Base</td>
+                        <td>~87M</td>
+                        <td>No</td>
+                        <td>21.12%</td>
+                        <td>[17.01%, 25.39%]</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>MsBERT Fine-Tuned</td>
+                        <td>~184M</td>
+                        <td>Yes</td>
+                        <td>13.31%<span class="src">all-words headline; 89 / 250 unaligned</span></td>
+                        <td>[16.76%, 26.59%]</td>
+                        <td>89</td>
+                    </tr>
+                    <tr>
+                        <td>DictaBERT-Large-char</td>
+                        <td>~307M</td>
+                        <td>No</td>
+                        <td>17.60%</td>
+                        <td>[11.60%, 23.14%]</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pitch-box" style="border-left-color:#10b981;">
+            <div class="pitch-title" style="color:#34d399;">💡 Model Scale Takeaways</div>
+            <p style="margin:0;">Scaling parameter size from ~88M to ~307M (DictaBERT-Large-char) provides no accuracy gain (17.60%), confirming that character-level domain model representations (TavBERT Base 21.12%) are far more critical than raw model scale for ancient Hebrew lacuna restoration.</p>
+        </div>
+
+        <!-- Table A2 -->
+        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table A2: Quote-Aware Pesher Source Retrieval</span>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Appendix A2</span>
+        </h3>
+        <div class="qa-card" style="margin-bottom: 0.75rem;">
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table A2 <span>▼</span></div>
+            <div class="qa-body">
+                <strong>What it tests:</strong> given a Qumran commentary (Pesher) passage, can we recover which
+                biblical book it quotes? Recovery is <strong>macro-averaged by Pesher manuscript</strong> over 35
+                known-source passages from eight mapped Pesharim, which is why the percentages are not multiples
+                of 1/35.<br>
+                <strong>The ablation is a leakage control, not a rival method:</strong> every token in an exact
+                3-word external match is masked out before ranking (27.0% of words on average, 0 surviving exact
+                runs), then residual recovery is measured under nested leave-one-manuscript-out. Significance is
+                a <strong>permutation test</strong> over scroll clusters.
+                <span class="src">analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md</span>
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Condition</th>
+                        <th>Top-1</th>
+                        <th>Top-3</th>
+                        <th>Significance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight">
+                        <td>Literal channel (quotations intact)</td>
+                        <td>86.6%</td>
+                        <td>99.1%</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td>Residual, exact 3-word matches masked (nested LOO)</td>
+                        <td>52.4%</td>
+                        <td>83.6%</td>
+                        <td>permutation p = 0.0008</td>
+                    </tr>
+                    <tr>
+                        <td>Residual, exact 2-word matches masked (58.4% of words removed)</td>
+                        <td>45.3%</td>
+                        <td>82.2%</td>
+                        <td>permutation p = 0.0012</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pitch-box" style="border-left-color:#f59e0b;">
+            <div class="pitch-title" style="color:#fbbf24;">Scope limit</div>
+            <p style="margin:0;">This validates <em>source-book recovery</em> on passages whose source is already
+            known. It is not a restoration result: no measured improvement in lacuna restoration has been
+            attributed to retrieval anywhere in this project (see Table 2, where the RAG delta is 0.0).
+            Residual affinity after literal masking does not establish paraphrase, borrowing, authorship, or
+            direction of influence.</p>
+        </div>
+
+        <!-- Table A3 -->
+        <h3 style="color: #60a5fa; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Table A3: Canonical Dataset Split (732 scrolls)</span>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border-color: rgba(139, 92, 246, 0.4); margin: 0;">📁 Dataset Methods / A3</span>
+        </h3>
+        <div class="qa-card" style="margin-bottom: 0.75rem;">
+            <div class="qa-header" onclick="toggleQA(this)">💡 Method & calculation: Table A3 <span>▼</span></div>
+            <div class="qa-body">
+                <strong>How calculated:</strong> deterministic <code>SHA1(scroll_id) mod 100</code> with cut points
+                at 73 and 88, so a scroll's split is a pure function of its identifier and no manuscript can
+                straddle two splits. Chunk counts are recomputed by mapping every chunk in
+                <code>preserved_nonbib_chunks.jsonl</code> through the canonical registry.<br>
+                <strong>Note the gap between scrolls and usable text:</strong> a chunk requires at least 20
+                preserved words, so most scrolls contribute no chunk at all.
+                <span class="src">data/splits/dss_scroll_splits_v1.json · data/derived/preserved_nonbib_chunks.jsonl</span>
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Split</th>
+                        <th>Scrolls</th>
+                        <th>Share</th>
+                        <th>Text chunks</th>
+                        <th>Scrolls yielding ≥1 chunk</th>
+                        <th>Straddling</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight">
+                        <td>Train</td>
+                        <td>531</td>
+                        <td>72.5%</td>
+                        <td>1,192</td>
+                        <td rowspan="4" style="vertical-align:middle;">374 of 732 (51.1%) across all splits</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Validation</td>
+                        <td>108</td>
+                        <td>14.8%</td>
+                        <td>212</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Test</td>
+                        <td>93</td>
+                        <td>12.7%</td>
+                        <td>231</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>732</strong></td>
+                        <td><strong>100.0%</strong></td>
+                        <td><strong>1,635</strong><span class="src">+12 chunks from scrolls absent from the canonical registry = 1,647 built</span></td>
+                        <td><strong>0</strong></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

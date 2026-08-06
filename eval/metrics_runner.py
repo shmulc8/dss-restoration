@@ -42,6 +42,18 @@ from typing import List, Tuple
 from scipy.stats import norm
 
 
+def normalize_hebrew_lemma(text: str) -> str:
+    """Normalize Hebrew orthographic and plene/defective spelling variants for Morpho-Lemmatic scoring."""
+    if not text:
+        return ""
+    # Standardize final letters to medial form for lemmatic comparison
+    final_map = {"ך": "כ", "ם": "מ", "ן": "נ", "ף": "פ", "ץ": "צ"}
+    res = "".join(final_map.get(ch, ch) for ch in text)
+    # Remove plene alef/vav/yod insertions common in Qumran orthography (e.g. לוא -> לא, כיא -> כי)
+    res = res.replace("לוא", "לא").replace("כיא", "כי").replace("זואת", "זאת")
+    return res
+
+
 def mcnemar_test(hits_a: List[int], hits_b: List[int]) -> Tuple[float, float]:
     """Compute McNemar paired statistical test z-statistic and two-sided p-value.
     

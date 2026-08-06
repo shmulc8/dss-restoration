@@ -120,6 +120,34 @@ While TavBERT FT-Optimal under physical conditioning ($P0$) achieves **64.86% To
 
 ---
 
+### 3.3 Future Improvement Roadmap: Pushing Top-10 Accuracy from ~65% to 85%
+
+Based on our diagnostic error breakdown, we propose **4 targeted algorithmic solutions** to address each failure mode:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ FOUR-POINT ALGORITHMIC IMPROVEMENT ROADMAP                                                               │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 🟦 1. Morpho-Lemmatic Normalization Scoring (Fixing 45% of Errors):                                     │
+│    Implement Morpho-Lemmatic scoring (`normalize_hebrew_lemma`) alongside exact string match to collapse │
+│    plene/defective spelling variants (`לוא` = `לא`) and clitic forms. Expected Gain: +8.0% to +12.0%.    │
+│                                                                                                          │
+│ 🟩 2. Global Scroll & Genre Context Injection (Fixing 30% of Errors):                                    │
+│    Concatenate column headers, genre metadata, and TF-IDF/RAG scroll keywords when local words are rotted│
+│    away. Expected Gain: +5.0% to +8.0%.                                                                 │
+│                                                                                                          │
+│ 🟧 3. Sectarian Vocabulary Prior Weighting (Fixing 15% of Errors):                                       │
+│    Apply dynamic inverse-document-frequency (IDF) boost for verified Qumran hapax legomena when partial  │
+│    ink traces (`rec=0`) match a rare sectarian root. Expected Gain: +2.0% to +4.0%.                       │
+│                                                                                                          │
+│ 🟨 4. Epigraphic Multi-Glyph Stroke Probabilities (Fixing 10% of Errors):                                 │
+│    Replace binary stroke filtering (`is_compatible`) with multispectral stroke confusion matrices.       │
+│    Expected Gain: +1.0% to +2.0%.                                                                        │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 🔬 4. Concrete Walkthrough Example & Skeptic Defenses
 
 ### 4.1 Step-by-Step Restoration Example (`סר⬚⬚ך` $\to$ `סרכיך`)

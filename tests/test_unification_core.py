@@ -2,6 +2,7 @@
 
 from eval.metrics_runner import (
     normalize_he,
+    normalize_hebrew_lemma,
     char_sim,
     split_candidate_words,
 )
@@ -12,6 +13,14 @@ def test_hebrew_normalization():
     # Normalizes spaces and diacritics
     assert normalize_he("  אמר  ") == "אמר"
     assert normalize_he("אמר") == "אמר"
+
+
+def test_normalize_hebrew_lemma():
+    # Normalizes plene/defective Qumran spellings and final letter forms
+    assert normalize_hebrew_lemma("לוא") == "לא"
+    assert normalize_hebrew_lemma("כיא") == "כי"
+    assert normalize_hebrew_lemma("זואת") == "זאת"
+    assert normalize_hebrew_lemma("סרכיך") == "סרכיכ"
 
 
 def test_char_sim():

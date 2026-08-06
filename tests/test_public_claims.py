@@ -32,15 +32,38 @@ FORBIDDEN_FRAGMENTS = (
     "36.8% across",
 )
 
-# Figures that represent outdated/removed claims from legacy pilot runs.
+# Figures that no artifact in this repository supports. Each was produced by a
+# hardcoded literal rather than an evaluation run, so a reappearance means an
+# unmeasured number is being presented as a result.
 UNSUPPORTED_FIGURES = {
-    "Single-Word RAG 48%": "legacy pilot claim replaced by quote-aware RAG Table A2",
+    "66.22": "full-pipeline real-lacuna Top-1; no evaluation produces this",
+    "83.78": "full-pipeline real-lacuna Top-10; no evaluation produces this",
+    "87.84": "full-pipeline real-lacuna Top-20; no evaluation produces this",
+    "58.11": "roadmap stage 1 Top-1; no evaluation produces this",
+    "74.32": "roadmap stage 1 Top-10; no evaluation produces this",
+    "78.38": "roadmap stage 2 Top-10; no evaluation produces this",
+    "81.08": "roadmap stage 3 Top-10; no evaluation produces this",
+    "47.30": "QD Top-1; the measured value is 40.5%",
+    "64.86": "QD Top-10; the measured value is 63.5%",
+    "70.27": "QD Top-20; the measured value is 67.6%",
+    "23.65": "TavBERT cloze Hit@10; measured is 20.58% fine-tuned / 21.12% base",
+    "24.80": "TavBERT n=250 Hit@10; measured is 22.40% fine-tuned / 24.40% base",
+    "14.2% Hit@10": "length-ensemble multiword; that generator has never been benchmarked",
+    "8.12%": "dictionary-lookup baseline; no such baseline has been run",
     "2,179": "total text chunks; the corpus contains 1,647",
     "12,971": "damaged-word count; no such quantity exists in the dataset",
+    "Single-Word RAG 48%": "legacy pilot claim replaced by quote-aware RAG Table A2",
 }
 
-# Significance claims guard
-UNSUPPORTED_SIGNIFICANCE = ()
+# Significance claims that no artifact supports. tuning.metrics_runner.mcnemar_test
+# exists but has never been applied to a reported comparison, and the cloze
+# intervals overlap, so no model lead is established at any alpha.
+UNSUPPORTED_SIGNIFICANCE = (
+    "p < 0.01",
+    "p &lt; 0.01",
+    "statistically significant",
+    "verified statistically",
+)
 
 
 def test_removed_claims_do_not_reappear() -> None:

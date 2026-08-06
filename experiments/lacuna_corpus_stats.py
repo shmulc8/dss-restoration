@@ -1,64 +1,87 @@
-"""Large-Scale Real Lacuna Evaluation Harness for Text-Fabric Corpus.
+"""Corpus statistics for physical lacunae in the Text-Fabric non-biblical corpus.
 
-Evaluates DSS restoration models on the full 27,814 physical scroll lacunae
-and the 3,695 test split physical lacunae recorded in curation/derived/nonbib_lacunae.jsonl.
+Reports extraction counts over the 27,814 physical lacunae recorded in
+curation/derived/nonbib_lacunae.jsonl, split out for the canonical test scrolls.
+
+This module computes counts only. It does not evaluate any model: scoring a
+restoration model at this scale requires a decoding run, which no artifact in
+this repository currently provides. Any accuracy figure quoted at the
+3,695-lacuna scale would therefore be unsupported.
 """
 
 import json
 import logging
 from pathlib import Path
-from collections import Counter
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 from data_preparation.splits import get_scroll_sets
-from tuning.candidate_generator import PartialLetterFilter, Candidate
 
 logger = logging.getLogger(__name__)
 LACUNAE_PATH = Path("curation/derived/nonbib_lacunae.jsonl")
 
+# A damaged word position carries usable ink only if its visible pattern holds a
+# character other than the unknown/blank placeholders.
+BLANK_CHARS = {"?", "⬚"}
 
-def evaluate_test_lacunae_accuracy() -> Dict[str, Any]:
-    """Compute large-scale corpus statistics and model accuracy over physical test lacunae."""
+
+def _trace_counts(records) -> tuple[int, int, int]:
+    """Return (damaged word positions, positions retaining ink, lacunae with >=1 traced word)."""
+    damaged_words = 0
+    trace_words = 0
+    lacunae_with_trace = 0
+
+    for rec in records:
+        patterns = rec.get("visible_patterns") or []
+        damaged_words += len(patterns)
+        traced_here = sum(
+            1 for pat in patterns if any(c not in BLANK_CHARS for c in pat)
+        )
+        trace_words += traced_here
+        if traced_here:
+            lacunae_with_trace += 1
+
+    return damaged_words, trace_words, lacunae_with_trace
+
+
+def compute_lacuna_corpus_statistics() -> Dict[str, Any]:
+    """Compute physical-lacuna extraction statistics for the corpus and the test split."""
     if not LACUNAE_PATH.exists():
         raise FileNotFoundError(f"Lacunae dataset not found: {LACUNAE_PATH}")
 
-    scroll_sets = get_scroll_sets()
-    test_scrolls = scroll_sets["test"]
+    test_scrolls = get_scroll_sets()["test"]
 
-    records = [json.loads(line) for line in LACUNAE_PATH.read_text(encoding="utf-8").splitlines() if line.strip()]
+    records = [
+        json.loads(line)
+        for line in LACUNAE_PATH.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     test_records = [r for r in records if r.get("scroll") in test_scrolls]
 
-    total_test_lacunae = len(test_records)
-    total_test_damaged_words = 0
-    test_trace_words = 0
+    corpus_damaged, corpus_traced, corpus_lac_traced = _trace_counts(records)
+    test_damaged, test_traced, test_lac_traced = _trace_counts(test_records)
 
-    for rec in test_records:
-        patterns = rec.get("visible_patterns") or []
-        total_test_damaged_words += len(patterns)
-        for pat in patterns:
-            if any(c not in {"?", "⬚"} for c in pat):
-                test_trace_words += 1
+    def rate(num: int, den: int) -> float:
+        return (num / den) if den else 0.0
 
-    trace_rate = (test_trace_words / total_test_damaged_words) if total_test_damaged_words else 0.0
-
-    # Model evaluation metrics over test lacunae under P0 physical conditioning vs U0
-    results_table = {
-        "test_split_scrolls": len(test_scrolls),
-        "total_test_lacunae": total_test_lacunae,
-        "total_test_damaged_words": total_test_damaged_words,
-        "test_partial_trace_words": test_trace_words,
-        "test_partial_trace_rate": trace_rate,
-        "models_eval": {
-            "dictabert_char_ft_p0": {"top1": 0.442, "top10": 0.658, "top20": 0.724, "regime": "P0 (Physical+Traces)"},
-            "tavbert_base_p0": {"top1": 0.451, "top10": 0.618, "top20": 0.671, "regime": "P0 (Physical+Traces)"},
-            "msbert_ft_p0": {"top1": 0.398, "top10": 0.631, "top20": 0.672, "regime": "P0 (Physical+Traces)"},
-            "msbert_ft_u0": {"top1": 0.021, "top10": 0.092, "top20": 0.128, "regime": "U0 (Unconstrained)"},
-        }
+    return {
+        "corpus": {
+            "lacunae": len(records),
+            "damaged_word_positions": corpus_damaged,
+            "damaged_words_retaining_ink": corpus_traced,
+            "partial_trace_rate": rate(corpus_traced, corpus_damaged),
+            "lacunae_with_traced_word": corpus_lac_traced,
+            "lacunae_with_traced_word_rate": rate(corpus_lac_traced, len(records)),
+        },
+        "test_split": {
+            "scrolls": len(test_scrolls),
+            "lacunae": len(test_records),
+            "damaged_word_positions": test_damaged,
+            "damaged_words_retaining_ink": test_traced,
+            "partial_trace_rate": rate(test_traced, test_damaged),
+            "lacunae_with_traced_word": test_lac_traced,
+        },
     }
-
-    return results_table
 
 
 if __name__ == "__main__":
-    results = evaluate_test_lacunae_accuracy()
-    print(json.dumps(results, indent=2))
+    print(json.dumps(compute_lacuna_corpus_statistics(), indent=2))

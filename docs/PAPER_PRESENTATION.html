@@ -710,9 +710,9 @@
                                 <td>2</td>
                                 <td>Baseline model</td>
                                 <td>DictaBERT-char assumed default; TavBERT un-evaluated.</td>
-                                <td><strong>TavBERT FT (Optimal Baseline)</strong> as reference model (23.65% Cloze Hit@10; 47.30% Real Lacuna P0 Top-1).</td>
+                                <td><strong>TavBERT (tau/tavbert-he)</strong> as the cloze reference model. Best measured cloze Hit@10 is TavBERT <em>base</em> at 21.12%; fine-tuning did not improve it (20.58%).</td>
                                 <td>Implemented</td>
-                                <td><span class="tag tag-measured">measured</span> primary baseline champion</td>
+                                <td><span class="tag tag-measured">measured</span></td>
                             </tr>
                             <tr class="highlight">
                                 <td>3</td>
@@ -749,10 +749,10 @@
                             <tr class="highlight">
                                 <td>7</td>
                                 <td>Multi-word gaps</td>
-                                <td>Fixed-length MLMs cannot vary output length (0.0% accuracy).</td>
+                                <td>Fixed-length MLMs cannot vary output length.</td>
                                 <td><strong>LengthEnsembleCharMLMGenerator</strong> — loops L ∈ [3, 15] with length-penalty re-ranking.</td>
                                 <td>Implemented, unit-tested</td>
-                                <td><span class="tag tag-measured">measured</span> (14.2% Hit@10 vs 0.0% single-length MLM, Table 3)</td>
+                                <td><span class="tag tag-unmeasured">not yet measured</span> — no benchmark run exists for this generator</td>
                             </tr>
                             <tr>
                                 <td>8</td>
@@ -768,15 +768,15 @@
                                 <td>Fixed-epoch fine-tuning overfits.</td>
                                 <td><strong>Validation early stopping</strong> (1e-5 LR, linear warmup, weight decay).</td>
                                 <td>Implemented</td>
-                                <td><span class="tag tag-measured">measured</span> (TavBERT FT 23.65% vs TavBERT Base 21.12%)</td>
+                                <td><span class="tag tag-unmeasured">not yet measured</span> — the measured comparison remains 20.58% FT vs. 21.12% base; no early-stopped run has been scored</td>
                             </tr>
                             <tr>
                                 <td>10</td>
                                 <td>Uncertainty</td>
                                 <td>Point estimates without intervals.</td>
-                                <td><strong>Percentile cluster bootstrap</strong> (1,000 resamples) + paired <strong>McNemar significance test</strong> (p &lt; 0.01).</td>
+                                <td><strong>Percentile cluster bootstrap</strong> (1,000 resamples), reported on every cloze row; permutation tests for the retrieval ablation.</td>
                                 <td>Implemented</td>
-                                <td><span class="tag tag-measured">measured</span> (all model leads statistically significant, p &lt; 0.01)</td>
+                                <td><span class="tag tag-measured">measured</span> for the bootstrap and the permutation tests. <code>mcnemar_test()</code> exists in <code>tuning/metrics_runner.py</code> but has never been applied to a reported comparison, so <strong>no model lead in this deck is established as significant</strong></td>
                             </tr>
                             <tr class="highlight">
                                 <td>11</td>
@@ -969,7 +969,8 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation: Table 2 (Real Lacuna Benchmark) <span>▼</span></div>
             <div class="qa-body">
                 <strong>What it measures:</strong> How often the model's ranked candidates match a published scholarly restoration at a genuinely damaged lacuna site.<br>
-                <strong>How calculated:</strong> Evaluates 74 eligible physical lacuna targets from Qumran-Digital (QD). TavBERT FT + Full 4-Point Roadmap achieves <strong>66.22% Top-1 / 83.78% Top-10</strong> (more than tripling the 20.27% Top-1 baseline of preliminary human scholar editions and the 8.12% dictionary lookup baseline).
+                <strong>Model:</strong> <code>ft_msbert_span_preserved_nonbib</code>, trained on preserved letters only, with post-MLM physical filtering. The character models have <strong>not</strong> been run on this benchmark.<br>
+                <strong>How calculated:</strong> 1,811 published proposal rows → 346 candidate targets → 74 eligible after exclusions (multi-word readings, readings contradicting visible ink, fewer than 10 visible context words, and 22 targets with no compatible attributed reading). Conditioning is on surviving ink plus approximate length, tolerance ±1. Success = any compatible attributed reading in Top-K.
                 <span class="src">comparison/reports/QD_RESEARCHER_BENCHMARK.md · qd_researcher_comparison.json</span>
             </div>
         </div>
@@ -986,40 +987,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="highlight" style="background: rgba(16, 185, 129, 0.2); font-weight: bold;">
-                        <td>🏆 TavBERT FT + Full 4-Point Roadmap</td>
-                        <td>P0 + Roadmap</td>
-                        <td>74</td>
-                        <td><strong>66.22%</strong></td>
-                        <td><strong>83.78%</strong></td>
-                        <td><strong>87.84%</strong></td>
-                    </tr>
-                    <tr style="font-weight: bold;">
-                        <td>🥇 TavBERT FT (Optimal Baseline)</td>
-                        <td>P0, ±1</td>
-                        <td>74</td>
-                        <td>47.30%</td>
-                        <td>64.86%</td>
-                        <td>70.27%</td>
-                    </tr>
-                    <tr>
-                        <td>DictaBERT-char FT</td>
-                        <td>P0, ±1</td>
-                        <td>74</td>
-                        <td>44.59%</td>
-                        <td>66.22%</td>
-                        <td>72.97%</td>
-                    </tr>
-                    <tr>
-                        <td>TavBERT Base</td>
-                        <td>P0, ±1</td>
-                        <td>74</td>
-                        <td>45.95%</td>
-                        <td>62.16%</td>
-                        <td>67.57%</td>
-                    </tr>
-                    <tr>
+                    <tr class="highlight" style="background: rgba(16, 185, 129, 0.15); font-weight: bold;">
                         <td>MsBERT FT + physical filtering</td>
+                        <td>P0, ±1</td>
+                        <td>74</td>
+                        <td><strong>40.5%</strong></td>
+                        <td><strong>63.5%</strong><span class="src">95% cluster bootstrap 51.4%–74.3%</span></td>
+                        <td><strong>67.6%</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Same model, same targets</td>
+                        <td>U0 (context only)</td>
+                        <td>74</td>
+                        <td>—</td>
+                        <td>9.5%</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td>+ train-only RAG</td>
                         <td>P0, ±1</td>
                         <td>74</td>
                         <td>40.5%</td>
@@ -1027,28 +1012,12 @@
                         <td>67.6%</td>
                     </tr>
                     <tr>
-                        <td>Human Scholar Initial Control</td>
+                        <td>QD initial-reading control</td>
                         <td>—</td>
                         <td>74</td>
-                        <td>20.27%</td>
-                        <td>43.24%</td>
-                        <td>44.60%</td>
-                    </tr>
-                    <tr>
-                        <td>Pure Dictionary Lookup Baseline</td>
-                        <td>Regex</td>
-                        <td>74</td>
-                        <td>8.12%</td>
-                        <td>34.50%</td>
-                        <td>41.20%</td>
-                    </tr>
-                    <tr>
-                        <td>MsBERT FT (Unconstrained)</td>
-                        <td>U0 (context only)</td>
-                        <td>74</td>
-                        <td>—</td>
-                        <td>9.46%</td>
-                        <td>—</td>
+                        <td>20.3%</td>
+                        <td>43.2%</td>
+                        <td>44.6%</td>
                     </tr>
                 </tbody>
             </table>
@@ -1091,7 +1060,7 @@
         </div>
         <div class="pitch-box" style="border-left-color:#10b981;">
             <div class="pitch-title" style="color:#34d399;">💡 Key Real-Lacuna Takeaway</div>
-            <p style="margin:0;">Physical ink conditioning ($P0$) boosts Top-10 restoration accuracy from 9.46% ($U0$) to 64.86% ($P0$), and the full 4-Point Roadmap elevates performance to <strong>83.78% Top-10 / 66.22% Top-1</strong>.</p>
+            <p style="margin:0;">Physical conditioning takes Top-10 from <strong>9.5% (U0) to 63.5% (P0)</strong> on the same 74 targets with the same model — <strong>+54.0 pp</strong>, and the project's one large measured effect. The RAG row shows a gain of exactly zero. Three caveats belong in the caption: QD selects <em>disputed</em> sites, the references are modern published proposals rather than physical truth, and at n=74 the interval is wide (51.4%–74.3%).</p>
         </div>
 
         <!-- Table 3 -->
@@ -1103,7 +1072,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation: Table 3 (Multi-Word Lacunae) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Restores multi-word gaps where physical parchment edge decay conceals both word boundaries and exact character lengths.<br>
-                <strong>How Calculated:</strong> Evaluates multi-word lacunae under unknown character length (L in range 3 to 15). <code>LengthEnsembleCharMLMGenerator</code> loops character lengths L in range 3 to 15 in TavBERT and re-ranks candidates with length-penalty re-ranking, achieving <strong>14.2% Hit@10</strong> (and 14.5% slot accuracy), breaking the 0.0% failure wall of single-length MLMs.
+                <strong>How calculated:</strong> the decoder is given the <strong>number of word slots</strong> but no gold character lengths. Slot accuracy asks whether each missing word appears in Top-K; sequence accuracy requires the whole lacuna to match in order within one beam. References are anonymous Text-Fabric editorial reconstructions used only as evaluation labels, excluded from input, training and retrieval. <strong>The genuinely unknown-length case is not represented here</strong>: <code>LengthEnsembleCharMLMGenerator</code> is implemented and unit-tested but has never been benchmarked, so no accuracy is claimed for it.
             </div>
         </div>
         <div class="table-container">
@@ -1292,24 +1261,24 @@
         <h3 style="color: #60a5fa; margin-top: 2rem;">🚀 Four-point algorithmic roadmap — measured gains</h3>
         <div class="pitch-box" style="border-left-color:#10b981; margin-top:0.5rem;">
             <div class="pitch-title" style="color:#34d399;">💡 4-Point Cumulative Accuracy Progression (n=74 QD Lacunae)</div>
-            <p style="margin:0;">The 4-point roadmap elevates TavBERT FT baseline ($P0$ Exact Match: <strong>47.30% Top-1 / 64.86% Top-10</strong>) to <strong>66.22% Top-1 / 83.78% Top-10 / 87.84% Top-20</strong> on real physical Dead Sea Scroll lacunae (+18.92% Top-10 gain!).</p>
+            <p style="margin:0;">All four components exist in <code>tuning/candidate_generator.py</code> and <code>tuning/metrics_runner.py</code> with unit tests, but <strong>none has been run against a benchmark</strong>, so no accuracy is attributable to any of them. Each is described below by what the code actually does, so the evaluation can be designed against reality — two of the four need rework before they could support a published claim at all.</p>
         </div>
 
         <div class="pipeline-flow" style="margin-top: 1rem;">
             <div class="flow-step">
                 <div class="flow-num" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">1</div>
                 <div class="flow-text">
-                    <h4 style="color: #60a5fa;">Lemma-normalised scoring (<code>normalize_hebrew_lemma()</code>) — 58.11% Top-1 / 74.32% Top-10</h4>
+                    <h4 style="color: #60a5fa;">Lemma-normalised scoring (<code>normalize_hebrew_lemma()</code>) <span class="tag tag-unmeasured">not yet measured</span></h4>
                     <p>Collapses final letter forms, common Qumran plene spellings
                     (<code dir="rtl">לוא</code>→<code dir="rtl">לא</code>,
-                    <code dir="rtl">כיא</code>→<code dir="rtl">כי</code>), affixed particles and suffixes, resolving orthographic mismatch between model outputs and published transcriptions (+9.46% Top-10 gain).</p>
+                    <code dir="rtl">כיא</code>→<code dir="rtl">כי</code>), affixed particles and suffixes. <strong>This relaxes the metric, it does not improve the model</strong> — it must be reported as a secondary lemma-level agreement figure alongside exact match, never as accuracy.</p>
                 </div>
             </div>
 
             <div class="flow-step">
                 <div class="flow-num" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">2</div>
                 <div class="flow-text">
-                    <h4 style="color: #34d399;">Retrieval-augmented context injection — 62.16% Top-1 / 78.38% Top-10</h4>
+                    <h4 style="color: #34d399;">Retrieval-augmented context injection <span class="tag tag-unmeasured">not yet measured</span></h4>
                     <p>Injects Pesher citation formulas (<code dir="rtl">פשרו על</code>) and retrieved scroll keywords when surrounding context words are missing, providing thematic context for destroyed lines (+4.06% Top-10 gain).</p>
                 </div>
             </div>
@@ -1317,7 +1286,7 @@
             <div class="flow-step">
                 <div class="flow-num" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);">3</div>
                 <div class="flow-text">
-                    <h4 style="color: #c084fc;">Sectarian vocabulary prior (<code>SectarianIDFBooster</code>) — 64.86% Top-1 / 81.08% Top-10</h4>
+                    <h4 style="color: #c084fc;">Sectarian vocabulary prior (<code>SectarianIDFBooster</code>) <span class="tag tag-unmeasured">needs rework</span></h4>
                     <p>Applies dynamic IDF score boosts for rare Qumran sectarian terms (<code dir="rtl">סרך</code>, <code dir="rtl">משכיל</code>, <code dir="rtl">תמים</code>, <code dir="rtl">אביונים</code>), elevating Qumran-specific technical vocabulary in candidate ranking (+2.70% Top-10 gain).</p>
                 </div>
             </div>
@@ -1325,7 +1294,7 @@
             <div class="flow-step">
                 <div class="flow-num" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">4</div>
                 <div class="flow-text">
-                    <h4 style="color: #fbbf24;">Stroke-confusion matching (<code>EpigraphicStrokeFilter</code>) — 66.22% Top-1 / 83.78% Top-10</h4>
+                    <h4 style="color: #fbbf24;">Stroke-confusion matching (<code>EpigraphicStrokeFilter</code>) <span class="tag tag-unmeasured">needs rework</span></h4>
                     <p>Incorporates epigraphic stroke similarity groups (<code dir="rtl">{ר, ד, ו, ן, נ, י}</code>, <code dir="rtl">{ה, ח, ת}</code>, <code dir="rtl">{מ, ס}</code>, <code dir="rtl">{ב, כ}</code> with weight 0.85), preventing candidate rejection when preliminary 1950s print transcriptions misidentified ambiguous letter strokes (+2.70% Top-10 gain).</p>
                 </div>
             </div>
@@ -1385,17 +1354,17 @@
                     <tr>
                         <td><strong>Character-level MLM</strong></td>
                         <td>Transformer encoder over a single-character vocabulary (|V| ≈ 30–50), e.g. TavBERT, DictaBERT-char.</td>
-                        <td>Enables arbitrary gap lengths with zero token alignment failures (0 / 729 unaligned). Achieves 23.65% Hit@10 cloze accuracy. <span class="tag tag-measured">measured</span></td>
+                        <td>Enables arbitrary gap lengths with zero alignment failures (0 / 729 unaligned). The accuracy advantage over WordPiece on cloze is modest and not significant at n=729. <span class="tag tag-measured">measured</span></td>
                     </tr>
                     <tr class="highlight">
                         <td><strong>Lemma-normalised agreement</strong></td>
                         <td>Relaxed scoring that folds final forms, plene spellings, affixed particles and some suffixes before comparison.</td>
-                        <td>Implemented in <code>normalize_hebrew_lemma()</code>. Boosts Top-1 real-lacuna accuracy from 47.30% to 58.11%. <span class="tag tag-measured">measured</span></td>
+                        <td>Implemented in <code>tuning/metrics_runner.py</code>. A <em>metric relaxation</em>, reportable only alongside exact match; no relaxed-match figure is claimed. <span class="tag tag-unmeasured">not yet measured</span></td>
                     </tr>
                     <tr>
                         <td><strong>Length ensemble decoding</strong></td>
                         <td>Beam search repeated over candidate character lengths L ∈ [3, 15], re-ranked by <code>(Σ log P) / L<sup>0.5</sup></code>.</td>
-                        <td>Implemented in <code>LengthEnsembleCharMLMGenerator</code>. Achieves 14.2% Hit@10 on multi-word lacunae of unknown character length. <span class="tag tag-measured">measured</span></td>
+                        <td>Implemented and unit-tested in <code>tuning/candidate_generator.py</code>; never benchmarked. Unknown-length multi-word restoration remains unsolved. <span class="tag tag-unmeasured">not yet measured</span></td>
                     </tr>
                     <tr class="highlight">
                         <td><strong>Quote-aware source retrieval</strong></td>

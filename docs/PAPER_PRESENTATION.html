@@ -1083,7 +1083,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 3 (Multi-Word Lacunae) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Restores multi-word gaps where physical parchment edge decay conceals both word boundaries and exact character lengths.<br>
-                <strong>How Calculated:</strong> Evaluates multi-word lacunae under unknown character length ($L \in [3, 15]$). <code>LengthEnsembleCharMLMGenerator</code> loops character lengths $L \in [3, 15]$ in TavBERT and re-ranks candidates with length-penalty scoring $\text{Score} = \frac{\sum \log P}{\sqrt{L}}$, achieving <strong>14.2% Hit@10</strong> (breaking the 0.0% failure wall of single-length MLMs).
+                <strong>How Calculated:</strong> Evaluates multi-word lacunae under unknown character length ($L \in [3, 15]$). <code>LengthEnsembleCharMLMGenerator</code> loops character lengths $L \in [3, 15]$ in TavBERT and re-ranks candidates with length-penalty scoring $\text{Score} = \frac{\sum \log P}{\sqrt{L}}$, achieving <strong>14.5% slot accuracy</strong> (breaking the 0.0% failure wall of single-length MLMs).
             </div>
         </div>
         <div class="table-container">
@@ -1092,15 +1092,15 @@
                     <tr>
                         <th>Model Variant / Strategy</th>
                         <th>Gap Length Condition</th>
-                        <th>Hit@10</th>
+                        <th>Hit@10 / Accuracy</th>
                         <th>Status / Failure Mode</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="highlight" style="background: rgba(16, 185, 129, 0.15); font-weight: bold;">
                         <td>🏆 LengthEnsembleCharMLM Generator</td>
-                        <td>Unknown Character Length (L ∈ [3, 15])</td>
-                        <td>14.2%</td>
+                        <td>Multi-Word Gap Slot Accuracy</td>
+                        <td>14.5%</td>
                         <td>Breaks 0.0% Failure Wall</td>
                     </tr>
                     <tr>
@@ -1120,7 +1120,7 @@
         </div>
         <div class="pitch-box" style="border-left-color:#10b981;">
             <div class="pitch-title" style="color:#34d399;">💡 Multi-Word Takeaway</div>
-            <p style="margin:0;">Standard single-length BERT MLMs collapse to 0.0% accuracy on unknown-length lacunae because fixed token counts cannot adapt output lengths. Character-length ensembling (LengthEnsembleCharMLMGenerator) resolves this, achieving 14.2% Hit@10.</p>
+            <p style="margin:0;">Standard single-length BERT MLMs collapse to 0.0% accuracy on unknown-length lacunae because fixed token counts cannot adapt output lengths. Character-length ensembling (LengthEnsembleCharMLMGenerator) resolves this, achieving 14.5% multi-word slot accuracy.</p>
         </div>
         </div>
 

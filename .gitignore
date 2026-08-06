@@ -29,3 +29,7 @@ ft_*
 # Large local artifacts (unification work)
 analysis/cache/
 scratch/
+external_comparison/merged_results/
+external_comparison/results/**/predictions.jsonl
+external_comparison/results/**/*.xlsx
+external_comparison/results/**/*.csv

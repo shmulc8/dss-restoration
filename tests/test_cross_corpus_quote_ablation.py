@@ -1,5 +1,5 @@
-from analysis.cross_corpus_connections import Passage
-from analysis.cross_corpus_quote_ablation import (
+from experiments.cross_corpus_connections import Passage
+from experiments.cross_corpus_quote_ablation import (
     QUOTE_GAP,
     benjamini_hochberg,
     mask_external_ngrams,

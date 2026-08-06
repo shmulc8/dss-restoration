@@ -487,7 +487,7 @@
 
     <div class="evidence-banner">
         <strong>Evidence status.</strong> Every number on these slides is traceable to a generated artifact under
-        <code>analysis/reports/</code>, <code>external_comparison/results/</code>, or <code>data/</code>, and the source file is
+        <code>comparison/reports/</code>, <code>experiments/results/runs/</code>, or <code>data/</code>, and the source file is
         named beside it. Per <code>docs/RESULTS.md</code>, <strong>no result here is yet a frozen paper result</strong>:
         the real-lacuna benchmark is a literature-agreement pilot at <em>n</em>=74, the cloze benchmark is a
         synthetic-damage diagnostic, and several pipeline components are implemented but not yet evaluated.
@@ -578,7 +578,7 @@
             damaged word that still shows ink, and <strong>29.7%</strong> of individual damaged words carry a
             partial trace (49,130 / 165,239). Roughly seven in ten damaged words show nothing — the P0 regime
             simply does not apply to them, which bounds how far this approach can reach.
-            <span class="src">data/derived/nonbib_lacunae.jsonl</span></p>
+            <span class="src">curation/derived/nonbib_lacunae.jsonl</span></p>
         </div>
     </div>
 
@@ -634,7 +634,7 @@
             single "9.5% → 63.5% → 21.1%" narrative. Character-level tokenization is an <em>enabling</em>
             property here, not a large accuracy win: 21.12% vs. 13.31% is a modest gap with overlapping
             confidence intervals.
-            <span class="src">external_comparison/results/summary_with_subsets.json</span></p>
+            <span class="src">experiments/results/runs/summary_with_subsets.json</span></p>
         </div>
     </div>
 
@@ -653,14 +653,14 @@
         <ul style="margin-left: 1.5rem; color: #d1d5db; line-height: 1.8;">
             <li><strong>Manuscript-disjoint splits:</strong> 732 scrolls partitioned by manuscript ID via
             <code>SHA1(scroll_id) mod 100</code> — 531 train (72.5%) / 108 val (14.8%) / 93 test (12.7%),
-            0 straddling scrolls, verified by <code>utils/splits.py:validate_split_disjointness</code>.
+            0 straddling scrolls, verified by <code>data_preparation/splits.py:validate_split_disjointness</code>.
             <span class="tag tag-measured">measured</span>
-            <span class="src">data/splits/dss_scroll_splits_v1.json</span></li>
+            <span class="src">data_preparation/dss_scroll_splits_v1.json</span></li>
             <li><strong>Reconstruction redaction:</strong> every sign flagged <code>rec=1</code> in Text-Fabric is
             an editorial reconstruction and is dropped before the text reaches the model, which sees only
             <code>rec=0</code> physical ink. The corpus builder never emits reconstruction text
             (<code>modern_reconstruction_text_emitted: false</code>).
-            <span class="src">data/derived/preserved_nonbib_manifest.json</span></li>
+            <span class="src">curation/derived/preserved_nonbib_manifest.json</span></li>
             <li><strong>Physical conditioning (P0):</strong> beam search over character candidates is filtered
             against the surviving ink pattern and an approximate gap length (tolerance ±1 character).</li>
         </ul>
@@ -868,7 +868,7 @@
             agreed with a bibliographically attributed restoration. The last row shows the characteristic
             failure: with only <code dir="rtl">לעים</code> surviving, several real Hebrew words fit the trace and
             the context is too damaged to discriminate.
-            <span class="src">analysis/reports/qd_researcher_comparison.json</span></p>
+            <span class="src">comparison/reports/qd_researcher_comparison.json</span></p>
         </div>
     </div>
 
@@ -902,7 +902,7 @@
                 that cannot align to the character-bounded gap scores 0.0. 95% intervals are sentence-level
                 percentile cluster bootstrap, B = 1,000 resamples. <strong>The interval is on Hit@10</strong>,
                 which is the headline column.
-                <span class="src">external_comparison/results/summary_with_subsets.json (2026-08-01)</span>
+                <span class="src">experiments/results/runs/summary_with_subsets.json (2026-08-01)</span>
             </div>
         </div>
         <div class="table-container">
@@ -970,7 +970,7 @@
             <div class="qa-body">
                 <strong>What it measures:</strong> How often the model's ranked candidates match a published scholarly restoration at a genuinely damaged lacuna site.<br>
                 <strong>How calculated:</strong> Evaluates 74 eligible physical lacuna targets from Qumran-Digital (QD). TavBERT FT + Full 4-Point Roadmap achieves <strong>66.22% Top-1 / 83.78% Top-10</strong> (more than tripling the 20.27% Top-1 baseline of preliminary human scholar editions and the 8.12% dictionary lookup baseline).
-                <span class="src">analysis/reports/QD_RESEARCHER_BENCHMARK.md · qd_researcher_comparison.json</span>
+                <span class="src">comparison/reports/QD_RESEARCHER_BENCHMARK.md · qd_researcher_comparison.json</span>
             </div>
         </div>
         <div class="table-container">
@@ -1232,7 +1232,7 @@
         <h3 style="color: #60a5fa;">Context degradation stress test <span class="tag tag-measured">measured</span></h3>
         <p>Real lacunae rarely sit in clean text — the neighbouring words are usually damaged too. This ablation
         randomly masks a fraction of surrounding context words on 120 held-out cases (≤30 per gap-length bucket)
-        and measures the effect. <span class="src">analysis/reports/context_noise_ablation.md</span></p>
+        and measures the effect. <span class="src">comparison/reports/context_noise_ablation.md</span></p>
 
         <div class="table-container">
             <table>
@@ -1540,35 +1540,35 @@
                         <td><strong>Qumran-Digital variant database</strong></td>
                         <td>Qumran Digital: Text and Lexicon — Göttingen Academy of Sciences and Humanities</td>
                         <td>Cached snapshot <strong>2026-05-21</strong>; the scorer performs no network requests</td>
-                        <td><code>data/derived/qd_researcher_variants.jsonl</code></td>
+                        <td><code>curation/derived/qd_researcher_variants.jsonl</code></td>
                         <td>1,811 published reading-proposal rows → 74 eligible targets with attributed restorations.</td>
                     </tr>
                     <tr class="highlight">
                         <td><strong>Derived lacuna dataset</strong></td>
                         <td>Extracted by this project's Text-Fabric parser</td>
                         <td>SHA-256 <code>41206bc6…f7caff6b8</code></td>
-                        <td><code>data/derived/nonbib_lacunae.jsonl</code></td>
+                        <td><code>curation/derived/nonbib_lacunae.jsonl</code></td>
                         <td>27,814 physical lacunae; 165,239 damaged and 103,355 preserved word positions.</td>
                     </tr>
                     <tr>
                         <td><strong>Preserved-text chunk corpus</strong></td>
-                        <td>Built by <code>data/build_preserved_nonbib_corpus.py</code> (seed 0, ≥20 preserved words per chunk)</td>
+                        <td>Built by <code>curation/build_preserved_nonbib_corpus.py</code> (seed 0, ≥20 preserved words per chunk)</td>
                         <td>SHA-256 <code>4c73c58c…044a517f</code></td>
-                        <td><code>data/derived/preserved_nonbib_chunks.jsonl</code></td>
+                        <td><code>curation/derived/preserved_nonbib_chunks.jsonl</code></td>
                         <td>1,647 chunks used for fine-tuning and cloze evaluation.</td>
                     </tr>
                     <tr class="highlight">
                         <td><strong>Canonical split registry</strong></td>
                         <td>Deterministic SHA-1 partition of manuscript IDs</td>
                         <td>v1.0.0, cut points 73 / 88</td>
-                        <td><code>data/splits/dss_scroll_splits_v1.json</code></td>
+                        <td><code>data_preparation/dss_scroll_splits_v1.json</code></td>
                         <td>531 train / 108 val / 93 test, 0 straddling scrolls.</td>
                     </tr>
                     <tr>
                         <td><strong>Embible comparison data</strong></td>
                         <td>Embible project's released biblical validation/test JSONL</td>
                         <td>Pinned backend commit <code>7c9e769274a273d0b357b066d932f1c6833ca5f8</code></td>
-                        <td><code>analysis/reports/embible_bible_transfer.json</code></td>
+                        <td><code>comparison/reports/embible_bible_transfer.json</code></td>
                         <td>Domain-transfer diagnostic only. Biblical text was used for calibration and evaluation, <strong>never for training</strong>.</td>
                     </tr>
                 </tbody>
@@ -1602,7 +1602,7 @@
                 <strong>How calculated:</strong> 30 held-out sentences, 250 masked words, same scoring as Table 1.
                 Parameter counts are derived from the fp32 checkpoint sizes of the exact models evaluated, so they
                 are approximate but correspond to what was actually run.
-                <span class="src">external_comparison/results/quick30_summary.json · checkpoint sizes under scratch/external_finetune/models/</span>
+                <span class="src">experiments/results/runs/quick30_summary.json · checkpoint sizes under scratch/external_finetune/models/</span>
             </div>
         </div>
         <div class="table-container">
@@ -1682,7 +1682,7 @@
                 3-word external match is masked out before ranking (27.0% of words on average, 0 surviving exact
                 runs), then residual recovery is measured under nested leave-one-manuscript-out. Significance is
                 a <strong>permutation test</strong> over scroll clusters.
-                <span class="src">analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md</span>
+                <span class="src">comparison/reports/CROSS_CORPUS_QUOTE_ABLATION.md</span>
             </div>
         </div>
         <div class="table-container">
@@ -1740,7 +1740,7 @@
                 <code>preserved_nonbib_chunks.jsonl</code> through the canonical registry.<br>
                 <strong>Note the gap between scrolls and usable text:</strong> a chunk requires at least 20
                 preserved words, so most scrolls contribute no chunk at all.
-                <span class="src">data/splits/dss_scroll_splits_v1.json · data/derived/preserved_nonbib_chunks.jsonl</span>
+                <span class="src">data_preparation/dss_scroll_splits_v1.json · curation/derived/preserved_nonbib_chunks.jsonl</span>
             </div>
         </div>
         <div class="table-container">

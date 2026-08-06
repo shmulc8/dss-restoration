@@ -2,7 +2,7 @@
 
 import pytest
 from pathlib import Path
-from eval.full_test_runner import run_full_test_benchmark
+from experiments.run_cloze_benchmark import run_full_test_benchmark
 
 
 def test_full_test_runner_missing_directory():
@@ -11,7 +11,7 @@ def test_full_test_runner_missing_directory():
 
 
 def test_full_test_runner_on_merged_results():
-    run_dir = Path("external_comparison/results/tavbert-base")
+    run_dir = Path("experiments/results/runs/tavbert-base")
     if run_dir.exists() and (run_dir / "predictions.jsonl").exists():
         report = run_full_test_benchmark(str(run_dir), num_bootstrap=10)
         assert report["total_sentences"] > 0

@@ -102,7 +102,7 @@ rankings helps with partial words and whitespace uncertainty.
 Embible contributes a particularly relevant Hebrew experimental design. It
 compares word models with TavBERT character predictions and distinguishes
 unknown from known whitespace and word-length information. The first controlled
-DSS baseline matrix is implemented in `eval/tf_embible_dss_benchmark.py`, with
+DSS baseline matrix is implemented in `experiments/tf_embible_dss_benchmark.py`, with
 stronger splits and span metrics. Its current character arm uses base TavBERT;
 it is not yet a final trained-system comparison.
 
@@ -334,7 +334,7 @@ Before any paper result:
 A number may enter the abstract, README headline, or presentation conclusion
 only if all are true:
 
-- the experiment is registered in `eval/run_all_experiments.py`;
+- the experiment is registered in `experiments/run_all_experiments.py`;
 - its test set is frozen and hashed;
 - its unit and information regime are explicit;
 - leakage checks pass;

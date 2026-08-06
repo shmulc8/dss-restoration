@@ -30,7 +30,7 @@ No result currently qualifies as a final paper result.
 - Limitation: this samples intact words and does not model unknown-length real
   damage.
 - Artifact:
-  [`analysis/reports/preserved_nonbib_intact_benchmark.json`](../analysis/reports/preserved_nonbib_intact_benchmark.json).
+  [`comparison/reports/preserved_nonbib_intact_benchmark.json`](../comparison/reports/preserved_nonbib_intact_benchmark.json).
 
 ### B. Attributed Qumran Digital comparison
 
@@ -46,7 +46,7 @@ No result currently qualifies as a final paper result.
 - Limitation: selected disputed sites, single-word only, and modern proposals
   rather than physical truth.
 - Artifact:
-  [`analysis/reports/QD_RESEARCHER_BENCHMARK.md`](../analysis/reports/QD_RESEARCHER_BENCHMARK.md).
+  [`comparison/reports/QD_RESEARCHER_BENCHMARK.md`](../comparison/reports/QD_RESEARCHER_BENCHMARK.md).
 
 ### C. Train-only RAG ablation
 
@@ -61,7 +61,7 @@ No result currently qualifies as a final paper result.
 - Limitation: known word-slot count, small balanced sample, and no inferential
   claim for the observed deltas.
 - Artifact:
-  [`analysis/reports/PRESERVED_RAG_LACUNA_LENGTHS.md`](../analysis/reports/PRESERVED_RAG_LACUNA_LENGTHS.md).
+  [`comparison/reports/PRESERVED_RAG_LACUNA_LENGTHS.md`](../comparison/reports/PRESERVED_RAG_LACUNA_LENGTHS.md).
 
 ### D. Embible-style synthetic-damage character/word baseline
 
@@ -91,9 +91,9 @@ No result currently qualifies as a final paper result.
 - Frozen held-out sample hash:
   `9d3e547ba461b7ec2743e6948cc4e8b9f4c72fd7652fd476a91bce94ea265132`.
 - Artifacts:
-  [`analysis/reports/EMBIBLE_DSS_BENCHMARK.md`](../analysis/reports/EMBIBLE_DSS_BENCHMARK.md)
+  [`comparison/reports/EMBIBLE_DSS_BENCHMARK.md`](../comparison/reports/EMBIBLE_DSS_BENCHMARK.md)
   and
-  [`analysis/reports/embible_dss_benchmark.json`](../analysis/reports/embible_dss_benchmark.json).
+  [`comparison/reports/embible_dss_benchmark.json`](../comparison/reports/embible_dss_benchmark.json).
 
 ### E. Fixed-decoder Bible domain transfer
 
@@ -119,9 +119,9 @@ No result currently qualifies as a final paper result.
   bottleneck, although the different sample sizes and small DSS strata prevent
   a final inferential claim.
 - Artifact:
-  [`analysis/reports/EMBIBLE_BIBLE_TRANSFER.md`](../analysis/reports/EMBIBLE_BIBLE_TRANSFER.md)
+  [`comparison/reports/EMBIBLE_BIBLE_TRANSFER.md`](../comparison/reports/EMBIBLE_BIBLE_TRANSFER.md)
   and
-  [`analysis/reports/embible_bible_transfer.json`](../analysis/reports/embible_bible_transfer.json).
+  [`comparison/reports/embible_bible_transfer.json`](../comparison/reports/embible_bible_transfer.json).
 
 ### F. Expanded DSS model-selection diagnostic
 
@@ -144,9 +144,9 @@ No result currently qualifies as a final paper result.
   It extends the deterministic sample stream used by the earlier 30-span run
   and lacks clustered uncertainty.
 - Artifacts:
-  [`analysis/reports/EMBIBLE_DSS_EXPANDED_PILOT.md`](../analysis/reports/EMBIBLE_DSS_EXPANDED_PILOT.md)
+  [`comparison/reports/EMBIBLE_DSS_EXPANDED_PILOT.md`](../comparison/reports/EMBIBLE_DSS_EXPANDED_PILOT.md)
   and
-  [`analysis/reports/embible_dss_expanded_pilot_summary.json`](../analysis/reports/embible_dss_expanded_pilot_summary.json).
+  [`comparison/reports/embible_dss_expanded_pilot_summary.json`](../comparison/reports/embible_dss_expanded_pilot_summary.json).
 
 ### G. Quote-aware cross-corpus source recovery
 
@@ -172,9 +172,9 @@ No result currently qualifies as a final paper result.
   borrowing, a lost source, or direction of influence.
 - Artifacts:
   [`docs/QUOTE_AWARE_SOURCE_CONNECTION_METHOD.md`](QUOTE_AWARE_SOURCE_CONNECTION_METHOD.md),
-  [`analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md`](../analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md),
+  [`comparison/reports/CROSS_CORPUS_QUOTE_ABLATION.md`](../comparison/reports/CROSS_CORPUS_QUOTE_ABLATION.md),
   and
-  [`analysis/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md`](../analysis/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md).
+  [`comparison/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md`](../comparison/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md).
 
 ## Claims that are not supported
 

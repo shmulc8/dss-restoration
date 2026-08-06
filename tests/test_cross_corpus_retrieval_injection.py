@@ -1,5 +1,5 @@
-from analysis.cross_corpus_connections import Passage
-from eval.cross_corpus_retrieval_injection import (
+from experiments.cross_corpus_connections import Passage
+from experiments.cross_corpus_retrieval_injection import (
     extract_proposals,
     merge_candidates,
     token_ids_for_phrase,

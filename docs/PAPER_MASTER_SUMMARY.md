@@ -150,7 +150,7 @@ restricted to Pesher passages. The module detects the citation formula and match
 ### 3.1 Five Real Targets from the Canonical Test Split
 
 All five scrolls below sit in the **canonical test split**, and every prediction is the model's actual ranked
-output from [`analysis/reports/qd_researcher_comparison.json`](../analysis/reports/qd_researcher_comparison.json).
+output from [`comparison/reports/qd_researcher_comparison.json`](../comparison/reports/qd_researcher_comparison.json).
 Predictions come from `ft_msbert_span_preserved_nonbib` under P0 (±1 character). Two of the five are not Top-1
 hits — this is a representative sample, not a highlight reel. **[pilot]**
 
@@ -207,7 +207,7 @@ inspection of held-out misses:
 
 Real lacunae rarely sit in clean text. This ablation randomly masks a fraction of the surrounding context
 words on 120 held-out cases (≤30 per gap-length bucket).
-Artifact: [`analysis/reports/context_noise_ablation.md`](../analysis/reports/context_noise_ablation.md).
+Artifact: [`comparison/reports/context_noise_ablation.md`](../comparison/reports/context_noise_ablation.md).
 
 | Context noise | Slot-level Top-1 | Sequence-level Top-1 |
 |---|---|---|
@@ -223,8 +223,8 @@ the context does not.
 ### 3.4 Four-Point Roadmap — Implemented, Not Yet Evaluated
 
 > [!WARNING]
-> **[not yet measured]** All four components exist in `eval/candidate_generator.py` and
-> `eval/metrics_runner.py` with unit tests, but **none has been run against a benchmark**, so no accuracy is
+> **[not yet measured]** All four components exist in `tuning/candidate_generator.py` and
+> `tuning/metrics_runner.py` with unit tests, but **none has been run against a benchmark**, so no accuracy is
 > attributable to any of them. Two of the four need rework before they could support a published claim.
 
 1. **Lemma-normalised scoring** (`normalize_hebrew_lemma()`) — collapses final letter forms, common plene
@@ -292,11 +292,11 @@ with no surviving ink, step 3 has nothing to constrain.
 | Data layer | Origin & attribution | Version / snapshot | Path | Role |
 |---|---|---|---|---|
 | **ETCBC Dead Sea Scrolls corpus** | ETCBC (Vrije Universiteit Amsterdam), distributed via Text-Fabric. Transcription and features by **Martin G. Abegg Jr., James E. Bowley, Edward M. Cook**. **Licence: CC BY-NC 4.0.** | Corpus `ETCBC/dss`, data version **2.0** | `DSS_TF_DIR` | Source text for 732 non-biblical scrolls with `rec` flags (0 = ink, 1 = reconstruction). |
-| **Qumran-Digital variant database** | Qumran Digital: Text and Lexicon — Göttingen Academy of Sciences and Humanities | Cached snapshot **2026-05-21**; the scorer makes no network requests | `data/derived/qd_researcher_variants.jsonl` | 1,811 proposal rows → 74 eligible targets with attributed restorations. |
-| **Derived lacuna dataset** | This project's Text-Fabric parser | SHA-256 `41206bc6…f7caff6b8` | `data/derived/nonbib_lacunae.jsonl` | 27,814 lacunae; 165,239 damaged and 103,355 preserved word positions. |
-| **Preserved-text chunk corpus** | `data/build_preserved_nonbib_corpus.py` (seed 0, ≥20 preserved words per chunk) | SHA-256 `4c73c58c…044a517f` | `data/derived/preserved_nonbib_chunks.jsonl` | 1,647 chunks for fine-tuning and cloze evaluation. |
-| **Canonical split registry** | Deterministic SHA-1 partition of manuscript IDs | v1.0.0, cut points 73 / 88 | `data/splits/dss_scroll_splits_v1.json` | 531 train / 108 val / 93 test, 0 straddling. |
-| **Embible comparison data** | Embible project's released biblical validation/test JSONL | Pinned backend commit `7c9e769274a273d0b357b066d932f1c6833ca5f8` | `analysis/reports/embible_bible_transfer.json` | Domain-transfer diagnostic. Biblical text was used for calibration and evaluation, **never training**. |
+| **Qumran-Digital variant database** | Qumran Digital: Text and Lexicon — Göttingen Academy of Sciences and Humanities | Cached snapshot **2026-05-21**; the scorer makes no network requests | `curation/derived/qd_researcher_variants.jsonl` | 1,811 proposal rows → 74 eligible targets with attributed restorations. |
+| **Derived lacuna dataset** | This project's Text-Fabric parser | SHA-256 `41206bc6…f7caff6b8` | `curation/derived/nonbib_lacunae.jsonl` | 27,814 lacunae; 165,239 damaged and 103,355 preserved word positions. |
+| **Preserved-text chunk corpus** | `curation/build_preserved_nonbib_corpus.py` (seed 0, ≥20 preserved words per chunk) | SHA-256 `4c73c58c…044a517f` | `curation/derived/preserved_nonbib_chunks.jsonl` | 1,647 chunks for fine-tuning and cloze evaluation. |
+| **Canonical split registry** | Deterministic SHA-1 partition of manuscript IDs | v1.0.0, cut points 73 / 88 | `data_preparation/dss_scroll_splits_v1.json` | 531 train / 108 val / 93 test, 0 straddling. |
+| **Embible comparison data** | Embible project's released biblical validation/test JSONL | Pinned backend commit `7c9e769274a273d0b357b066d932f1c6833ca5f8` | `comparison/reports/embible_bible_transfer.json` | Domain-transfer diagnostic. Biblical text was used for calibration and evaluation, **never training**. |
 
 > [!WARNING]
 > **Licensing.** `ETCBC/dss` is **CC BY-NC 4.0**. Attribution must name Abegg, Bowley and Cook, and any
@@ -331,7 +331,7 @@ Two incompatible split definitions coexist:
 
 | Registry | Scrolls | Partition |
 |---|---|---|
-| `data/splits/dss_scroll_splits_v1.json` (canonical) | 732 | 531 train / 108 val / 93 test |
+| `data_preparation/dss_scroll_splits_v1.json` (canonical) | 732 | 531 train / 108 val / 93 test |
 | `preserved_nonbib_manifest.json` → `scroll_splits` | 736 | 413 train / 103 dev / 220 heldout |
 
 The QD benchmark ran against the **manifest** registry, so **40 of its 74 targets fall in the canonical
@@ -347,14 +347,14 @@ canonical registry entirely.
 
 ## ⚙️ 7. Methodology
 
-### 7.1 Manuscript Partitioning ([`data/splits/dss_scroll_splits_v1.json`](../data/splits/dss_scroll_splits_v1.json))
+### 7.1 Manuscript Partitioning ([`data_preparation/dss_scroll_splits_v1.json`](../data_preparation/dss_scroll_splits_v1.json))
 
 $$\text{Partition}(\text{Scroll\_ID}) = \text{SHA1}(\text{Scroll\_ID}) \bmod 100 \implies \begin{cases} \text{Train} & [0, 73) \quad (531 \text{ scrolls},\ 72.5\%) \\ \text{Val} & [73, 88) \quad (108 \text{ scrolls},\ 14.8\%) \\ \text{Test} & [88, 100) \quad (93 \text{ scrolls},\ 12.7\%) \end{cases}$$
 
 A scroll's split is a pure function of its identifier, so no manuscript can straddle two splits.
-`utils/splits.py:validate_split_disjointness` asserts this.
+`data_preparation/splits.py:validate_split_disjointness` asserts this.
 
-### 7.2 Unified Candidate Generator ([`eval/candidate_generator.py`](../eval/candidate_generator.py))
+### 7.2 Unified Candidate Generator ([`tuning/candidate_generator.py`](../tuning/candidate_generator.py))
 
 $$\text{generate\_candidates}(\text{context}_{\text{left}}, \text{context}_{\text{right}}, L, P, K) \to [C_1, \dots, C_K]$$
 
@@ -380,7 +380,7 @@ $$\text{Score}(C_L) = \frac{\sum_{i=1}^{L} \log P(c_i \mid c_{<i}, \text{context
   gap scores 0.0 rather than being dropped from the denominator.
 - **Aligned-only metric.** Reported alongside, for transparency about where the difference comes from.
 
-### 7.6 Fine-Tuning ([`training/unified_trainer.py`](../training/unified_trainer.py))
+### 7.6 Fine-Tuning ([`tuning/unified_trainer.py`](../tuning/unified_trainer.py))
 - Task: 1–3 word contiguous span masking.
 - Learning rate $1\times10^{-5}$, linear warmup ratio 0.1, weight decay 0.01.
 - `evaluation_strategy="epoch"`, `load_best_model_at_end=True`, tracking validation loss on the 108 validation
@@ -433,7 +433,7 @@ with groups `{ר ד ו ן נ י}`, `{ה ח ת}`, `{מ ס}`, `{ב כ}` and an acc
 #### Table 1: Synthetic Cloze — `scatter-30` **[measured]**
 *100 held-out sentences, $n=729$ masked words, regime O-len. Intervals are sentence-level percentile cluster
 bootstrap, $B=1000$.*
-Artifact: [`external_comparison/results/summary_with_subsets.json`](../external_comparison/results/summary_with_subsets.json) (2026-08-01).
+Artifact: [`experiments/results/runs/summary_with_subsets.json`](../experiments/results/runs/summary_with_subsets.json) (2026-08-01).
 
 | Model | Hit@10 (all-words) + 95% CI | Hit@1 | Aligned-only Hit@10 | Char sim | MRR | Unaligned |
 |---|---|---|---|---|---|---|
@@ -454,8 +454,8 @@ only in Table A1.
 #### Table 2: Real Lacuna Literature Agreement — Qumran-Digital, $n=74$ **[pilot]**
 *Model: `ft_msbert_span_preserved_nonbib`, trained on preserved letters only, with post-MLM physical
 filtering. **Not** a character model — the character models have not been run on this benchmark.*
-Artifacts: [`QD_RESEARCHER_BENCHMARK.md`](../analysis/reports/QD_RESEARCHER_BENCHMARK.md),
-[`qd_researcher_comparison.json`](../analysis/reports/qd_researcher_comparison.json).
+Artifacts: [`QD_RESEARCHER_BENCHMARK.md`](../comparison/reports/QD_RESEARCHER_BENCHMARK.md),
+[`qd_researcher_comparison.json`](../comparison/reports/qd_researcher_comparison.json).
 
 | System / condition | Regime | $n$ | Top-1 | Top-10 | Top-20 |
 |---|---|---|---|---|---|
@@ -485,7 +485,7 @@ that setting.
 *The decoder knows the number of word slots but no gold character lengths. References are anonymous
 Text-Fabric editorial reconstructions used only as evaluation labels, excluded from input, training and
 retrieval.*
-Artifact: [`PRESERVED_RAG_LACUNA_LENGTHS.md`](../analysis/reports/PRESERVED_RAG_LACUNA_LENGTHS.md).
+Artifact: [`PRESERVED_RAG_LACUNA_LENGTHS.md`](../comparison/reports/PRESERVED_RAG_LACUNA_LENGTHS.md).
 
 | Condition | Unit | $n$ | Top-1 | Top-10 |
 |---|---|---|---|---|
@@ -497,7 +497,7 @@ Artifact: [`PRESERVED_RAG_LACUNA_LENGTHS.md`](../analysis/reports/PRESERVED_RAG_
 Every row supplies the word-slot count. The genuinely unknown-length case is not represented — see §7.4.
 
 #### Table 4: Physical Lacuna Corpus Statistics **[measured — counts only]**
-*Recomputed from the parsed dataset via `eval/large_scale_lacuna_eval.py`. **No model has been scored at this
+*Recomputed from the parsed dataset via `experiments/lacuna_corpus_stats.py`. **No model has been scored at this
 scale**; any accuracy figure for 3,695 lacunae would be unsupported.*
 
 | Quantity | Whole non-biblical corpus | Canonical test split |
@@ -517,7 +517,7 @@ show no ink.
 #### Table A1: Model Selection & Pretraining Scale **[measured]**
 *30 held-out sentences, 250 masked words, same scoring as Table 1. Parameter counts are derived from the fp32
 checkpoint sizes of the models actually evaluated.*
-Artifact: [`external_comparison/results/quick30_summary.json`](../external_comparison/results/quick30_summary.json).
+Artifact: [`experiments/results/runs/quick30_summary.json`](../experiments/results/runs/quick30_summary.json).
 
 | Model | Params | Fine-tuned? | Hit@10 | 95% CI | Unaligned |
 |---|---|---|---|---|---|
@@ -537,8 +537,8 @@ nothing (17.60% both), and no fine-tuning benefit survives. Model selection shou
 which is why the percentages are not multiples of 1/35. The ablation is a **leakage control**, not a rival
 method: every token in an exact external match is masked before ranking, then residual recovery is measured
 under nested leave-one-manuscript-out. Significance is a **permutation test** over scroll clusters.*
-Artifacts: [`CROSS_CORPUS_QUOTE_ABLATION.md`](../analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md),
-[`CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md`](../analysis/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md).
+Artifacts: [`CROSS_CORPUS_QUOTE_ABLATION.md`](../comparison/reports/CROSS_CORPUS_QUOTE_ABLATION.md),
+[`CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md`](../comparison/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md).
 
 | Condition | Top-1 | Top-3 | Significance |
 |---|---|---|---|
@@ -635,7 +635,7 @@ dss-restoration/
 ├── training/
 │   ├── unified_trainer.py                <-- fine-tuning CLI with early stopping
 │   └── run_multiseed_experiment.py       <-- multi-seed runner
-├── analysis/reports/                     <-- generated artifacts; the source of every number here
+├── comparison/reports/                     <-- generated artifacts; the source of every number here
 ├── tests/                                <-- 79 tests, incl. test_public_claims.py claim guards
 └── pytest.ini
 ```
@@ -645,16 +645,16 @@ dss-restoration/
 uv run pytest
 
 # Multi-seed fine-tuning with validation early stopping
-PYTHONPATH=. uv run python training/run_multiseed_experiment.py --model tau/tavbert-he --epochs 3
+PYTHONPATH=. uv run python tuning/run_multiseed_experiment.py --model tau/tavbert-he --epochs 3
 
 # Score an existing prediction run against the cloze benchmark
-PYTHONPATH=. uv run python eval/full_test_runner.py --run-dir external_comparison/results/tavbert-base
+PYTHONPATH=. uv run python experiments/run_cloze_benchmark.py --run-dir experiments/results/runs/tavbert-base
 
 # Score the QD literature-agreement benchmark (offline against the cached snapshot)
-PYTHONPATH=. uv run python eval/score_qd_researcher_benchmark.py
+PYTHONPATH=. uv run python experiments/run_qd_benchmark.py
 
 # Physical lacuna corpus statistics
-PYTHONPATH=. uv run python eval/large_scale_lacuna_eval.py
+PYTHONPATH=. uv run python experiments/lacuna_corpus_stats.py
 ```
 
 `tests/test_public_claims.py` ties this document and `PAPER_PRESENTATION.html` to the generated artifacts: it

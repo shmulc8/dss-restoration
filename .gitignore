@@ -27,9 +27,15 @@ models/*
 ft_*
 
 # Large local artifacts (unification work)
-analysis/cache/
+comparison/cache/
 scratch/
-external_comparison/merged_results/
-external_comparison/results/**/predictions.jsonl
-external_comparison/results/**/*.xlsx
-external_comparison/results/**/*.csv
+experiments/external_finetune/merged_results/
+experiments/results/runs/**/predictions.jsonl
+experiments/results/runs/**/*.xlsx
+experiments/results/runs/**/*.csv
+
+# Large local artifacts: model checkpoints and exploratory runs.
+# Kept on disk, never committed — they hold the raw outputs behind the reports
+# under comparison/reports/, so do not delete them.
+models/
+scratch/

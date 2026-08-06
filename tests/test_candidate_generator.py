@@ -1,7 +1,7 @@
 """Unit tests for CandidateGenerator interface, LengthEnsembleCharMLMGenerator, and PartialLetterFilter."""
 
 import pytest
-from eval.candidate_generator import (
+from tuning.candidate_generator import (
     Candidate,
     PartialLetterFilter,
     MockCandidateGenerator,

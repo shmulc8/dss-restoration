@@ -9,7 +9,7 @@ index.
 - [Live research site](https://dss-restoration-demo.pages.dev/)
 - [Hebrew research deck](https://dss-restoration-demo.pages.dev/slides_he.html)
 - [Locked paper methodology](docs/METHODOLOGY.md)
-- [Final method and system decision](docs/BEST_METHOD.md)
+- [Final method and system decision](docs/archive/BEST_METHOD.md)
 - [Current evidence register](docs/RESULTS.md)
 
 ## Research claim
@@ -66,15 +66,15 @@ The checked-in manifest records 736 scrolls, 1,647 chunks, and 27,814 lacuna
 records. Rebuild and validate the corpus with:
 
 ```bash
-.venv/bin/python data/build_preserved_nonbib_corpus.py
-.venv/bin/python data/validate_preserved_nonbib_corpus.py
-.venv/bin/python eval/validate_leakage.py
+.venv/bin/python curation/build_preserved_nonbib_corpus.py
+.venv/bin/python curation/validate_preserved_nonbib_corpus.py
+.venv/bin/python experiments/validate_leakage.py
 ```
 
 Fine-tune the current preserved-only baseline with:
 
 ```bash
-.venv/bin/python training/finetune_span_preserved_nonbib.py
+.venv/bin/python tuning/unified_trainer.py
 ```
 
 This checkpoint is a baseline, not the final paper model. The paper protocol
@@ -97,22 +97,22 @@ word system remains the strongest implemented baseline.
 
 ```bash
 # List the paper-facing evaluations without running them
-.venv/bin/python eval/run_all_experiments.py --list
+.venv/bin/python experiments/run_all_experiments.py --list
 
 # Run validation only
-.venv/bin/python eval/run_all_experiments.py --checks
+.venv/bin/python experiments/run_all_experiments.py --checks
 
 # Validate the machine-readable promotion and evaluation contract directly
-.venv/bin/python eval/validate_paper_protocol.py
+.venv/bin/python experiments/validate_paper_protocol.py
 
 # Run the retained pilot evaluations
-.venv/bin/python eval/run_all_experiments.py --pilots
+.venv/bin/python experiments/run_all_experiments.py --pilots
 
 # Run only the Embible-style character/word matrix
-.venv/bin/python eval/run_all_experiments.py --pilots --only embible
+.venv/bin/python experiments/run_all_experiments.py --pilots --only embible
 
 # Run the fixed-decoder Bible transfer diagnostic
-.venv/bin/python eval/run_all_experiments.py --pilots --only bible-transfer
+.venv/bin/python experiments/run_all_experiments.py --pilots --only bible-transfer
 ```
 
 The runner includes only the supported pipeline. Older experimental scripts may

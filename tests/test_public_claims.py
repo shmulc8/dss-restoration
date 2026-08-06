@@ -76,7 +76,7 @@ def test_bootstrap_and_mcnemar_are_callable() -> None:
     """Both are cited as method; a paste that breaks them must fail the suite."""
     import pandas as pd
 
-    from eval.metrics_runner import _cluster_bootstrap, mcnemar_test
+    from tuning.metrics_runner import _cluster_bootstrap, mcnemar_test
 
     df = pd.DataFrame(
         {
@@ -97,7 +97,7 @@ def test_bootstrap_and_mcnemar_are_callable() -> None:
 def test_qd_headline_matches_generated_report() -> None:
     """The real-lacuna figures in the deck must match the scorer's own report."""
     report = json.loads(
-        (ROOT / "analysis" / "reports" / "qd_researcher_comparison.json").read_text(
+        (ROOT / "comparison" / "reports" / "qd_researcher_comparison.json").read_text(
             encoding="utf-8"
         )
     )
@@ -126,12 +126,12 @@ def test_qd_headline_matches_generated_report() -> None:
 def test_deck_declares_the_split_registry_conflict() -> None:
     """40 of the 74 QD targets sit in the canonical train split; the deck must say so."""
     report = json.loads(
-        (ROOT / "analysis" / "reports" / "qd_researcher_comparison.json").read_text(
+        (ROOT / "comparison" / "reports" / "qd_researcher_comparison.json").read_text(
             encoding="utf-8"
         )
     )
     canonical = json.loads(
-        (ROOT / "data" / "splits" / "dss_scroll_splits_v1.json").read_text(
+        (ROOT / "data_preparation" / "dss_scroll_splits_v1.json").read_text(
             encoding="utf-8"
         )
     )["scroll_assignment"]
@@ -153,7 +153,7 @@ def test_public_surfaces_link_the_methodology() -> None:
 
 def test_embible_public_numbers_match_generated_report() -> None:
     report = json.loads(
-        (ROOT / "analysis" / "reports" / "embible_dss_benchmark.json").read_text(
+        (ROOT / "comparison" / "reports" / "embible_dss_benchmark.json").read_text(
             encoding="utf-8"
         )
     )
@@ -183,7 +183,7 @@ def test_embible_public_numbers_match_generated_report() -> None:
 
 def test_bible_transfer_public_numbers_match_generated_report() -> None:
     report = json.loads(
-        (ROOT / "analysis" / "reports" / "embible_bible_transfer.json").read_text(
+        (ROOT / "comparison" / "reports" / "embible_bible_transfer.json").read_text(
             encoding="utf-8"
         )
     )

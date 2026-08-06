@@ -1,6 +1,6 @@
 import numpy as np
 
-from training.unified_trainer import choose_word_span
+from tuning.unified_trainer import choose_word_span
 
 
 def test_choose_word_span_is_contiguous_and_bounded() -> None:

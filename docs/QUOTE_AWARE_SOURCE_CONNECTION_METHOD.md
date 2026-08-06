@@ -112,13 +112,13 @@ as a negative downstream ablation or future expert-assistance track.
 ## Reproduction
 
 ```bash
-PYTHONPATH=. .venv/bin/python analysis/cross_corpus_quote_ablation.py
+PYTHONPATH=. .venv/bin/python experiments/cross_corpus_quote_ablation.py
 
-PYTHONPATH=. .venv/bin/python analysis/cross_corpus_quote_ablation.py \
+PYTHONPATH=. .venv/bin/python experiments/cross_corpus_quote_ablation.py \
   --quote-ngram 2 \
   --residual-min-words 20 \
-  --output-json analysis/reports/cross_corpus_quote_ablation_bigram.json \
-  --output-markdown analysis/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md
+  --output-json comparison/reports/cross_corpus_quote_ablation_bigram.json \
+  --output-markdown comparison/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md
 
 PYTHONPATH=. .venv/bin/python -m pytest -q \
   tests/test_cross_corpus_quote_ablation.py \
@@ -127,7 +127,7 @@ PYTHONPATH=. .venv/bin/python -m pytest -q \
 
 Primary generated evidence:
 
-- `analysis/reports/CROSS_CORPUS_QUOTE_ABLATION.md`
-- `analysis/reports/cross_corpus_quote_ablation.json`
-- `analysis/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md`
-- `analysis/reports/cross_corpus_quote_ablation_bigram.json`
+- `comparison/reports/CROSS_CORPUS_QUOTE_ABLATION.md`
+- `comparison/reports/cross_corpus_quote_ablation.json`
+- `comparison/reports/CROSS_CORPUS_QUOTE_ABLATION_BIGRAM.md`
+- `comparison/reports/cross_corpus_quote_ablation_bigram.json`

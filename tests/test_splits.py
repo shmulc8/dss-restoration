@@ -1,6 +1,6 @@
 """Unit tests for unified frozen scroll splits module."""
 
-from utils.splits import (
+from data_preparation.splits import (
     load_frozen_scroll_splits,
     get_scroll_sets,
     validate_split_disjointness,

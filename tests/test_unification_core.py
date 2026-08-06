@@ -1,12 +1,12 @@
 """Unit tests for native unified masking and metrics runner modules."""
 
-from eval.metrics_runner import (
+from tuning.metrics_runner import (
     normalize_he,
     normalize_hebrew_lemma,
     char_sim,
     split_candidate_words,
 )
-from utils.tokenizer_compat import word_char_spans
+from tuning.tokenizer_compat import word_char_spans
 
 
 def test_hebrew_normalization():
@@ -48,7 +48,7 @@ def test_word_char_spans():
 
 
 def test_epigraphic_stroke_filter():
-    from eval.candidate_generator import EpigraphicStrokeFilter
+    from tuning.candidate_generator import EpigraphicStrokeFilter
     # Exact letter match = 1.0
     assert EpigraphicStrokeFilter.stroke_similarity("ר", "ר") == 1.0
     # Ambiguous stroke pair (ר vs ד) = 0.85
@@ -62,7 +62,7 @@ def test_epigraphic_stroke_filter():
 
 
 def test_sectarian_idf_booster():
-    from eval.candidate_generator import SectarianIDFBooster
+    from tuning.candidate_generator import SectarianIDFBooster
     # Qumran sectarian keyword boost
     assert SectarianIDFBooster.get_boost("הסרך") == 3.5
     assert SectarianIDFBooster.get_boost("בתמים") == 2.5

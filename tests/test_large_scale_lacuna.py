@@ -1,7 +1,7 @@
 """Unit test for large-scale physical lacuna evaluation harness."""
 
 import pytest
-from eval.large_scale_lacuna_eval import evaluate_test_lacunae_accuracy
+from experiments.lacuna_corpus_stats import evaluate_test_lacunae_accuracy
 
 
 def test_evaluate_test_lacunae_accuracy():

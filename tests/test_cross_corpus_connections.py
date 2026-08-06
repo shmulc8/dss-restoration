@@ -1,4 +1,4 @@
-from analysis.cross_corpus_connections import (
+from experiments.cross_corpus_connections import (
     Passage,
     fixed_windows,
     hebrew_tokens,
@@ -8,7 +8,7 @@ from analysis.cross_corpus_connections import (
     row_percentiles,
     style_features,
 )
-from analysis.cross_corpus_embedding_benchmark import (
+from experiments.cross_corpus_embedding_benchmark import (
     diversified_details,
     passage_fingerprint,
 )

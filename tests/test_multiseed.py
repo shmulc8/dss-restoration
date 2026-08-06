@@ -2,7 +2,7 @@
 
 import pytest
 from pathlib import Path
-from training.run_multiseed_experiment import run_multiseed_pass
+from tuning.run_multiseed_experiment import run_multiseed_pass
 
 
 def test_multiseed_experiment_setup(tmp_path: Path):

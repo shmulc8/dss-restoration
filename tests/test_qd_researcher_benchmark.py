@@ -1,7 +1,7 @@
 import unittest
 from collections import Counter
 
-from eval.score_qd_researcher_benchmark import (
+from experiments.run_qd_benchmark import (
     PhysicalConstraint,
     _visible_segments,
     build_constraint,
@@ -11,7 +11,7 @@ from eval.score_qd_researcher_benchmark import (
     rag_context_keys,
     rag_score,
 )
-from utils.preserved_corpus import GAP_TOKEN
+from curation.preserved_corpus import GAP_TOKEN
 
 
 class QDEditorialParsingTests(unittest.TestCase):

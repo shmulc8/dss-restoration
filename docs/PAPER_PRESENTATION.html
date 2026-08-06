@@ -709,9 +709,9 @@
                                 <td>2</td>
                                 <td>Baseline model</td>
                                 <td>DictaBERT-char assumed default; TavBERT un-evaluated.</td>
-                                <td><strong>TavBERT FT (Optimal)</strong> as the primary headline baseline model (23.65% Cloze Hit@10, 47.30% Real Lacuna Top-1).</td>
+                                <td><strong>TavBERT (tau/tavbert-he)</strong> as the cloze reference model (21.12% Base / 20.58% FT cloze Hit@10; 40.5% Real Lacuna Top-1).</td>
                                 <td>Implemented</td>
-                                <td><span class="tag tag-measured">measured</span> verified primary baseline</td>
+                                <td><span class="tag tag-measured">measured</span> baseline reference</td>
                             </tr>
                             <tr class="highlight">
                                 <td>3</td>
@@ -743,15 +743,15 @@
                                 <td>Retrieval across all texts produced biblicisms on non-biblical texts.</td>
                                 <td><strong>Quote-aware Pesher source retrieval</strong> (86.6% Top-1 book recovery on 35 known-source passages).</td>
                                 <td>Implemented</td>
-                                <td><span class="tag tag-measured">measured</span> (86.57% Top-1 book recovery, Table A2)</td>
+                                <td><span class="tag tag-measured">measured</span> (86.6% Top-1 book recovery, Table A2)</td>
                             </tr>
                             <tr class="highlight">
                                 <td>7</td>
                                 <td>Multi-word gaps</td>
-                                <td>Fixed-length MLMs cannot vary output length (0.0% accuracy).</td>
+                                <td>Fixed-length MLMs cannot vary output length.</td>
                                 <td><strong>LengthEnsembleCharMLMGenerator</strong> — loops L ∈ [3, 15] with length-penalty re-ranking.</td>
                                 <td>Implemented, unit-tested</td>
-                                <td><span class="tag tag-measured">measured</span> (14.2% Hit@10 vs 0.0% single-length MLM, Table 3)</td>
+                                <td><span class="tag tag-measured">measured</span> (length-ensemble generator implemented for multi-word gaps)</td>
                             </tr>
                             <tr>
                                 <td>8</td>
@@ -767,15 +767,15 @@
                                 <td>Fixed-epoch fine-tuning overfits.</td>
                                 <td><strong>Validation early stopping</strong> (1e-5 LR, linear warmup, weight decay).</td>
                                 <td>Implemented</td>
-                                <td><span class="tag tag-measured">measured</span> (TavBERT FT 23.65% vs TavBERT Base 21.12%)</td>
+                                <td><span class="tag tag-measured">measured</span> (TavBERT Base 21.12% vs TavBERT FT 20.58%)</td>
                             </tr>
                             <tr>
                                 <td>10</td>
                                 <td>Uncertainty</td>
                                 <td>Point estimates without intervals.</td>
-                                <td><strong>Percentile cluster bootstrap</strong> (1,000 resamples) + paired <strong>McNemar significance test</strong> (p &lt; 0.01).</td>
+                                <td><strong>Percentile cluster bootstrap</strong> (1,000 resamples) + paired McNemar metric evaluation framework.</td>
                                 <td>Implemented</td>
-                                <td><span class="tag tag-measured">measured</span> (all model leads statistically significant, p &lt; 0.01)</td>
+                                <td><span class="tag tag-measured">measured</span> (bootstrap CIs reported on all rows)</td>
                             </tr>
                             <tr class="highlight">
                                 <td>11</td>
@@ -917,10 +917,10 @@
                 </thead>
                 <tbody>
                     <tr class="highlight">
-                        <td><strong>TavBERT FT (Optimal)</strong></td>
-                        <td><strong>23.65%</strong> [18.90%, 28.40%]</td>
-                        <td>8.42%</td>
-                        <td>23.65%</td>
+                        <td>TavBERT Base</td>
+                        <td><strong>21.12%</strong> [17.01%, 25.39%]</td>
+                        <td>7.27%</td>
+                        <td>21.12%</td>
                         <td>0 / 729 (0.0%)</td>
                     </tr>
                     <tr>
@@ -931,10 +931,10 @@
                         <td>0 / 729 (0.0%)</td>
                     </tr>
                     <tr>
-                        <td>TavBERT Base</td>
-                        <td>21.12% [17.01%, 25.39%]</td>
-                        <td>7.27%</td>
-                        <td>21.12%</td>
+                        <td>TavBERT Fine-Tuned</td>
+                        <td>20.58% [17.03%, 24.49%]</td>
+                        <td>7.96%</td>
+                        <td>20.58%</td>
                         <td>0 / 729 (0.0%)</td>
                     </tr>
                     <tr>
@@ -956,7 +956,7 @@
         </div>
         <div class="pitch-box" style="border-left-color:#10b981;">
             <div class="pitch-title" style="color:#34d399;">💡 Key Method Takeaways</div>
-            <p style="margin:0;">First, <strong>character-level MLMs (TavBERT FT 23.65%, DictaBERT-char FT 22.80%) out-perform WordPiece models (MsBERT 13.31%)</strong> by eliminating token alignment drops. Second, WordPiece tokenizers drop 38.3% of target words due to character sequence mismatch. Third, ByT5 unified Seq2Seq achieves only 5.35% Hit@10 under unconstrained cloze due to lack of character length conditioning.</p>
+            <p style="margin:0;">First, <strong>character-level MLMs (TavBERT Base 21.12%, DictaBERT-char FT 22.80%) out-perform WordPiece models (MsBERT 13.31%)</strong> by eliminating token alignment drops. Second, WordPiece tokenizers drop 38.3% of target words due to character sequence mismatch. Third, ByT5 unified Seq2Seq achieves only 5.35% Hit@10 under unconstrained cloze due to lack of character length conditioning.</p>
         </div>
 
         <!-- Table 2 -->
@@ -1264,7 +1264,7 @@
         </div>
         <div class="pitch-box" style="border-left-color:#10b981;">
             <div class="pitch-title" style="color:#34d399;">💡 Model Scale Takeaways</div>
-            <p style="margin:0;">Scaling parameter size from ~88M to ~307M (DictaBERT-Large-char) provides no accuracy gain (17.60%), confirming that character-level domain fine-tuning (TavBERT FT 23.65%) is far more critical than raw model scale for ancient Hebrew lacuna restoration.</p>
+            <p style="margin:0;">Scaling parameter size from ~88M to ~307M (DictaBERT-Large-char) provides no accuracy gain (17.60%), confirming that character-level domain model representations (TavBERT Base 21.12%) are far more critical than raw model scale for ancient Hebrew lacuna restoration.</p>
         </div>
 
         <!-- Table A2 -->

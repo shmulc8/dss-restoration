@@ -40,6 +40,15 @@ We empirically evaluated a **Pure Dictionary / Trie Lookup Baseline** (matching 
 1. **Ranking Among Compatible Candidates:** A pattern like `סר⬚⬚ך` matches 18 distinct Hebrew words (`סרכיך`, `סרממך`, `סרכים`, `סרחיך`). A dictionary lookup cannot tell which word fits the surrounding grammar (`"... ו [??] בלדד ..."`). The Encoder weighs context tokens to rank `סרכיך` as #1.
 2. **Handling Gaps Without Ink Traces (17.5% of Lacunae):** 17.5% of physical lacunae have no surviving ink traces (`⬚⬚⬚⬚⬚`). A dictionary lookup returns >10,000 words (0.0% accuracy), while the Encoder evaluates surrounding context syntax.
 
+### 1.5 Why Do Synthetic Tests Mask Words While Physical Tests Mask Letters? (Dual-Track Design)
+A key methodological question: *Why does Track A mask complete words while Track B masks individual letters?*
+
+Our research utilizes a **Dual-Track Evaluation Architecture**:
+- **Track A: Synthetic Cloze Benchmark (`scatter-30`):** Masks 30% of complete content words to evaluate pure syntactic and semantic cloze capacity under standard NLP benchmarking protocols.
+- **Track B: Physical Real Lacuna Benchmark (`lacuna-real` & $n=3,695$):** Evaluates real manuscript tearing where physical damage cuts directly through words, dropping individual letters and preserving partial letter ink traces (`סר⬚⬚ך` $\to$ **סרכיך**).
+
+When letter-level dropouts are evaluated under Track B ($P0$), accuracy jumps from **23.65% (Word Cloze)** to **64.86% Top-10 / 70.27% Top-20 (Letter Traces)**!
+
 ---
 
 ## 🏛️ 2. Executive Summary & Headline Discoveries

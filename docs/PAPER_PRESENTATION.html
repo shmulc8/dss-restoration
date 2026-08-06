@@ -721,7 +721,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 1 (Cloze scatter-30) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Simulates an epigrapher trying to fill in 1-word missing slots when 30% of words across a line are physically missing simultaneously.<br>
-                <strong>How Calculated:</strong> Evaluates 100 paired held-out test sentences (729 masked words). Beam search (P0K=50P0, beam width P010 \times 6P0) predicts candidate words under P0O\text{-len}P0 gold character length proxy. Headline All-Words metric treats unaligned word predictions as 0.0 hit score. 95% Confidence Intervals computed via sentence-level percentile cluster bootstrap (P0B=1000P0).
+                <strong>How Calculated:</strong> Evaluates 100 paired held-out test sentences (729 masked words). Beam search (K = 50 candidate pool, beam width 10 × 6) predicts candidate words under O-len gold character length proxy. Headline All-Words metric treats unaligned word predictions as 0.0 hit score. 95% Confidence Intervals computed via sentence-level percentile cluster bootstrap (B = 1,000 resamples).
             </div>
         </div>
         <div class="table-container">
@@ -777,7 +777,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table 2 (QD Literature Agreement) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Measures how often our AI model top predictions match final published scholarly restorations (Qimron 2013/2020 & DJD XXIX) on actual torn physical scroll fragments.<br>
-                <strong>How Calculated:</strong> Evaluates 74 physically damaged target lacunae with published scholarly collations. Models condition on surviving physical ink traces (P0P0P0) with length tolerance P0\pm 1P0. Top-K accuracy measures whether any attributed reading appears in the model's Top-1, Top-10, or Top-20 candidates.
+                <strong>How Calculated:</strong> Evaluates 74 physically damaged target lacunae with published scholarly collations. Models condition on surviving physical ink traces (P0P0P0) with length tolerance ±1. Top-K accuracy measures whether any attributed reading appears in the model's Top-1, Top-10, or Top-20 candidates.
             </div>
         </div>
         <div class="table-container">
@@ -1047,7 +1047,7 @@
             <div class="qa-header" onclick="toggleQA(this)">💡 Method & Calculation Intuition: Table A3 (SHA-1 Disjoint Splits) <span>▼</span></div>
             <div class="qa-body">
                 <strong>Philological Intuition:</strong> Proves that our train/val/test splits are 100% manuscript-disjoint so the model cannot cheat by memorizing duplicate scroll fragments.<br>
-                <strong>How Calculated:</strong> Deterministic SHA-1 hash of manuscript ID (P0\text{SHA1}(\text{scroll\_id}) \bmod 100P0). Allocates 531 train (73.6%), 108 val (12.7%), and 93 test scrolls (13.7%) with zero straddling scrolls.
+                <strong>How Calculated:</strong> Deterministic SHA-1 hash of manuscript ID (SHA1(scroll_id) mod 100). Allocates 531 train (73.6%), 108 val (12.7%), and 93 test scrolls (13.7%) with zero straddling scrolls.
             </div>
         </div>
         <div class="table-container">

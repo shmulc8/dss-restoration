@@ -407,16 +407,49 @@
 
     <!-- Navigation Tabs -->
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab(0)">🚀 1. Executive Summary & Pitch</button>
-        <button class="tab-btn" onclick="switchTab(1)">📂 2. Data Provenance Map</button>
-        <button class="tab-btn" onclick="switchTab(2)">🔬 3. Epigraphic Safeguards</button>
-        <button class="tab-btn" onclick="switchTab(3)">📊 4. Publication Tables</button>
-        <button class="tab-btn" onclick="switchTab(4)">🗣️ 5. Advisor Q&A Defense</button>
-        <button class="tab-btn" onclick="switchTab(5)">📐 6. System Methods & Math</button>
+        <button class="tab-btn active" onclick="switchTab(0)">🧭 1. First-Time Reader Primer</button>
+        <button class="tab-btn" onclick="switchTab(1)">🚀 2. Executive Summary</button>
+        <button class="tab-btn" onclick="switchTab(2)">📂 3. Data Provenance Map</button>
+        <button class="tab-btn" onclick="switchTab(3)">🔬 4. Epigraphic Safeguards</button>
+        <button class="tab-btn" onclick="switchTab(4)">📊 5. Publication Tables</button>
+        <button class="tab-btn" onclick="switchTab(5)">🗣️ 6. Advisor Q&A Defense</button>
+        <button class="tab-btn" onclick="switchTab(6)">📐 7. System Methods</button>
+    </div>
+
+    <!-- Tab 0: First-Time Reader Primer -->
+    <div class="tab-content active" id="tab-0">
+        <h2>🧭 First-Time Reader Primer: What Is This Project?</h2>
+        <p>If you have never heard about this project before, this section provides an intuitive, non-jargon orientation explaining the problem, the core difficulty, and our solution.</p>
+
+        <div class="pipeline-flow">
+            <div class="flow-step">
+                <div class="flow-num">A</div>
+                <div class="flow-text">
+                    <h4>What is the Problem?</h4>
+                    <p>The Dead Sea Scrolls (2,000-year-old Jewish manuscripts) are damaged by rot and tearing. Editors must fill missing gaps ("lacunae"). Manual scholar restoration takes decades and is prone to subjective bias.</p>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-num">B</div>
+                <div class="flow-text">
+                    <h4>Why Does Standard AI Fail (<10% Accuracy)?</h4>
+                    <p>Standard LLMs (BERT/GPT) treat manuscript gaps like open-ended creative writing. They ignore physical hole sizes and cannot read partial letter ink traces surviving on parchment edges.</p>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-num">C</div>
+                <div class="flow-text">
+                    <h4>What Is Our Solution (66.2% Accuracy)?</h4>
+                    <p>We built the first scroll-disjoint framework that conditions character-level language models directly on surviving ink traces (e.g. <code>סר⬚⬚ך</code> → <strong>סרכיך</strong>), more than doubling human scholar retrieval rates.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Tab 1: Executive Summary -->
-    <div class="tab-content active" id="tab-0">
+    <div class="tab-content" id="tab-1">
         <h2>🚀 Executive Summary & Headline Discoveries</h2>
         <p>Restoring damaged ancient manuscripts has traditionally been treated either as unconstrained text generation or manual epigraphic guesswork. Our unified framework establishes the first scroll-disjoint baseline conditioning character language models directly on physical ink traces.</p>
 
@@ -435,7 +468,7 @@
     </div>
 
     <!-- Tab 2: Data Provenance Map -->
-    <div class="tab-content" id="tab-1">
+    <div class="tab-content" id="tab-2">
         <h2>📂 Data Provenance Map & Source Inspection</h2>
         <p>Every number in this study traces directly back to open, reproducible data files in the repository:</p>
 
@@ -486,7 +519,7 @@
     </div>
 
     <!-- Tab 3: Epigraphic Safeguards -->
-    <div class="tab-content" id="tab-2">
+    <div class="tab-content" id="tab-3">
         <h2>🔬 Epigraphic Redaction Engine & Safeguards</h2>
         <p>To guarantee that our AI models do not "cheat" by reading modern scholars' bracketed conjectures, we built an automated zero-leak redaction filter operating on Text-Fabric metadata tags.</p>
 
@@ -532,7 +565,7 @@
     </div>
 
     <!-- Tab 4: Publication Benchmark Tables -->
-    <div class="tab-content" id="tab-3">
+    <div class="tab-content" id="tab-4">
         <h2>📊 Publication Benchmark Tables</h2>
 
         <h3 style="color: #60a5fa; margin-top: 1rem;">Table 1: Main Synthetic Benchmark — Cloze Restoration (scatter-30, n=729 words)</h3>
@@ -647,7 +680,7 @@
     </div>
 
     <!-- Tab 5: Advisor Q&A Defense -->
-    <div class="tab-content" id="tab-4">
+    <div class="tab-content" id="tab-5">
         <h2>🗣️ Advisor Meeting Q&A Defense</h2>
         <p>Click any card to review bulletproof answers for tough advisor questions during your presentation:</p>
 
@@ -681,7 +714,7 @@
     </div>
 
     <!-- Tab 6: System Methods -->
-    <div class="tab-content" id="tab-5">
+    <div class="tab-content" id="tab-6">
         <h2>📐 System Architecture & Pipeline Design</h2>
 
         <div class="pipeline-flow">

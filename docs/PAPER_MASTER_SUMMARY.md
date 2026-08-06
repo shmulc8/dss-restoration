@@ -11,12 +11,12 @@
 ### 1.1 What Problem Are We Solving?
 The Dead Sea Scrolls (discovered in 11 Qumran caves) are among the most important historical manuscripts in existence. However, after 2,000 years in caves, the leather and parchment scrolls are severely damaged by rot, moisture, and tearing. 
 
-Modern epigraphers and editors attempt to fill in these missing gaps ("lacunae"). Traditionally, this is done through manual scholarly conjecture. Recently, researchers tried using AI language models (like BERT or GPT), but **standard AI fails on real scroll gaps, getting less than 10% of missing words right**.
+Modern epigraphers and editors attempt to fill in these missing gaps ("lacunae"). Traditionally, this is done through manual scholarly conjecture. Recently, researchers tried using language models (like WordPiece MLMs or Seq2Seq architectures), but **standard unconstrained language models fail on real scroll gaps, getting less than 10% of missing words right**.
 
-### 1.2 Why Does Standard AI Fail on Ancient Manuscripts?
-1. **Unconstrained Blind Guessing:** Standard AI treats lacuna restoration like open-ended story generation, ignoring the physical size of the hole in the parchment.
-2. **Ignoring Surviving Ink Traces:** On real torn scrolls, **82.5% of damaged words retain partial letter strokes** (e.g., the top curve of a Resh or bottom line of a Kaf). Standard AI models cannot use character-level ink trace constraints.
-3. **Data Contamination:** Previous AI studies evaluated models on random sentence splits. Because fragments of the same scroll were split across train and test sets, models simply memorized duplicate sentences from the training set.
+### 1.2 Why Do Standard Masked Language Models (MLMs) Fail on Ancient Manuscripts?
+1. **Unconstrained Sub-Word Tokenization:** Standard Sub-Word MLMs (like MsBERT) tokenize text into BPE/WordPiece sub-words. They predict tokens without constraining physical character length, predicting words that physically cannot fit the parchment hole.
+2. **Ignoring Surviving Ink Traces:** On real torn scrolls, **82.5% of damaged words retain partial letter strokes** (e.g., the top curve of a Resh or bottom line of a Final Kaf). Sub-word tokenizers operate on fixed vocabulary IDs and cannot enforce character-level ink trace constraints inside tokens.
+3. **Data Contamination:** Previous studies evaluated models on random sentence splits. Because fragments of the same scroll were split across train and test sets, models simply memorized duplicate sentences from the training set.
 
 ### 1.3 What Is Our Core Contribution?
 We built the first **scroll-disjoint, physically-conditioned text restoration framework**:

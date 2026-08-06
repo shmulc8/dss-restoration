@@ -621,8 +621,9 @@
         </div>
 
         <div class="pitch-box" style="border-left-color:#10b981;">
-            <div class="pitch-title" style="color:#34d399;">💡 Key Architectural Takeaway</div>
-            <p style="margin:0;">Character-level tokenization (TavBERT / Dicta-char) is an <strong>enabling structural requirement</strong> for epigraphic text restoration: it eliminates subword alignment drops (38.3% $\to$ 0.0%) and allows exact physical letter-stroke matching ($P0$) on surviving parchment fragments.</p>
+            <div class="pitch-title" style="color:#34d399;">💡 Key Architectural Takeaway & Why Cloze Scores Are ~23%</div>
+            <p style="margin:0;">Character-level tokenization (TavBERT / Dicta-char) is an <strong>enabling structural requirement</strong> for epigraphic text restoration: it eliminates subword alignment drops (38.3% → 0.0%) and enables exact physical letter-stroke matching ($P0$).<br><br>
+            <strong>Why are synthetic cloze scores ~23.65% vs ~83.78% on real lacunae?</strong> In synthetic cloze (Track A), 30% of content words are hidden <em>with zero surviving ink letters inside the gap</em>, requiring pure unconstrained context prediction out of tens of thousands of ancient Hebrew vocabulary words. In real physical lacunae (Track B), surviving physical ink traces ($P0$) eliminate 99% of dictionary candidates, lifting real-world restoration accuracy to <strong>64.86% (Baseline) and 83.78% (Full Roadmap)</strong>.</p>
         </div>
     </div>
 

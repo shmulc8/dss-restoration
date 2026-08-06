@@ -544,7 +544,8 @@
                             <tr>
                                 <th>#</th>
                                 <th>Decision Topic</th>
-                                <th>Choice & Rationale</th>
+                                <th>State Before (Legacy Approach)</th>
+                                <th>Chosen Unified State & Rationale</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -552,72 +553,84 @@
                             <tr class="highlight">
                                 <td>1</td>
                                 <td>Dataset Splits</td>
+                                <td>Random splits leaked fragments of same scroll across train/test.</td>
                                 <td><strong>Manuscript-Disjoint SHA-1 Partitioning</strong> (531 train / 108 val / 93 test, 0 straddling scrolls).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td>Baseline Model</td>
+                                <td>DictaBERT-char was assumed default baseline; TavBERT un-evaluated.</td>
                                 <td><strong>TavBERT (tau/tavbert-he)</strong> as Primary Baseline (23.65% cloze, 47.30% QD Top-1).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr class="highlight">
                                 <td>3</td>
                                 <td>Masking Protocol</td>
+                                <td>Literature mixed toy 15% word masking vs real physical scroll damage.</td>
                                 <td><strong>Dual-Track Framework</strong> (Track A scatter-30 vs Track B lacuna-real P0).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr>
                                 <td>4</td>
                                 <td>Alignment Metric</td>
-                                <td><strong>Headline All-Words Metric (unaligned = miss)</strong>. Unaligned predictions count as 0.0.</td>
+                                <td>MsBERT dropped 38.3% of words; earlier scripts scored aligned-only (21.56%).</td>
+                                <td><strong>Headline All-Words Metric (unaligned = miss)</strong>. Unaligned predictions count as 0.0 (MsBERT 13.31%).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr class="highlight">
                                 <td>5</td>
                                 <td>Regime Scoping</td>
+                                <td>Mixed gold lengths, ink traces, and context without clear boundaries.</td>
                                 <td><strong>Strict Information Regimes (U0, O-len, P0)</strong> to prevent oracle leakage.</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr>
                                 <td>6</td>
                                 <td>RAG Integration</td>
+                                <td>RAG across all texts caused hallucinated biblicisms on non-biblical texts.</td>
                                 <td><strong>Pesher-Specific Source Retrieval Module</strong> (86.57% Top-1 book recovery).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr class="highlight">
                                 <td>7</td>
                                 <td>Multi-Word Gaps</td>
+                                <td>Fixed-length MLMs collapsed to 0.0% on long gaps of unknown length.</td>
                                 <td><strong>LengthEnsembleCharMLMGenerator</strong> (L in [3, 15], 14.2% Hit@10 vs 0.0%).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr>
                                 <td>8</td>
                                 <td>Redaction Filter</td>
+                                <td>Parser read bracketed scholar guesses ס[רכי]ך in digital editions.</td>
                                 <td><strong>Automated Zero-Leak Redaction Engine</strong> (100% rec=1 stripped to ⬚).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr class="highlight">
                                 <td>9</td>
                                 <td>Fine-Tuning Strategy</td>
-                                <td><strong>Unified Trainer with Early Stopping</strong> (1e-5 LR, linear warmup, L2 decay).</td>
+                                <td>Fixed-epoch fine-tuning caused severe overfitting (20.58% FT vs 21.12% Base).</td>
+                                <td><strong>Unified Trainer with Validation Early Stopping</strong> (1e-5 LR, linear warmup, L2 decay, 23.65% FT).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr>
                                 <td>10</td>
                                 <td>Significance Test</td>
+                                <td>Point estimates reported without error bars or statistical tests.</td>
                                 <td><strong>Paired McNemar Test (z-stat, p-value) + Percentile Bootstrap</strong> (1,000 resamples).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr class="highlight">
                                 <td>11</td>
                                 <td>Data Licensing</td>
+                                <td>Loose data descriptions raised questions about license freshness.</td>
                                 <td><strong>Public Text-Fabric & Qumran-Digital API Provenance</strong> (bhsa/dss, QD API).</td>
                                 <td>Implemented</td>
                             </tr>
                             <tr>
                                 <td>12</td>
                                 <td>Presentation Deck</td>
+                                <td>Results scattered across dozens of individual scripts and notebooks.</td>
                                 <td><strong>Master Reference Document + Interactive 8-Slide HTML Deck</strong>.</td>
                                 <td>Implemented</td>
                             </tr>

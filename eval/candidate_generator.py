@@ -66,6 +66,59 @@ class PartialLetterFilter:
         return True
 
 
+class EpigraphicStrokeFilter:
+    """Point 4 Roadmap: Evaluates character stroke similarity across paleographically ambiguous Qumran hands."""
+
+    STROKE_CONFUSION_GROUPS = [
+        {"ר", "ד", "ו", "ן", "י"},  # Vertical / head stroke ambiguity
+        {"ה", "ח", "ת"},            # Corner roof stroke ambiguity
+        {"מ", "ס"},                # Loop closure ambiguity
+        {"ב", "כ"},                # Lower base stroke ambiguity
+    ]
+
+    @classmethod
+    def stroke_similarity(cls, c1: str, c2: str, wildcard_char: str = "⬚") -> float:
+        """Compute paleographic stroke similarity between two characters."""
+        if c1 == wildcard_char or c2 == wildcard_char:
+            return 1.0
+        if c1 == c2:
+            return 1.0
+        for group in cls.STROKE_CONFUSION_GROUPS:
+            if c1 in group and c2 in group:
+                return 0.85  # High partial stroke similarity
+        return 0.0
+
+    @classmethod
+    def is_stroke_compatible(
+        cls, candidate_text: str, pattern: str, min_similarity: float = 0.85, wildcard_char: str = "⬚"
+    ) -> bool:
+        """Check if candidate_text matches pattern under multispectral stroke similarity matrix."""
+        if len(candidate_text) != len(pattern):
+            return False
+        for c_char, p_char in zip(candidate_text, pattern):
+            if cls.stroke_similarity(c_char, p_char, wildcard_char) < min_similarity:
+                return False
+        return True
+
+
+class SectarianIDFBooster:
+    """Point 3 Roadmap: Applies dynamic IDF score boost for Qumran sectarian vocabulary."""
+
+    SECTARIAN_VOCAB = {
+        "סרך": 3.5, "משכיל": 3.0, "עצה": 2.5, "תמים": 2.5, "אביונים": 3.0,
+        "אור": 2.0, "חושך": 2.0, "מורה": 3.0, "צדק": 2.5, "יחד": 2.5,
+        "תעודה": 3.0, "ברית": 2.0, "סוד": 2.5, "מעשיהם": 2.0, "רוח": 2.0
+    }
+
+    @classmethod
+    def get_boost(cls, candidate_text: str) -> float:
+        """Calculate sectarian vocabulary IDF score boost for a candidate word."""
+        for term, boost in cls.SECTARIAN_VOCAB.items():
+            if term in candidate_text:
+                return boost
+        return 0.0
+
+
 class LengthEnsembleCharMLMGenerator(CandidateGenerator):
     """Length-Ensemble Candidate Generator for Unknown-Length Multi-Word Lacunae.
 

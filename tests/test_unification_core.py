@@ -45,3 +45,26 @@ def test_word_char_spans():
     assert spans[0] == (0, 5)
     assert spans[1] == (6, 9)
     assert spans[2] == (10, 12)
+
+
+def test_epigraphic_stroke_filter():
+    from eval.candidate_generator import EpigraphicStrokeFilter
+    # Exact letter match = 1.0
+    assert EpigraphicStrokeFilter.stroke_similarity("ר", "ר") == 1.0
+    # Ambiguous stroke pair (ר vs ד) = 0.85
+    assert EpigraphicStrokeFilter.stroke_similarity("ר", "ד") == 0.85
+    # Wildcard = 1.0
+    assert EpigraphicStrokeFilter.stroke_similarity("⬚", "ר") == 1.0
+    # Compatible under stroke matrix (e.g. ארוני matches א⬚⬚ד⬚)
+    assert EpigraphicStrokeFilter.is_stroke_compatible("ארוני", "א⬚⬚ד⬚") == True
+    # Incompatible stroke (e.g. ארוני vs א⬚⬚ש⬚)
+    assert EpigraphicStrokeFilter.is_stroke_compatible("ארוני", "א⬚⬚ש⬚") == False
+
+
+def test_sectarian_idf_booster():
+    from eval.candidate_generator import SectarianIDFBooster
+    # Qumran sectarian keyword boost
+    assert SectarianIDFBooster.get_boost("הסרך") == 3.5
+    assert SectarianIDFBooster.get_boost("בתמים") == 2.5
+    # Non-sectarian common word = 0.0
+    assert SectarianIDFBooster.get_boost("שלום") == 0.0

@@ -12,17 +12,16 @@ from transformers import AutoTokenizer
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-from data_preparation.dss_split import load_split
+from curation.preserved_corpus import load_chunks
 
 
 def check_split_leakage():
     print("=== Check 1: Split Leakage ===")
-    train, test, bib = load_split()
-    train_books = set(r["book"] for r in train)
-    test_books = set(r["book"] for r in test)
-    intersection = train_books.intersection(test_books)
-    print(f"Train scrolls: {len(train_books)}")
-    print(f"Test scrolls: {len(test_books)}")
+    train_scrolls = {row["scroll"] for row in load_chunks("train")}
+    test_scrolls = {row["scroll"] for row in load_chunks("heldout")}
+    intersection = train_scrolls.intersection(test_scrolls)
+    print(f"Train scrolls: {len(train_scrolls)}")
+    print(f"Test scrolls: {len(test_scrolls)}")
     print(f"Intersection: {intersection}")
     assert len(intersection) == 0, "ERROR: Scroll overlap between train and test sets!"
     print("SUCCESS: Train and test sets are completely disjoint at the scroll level.\n")

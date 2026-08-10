@@ -1,9 +1,12 @@
 \documentclass[10pt,twocolumn,a4paper]{article}
 
 \usepackage[margin=2.0cm,top=2.2cm,bottom=2.2cm]{geometry}
-\usepackage{times}
+\usepackage{newtxtext}
+\usepackage{amsmath}
+\let\Bbbk\undefined
+\usepackage{amssymb}
+\usepackage{newtxmath}
 \usepackage{microtype}
-\usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{graphicx}
@@ -15,26 +18,29 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\usetikzlibrary{shapes,arrows,positioning}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,shadows}
 
-\definecolor{navyblue}{RGB}{16, 78, 139}
-\definecolor{emerald}{RGB}{16, 185, 129}
-\definecolor{darkred}{RGB}{180, 40, 40}
-\definecolor{lightbg}{RGB}{245, 247, 250}
+% Professional Color Palette
+\definecolor{primary}{RGB}{26, 54, 93}       % Deep Navy
+\definecolor{secondary}{RGB}{47, 133, 90}    % Forest Emerald
+\definecolor{accent}{RGB}{197, 48, 48}       % Deep Crimson
+\definecolor{bglight}{RGB}{247, 250, 252}    % Soft Off-White
+\definecolor{bordergray}{RGB}{226, 232, 240} % Light Border Gray
 
 % Section title styling
 \usepackage{titlesec}
-\titleformat{\section}{\large\bfseries\color{navyblue}}{\thesection.}{0.5em}{}
-\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection.}{0.5em}{}
+\titleformat{\section}{\large\bfseries\color{primary}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\bfseries\color{primary}}{\thesubsection.}{0.5em}{}
 
-\title{\textbf{\Large Epigraphic Masked Language Models for Dead Sea Scrolls Restoration:\\Unifying Token Alignment, Physical Ink Traces, and Multi-Word Length Ensembling}}
+\title{\Large\bfseries Epigraphic Masked Language Models for Dead Sea Scrolls Restoration:\\Unifying Token Alignment, Physical Ink Traces, and Multi-Word Length Ensembling}
 
 \author{
-  \textbf{[Anonymous / Joint Work]} \\
-  Digital Humanities Research Group
+  \textbf{Anonymous EMNLP/ACL Submission} \\
+  \textit{Paper ID: 4821} \\
+  \textit{Track: Computational Humanities \& Ancient Language Restoration}
 }
 
-\date{\today}
+\date{}
 
 \begin{document}
 
@@ -50,27 +56,33 @@ The Dead Sea Scrolls—discovered in caves near Qumran between 1947 and 1956—c
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[node distance=0.9cm, auto, >=stealth, transform shape, scale=0.82]
-    \node [draw, fill=lightbg, rounded corners, text width=6.5cm, align=center] (input) 
-        {\textbf{Input Scroll Fragment (rec=0 Ink Only)}\\ \textit{`... b'atzeit beit [LACUNA] le'olam ...'}};
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+    node distance=0.7cm and 0.5cm,
+    box/.style={draw=primary!80, fill=bglight, rounded corners=4pt, text width=7.2cm, align=center, font=\small, inner sep=6pt, drop shadow={opacity=0.15}},
+    arrow/.style={-{Stealth[scale=1.2]}, thick, color=primary!80}
+]
+    \node [box, fill=primary!5] (input) 
+        {\textbf{Input Scroll Fragment (Surviving Ink Only)}\\ \textit{`... b'atzeit beit [LACUNA] le'olam ...'}};
     
-    \node [draw, fill=navyblue!10, rounded corners, text width=6.5cm, below=of input, align=center] (tavbert) 
-        {\textbf{TavBERT Character MLM Encoders}\\ (0.0\% Token Alignment Drop Rate)};
+    \node [box, fill=primary!15, below=of input] (tavbert) 
+        {\textbf{1. TavBERT Character MLM Encoders}\\ \textit{Eliminates Subword Alignment Drops (0.0\% Drops)}};
         
-    \node [draw, fill=emerald!15, rounded corners, text width=6.5cm, below=of tavbert, align=center] (inkfilter) 
-        {\textbf{P0 Ink Trace \& Hole Bound Filter}\\ ($L \pm 1$ Length + Visible Ink Stroke Match)};
+    \node [box, fill=secondary!15, below=of tavbert] (inkfilter) 
+        {\textbf{2. Physical P0 Ink Trace \& Hole Bound Filter}\\ \textit{Enforces $L \pm 1$ Length + Visible Ink Stroke Match}};
         
-    \node [draw, fill=emerald!30, rounded corners, text width=6.5cm, below=of inkfilter, align=center] (roadmap) 
-        {\textbf{4-Point Algorithmic Roadmap}\\ (Morpho-Lemma + Pesher RAG + IDF + Stroke Filter)};
+    \node [box, fill=secondary!25, below=of inkfilter] (roadmap) 
+        {\textbf{3. 4-Point Post-Processing Roadmap}\\ \textit{Morpho-Lemma + Pesher RAG + IDF + Stroke Filter}};
         
-    \node [draw, fill=emerald!50, rounded corners, font=\bfseries, text width=6.5cm, below=of roadmap, align=center] (output) 
+    \node [box, fill=secondary!45, font=\bfseries, below=of roadmap] (output) 
         {Top-10 Candidate Restorations\\ \textbf{83.78\% Top-10 / 66.22\% Top-1 Accuracy}};
 
-    \draw [->, thick] (input) -- (tavbert);
-    \draw [->, thick] (tavbert) -- (inkfilter);
-    \draw [->, thick] (inkfilter) -- (roadmap);
-    \draw [->, thick] (roadmap) -- (output);
+    \draw [arrow] (input) -- (tavbert);
+    \draw [arrow] (tavbert) -- (inkfilter);
+    \draw [arrow] (inkfilter) -- (roadmap);
+    \draw [arrow] (roadmap) -- (output);
 \end{tikzpicture}
+}
 \caption{System Architecture: End-to-end pipeline combining character TavBERT MLM, physical $P0$ ink filtering, and the 4-point roadmap.}
 \label{fig:pipeline}
 \end{figure}
@@ -107,34 +119,11 @@ Our post-processing roadmap combines: (1) Morpho-lemma normalization, (2) Quote-
 \text{Score}(c) = \frac{\sum_{i=1}^L \log P(c_i)}{\sqrt{L}}
 \end{equation}
 
-\subsection{Real Manuscript Case Studies}
-
-To demonstrate real-world epigraphic performance, Table~\ref{tab:case_studies} showcases two physical lacuna case studies directly from our test targets.
-
-\begin{table*}[t]
-\centering
-\small
-\caption{Qualitative Physical Lacuna Case Studies on Real Dead Sea Scrolls Targets.}
-\label{tab:case_studies}
-\begin{tabular}{lllll}
-\toprule
-\textbf{Manuscript \& Location} & \textbf{Physical Ink Trace ($P0$)} & \textbf{Published Scholar Proposals} & \textbf{Model Top-3 Candidates} & \textbf{Status / Result} \\
-\midrule
-$1\text{QpHab}$ Col. IV Line 11 & Visible \textit{`ashm'}, $L=5$ & \textit{ashm, ashmah, ashmim, ashmatam} & 1.\ \textbf{\textit{ashmot}} (\textit{Model Proposal}) & $\star$ Top-1 Model Proposal \\
-(\textit{Pesher Habakkuk}) & & & 2.\ \textit{ashmim} & $\checkmark$ Top-2 Scholar Match \\
-& & & 3.\ \textit{ashmah} & $\checkmark$ Top-3 Scholar Match \\
-\midrule
-$1\text{Q34bis}$ Frg. 3 i Line 4 & Visible \textit{`deshen'}, $L=4$ & \textit{deshen, le-hedashen, le-hitdashen} & 1.\ \textbf{\textit{be-deshen}} (\textit{Model \#1}) & $\star$ Top-1 Model Proposal \\
-(\textit{Prayers Scroll}) & & & 2.\ \textit{deshen} & $\checkmark$ Top-2 Scholar Match \\
-& & & 3.\ \textit{mi-deshen} & $\star$ Top-3 Model Proposal \\
-\bottomrule
-\end{tabular}
-\end{table*}
-
 \section{Experimental Results}
 
 \begin{figure}[htbp]
 \centering
+\resizebox{\linewidth}{!}{%
 \begin{tikzpicture}
 \begin{axis}[
     ybar,
@@ -147,22 +136,24 @@ $1\text{Q34bis}$ Frg. 3 i Line 4 & Visible \textit{`deshen'}, $L=4$ & \textit{de
     x tick label style={rotate=25,anchor=east,font=\small},
     width=0.48\textwidth,
     height=5.5cm,
-    bar width=0.55cm,
-    enlarge x limits=0.15,
-    colorscheme/.style={fill=navyblue!70}
+    bar width=0.45cm,
+    enlarge x limits=0.18,
+    fill=primary!70
 ]
-\addplot[fill=navyblue!60] coordinates {(U0 Context, 9.46) (Regex Dict, 34.50) (Human DJD, 43.24) (TavBERT P0, 64.86) (Full Roadmap, 83.78)};
+\addplot[fill=primary!70, draw=primary] coordinates {(U0 Context, 9.46) (Regex Dict, 34.50) (Human DJD, 43.24) (TavBERT P0, 64.86) (Full Roadmap, 83.78)};
 \end{axis}
 \end{tikzpicture}
+}
 \caption{Real Lacuna Top-10 Restoration Accuracy on peer-reviewed Qumran-Digital scholar targets ($n=74$).}
 \label{fig:chart}
 \end{figure}
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \small
 \caption{Synthetic Cloze Restoration Benchmark (\texttt{scatter-30}, $n=729$ content words).}
 \label{tab:table1}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Model Variant} & \textbf{Tokenizer} & \textbf{Hit@10} & \textbf{Hit@1} & \textbf{Drops} \\
@@ -174,13 +165,15 @@ MsBERT Fine-Tuned & WordPiece & 13.31\% & 9.78\% & 38.3\% \\
 ByT5 Fine-Tuned & Byte Seq2Seq & 5.35\% & 0.82\% & 0.0\% \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \small
 \caption{Real Lacuna Literature Agreement Benchmark ($n=74$ QD scholar targets).}
 \label{tab:table2}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
 \textbf{System / Condition} & \textbf{Regime} & \textbf{Top-1} & \textbf{Top-10} & \textbf{Top-20} \\
@@ -194,13 +187,15 @@ Pure Dictionary Regex & Regex & 8.12\% & 34.50\% & 41.20\% \\
 MsBERT FT (Unconstrained) & U0 & — & 9.46\% & — \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \small
 \caption{Large-Scale Text-Fabric Physical Lacuna Benchmark ($n=3,695$ test lacunae across 93 held-out scrolls).}
 \label{tab:table3}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Model Variant} & \textbf{Regime} & \textbf{Top-1} & \textbf{Top-10} \\
@@ -212,13 +207,15 @@ MsBERT Fine-Tuned & P0 Exact & 39.80\% & 63.10\% \\
 MsBERT FT (Unconstrained) & U0 Context & 2.10\% & 9.20\% \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \small
 \caption{Unknown-Length Multi-Word Lacuna Benchmark.}
 \label{tab:table4}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{lcc}
 \toprule
 \textbf{Model Variant / Strategy} & \textbf{Gap Condition} & \textbf{Hit@10 / Acc.} \\
@@ -228,13 +225,37 @@ Fixed Single-Length MLM & Unknown $L \in [3,15]$ & 0.0\% (Collapse) \\
 Fixed Length Oracle (O-len) & 1-Word Known & 16.7\% (Upper Bound) \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Qualitative Physical Lacuna Case Studies on Real Dead Sea Scrolls Targets.}
+\label{tab:case_studies}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllll}
+\toprule
+\textbf{Manuscript \& Location} & \textbf{Physical Ink Trace ($P0$)} & \textbf{Published Scholar Proposals} & \textbf{Model Top-3 Candidates} & \textbf{Status / Result} \\
+\midrule
+$1\text{QpHab}$ Col. IV Line 11 & Visible \textit{`ashm'}, $L=5$ & \textit{ashm, ashmah, ashmim, ashmatam} & 1.\ \textbf{\textit{ashmot}} (\textit{Model Proposal}) & $\star$ Top-1 Model Proposal \\
+(\textit{Pesher Habakkuk}) & & & 2.\ \textit{ashmim} & $\checkmark$ Top-2 Scholar Match \\
+& & & 3.\ \textit{ashmah} & $\checkmark$ Top-3 Scholar Match \\
+\midrule
+$1\text{Q34bis}$ Frg. 3 i Line 4 & Visible \textit{`deshen'}, $L=4$ & \textit{deshen, le-hedashen, le-hitdashen} & 1.\ \textbf{\textit{be-deshen}} (\textit{Model \#1}) & $\star$ Top-1 Model Proposal \\
+(\textit{Prayers Scroll}) & & & 2.\ \textit{deshen} & $\checkmark$ Top-2 Scholar Match \\
+& & & 3.\ \textit{mi-deshen} & $\star$ Top-3 Model Proposal \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
 
 \begin{table*}[t]
 \centering
 \small
 \caption{Comparative Synthesis Against Prior Epigraphic Works.}
 \label{tab:comparison}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lllll}
 \toprule
 \textbf{Dimension} & \textbf{Lazar et al. (2021)} & \textbf{Fono et al. (2024)} & \textbf{Shmidman et al. (2024)} & \textbf{Our System (DSS Hebrew)} \\
@@ -249,6 +270,7 @@ Split Safeguards & Random 80/20 train/test & Random 80/20 train/test & Random tr
 Top Score & 89.5\% Hit@5 (Sign) & 53.2\% Hit@10 (Biblical) & Not reported on physical DSS & \textbf{83.78\% Top-10 / 66.22\% Top-1} \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 \section{Conclusion}

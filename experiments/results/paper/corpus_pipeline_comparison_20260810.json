@@ -1,0 +1,42 @@
+{
+  "status": "descriptive_external_pipeline_audit_no_model_scores",
+  "external_source": {
+    "anonymous_label": "independently_implemented_contiguous_run_pipeline",
+    "git_revision": "a6e653c8778c1b12b4f3aea9e27cc6e11103e828",
+    "dataset_path": "data_preparation/dss_sentences_min10_splits_ppp_count_1_nonbib.xlsx",
+    "dataset_sha256": "10f0648b9f08ad08c339dcfdf32f468cb33a3672f336f35c4b6df8cb1135c77b",
+    "pipeline_path": "amir_style_data_curation/dss_marker_pipeline.ipynb",
+    "pipeline_sha256": "8f5638cb5d6b437594a079d193fc0f49c9f0001801a20819d6c7c0cdf372f9e3",
+    "configuration": {
+      "non_biblical_only": true,
+      "minimum_contiguous_written_words": 10,
+      "partially_reconstructed_words_included": true,
+      "minimum_authentic_consonants_for_partial_word": 1
+    }
+  },
+  "strict_reconstruction_free_pipeline": {
+    "archival_scrolls": 736,
+    "model_contributing_scrolls": 377,
+    "retained_words": 95736,
+    "reconstructed_words_admitted": 0
+  },
+  "contiguous_run_pipeline": {
+    "model_contributing_scrolls": 254,
+    "retained_words": 44083,
+    "partially_reconstructed_words": 3655,
+    "partially_reconstructed_word_percent": 8.291178,
+    "examples": 1491
+  },
+  "overlap": {
+    "model_scrolls_in_both": 223,
+    "strict_only_model_scrolls": 154,
+    "contiguous_run_only_model_scrolls": 31,
+    "zero_preserved_scrolls_in_contiguous_run_model": 0,
+    "extreme_fragmentation_scrolls_in_contiguous_run_model": 2,
+    "extreme_fragmentation_scroll_names_in_contiguous_run_model": [
+      "4Q457a",
+      "4Q472a"
+    ]
+  },
+  "interpretation": "Neither pipeline deletes scrolls by a global intactness ratio. Eligibility emerges from local example construction; the strict pipeline preserves all identifiers for provenance while admitting only reconstruction-free labels."
+}

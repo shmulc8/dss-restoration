@@ -21,10 +21,10 @@ from typing import Any, Callable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SPAN = ROOT / "experiments/results/paper/span_baselines_rerun_20260810.json"
-DEFAULT_QD = ROOT / "experiments/results/paper/qd_msbert_rerun_20260810.json"
+DEFAULT_SPAN = ROOT / "experiments/results/paper/span_balanced_300_20260811.json"
+DEFAULT_QD = ROOT / "experiments/results/paper/qd_evidence_conditions_20260811.json"
 DEFAULT_BYT5 = tuple(
-    ROOT / f"experiments/results/paper/byt5_unknown_length_seed{seed}.json"
+    ROOT / f"experiments/results/paper/byt5_balanced_seed{seed}_20260811.json"
     for seed in (41, 42, 43)
 )
 DEFAULT_OUTPUT = ROOT / "experiments/results/paper/paper_results_snapshot.json"
@@ -112,30 +112,23 @@ def holm_adjust(comparisons: dict[str, dict[str, Any]]) -> None:
 
 def split_audit(qd: dict[str, Any]) -> dict[str, Any]:
     preserved = load(ROOT / "curation/derived/preserved_nonbib_manifest.json")
-    canonical = load(ROOT / "data_preparation/dss_scroll_splits_v1.json")
-    legacy = {
+    assignment = {
         scroll: split
         for split, scrolls in preserved["scroll_splits"].items()
         for scroll in scrolls
     }
-    current = canonical["scroll_assignment"]
     target_sigla = [str(target["siglum"]) for target in qd["targets"]]
+    counts = {
+        split: sum(assignment.get(siglum) == split for siglum in target_sigla)
+        for split in ("train", "dev", "heldout")
+    }
+    if counts != {"train": 0, "dev": 0, "heldout": len(target_sigla)}:
+        raise ValueError(f"QD targets are not held out under the checkpoint split: {counts}")
     return {
         "targets": len(target_sigla),
         "unique_scrolls": len(set(target_sigla)),
-        "model_associated_split": {
-            split: sum(legacy.get(siglum) == split for siglum in target_sigla)
-            for split in ("train", "dev", "heldout")
-        },
-        "later_canonical_registry": {
-            split: sum(current.get(siglum) == split for siglum in target_sigla)
-            for split in ("train", "val", "test")
-        },
-        "interpretation": (
-            "All targets are held out under the split used to train the checkpoint. "
-            "A later registry assigns some targets differently; the two registries "
-            "must not be mixed in one experiment."
-        ),
+        "checkpoint_frozen_split": counts,
+        "interpretation": "All targets are held out under the manifest used to train the checkpoint.",
     }
 
 
@@ -168,14 +161,12 @@ def render_markdown(snapshot: dict[str, Any]) -> str:
             "",
             "## Qumran Digital literature agreement",
             "",
-            f"- P0 Top-10: {qd['p0']['top10']:.1f}% "
-            f"({qd['p0']['top10_scroll_cluster_ci'][0]:.1f}%--"
-            f"{qd['p0']['top10_scroll_cluster_ci'][1]:.1f}%).",
-            f"- U0 Top-10: {qd['u0']['top10']:.1f}%.",
-            f"- P0 + retrieval Top-10: {qd['rag']['top10']:.1f}%.",
-            f"- Split audit: {qd['split_audit']['model_associated_split']} under the "
-            "model-associated registry; "
-            f"{qd['split_audit']['later_canonical_registry']} under the later registry.",
+            f"- Visible-trace Top-10: {qd['visible_only']['top10']:.1f}% "
+            f"({qd['visible_only']['top10_scroll_cluster_ci'][0]:.1f}%--"
+            f"{qd['visible_only']['top10_scroll_cluster_ci'][1]:.1f}%).",
+            f"- Context-only Top-10: {qd['context_only']['top10']:.1f}%.",
+            f"- Frequency + visible traces Top-10: {qd['frequency_visible_only']['top10']:.1f}%.",
+            f"- Split audit: {qd['split_audit']['checkpoint_frozen_split']}.",
             "",
             "## Promotion status",
             "",
@@ -252,14 +243,9 @@ def aggregate(span_path: Path, qd_path: Path, byt5_paths: tuple[Path, ...]) -> d
         )
     controlled_keys = {(row["epochs"], row["batch_size"], row["learning_rate"]) for row in training_configs}
 
-    qd_ci = qd["target_level_any_attributed_restoration"][
-        "top10_scroll_cluster_bootstrap_95ci"
-    ]
-    rag_ci = qd["rag_target_level_any_attributed_restoration"][
-        "top10_scroll_cluster_bootstrap_95ci"
-    ]
+    qd_conditions = qd["condition_results"]
     snapshot = {
-        "status": "shareable_reproduced_snapshot_not_final_promotion",
+        "status": "team_review_evidence_snapshot",
         "primary_task": "synthetic_damage_unknown_length_exact_complete_span_top10",
         "sample_sha256": sample_hash,
         "span_systems": span_systems,
@@ -276,16 +262,17 @@ def aggregate(span_path: Path, qd_path: Path, byt5_paths: tuple[Path, ...]) -> d
             "top10_sd_descriptive": statistics.stdev(row["top10"] for row in checkpoint_rows),
         },
         "qd": {
-            "p0": {
-                **qd["target_level_any_attributed_restoration"],
-                "top10_scroll_cluster_ci": qd_ci,
+            **{
+                name: {
+                    **values,
+                    "top10_scroll_cluster_ci": values[
+                        "top10_scroll_cluster_bootstrap_95ci"
+                    ],
+                }
+                for name, values in qd_conditions.items()
             },
-            "rag": {
-                **qd["rag_target_level_any_attributed_restoration"],
-                "top10_scroll_cluster_ci": rag_ci,
-            },
-            "u0": qd["diagnostics"]["unconstrained_target_level"],
-            "initial_reading": qd["qd_initial_control"],
+            "composition_unseen_subset": qd.get("composition_unseen_subset"),
+            "trace_count_strata": qd.get("trace_count_strata"),
             "split_audit": split_audit(qd),
         },
         "artifacts": {
@@ -297,9 +284,8 @@ def aggregate(span_path: Path, qd_path: Path, byt5_paths: tuple[Path, ...]) -> d
             ],
         },
         "remaining_promotion_gates": [
-            "train and evaluate three checkpoints with identical hyperparameters",
-            "freeze one authoritative split registry before new training",
-            "complete a formulaic and near-duplicate cross-split audit",
+            "replicate the single-checkpoint MLM comparisons across matched training seeds",
+            "train a model on a composition-disjoint development protocol",
         ],
     }
     return snapshot

@@ -22,22 +22,22 @@ def test_snapshot_cluster_estimates_equal_reported_top10() -> None:
     )
     for result in snapshot["span_systems"].values():
         assert result["top10_scroll_cluster_ci"]["estimate"] == result["top10"]
-        assert result["top10_scroll_cluster_ci"]["scroll_clusters"] == 6
+        assert result["top10_scroll_cluster_ci"]["scroll_clusters"] == 79
 
 
-def test_checkpoint_rows_are_not_misreported_as_controlled_seeds() -> None:
+def test_checkpoint_rows_are_controlled_seeds() -> None:
     snapshot = json.loads(
         (ROOT / "experiments/results/paper/paper_results_snapshot.json").read_text(
             encoding="utf-8"
         )
     )
-    assert snapshot["byt5_checkpoint_replications"]["controlled_seed_set"] is False
+    assert snapshot["byt5_checkpoint_replications"]["controlled_seed_set"] is True
 
 
 def test_checkpoint_artifacts_are_self_contained_and_portable() -> None:
     for seed in (41, 42, 43):
         artifact = json.loads(
-            (ROOT / f"experiments/results/paper/byt5_unknown_length_seed{seed}.json").read_text(
+            (ROOT / f"experiments/results/paper/byt5_balanced_seed{seed}_20260811.json").read_text(
                 encoding="utf-8"
             )
         )

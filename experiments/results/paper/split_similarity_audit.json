@@ -1,0 +1,192 @@
+{
+  "status": "descriptive_split_audit_no_model_scores",
+  "definition": {
+    "development_side": "train plus dev",
+    "composition_unseen": "held-out scroll whose non-empty composition labels do not occur in train or dev",
+    "near_duplicate": "maximum exact preserved-word 5-gram Jaccard against any train/dev chunk"
+  },
+  "inputs": {
+    "manifest": "curation/derived/preserved_nonbib_manifest.json",
+    "manifest_sha256": "c9720879931c9ea4fe6555f1f4cd1970d14cc5192d8806f643ff7877df6cfa41",
+    "composition_csv": "dss_chunks.csv",
+    "composition_csv_sha256": "80b3b4af9c6762bdb461458096e74d56b7902682fb9eaf20c563dadaf063958a"
+  },
+  "composition": {
+    "labeled_compositions": 88,
+    "compositions_crossing_splits": 26,
+    "heldout_scrolls": 220,
+    "heldout_composition_unseen_scrolls": 15,
+    "heldout_composition_unseen_sigla": [
+      "11Q11",
+      "11Q14",
+      "1Q34bis",
+      "1QS",
+      "1QSb",
+      "2Q18",
+      "4Q123",
+      "4Q179",
+      "4Q185",
+      "4Q264a",
+      "4Q388a",
+      "4Q448",
+      "4Q502",
+      "4Q509",
+      "CD"
+    ]
+  },
+  "chunk_similarity": {
+    "development_chunks": 1240,
+    "heldout_chunks": 407,
+    "exact_normalized_duplicates": 0,
+    "maximum_5gram_jaccard": {
+      "median": 0.0,
+      "p90": 0.012269938650306749,
+      "p95": 0.01948051948051948,
+      "maximum": 0.17435897435897435,
+      "at_least_0.5": 0,
+      "at_least_0.8": 0
+    },
+    "closest_pairs": [
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 34,
+        "reference_scroll": "4Q258",
+        "reference_split": "train",
+        "jaccard_5gram": 0.17435897435897435
+      },
+      {
+        "heldout_scroll": "CD",
+        "heldout_chunk": 23,
+        "reference_scroll": "4Q271",
+        "reference_split": "train",
+        "jaccard_5gram": 0.13664596273291926
+      },
+      {
+        "heldout_scroll": "4Q471b",
+        "heldout_chunk": 0,
+        "reference_scroll": "4Q431",
+        "reference_split": "train",
+        "jaccard_5gram": 0.125
+      },
+      {
+        "heldout_scroll": "CD",
+        "heldout_chunk": 25,
+        "reference_scroll": "4Q271",
+        "reference_split": "train",
+        "jaccard_5gram": 0.10493827160493827
+      },
+      {
+        "heldout_scroll": "CD",
+        "heldout_chunk": 24,
+        "reference_scroll": "4Q271",
+        "reference_split": "train",
+        "jaccard_5gram": 0.08974358974358974
+      },
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 36,
+        "reference_scroll": "4Q258",
+        "reference_split": "train",
+        "jaccard_5gram": 0.0893854748603352
+      },
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 31,
+        "reference_scroll": "4Q258",
+        "reference_split": "train",
+        "jaccard_5gram": 0.0851063829787234
+      },
+      {
+        "heldout_scroll": "CD",
+        "heldout_chunk": 36,
+        "reference_scroll": "4Q271",
+        "reference_split": "train",
+        "jaccard_5gram": 0.08275862068965517
+      },
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 33,
+        "reference_scroll": "4Q259",
+        "reference_split": "train",
+        "jaccard_5gram": 0.0784313725490196
+      },
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 17,
+        "reference_scroll": "4Q258",
+        "reference_split": "train",
+        "jaccard_5gram": 0.06912442396313365
+      },
+      {
+        "heldout_scroll": "4Q272",
+        "heldout_chunk": 1,
+        "reference_scroll": "4Q266",
+        "reference_split": "train",
+        "jaccard_5gram": 0.05952380952380952
+      },
+      {
+        "heldout_scroll": "1Q27",
+        "heldout_chunk": 0,
+        "reference_scroll": "4Q300",
+        "reference_split": "train",
+        "jaccard_5gram": 0.045454545454545456
+      },
+      {
+        "heldout_scroll": "4Q220",
+        "heldout_chunk": 0,
+        "reference_scroll": "11Q19",
+        "reference_split": "train",
+        "jaccard_5gram": 0.045112781954887216
+      },
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 38,
+        "reference_scroll": "4Q260",
+        "reference_split": "train",
+        "jaccard_5gram": 0.0425531914893617
+      },
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 35,
+        "reference_scroll": "4Q258",
+        "reference_split": "train",
+        "jaccard_5gram": 0.04225352112676056
+      },
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 14,
+        "reference_scroll": "4Q258",
+        "reference_split": "train",
+        "jaccard_5gram": 0.03755868544600939
+      },
+      {
+        "heldout_scroll": "4Q427",
+        "heldout_chunk": 4,
+        "reference_scroll": "4Q431",
+        "reference_split": "train",
+        "jaccard_5gram": 0.03669724770642202
+      },
+      {
+        "heldout_scroll": "4Q214b",
+        "heldout_chunk": 0,
+        "reference_scroll": "4Q244",
+        "reference_split": "train",
+        "jaccard_5gram": 0.023255813953488372
+      },
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 39,
+        "reference_scroll": "4Q260",
+        "reference_split": "train",
+        "jaccard_5gram": 0.022222222222222223
+      },
+      {
+        "heldout_scroll": "1QS",
+        "heldout_chunk": 3,
+        "reference_scroll": "4Q256",
+        "reference_split": "train",
+        "jaccard_5gram": 0.02112676056338028
+      }
+    ]
+  }
+}

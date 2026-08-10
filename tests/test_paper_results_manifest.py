@@ -13,11 +13,11 @@ def _table(manifest: dict, command: str) -> dict:
     return next(t for t in manifest["tables"] if t["command"] == command)
 
 
-def test_paper_manifest_is_explicitly_below_final_promotion() -> None:
+def test_paper_manifest_is_the_team_review_snapshot() -> None:
     manifest = json.loads(
         (ROOT / "docs" / "paper_results_manifest.json").read_text(encoding="utf-8")
     )
-    assert manifest["status"] == "shareable_reproduced_snapshot_not_final_promotion"
+    assert manifest["status"] == "team_review_evidence_snapshot"
     assert all(table["status"] != "paper_result" for table in manifest["tables"])
 
 
@@ -44,7 +44,7 @@ def test_shared_alignment_rows_match_artifact() -> None:
 
 def test_span_pilot_headline_matches_fresh_snapshot() -> None:
     artifact = json.loads(
-        (ROOT / "experiments/results/paper/span_baselines_rerun_20260810.json").read_text(
+        (ROOT / "experiments/results/paper/span_balanced_300_20260811.json").read_text(
             encoding="utf-8"
         )
     )

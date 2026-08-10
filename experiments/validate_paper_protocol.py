@@ -23,15 +23,19 @@ def validate(protocol: dict) -> list[str]:
     splits = protocol.get("splits", {})
     if splits.get("primary") != "scroll_disjoint":
         errors.append("primary split must be scroll-disjoint")
-    if splits.get("retrieval_index") != "training_scrolls_only":
-        errors.append("retrieval must be train-only")
     if splits.get("test_used_for_selection") is not False:
         errors.append("test data cannot be used for model selection")
     training = protocol.get("training", {})
-    if len(set(training.get("seeds", []))) < 3:
-        errors.append("at least three unique training seeds are required")
+    if len(set(training.get("byt5_matched_seeds", []))) < 3:
+        errors.append("ByT5 replication requires at least three matched seeds")
+    if not training.get("single_seed_mlm_limitation_reported"):
+        errors.append("single-seed MLM limitation must be explicit")
     required_diagnostics = set(protocol.get("mandatory_diagnostics", []))
-    for name in ("tokenizer_word_coverage", "tokenizer_complete_span_coverage"):
+    for name in (
+        "tokenizer_word_coverage",
+        "tokenizer_complete_span_coverage",
+        "candidate_set_coverage",
+    ):
         if name not in required_diagnostics:
             errors.append(f"missing mandatory diagnostic: {name}")
     gate = set(protocol.get("promotion_gate", {}).get("paper_result_requires", []))
@@ -39,6 +43,7 @@ def validate(protocol: dict) -> list[str]:
         "clustered_confidence_intervals",
         "exact_multiword_sequence_scoring",
         "unknown_length_primary_condition",
+        "near_duplicate_audit_reported",
     ):
         if requirement not in gate:
             errors.append(f"missing promotion gate: {requirement}")

@@ -23,7 +23,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from experiments.tf_embible_dss_benchmark import Item, sample_items, sample_sha256
+from experiments.tf_embible_dss_benchmark import (
+    Item,
+    sample_diagnostics,
+    sample_items,
+    sample_sha256,
+)
 
 tlog.set_verbosity_error()
 
@@ -47,6 +52,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--beam-width", type=int, default=10)
     parser.add_argument("--batch-size", type=int, default=2)
     parser.add_argument("--max-new-tokens", type=int, default=48)
+    parser.add_argument("--context-words", type=int, default=CONTEXT_WORDS)
     parser.add_argument(
         "--device",
         choices=("auto", "cpu", "mps", "cuda"),
@@ -191,10 +197,14 @@ def evaluate() -> None:
         raise ValueError("per-length must be positive")
     model_dir = args.model_dir.resolve()
     weights = model_dir / "model.safetensors"
+    training_metadata_path = model_dir / "byt5_training_metadata.json"
     if not weights.is_file():
         raise FileNotFoundError(
             f"complete model weights not found at {weights}; train the checkpoint first"
         )
+    if not training_metadata_path.is_file():
+        raise FileNotFoundError(f"training metadata not found: {training_metadata_path}")
+    training_metadata = json.loads(training_metadata_path.read_text(encoding="utf-8"))
 
     per_length = args.per_length or DEFAULT_PER_LENGTH[args.split]
     seed = args.seed if args.seed is not None else DEFAULT_SEEDS[args.split]
@@ -203,7 +213,7 @@ def evaluate() -> None:
         per_length=per_length,
         max_words=MAX_WORDS,
         max_chars=MAX_CHARS,
-        context_words=CONTEXT_WORDS,
+        context_words=args.context_words,
         seed=seed,
     )
     expected = per_length * MAX_WORDS
@@ -244,12 +254,18 @@ def evaluate() -> None:
             "per_word_length": per_length,
             "sample_sha256": sample_sha256(items),
             "eligible_pool_by_word_count": eligible,
-            "context_words_each_side": CONTEXT_WORDS,
+            "context_words_each_side": args.context_words,
+            "sample_diagnostics": sample_diagnostics(items),
             "candidate_word_counts": [1, 2, 3],
             "gold_length_or_boundaries_given": False,
             "modern_reconstructions_used": False,
-            "model_dir": str(model_dir),
+            "model_dir": (
+                str(model_dir.relative_to(ROOT))
+                if model_dir.is_relative_to(ROOT)
+                else str(model_dir)
+            ),
             "model_sha256": file_sha256(weights),
+            "training": training_metadata,
             "beam_width": args.beam_width,
             "returned_sequences": 10,
         },

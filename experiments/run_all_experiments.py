@@ -1,8 +1,6 @@
 """Run only the evaluation paths listed in the current evidence register.
 
 This runner intentionally excludes superseded and exploratory experiments.
-It does not turn the retained pilot numbers into paper results; see
-``docs/METHODOLOGY.md`` for the promotion gate.
 """
 
 from __future__ import annotations
@@ -57,15 +55,19 @@ EXPERIMENTS = (
         "checks",
     ),
     Experiment(
-        "qd",
-        "Attributed Qumran Digital literature-agreement pilot",
-        ("experiments/run_qd_benchmark.py",),
-        "pilots",
+        "split-audit",
+        "Audit composition and near-duplicate overlap in the frozen split",
+        ("experiments/audit_split_similarity.py",),
+        "checks",
     ),
     Experiment(
-        "rag",
-        "Train-only RAG single- and multiword paired pilot",
-        ("experiments/tf_preserved_rag_multiword_benchmark.py", "--per-bucket", "25"),
+        "qd",
+        "Attributed Qumran Digital evidence-condition benchmark",
+        (
+            "experiments/run_qd_benchmark.py",
+            "--report", "experiments/results/paper/qd_evidence_conditions_20260811.json",
+            "--markdown", "comparison/reports/QD_EVIDENCE_CONDITIONS.md",
+        ),
         "pilots",
     ),
     Experiment(
@@ -74,21 +76,42 @@ EXPERIMENTS = (
         (
             "experiments/tf_embible_dss_benchmark.py",
             "--dev-per-length",
-            "5",
+            "20",
             "--test-per-length",
-            "10",
+            "100",
+            "--context-words", "2",
+            "--word-model", "models/ft_msbert_span_preserved_nonbib",
+            "--char-model", "models/ft_tavbert_span_preserved_nonbib_seed42",
+            "--output-json", "experiments/results/paper/span_balanced_300_20260811.json",
+            "--output-markdown", "comparison/reports/SPAN_BALANCED_300_20260811.md",
             "--local-files-only",
         ),
         "pilots",
     ),
-    Experiment(
-        "bible-transfer",
-        "Fixed-decoder transfer diagnostic on Embible Biblical verses",
-        (
-            "experiments/embible_bible_transfer_benchmark.py",
-            "--local-files-only",
-        ),
-        "pilots",
+    *(
+        Experiment(
+            f"byt5-{seed}",
+            f"Matched ByT5 seed {seed} on the balanced span benchmark",
+            (
+                "experiments/tf_tokenization_free_benchmark.py",
+                "--model-dir", model,
+                "--split", "heldout",
+                "--per-length", "100",
+                "--seed", "73",
+                "--context-words", "2",
+                "--beam-width", "10",
+                "--batch-size", "8",
+                "--local-files-only",
+                "--output-json",
+                f"experiments/results/paper/byt5_balanced_seed{seed}_20260811.json",
+            ),
+            "pilots",
+        )
+        for seed, model in (
+            (41, "models/ft_byt5_span_scroll_conditioned_seed41"),
+            (42, "models/ft_byt5_span_preserved_nonbib_seed42"),
+            (43, "models/ft_byt5_span_preserved_nonbib_seed43"),
+        )
     ),
 )
 

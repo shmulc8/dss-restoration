@@ -22,12 +22,7 @@ from curation.preserved_corpus import (
     load_manifest,
 )
 
-TF_DIR = Path(
-    os.environ.get(
-        "DSS_TF_DIR",
-        "/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0",
-    )
-)
+TF_DIR = Path(os.environ["DSS_TF_DIR"]) if "DSS_TF_DIR" in os.environ else None
 
 
 def main(*, derived_only: bool = False):
@@ -64,7 +59,24 @@ def main(*, derived_only: bool = False):
                 character in HEBREW or character == "?" for character in stored_pattern
             )
 
+    flagged = manifest["extreme_fragmentation_scrolls"]
+    chunk_scrolls = {row["scroll"] for row in chunks}
+    counts = manifest["counts"]["eligibility"]
+    assert counts["archival_registry_scrolls"] == sum(len(rows) for rows in split_sets.values())
+    assert counts["primary_mlm_scrolls"] == len(chunk_scrolls)
+    assert counts["scrolls_without_primary_mlm_chunks"] == counts["archival_registry_scrolls"] - len(chunk_scrolls)
+    assert counts["zero_preserved_word_scrolls"] == sum(
+        row["zero_preserved_words"] for row in flagged.values()
+    )
+    assert counts["extreme_fragmentation_scrolls"] == len(flagged)
+    assert not (set(flagged) & chunk_scrolls)
+
     if not derived_only:
+        if TF_DIR is None:
+            raise RuntimeError(
+                "Set DSS_TF_DIR to the ETCBC DSS Text-Fabric 2.0 directory "
+                "or use --derived-only."
+            )
         tf = Fabric(locations=str(TF_DIR), silent="deep")
         api = tf.load(
             "otype glyph full rec rem biblical scroll",

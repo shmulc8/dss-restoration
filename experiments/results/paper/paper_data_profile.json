@@ -139,18 +139,263 @@
         "median_preserved_context_words": 13.0
       }
     },
+    "scroll_eligibility": {
+      "archival_registry_scrolls": 736,
+      "primary_mlm_scrolls": 377,
+      "scrolls_without_primary_mlm_chunks": 359,
+      "zero_preserved_word_scrolls": 25,
+      "extreme_fragmentation_scrolls": 71,
+      "extreme_fragmentation_definition": "preserved_source_words < 20 and preserved_fraction < 0.10",
+      "extreme_fragmentation_in_unknown_length_targets": 0,
+      "extreme_fragmentation_in_qd_targets": 0,
+      "policy": "retain every identifier for provenance; admit a scroll to primary MLM training only when it yields a reconstruction-free eligible chunk"
+    },
+    "external_pipeline_audit": {
+      "status": "descriptive_external_pipeline_audit_no_model_scores",
+      "external_source": {
+        "anonymous_label": "independently_implemented_contiguous_run_pipeline",
+        "git_revision": "a6e653c8778c1b12b4f3aea9e27cc6e11103e828",
+        "dataset_path": "data_preparation/dss_sentences_min10_splits_ppp_count_1_nonbib.xlsx",
+        "dataset_sha256": "10f0648b9f08ad08c339dcfdf32f468cb33a3672f336f35c4b6df8cb1135c77b",
+        "pipeline_path": "amir_style_data_curation/dss_marker_pipeline.ipynb",
+        "pipeline_sha256": "8f5638cb5d6b437594a079d193fc0f49c9f0001801a20819d6c7c0cdf372f9e3",
+        "configuration": {
+          "non_biblical_only": true,
+          "minimum_contiguous_written_words": 10,
+          "partially_reconstructed_words_included": true,
+          "minimum_authentic_consonants_for_partial_word": 1
+        }
+      },
+      "strict_reconstruction_free_pipeline": {
+        "archival_scrolls": 736,
+        "model_contributing_scrolls": 377,
+        "retained_words": 95736,
+        "reconstructed_words_admitted": 0
+      },
+      "contiguous_run_pipeline": {
+        "model_contributing_scrolls": 254,
+        "retained_words": 44083,
+        "partially_reconstructed_words": 3655,
+        "partially_reconstructed_word_percent": 8.291178,
+        "examples": 1491
+      },
+      "overlap": {
+        "model_scrolls_in_both": 223,
+        "strict_only_model_scrolls": 154,
+        "contiguous_run_only_model_scrolls": 31,
+        "zero_preserved_scrolls_in_contiguous_run_model": 0,
+        "extreme_fragmentation_scrolls_in_contiguous_run_model": 2,
+        "extreme_fragmentation_scroll_names_in_contiguous_run_model": [
+          "4Q457a",
+          "4Q472a"
+        ]
+      },
+      "interpretation": "Neither pipeline deletes scrolls by a global intactness ratio. Eligibility emerges from local example construction; the strict pipeline preserves all identifiers for provenance while admitting only reconstruction-free labels."
+    },
+    "split_similarity_audit": {
+      "status": "descriptive_split_audit_no_model_scores",
+      "definition": {
+        "development_side": "train plus dev",
+        "composition_unseen": "held-out scroll whose non-empty composition labels do not occur in train or dev",
+        "near_duplicate": "maximum exact preserved-word 5-gram Jaccard against any train/dev chunk"
+      },
+      "inputs": {
+        "manifest": "curation/derived/preserved_nonbib_manifest.json",
+        "manifest_sha256": "c9720879931c9ea4fe6555f1f4cd1970d14cc5192d8806f643ff7877df6cfa41",
+        "composition_csv": "dss_chunks.csv",
+        "composition_csv_sha256": "80b3b4af9c6762bdb461458096e74d56b7902682fb9eaf20c563dadaf063958a"
+      },
+      "composition": {
+        "labeled_compositions": 88,
+        "compositions_crossing_splits": 26,
+        "heldout_scrolls": 220,
+        "heldout_composition_unseen_scrolls": 15,
+        "heldout_composition_unseen_sigla": [
+          "11Q11",
+          "11Q14",
+          "1Q34bis",
+          "1QS",
+          "1QSb",
+          "2Q18",
+          "4Q123",
+          "4Q179",
+          "4Q185",
+          "4Q264a",
+          "4Q388a",
+          "4Q448",
+          "4Q502",
+          "4Q509",
+          "CD"
+        ]
+      },
+      "chunk_similarity": {
+        "development_chunks": 1240,
+        "heldout_chunks": 407,
+        "exact_normalized_duplicates": 0,
+        "maximum_5gram_jaccard": {
+          "median": 0.0,
+          "p90": 0.012269938650306749,
+          "p95": 0.01948051948051948,
+          "maximum": 0.17435897435897435,
+          "at_least_0.5": 0,
+          "at_least_0.8": 0
+        },
+        "closest_pairs": [
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 34,
+            "reference_scroll": "4Q258",
+            "reference_split": "train",
+            "jaccard_5gram": 0.17435897435897435
+          },
+          {
+            "heldout_scroll": "CD",
+            "heldout_chunk": 23,
+            "reference_scroll": "4Q271",
+            "reference_split": "train",
+            "jaccard_5gram": 0.13664596273291926
+          },
+          {
+            "heldout_scroll": "4Q471b",
+            "heldout_chunk": 0,
+            "reference_scroll": "4Q431",
+            "reference_split": "train",
+            "jaccard_5gram": 0.125
+          },
+          {
+            "heldout_scroll": "CD",
+            "heldout_chunk": 25,
+            "reference_scroll": "4Q271",
+            "reference_split": "train",
+            "jaccard_5gram": 0.10493827160493827
+          },
+          {
+            "heldout_scroll": "CD",
+            "heldout_chunk": 24,
+            "reference_scroll": "4Q271",
+            "reference_split": "train",
+            "jaccard_5gram": 0.08974358974358974
+          },
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 36,
+            "reference_scroll": "4Q258",
+            "reference_split": "train",
+            "jaccard_5gram": 0.0893854748603352
+          },
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 31,
+            "reference_scroll": "4Q258",
+            "reference_split": "train",
+            "jaccard_5gram": 0.0851063829787234
+          },
+          {
+            "heldout_scroll": "CD",
+            "heldout_chunk": 36,
+            "reference_scroll": "4Q271",
+            "reference_split": "train",
+            "jaccard_5gram": 0.08275862068965517
+          },
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 33,
+            "reference_scroll": "4Q259",
+            "reference_split": "train",
+            "jaccard_5gram": 0.0784313725490196
+          },
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 17,
+            "reference_scroll": "4Q258",
+            "reference_split": "train",
+            "jaccard_5gram": 0.06912442396313365
+          },
+          {
+            "heldout_scroll": "4Q272",
+            "heldout_chunk": 1,
+            "reference_scroll": "4Q266",
+            "reference_split": "train",
+            "jaccard_5gram": 0.05952380952380952
+          },
+          {
+            "heldout_scroll": "1Q27",
+            "heldout_chunk": 0,
+            "reference_scroll": "4Q300",
+            "reference_split": "train",
+            "jaccard_5gram": 0.045454545454545456
+          },
+          {
+            "heldout_scroll": "4Q220",
+            "heldout_chunk": 0,
+            "reference_scroll": "11Q19",
+            "reference_split": "train",
+            "jaccard_5gram": 0.045112781954887216
+          },
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 38,
+            "reference_scroll": "4Q260",
+            "reference_split": "train",
+            "jaccard_5gram": 0.0425531914893617
+          },
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 35,
+            "reference_scroll": "4Q258",
+            "reference_split": "train",
+            "jaccard_5gram": 0.04225352112676056
+          },
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 14,
+            "reference_scroll": "4Q258",
+            "reference_split": "train",
+            "jaccard_5gram": 0.03755868544600939
+          },
+          {
+            "heldout_scroll": "4Q427",
+            "heldout_chunk": 4,
+            "reference_scroll": "4Q431",
+            "reference_split": "train",
+            "jaccard_5gram": 0.03669724770642202
+          },
+          {
+            "heldout_scroll": "4Q214b",
+            "heldout_chunk": 0,
+            "reference_scroll": "4Q244",
+            "reference_split": "train",
+            "jaccard_5gram": 0.023255813953488372
+          },
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 39,
+            "reference_scroll": "4Q260",
+            "reference_split": "train",
+            "jaccard_5gram": 0.022222222222222223
+          },
+          {
+            "heldout_scroll": "1QS",
+            "heldout_chunk": 3,
+            "reference_scroll": "4Q256",
+            "reference_split": "train",
+            "jaccard_5gram": 0.02112676056338028
+          }
+        ]
+      }
+    },
     "interpretation_caution": "Gap word counts use consecutive source-word positions after editorial text is removed; they are transcription-derived structural estimates, not direct measurements of a single physical hole."
   },
   "evaluation_sets": {
     "unknown_length_synthetic": {
       "targets": 300,
-      "scrolls": 6,
-      "sample_sha256": "d3a8701df04ae725655c6a1d423cf84b2fb82a6d55bbf76ac78eda152be18ec5",
+      "scrolls": 79,
+      "sample_sha256": "bb04dad8e1b32bc5630b24c02bee8375ac4c7875bba1eab114ff3d12641e3f85",
       "gold_length_word_count_and_boundaries_given": false,
       "strata": {
         "1": {
           "n": 100,
-          "scrolls": 4,
+          "scrolls": 77,
           "character_length_median": 3.0,
           "character_length_iqr_nearest_rank": [
             3,
@@ -158,56 +403,58 @@
           ],
           "character_length_range": [
             2,
-            7
+            6
           ]
         },
         "2": {
           "n": 100,
-          "scrolls": 4,
+          "scrolls": 55,
           "character_length_median": 7.0,
           "character_length_iqr_nearest_rank": [
             6,
-            8
+            9
           ],
           "character_length_range": [
             4,
-            12
+            13
           ]
         },
         "3": {
           "n": 100,
-          "scrolls": 5,
+          "scrolls": 41,
           "character_length_median": 10.0,
           "character_length_iqr_nearest_rank": [
             9,
-            11
+            12
           ],
           "character_length_range": [
-            7,
+            6,
             15
           ]
         }
       }
     },
     "qd_literature_agreement": {
-      "targets": 74,
-      "scrolls": 37,
-      "unique_target_readings": 99,
-      "targets_with_multiple_readings": 22,
-      "targets_with_multiple_readings_percent": 29.72972972972973,
-      "estimated_length_median": 5.0,
+      "targets": 93,
+      "scrolls": 40,
+      "unique_target_readings": 184,
+      "targets_with_multiple_readings": 59,
+      "targets_with_multiple_readings_percent": 63.44086021505376,
+      "estimated_length_median": 5,
       "estimated_length_range": [
         2,
-        9
+        10
       ],
-      "targets_anchored_at_one_or_both_edges": 72,
+      "targets_anchored_at_one_or_both_edges": 91,
       "target_definition": "eligible non-biblical single-word natural lacunae"
     }
   },
   "inputs": {
-    "curation/derived/preserved_nonbib_manifest.json": "f7fdae320083fd2eb0a3553b20deb54fffc4baea40806ba4961bafb7d9d6bb55",
+    "curation/derived/preserved_nonbib_manifest.json": "c9720879931c9ea4fe6555f1f4cd1970d14cc5192d8806f643ff7877df6cfa41",
     "curation/derived/nonbib_lacunae.jsonl": "41206bc6d68211c7f53dcd588fa61bea896ee7dc4b009a73c7a2c02c7caff6b8",
-    "experiments/results/paper/qd_msbert_rerun_20260810.json": "e1a094f6edd9bd080f6eb1c44ddd95721e8c36d029ed7725e230f27ef2f3168d",
-    "experiments/results/paper/span_baselines_rerun_20260810.json": "1495b68969d1ade57dd8f0dbb78a7cd6a78c9116146a68a99566a96ddc53ad5f"
+    "experiments/results/paper/qd_evidence_conditions_20260811.json": "954149ba771c65d41159067d8ec119e7a20c816289a26c0c9601555eeaaa5811",
+    "experiments/results/paper/span_balanced_300_20260811.json": "cd7de40f349b62f1f9fdf300a6920a4580a08684dfa8c06048886d467c495dec",
+    "experiments/results/paper/corpus_pipeline_comparison_20260810.json": "03eb542200d4618c12fa1b5e8d74fa5a38474493cb1160a26e27fed591b3b055",
+    "experiments/results/paper/split_similarity_audit.json": "286071c039b0fda99d2159fbd6d09380b3ecd1d566fb8e657d02e56452edbf54"
   }
 }

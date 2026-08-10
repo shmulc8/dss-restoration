@@ -20,7 +20,7 @@
   linkcolor=DSSNavy,
   citecolor=DSSEmerald,
   urlcolor=DSSNavy,
-  pdftitle={Epigraphic Masked Language Models for Dead Sea Scrolls Restoration},
+  pdftitle={Reconstruction-Free Evaluation for Dead Sea Scroll Restoration},
   pdfauthor={Anonymous EMNLP/ACL Submission}
 }
 \captionsetup{font=small,labelfont=bf}
@@ -32,8 +32,8 @@
 
 \input{paper_tables.tex}
 
-\title{\bfseries Epigraphic Masked Language Models for Dead Sea Scrolls Restoration:\\
-Unifying Token Alignment, Physical Ink Traces, and Multi-Word Length Ensembling}
+\title{\bfseries Reconstruction-Free Evaluation for Dead Sea Scroll Restoration:\\
+Token Alignment, Transcription-Encoded Evidence, and Unknown-Length Gaps}
 \author{\textbf{Anonymous EMNLP/ACL Submission} \\
 \textit{Paper ID: 4821} \\
 \textit{Track: Computational Humanities \& Ancient Language Restoration}}
@@ -44,27 +44,27 @@ Unifying Token Alignment, Physical Ink Traces, and Multi-Word Length Ensembling}
 
 \begin{abstract}
 \normalsize
-Restoring a damaged Dead Sea Scroll is not ordinary masked-word prediction. A lacuna may preserve partial letters and an approximate physical extent while concealing its character length, word count, and internal boundaries. We present an evaluation framework that separates these material signals from linguistic context and compares character, subword, and byte-level models on shared targets. On 74 natural lacunae, adding transcription-encoded traces and approximate length raises Top-10 agreement with published proposals from 9.5\% to 63.5\%---a gain of 54.0 percentage points---while train-only retrieval adds no improvement. On 300 synthetic gaps of unknown length, the strongest implemented baseline reaches 15.0\% exact complete-span Top-10, with performance concentrated in single-word gaps. Character tokenization prevents alignment failures, but does not by itself solve span ranking. Together, these results show that material conditioning provides a large practical benefit while unknown-length multiword restoration remains the central modeling challenge. The system ranks hypotheses for expert review; agreement with published proposals is not evidence of historical truth.
+Dead Sea Scroll lacunae differ from ordinary masked-word tasks: visible letters may survive, while character length, word count, and boundaries remain uncertain. We introduce a reconstruction-free corpus derivative and two complementary evaluations that keep these information sources explicit. On 93 natural single-word lacunae, a preserved-only masked language model attains 15.1\% Top-10 agreement with attributed proposals from context alone and 50.5\% when supplied transcription-visible letters; a frequency baseline with the same traces reaches 36.6\%. On 300 non-overlapping synthetic spans sampled across 79 held-out scrolls, the strongest unknown-length decoder reaches 7.7\% exact Top-10 and recovers no three-word target. These results establish a useful but bounded conclusion: transcription evidence sharply narrows candidate sets, whereas present language models do not solve unknown-length multiword restoration. Agreement with published proposals is not historical ground truth.
 \end{abstract}
 
 \section{Introduction}
 
-The Dead Sea Scrolls preserve ancient Hebrew and Aramaic in manuscripts damaged by abrasion, tears, decay, and uncertain joins. The data are not dominated by isolated missing words: in our reconstruction-free transcription derivative, only 18.8\% of lacuna records occupy one source-word position, the median occupies four, and 32.7\% occupy six or more. A lacuna may also preserve an estimated physical extent, partial letters, and several defensible reconstructions. Its word count and internal boundaries are therefore often unknown. A computational restoration system must represent both linguistic context and the information state of the artifact.
+The Dead Sea Scrolls preserve ancient Hebrew and Aramaic in manuscripts damaged by abrasion, tears, decay, and uncertain joins. The data are not dominated by isolated missing words: in our reconstruction-free transcription derivative, only 18.8\% of lacuna records occupy one source-word position, the median occupies four, and 32.7\% occupy six or more. A transcription may encode partial letters and an editor's estimate of missing extent, while the original word count and boundaries remain uncertain. A restoration system must therefore state exactly which evidence it receives.
 
 Masked language models (MLMs) provide contextual predictions, but their tokenization can leak or obscure gap structure. A WordPiece mask normally specifies a token count, while an epigrapher observes an uncertain region measured in material space. Character models offer direct alignment, yet lexical models may rank complete words more effectively. Retrieval can expose parallels but can also leak the target or reproduce editorial traditions. Evaluation against a modern reconstruction is similarly ambiguous: it measures agreement with an edition, not recovery of inaccessible historical truth.
 
-We organize these issues into two complementary tasks: (A) synthetic damage to preserved text with a known answer and (B) agreement with multiple attributed readings at natural lacunae. The final primary task is A under unknown character length, word count, and boundaries, with exact complete-span Top-10 as the metric.
+We organize these issues into two complementary tasks: (A) synthetic damage to preserved text with a known answer and (B) agreement with multiple attributed readings at natural lacunae. Task A hides character length, word count, and boundaries and uses exact complete-span Top-10. Task B separates context-only, visible-trace, and editor-length conditions on one fixed denominator.
 
 The present draft makes four evidence-bounded contributions:
 
 \begin{itemize}
   \item a reconstruction-free non-biblical corpus derivative and a reproducible profile of 27,814 transcription-derived lacuna records;
-  \item an evidence taxonomy and shared-denominator evaluation that separate context-only, oracle-length, and transcription-derived material conditions;
-  \item a paired ablation showing a 54.0-point Top-10 literature-agreement gain from encoded traces and approximate extent on 74 natural lacunae; and
-  \item a negative result on 300 synthetic spans: the strongest implemented system reaches 15.0\% exact Top-10 and fails on all three-word targets, establishing unknown-length multiword decoding as the central unresolved problem.
+  \item a shared-denominator benchmark that separates context, transcription-visible letters, and editor-derived length rather than collapsing them into a ``physical'' condition;
+  \item a paired 93-target ablation with a frequency baseline, candidate-coverage reporting, manuscript-cluster uncertainty, and a composition-unseen subset; and
+  \item a manuscript-balanced 300-span benchmark showing that unknown-length multiword decoding remains unresolved.
 \end{itemize}
 
-This is a current-state research draft. No reported pilot has passed every promotion criterion for a final paper result.
+The contribution is therefore primarily methodological and diagnostic rather than a claim of historically correct restoration.
 
 \begin{figure}[t]
 \centering
@@ -77,18 +77,18 @@ This is a current-state research draft. No reported pilot has passed every promo
     drop shadow={opacity=0.10,shadow xshift=1pt,shadow yshift=-1pt}},
   flow/.style={-{Stealth[length=2.2mm]},line width=0.75pt,draw=DSSNavy!80}
 ]
-\node[stage,fill=DSSNavy!7] (input) {\textbf{Preserved transcription}\\ context, gap marker, encoded visible letters};
-\node[stage,fill=DSSNavy!13,below=of input] (gen) {\textbf{Candidate generators}\\ word-span model; character/byte sequence model};
-\node[stage,fill=DSSEmerald!10,below=of gen] (constraint) {\textbf{$P0$ constraint}\\ approximate extent and visible-position agreement};
-\node[stage,fill=DSSEmerald!17,below=of constraint] (rank) {\textbf{Optional train-only evidence}\\ parallel retrieval, morphology, provenance};
-\node[stage,fill=DSSEmerald!27,below=of rank] (output) {\textbf{Ranked hypotheses}\\ scores, evidence regime, uncertainty, sources};
+\node[stage,fill=DSSNavy!7] (input) {\textbf{Preserved transcription}\\ context and anonymous gap marker};
+\node[stage,fill=DSSNavy!13,below=of input] (gen) {\textbf{Candidate generator}\\ preserved-only MLM or sequence model};
+\node[stage,fill=DSSEmerald!10,below=of gen] (constraint) {\textbf{Declared evidence condition}\\ none; visible traces; editor-length oracle};
+\node[stage,fill=DSSEmerald!17,below=of constraint] (rank) {\textbf{Coverage-aware ranking}\\ retain failures and small candidate sets};
+\node[stage,fill=DSSEmerald!27,below=of rank] (output) {\textbf{Evaluation output}\\ exact span or attributed-reading agreement};
 \draw[flow] (input) -- (gen);
 \draw[flow] (gen) -- (constraint);
 \draw[flow] (constraint) -- (rank);
 \draw[flow] (rank) -- (output);
 \end{tikzpicture}%
 }
-\caption{Proposed scholar-facing architecture. ``Visible letters'' are encoded from a transcription; the present system does not infer strokes directly from pixels.}
+\caption{Evaluation architecture. Visible letters are copied from a transcription; no image or stroke inference is performed. Each result names its supplied evidence.}
 \label{fig:architecture}
 \end{figure}
 
@@ -116,15 +116,16 @@ A_k(g)=\mathbb{I}[C_k(g)\cap Y_g\neq\varnothing].
 \end{equation}
 $A_k$ is \emph{literature agreement}; neither inclusion nor exclusion establishes truth.
 
-We distinguish three information conditions:
+We distinguish four information conditions:
 
 \begin{itemize}
-  \item $U0$: context only; length, boundaries, and visible traces are unavailable.
-  \item $O$-len: gold target length is supplied as an oracle diagnostic and cannot support a realistic headline claim.
-  \item $P0$: approximate gap-derived length and transcription-encoded surviving letters are supplied. If $J$ indexes reliable visible positions, a candidate $c$ must satisfy $|c|\in[L-1,L+1]$ and $c_j=p_j$ for all $j\in J$.
+  \item \textsc{Context}: linguistic context only.
+  \item \textsc{Visible}: candidates must contain the Hebrew segments shown outside reconstruction brackets, respecting anchored edges when encoded.
+  \item \textsc{EditorLength}: candidate length must fall within one character of the QD display/initial length. This is an oracle/editor-assisted diagnostic.
+  \item \textsc{Visible+Length}: the conjunction of the preceding filters, also oracle-assisted because of length.
 \end{itemize}
 
-The term ``material constraint'' is shorthand for information encoded by editors from the artifact. The current pipeline neither reads multispectral images nor estimates stroke probabilities.
+Visible traces are transcription evidence, not independent observations collected by our system. The current pipeline neither reads multispectral images nor estimates stroke probabilities.
 
 \section{Data}
 
@@ -133,12 +134,19 @@ The corpus is derived from the ETCBC DSS Text-Fabric dataset \cite{etcbcdss}. Bi
 
 \CorpusOverviewTable
 
+\paragraph{Scroll eligibility is task-specific.}
+An archival registry and a modeling population answer different questions. We retain all 736 non-biblical scroll identifiers for provenance, including fragments that contribute only damage metadata. A scroll enters primary MLM text only if it yields at least one 128-unit chunk with 20 preserved words. Consequently, 377 scrolls contribute model text and 359 do not (Table~\ref{tab:scroll-eligibility}). The latter are not deleted: 25 contain no strictly preserved words, while 71 satisfy the predeclared extreme-fragmentation flag of fewer than 20 preserved source words and a preserved-position fraction below 10\%. These overlapping groups remain auditable but are excluded from primary linguistic modeling and contextual-restoration target selection. Neither evaluation contains an extreme-fragmentation scroll. Preservation fraction here is a property of classified transcription positions, not a measurement of surviving parchment area.
+
+\ScrollEligibilityTable
+
+This policy avoids a global intactness blacklist. A globally damaged manuscript may contain a locally usable island; such material may enter a separately reported preserved-run ablation if it satisfies reconstruction-free local criteria, but it cannot silently enter the primary population. Conversely, a high scroll-wide preservation rate cannot rescue a target with inadequate local left/right context. Target eligibility is therefore determined at the lacuna as well as the scroll level.
+
 \paragraph{What does a lacuna look like?}
 The 27,814 records contain 165,239 damaged source-word positions (Table~\ref{tab:lacuna-shape}). Their median span is four positions, the 90th percentile is 13, and the maximum is 268. These are consecutive source-word positions after editorially supplied text has been removed. They describe the structure of the transcription and must not be read as 27,814 independent, metrically measured physical holes.
 
 \LacunaShapeTable
 
-The transcription nevertheless preserves useful material evidence. At least one word retains a visible trace in 23,632 lacuna records (85.0\%), but only 49,130 of the 165,239 damaged word positions (29.7\%) retain any trace. An estimated missing-character extent is available for 25,509 records (91.7\%); its median is five characters and its nearest-rank interquartile range is 2--12. Both left and right preserved context are available for 26,467 records (95.2\%), with a median of 14 total context words. The contrast between record-level evidence and position-level sparsity motivates constrained ranking without assuming that every hidden word has surviving ink.
+The transcription nevertheless preserves useful evidence. At least one word retains a visible trace in 23,632 lacuna records (85.0\%), but only 49,130 of the 165,239 damaged word positions (29.7\%) retain any trace. An estimated missing-character extent is available for 25,509 records (91.7\%); its median is five characters and its nearest-rank interquartile range is 2--12. Both left and right preserved context are available for 26,467 records (95.2\%), with a median of 14 total context words. The contrast between record-level evidence and position-level sparsity motivates constrained ranking without assuming that every hidden word has a trace.
 
 \paragraph{Two evaluation views.}
 No single benchmark answers both whether a system can recover a known string and whether it can surface a defensible proposal at a genuine lacuna. We therefore use the complementary views in Table~\ref{tab:evaluation-sets}: synthetic damage supplies an observable answer under controlled masking, while the QD set preserves natural ambiguity and supports only literature-agreement claims.
@@ -148,42 +156,35 @@ No single benchmark answers both whether a system can recover a known string and
 \paragraph{Synthetic alignment diagnostic.}
 The shared 729-word diagnostic masks intact content words and tests whether candidate generation aligns with the same character interval. It is useful for tokenizer coverage, but it does not simulate unknown-length natural damage and is not the primary benchmark.
 
-\paragraph{Unknown-length span pilot.}
-We hide 300 preserved DSS spans, balanced across one, two, and three words, after fitting decoding parameters on 60 development spans. Character length, word count, and boundaries are hidden. Median character lengths are 3, 7, and 10 in the respective strata. The deterministic sample is nested with an earlier 30-span pilot and contains only six held-out scroll clusters. We report scroll-cluster bootstrap intervals, but their stability is limited by that small cluster count; this remains model-selection evidence rather than an independent test.
+\paragraph{Unknown-length spans.}
+We hide 300 preserved DSS spans, balanced across one, two, and three words, after fitting decoding parameters on 60 development spans. Character length, word count, and boundaries are hidden. To prevent large compositions from dominating, deterministic round-robin sampling cycles through manuscripts and rejects overlapping hidden intervals. The test covers 79 held-out scrolls (77, 55, and 41 in the respective word-count strata) and uses two context words on each side.
 
 \paragraph{Qumran Digital targets.}
-The QD snapshot dated 21 May 2026 contains 1,811 publication rows at 346 candidate locations. After predeclared exclusions, 74 non-biblical single-word targets remain across 37 scrolls, with 99 distinct physically compatible attributed readings. Twenty-two targets (29.7\%) have multiple attributed readings; estimated length has a median of five characters (range 2--9), and 72 targets retain a left or right edge anchor. Exclusions include multiword or incomplete readings, corrections, non-lacuna variants, insufficient context, unsupported markup, and proposals contradicting visible letters. The frozen manifest associated with the evaluated checkpoint assigns all 74 targets to held-out scrolls. A later registry instead assigns 40 of the 74 targets to train, 22 to validation, and 12 to test. The reported diagnostic is therefore held out relative to the checkpoint-associated split, but it must not be mixed with experiments trained under the later registry. Future training will freeze one authoritative registry before model fitting. QD selected disputed sites and is working scholarly data; the benchmark is neither random nor exhaustive.
+The QD snapshot dated 21 May 2026 contains 1,811 publication rows at 346 candidate locations. Predeclared structural and context filters retain 93 non-biblical single-word targets across 40 scrolls and 184 distinct attributed readings. Crucially, a proposal is not removed merely because it conflicts with a tested evidence filter; it remains a possible reference and becomes unretrievable in that condition. All 93 targets are held out under the frozen manifest used for checkpoint training. QD selected disputed sites and is working scholarly data; the benchmark is neither random nor exhaustive.
 
 \section{Models and Decoding}
 
 \paragraph{Word-span baseline.}
-The current leading implemented baseline enumerates one-token word hypotheses for unknown numbers of positions, combines forward and backward MLM evidence, and ranks complete surfaced strings. It is trained only on preserved non-biblical text. The tokenizer can represent 86.3\% of complete targets in the 300-span pilot; all others remain in the denominator.
+The word-span baseline enumerates one to three word-mask hypotheses and ranks complete surfaced strings. It is fine-tuned only on preserved non-biblical text. The tokenizer can represent 81.7\% of complete synthetic targets with one token per word; all other targets remain in the denominator as misses.
 
 \paragraph{Character and byte models.}
-TavBERT supplies character-aligned masks, and a fine-tuned DictaBERT-char checkpoint provides a second character baseline. ByT5 supplies a byte-level sequence-to-sequence comparison \cite{raffel2020}. Character alignment avoids WordPiece drops, but alignment alone does not imply superior exact-span ranking.
+TavBERT supplies character-aligned masks and ByT5 supplies a byte-level sequence-to-sequence comparison \cite{raffel2020}. Character alignment avoids WordPiece drops, but alignment alone does not imply superior exact-span ranking. Three ByT5 checkpoints vary only the training seed (41--43) and share three epochs, batch size 32, learning rate $10^{-3}$, and the same corpus hash.
 
 \paragraph{Embible-style combinations.}
 We implement both the paper-described overlap rule and a development-fitted rank fusion of word and character candidates. Under the locked tie-break, a simpler system is retained when exact Top-10 ties. This prevents selecting a more complex ensemble on secondary metrics alone.
 
-\paragraph{Retrieval.}
-The retrieval index contains preserved training scrolls only. Its weight is selected on development scrolls. Candidates are scored by the MLM plus a weighted exact-context signal. A final retrieval claim additionally requires answer-string removal, near-duplicate filtering, recall/MRR/nDCG reporting, and a paired downstream improvement with uncertainty.
-
-\paragraph{Planned tokenization-free decoder.}
-The promotion protocol requires a character-, byte-, or unrestricted span-sequence model that marginalizes or searches over output length and boundary hypotheses. Length-normalized scoring may be written as
-\begin{equation}
-s(c)=\frac{\sum_{i=1}^{|c|}\log p(c_i\mid c_{<i},x_{<g},x_{>g})}{|c|^{\alpha}},
-\end{equation}
-with $\alpha$ selected on development data. This component is a planned experiment, not the source of a reported success.
+\paragraph{Frequency baseline.}
+For the QD task, we rank Hebrew surface forms by frequency in preserved training chunks, then apply exactly the same trace and length filters as the MLM. This baseline isolates how much apparent success follows from a narrow constraint set rather than contextual modeling.
 
 \section{Evaluation Protocol}
 
 The primary automatic task is exact complete-span Top-10 under unknown length, word count, and word boundaries. Exact Top-1/5/20, MRR, CER, boundary F1, word-count mean absolute error, decoder failure, calibration, selective accuracy, and latency are secondary. Slot-level word hits are diagnostic only.
 
-Scroll-disjoint is the minimum split; a composition-disjoint split is the hard evaluation. Formulaic and near-duplicate passages must be grouped before partitioning. Retrieval is restricted to training scrolls. Test data are never used for selection. Failed decoding, tokenizer misalignment, and unrepresentable targets count as misses.
+The frozen split is scroll-disjoint. Test data are never used for selection. Failed decoding, tokenizer misalignment, unrepresentable targets, empty candidate sets, and lists shorter than $K$ remain in the denominator. Exact duplicate normalized chunks are absent across the development/test boundary. Maximum preserved-word five-gram Jaccard is 0.174; none of 407 held-out chunks reaches 0.5. Because 26 of 88 composition labels cross partitions, we separately report the QD targets whose composition labels are unseen in train and development.
 
-Final experiments use seeds 41, 42, and 43, development-only early stopping, and a fixed tuning budget. We report seed variation and 95\% confidence intervals clustered by scroll (and composition in the hard split). System comparisons are paired at manuscript locations; multiplicity is corrected for the predeclared comparison family. Target-level predictions, exclusions, manifests, and code/data/model/result hashes are required for promotion. These reporting choices follow reproducibility guidance in NLP \cite{dodge2019,ulmer2024}.
+We report 95\% bootstrap intervals clustered by scroll and paired cluster intervals for evidence-condition deltas. Target-level predictions, exclusions, manifests, and code/data/model/result hashes accompany the aggregate tables. ByT5 uses three matched seeds; the MLM and TavBERT comparisons remain single-checkpoint analyses and are labeled accordingly. These choices follow reproducibility guidance in NLP \cite{dodge2019,ulmer2024}.
 
-\section{Pilot Results}
+\section{Results}
 
 The results follow the task's sources of uncertainty rather than a leaderboard: we first test whether tokenization can align a known interval, then require exact recovery when length and boundaries are hidden, and finally measure agreement with attributed proposals at natural lacunae. Metrics are comparable only within each table.
 
@@ -196,9 +197,11 @@ Table~\ref{tab:alignment} uses a genuinely shared denominator. TavBERT base obta
 \SpanStrataTable
 
 \paragraph{Unknown-length multiword restoration remains open.}
-The preserved-only word-span model and rank fusion tie at 15.0\% exact Top-10 (Table~\ref{tab:spanpilot}); the simplicity rule retains the word model. The oracle word-length filter reaches 20.7\%, quantifying the benefit of unavailable structural information rather than a deployable gain. Table~\ref{tab:strata} exposes the decisive weakness: the baseline falls from 40.0\% on one-word spans to 5.0\% on two-word spans and 0.0\% on three-word spans. Coverage also degrades with length. Thus the pilot rejects, rather than validates, a claim of solved unknown-length restoration.
+The word-span model and rank fusion tie at 7.7\% exact Top-10 (Table~\ref{tab:spanpilot}); the simplicity rule retains the word model. The oracle word-length filter reaches 12.0\%, quantifying the benefit of unavailable structural information rather than a deployable gain. Table~\ref{tab:strata} exposes the decisive weakness: the baseline falls from 22.0\% on one-word spans to 1.0\% on two-word spans and 0.0\% on three-word spans. Thus the benchmark rejects, rather than validates, a claim of solved unknown-length restoration.
 
-Three ByT5 checkpoints were also rerun on the identical target manifest. Each produces 0\% Top-10 on the two- and three-word strata. Because one checkpoint used different hyperparameters, these are checkpoint replications rather than a controlled three-seed estimate; their settings and target-level outputs remain in the frozen result artifacts.
+Three matched ByT5 checkpoints were rerun on the identical target manifest. Their overall exact Top-10 scores are 1.3\%, 1.3\%, and 1.0\%; every checkpoint obtains 0\% on the two- and three-word strata. The seed result therefore confirms a stable negative finding rather than a competitive sequence baseline.
+
+\ByTCheckpointTable
 
 \QDTable
 
@@ -207,58 +210,65 @@ Three ByT5 checkpoints were also rerun on the identical target manifest. Each pr
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}
 \begin{axis}[
-  ybar,width=7.8cm,height=5.4cm,ymin=0,ymax=76,
+  ybar,width=7.8cm,height=5.4cm,ymin=0,ymax=60,
   ylabel={Top-10 agreement (\%)},
-  symbolic x coords={U0,Initial,P0,RAG},xtick=data,
-  xticklabels={Context only,QD initial,Encoded $P0$,$P0$ + retrieval},
+  symbolic x coords={FreqC,MLMC,FreqV,MLMV},xtick=data,
+  xticklabels={Freq. context,MLM context,Freq. + traces,MLM + traces},
   x tick label style={rotate=25,anchor=east,font=\scriptsize},
-  ytick={0,20,40,60},ymajorgrids=true,
+  ytick={0,10,20,30,40,50,60},ymajorgrids=true,
   grid style={draw=DSSRule,dashed},bar width=9mm,enlarge x limits=0.18,
   nodes near coords,every node near coord/.append style={font=\scriptsize},
   nodes near coords align={vertical},clip=false
 ]
 \addplot[draw=DSSNavy,fill=DSSNavy!76] coordinates
-  {(U0,9.46) (Initial,43.24) (P0,63.51) (RAG,63.51)};
+  {(FreqC,3.23) (MLMC,15.05) (FreqV,36.56) (MLMV,50.54)};
 \end{axis}
 \end{tikzpicture}%
 }
-\caption{QD Top-10 literature agreement. $U0$ and $P0$ use the same preserved-only MsBERT, isolating supplied evidence; the QD initial reading is contextual metadata, not a human control. Retrieval adds no test-set gain.}
+\caption{QD Top-10 literature agreement on a fixed 93-target denominator. Trace filters help both systems; the MLM retains a 14.0-point advantage over frequency under the same visible evidence.}
 \label{fig:qd-bars}
 \end{figure}
 
-\paragraph{Encoded constraints dominate within the QD diagnostic.}
-On the same 74 targets, $P0$ changes Top-10 agreement from 9.5\% to 63.5\% (Table~\ref{tab:qd}). This paired input ablation shows that encoded constraints narrow candidates within this sample. The 95\% interval, clustered over 37 scrolls, is 52.4--74.4\%. The result is held out under the checkpoint-associated split, but is not comparable to models trained with the later registry. The 43.2\% QD initial-reading row describes overlap with an initial database reading and must not be interpreted as expert-alone performance. Exploratory character comparisons lack paired uncertainty and are therefore not promoted as evidence of a winner.
+\paragraph{Visible transcription traces carry most of the QD signal.}
+On the same 93 targets, visible-trace filtering changes MLM Top-10 agreement from 15.1\% to 50.5\% (Table~\ref{tab:qd}). The paired improvement is 35.5 points, with a 24.5--46.5 manuscript-cluster 95\% interval. The absolute visible-trace score has a 40.3--60.0\% interval. Under the same traces, the frequency baseline reaches 36.6\%; the paired MLM advantage is 14.0 points with a 3.7--23.1 interval. Constraint narrowing therefore explains part, but not all, of the result. Coverage is imperfect: the MLM filter returns no candidate for 13 targets and fewer than ten for 37, all retained as misses. The editor-derived length proxy adds no Top-10 gain over visible traces alone and is not used in the headline.
 
-\paragraph{Retrieval is not yet a scoring contribution.}
-Train-only retrieval leaves QD unchanged. Small positive Text-Fabric deltas use only 25 single-word spans or 100 multiword spans and assume known slot counts. They motivate a larger paired automatic evaluation but do not justify including retrieval in a champion system; the full ablation remains in the frozen result artifacts.
+\paragraph{Trace-count error analysis.}
+Visible conditioning is not uniformly beneficial. For the 12 targets with only one transcribed letter, Top-10 falls from 41.7\% context-only to 16.7\%; for 14 two-letter targets it rises from 28.6\% to 57.1\%, and for 67 targets with at least three letters it rises from 7.5\% to 55.2\%. Single-letter placement is therefore too brittle to treat as a reliable hard filter in this sample. A production system should soften uncertain traces and expose conflicts rather than silently discarding candidates.
+
+\paragraph{Composition-unseen analysis.}
+The frozen split is manuscript-disjoint but not composition-disjoint. Restricting QD to 24 targets from 11 scrolls whose composition labels do not occur in train or development yields 16.7\% context-only and 62.5\% visible-trace Top-10; the matched frequency baseline reaches 33.3\%. This small, selected subset is a robustness check, not a substitute for training on a composition-grouped split.
 
 \section{Comparative Synthesis}
 
 \SynthesisTable
 
-Table~\ref{tab:synthesis} places the framework in its actual lineage. Lazar establishes ancient Semitic MLM completion; Embible motivates granularity ensembles; MsBERT motivates manuscript-domain pretraining; Aeneas demonstrates arbitrary-length multimodal restoration and controlled human evaluation. Our current contribution is an evaluation and evidence framework for DSS transcriptions. A final model contribution depends on passing the promotion gate.
+Table~\ref{tab:synthesis} places the framework in its lineage. Lazar establishes ancient Semitic MLM completion; Embible motivates granularity ensembles; MsBERT motivates manuscript-domain pretraining; Aeneas demonstrates arbitrary-length multimodal restoration. Our contribution is a DSS corpus and evaluation framework that separates supplied evidence from model ability; we do not claim a new state-of-the-art architecture.
 
 \section{Reproducibility and Data Statement}
 
-Core paper-facing numbers are regenerated from a frozen result snapshot containing target-manifest, model, input, and artifact hashes; a machine-readable table specification records evidence class and sources. The current snapshot reproduces the 300-span baselines and three ByT5 checkpoint evaluations on the same target hash, and reruns QD over 74 target-level records. The preserved corpus validator enforces non-biblical membership, removal of modern reconstruction text, anonymous gap representation, and disjoint splits. A leakage validator checks train/test scroll intersection, complete masking, and subtoken-length leakage. The protocol validator checks the frozen primary task and promotion criteria.
+Core paper-facing numbers are regenerated from a frozen result snapshot containing target-manifest, model, input, and artifact hashes; a machine-readable table specification records evidence class and sources. The snapshot reproduces the 300-span baselines and three matched ByT5 evaluations on one target hash, and reruns QD over 93 target-level records. The preserved corpus validator enforces non-biblical membership, removal of modern reconstruction text, anonymous gap representation, and disjoint scrolls. A separate audit records composition overlap, exact duplicates, and five-gram similarity.
 
-The camera-ready version will identify a pinned ETCBC DSS release and commit, QD snapshot date, licenses, model checkpoint revisions, parameter counts, training epochs, batch size, learning rate, optimizer, candidate-pool and beam sizes, tuning budget, software versions, hardware, elapsed time, and estimated compute. Anonymous review artifacts will contain no identity-bearing links. Public release remains subject to the licenses and attribution requirements of the source corpora and model checkpoints.
+The corpus manifest records primary-population counts and per-scroll preserved/damaged statistics for every extreme-fragmentation flag. Target-level predictions include candidate counts, evidence-condition ranks, and attributed readings, allowing every aggregate to be recomputed without rerunning a model.
+
+The artifact records the ETCBC Text-Fabric version, QD snapshot date, source licenses, checkpoint hashes, training epochs, batch sizes, learning rates, beam sizes, seeds, software environment, and sample hashes. Experiments ran locally on an Apple M4 Max with 36~GB unified memory using MPS. Public redistribution remains subject to source-corpus and checkpoint licenses.
 
 \section{Limitations and Responsible Use}
 
-Synthetic damage preserves observable answers but differs from natural deterioration and editorial uncertainty. QD targets cover selected disputed sites, not a representative random sample, and its attributed proposals are incomplete. Text-Fabric editorial labels can encode modern reconstructions and therefore cannot serve as physical truth. Transcription-derived constraints inherit editor decisions about visible characters and gap extent. Period, dialect, genre, scribal practice, formulaic language, and orthography may all confound apparent model quality.
+Synthetic damage supplies observable answers but differs from natural deterioration and editorial uncertainty. QD targets cover selected disputed sites, not a representative random sample, and its attributed proposals are incomplete. Text-Fabric editorial labels can encode modern reconstructions and therefore cannot serve as physical truth. Transcription-derived traces inherit editorial judgments. Period, dialect, genre, scribal practice, formulaic language, and orthography may all confound apparent model quality.
 
-The current pilots are small, several are single-run, and most lack paired clustered intervals. The 300-span sample is nested with an earlier pilot. Retrieval may reproduce memorized parallels or editorial conventions. Character models solve alignment but have not solved exact multiword generation. Direct claims about ink require image inputs and image/transcription registration, which are absent here.
+Eligibility thresholds also induce selection effects. Requiring 20 preserved words per chunk favors scrolls with sufficiently dense local text, while a contiguous-run rule favors uninterrupted passages and suppresses the damaged contexts encountered at inference. The extreme-fragmentation flag is an operational audit threshold rather than a claim that a manuscript is philologically worthless. Results therefore generalize to eligible transcription contexts, not automatically to the most severely damaged physical fragments.
+
+The QD model is a single training seed; its interval captures target and manuscript sampling, not optimization variance. The composition-unseen subset is small, and composition labels are incomplete. The synthetic benchmark covers only one to three words and two context words per side. Character models solve alignment but have not solved exact multiword generation. Direct claims about ink require image inputs and image/transcription registration, which are absent here.
 
 The system is intended for decision support. Every candidate should retain its model score, evidence condition, rejected constraints, provenance, and uncertainty. Suggestions must not be silently inserted into editions, used to overwrite attributed readings, or presented as recovered historical text. Scholars remain responsible for paleography, material joins, syntax, genre, parallels, and publication decisions.
 
 \section{Conclusion}
 
-The current evidence supports a narrower and more useful conclusion than the original roadmap claim. Character tokenization eliminates alignment drops, but does not automatically improve ranking. Transcription-derived material constraints substantially narrow a real-lacuna candidate space. Train-only retrieval has not yet improved QD agreement. Most importantly, exact unknown-length multiword restoration remains unsolved. The resulting protocol turns these observations into a reproducible research program: shared denominators, manuscript-disjoint data, exact complete-span scoring, paired uncertainty, and answer-removal tests.
+Transcription-visible letters substantially narrow candidate space, and a contextual MLM improves over frequency under the same evidence. This is the paper's positive result. Its equally important negative result is that token alignment and granularity ensembling do not solve unknown-length multiword restoration: exact recovery approaches zero beyond one word. Shared denominators, coverage accounting, manuscript-balanced sampling, clustered uncertainty, and explicit oracle labels make both conclusions reproducible without turning literature agreement into historical truth.
 
 \section*{Responsible NLP Research Checklist}
 
-This draft follows the current ARR checklist structure \cite{arrchecklist}. Data provenance, language, licensing, exclusions, reconstruction redaction, and limitations are stated above. Final submission additionally requires completed compute/resource reporting, public artifact and model documentation, and statistical details. This work contains no human-participant study.
+This draft follows the ARR checklist structure \cite{arrchecklist}. Data provenance, language, licensing, exclusions, reconstruction redaction, compute, statistical units, and limitations are stated above. This work contains no human-participant study.
 
 \begingroup
 \small

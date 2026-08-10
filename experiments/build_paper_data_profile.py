@@ -21,8 +21,10 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 LACUNAE = ROOT / "curation/derived/nonbib_lacunae.jsonl"
 MANIFEST = ROOT / "curation/derived/preserved_nonbib_manifest.json"
-QD = ROOT / "experiments/results/paper/qd_msbert_rerun_20260810.json"
-SPANS = ROOT / "experiments/results/paper/span_baselines_rerun_20260810.json"
+QD = ROOT / "experiments/results/paper/qd_evidence_conditions_20260811.json"
+SPANS = ROOT / "experiments/results/paper/span_balanced_300_20260811.json"
+CORPUS_COMPARISON = ROOT / "experiments/results/paper/corpus_pipeline_comparison_20260810.json"
+SPLIT_AUDIT = ROOT / "experiments/results/paper/split_similarity_audit.json"
 DEFAULT_OUTPUT = ROOT / "experiments/results/paper/paper_data_profile.json"
 BLANK_CHARS = {"?", "⬚"}
 
@@ -140,7 +142,11 @@ def build_profile() -> dict[str, Any]:
     lacunae = load_jsonl(LACUNAE)
     qd = load_json(QD)
     spans = load_json(SPANS)
+    comparison = load_json(CORPUS_COMPARISON)
+    split_audit = load_json(SPLIT_AUDIT)
     heldout = [record for record in lacunae if record["split"] == "heldout"]
+    eligibility = manifest["counts"]["eligibility"]
+    extreme_scrolls = set(manifest["extreme_fragmentation_scrolls"])
 
     unique_readings = Counter(
         (record["siglum"], int(record["word_id"]))
@@ -182,6 +188,24 @@ def build_profile() -> dict[str, Any]:
             },
             "all_lacunae_shape": corpus_scope(lacunae),
             "checkpoint_associated_heldout_shape": corpus_scope(heldout),
+            "scroll_eligibility": {
+                **eligibility,
+                "extreme_fragmentation_definition": (
+                    "preserved_source_words < 20 and preserved_fraction < 0.10"
+                ),
+                "extreme_fragmentation_in_unknown_length_targets": sum(
+                    case["scroll"] in extreme_scrolls for case in span_cases
+                ),
+                "extreme_fragmentation_in_qd_targets": sum(
+                    target["siglum"] in extreme_scrolls for target in qd_targets
+                ),
+                "policy": (
+                    "retain every identifier for provenance; admit a scroll to primary MLM "
+                    "training only when it yields a reconstruction-free eligible chunk"
+                ),
+            },
+            "external_pipeline_audit": comparison,
+            "split_similarity_audit": split_audit,
             "interpretation_caution": (
                 "Gap word counts use consecutive source-word positions after editorial text "
                 "is removed; they are transcription-derived structural estimates, not direct "
@@ -221,7 +245,7 @@ def build_profile() -> dict[str, Any]:
         },
         "inputs": {
             str(path.relative_to(ROOT)): sha256(path)
-            for path in (MANIFEST, LACUNAE, QD, SPANS)
+            for path in (MANIFEST, LACUNAE, QD, SPANS, CORPUS_COMPARISON, SPLIT_AUDIT)
         },
     }
 

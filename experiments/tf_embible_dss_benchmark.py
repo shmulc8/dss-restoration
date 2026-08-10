@@ -166,14 +166,69 @@ def sample_items(
         context_words=context_words,
     )
     rng = random.Random(seed)
-    selected: list[Item] = []
+    selected_by_length: dict[int, list[Item]] = defaultdict(list)
+    occupied: dict[tuple[str, str], list[tuple[int, int]]] = defaultdict(list)
     eligible = {}
-    for length in range(1, max_words + 1):
+    # Select the rarest (longest) targets first.  Within each length, cycle
+    # through manuscripts before taking a second target from the same scroll.
+    # This avoids the former flat-sampling failure mode in which a few long
+    # compositions dominated nearly the entire benchmark.
+    for length in range(max_words, 0, -1):
         pool = pools.get(length, [])
         eligible[str(length)] = len(pool)
-        rng.shuffle(pool)
-        selected.extend(pool[:per_length])
+        by_scroll: dict[str, list[Item]] = defaultdict(list)
+        for item in pool:
+            by_scroll[item.scroll].append(item)
+        scrolls = sorted(by_scroll)
+        rng.shuffle(scrolls)
+        for rows in by_scroll.values():
+            rng.shuffle(rows)
+
+        while len(selected_by_length[length]) < per_length:
+            progress = False
+            for scroll in scrolls:
+                rows = by_scroll[scroll]
+                while rows:
+                    item = rows.pop()
+                    _, _, chunk, start, width = item.item_id.rsplit(":", 4)
+                    interval = (int(start), int(start) + int(width))
+                    key = (scroll, chunk)
+                    if any(
+                        interval[0] < previous[1] and previous[0] < interval[1]
+                        for previous in occupied[key]
+                    ):
+                        continue
+                    occupied[key].append(interval)
+                    selected_by_length[length].append(item)
+                    progress = True
+                    break
+                if len(selected_by_length[length]) == per_length:
+                    break
+            if not progress:
+                break
+
+    selected = [
+        item
+        for length in range(1, max_words + 1)
+        for item in selected_by_length[length]
+    ]
     return selected, eligible
+
+
+def sample_diagnostics(items: list[Item]) -> dict[str, Any]:
+    by_scroll: dict[str, int] = defaultdict(int)
+    by_length_scrolls: dict[str, set[str]] = defaultdict(set)
+    for item in items:
+        by_scroll[item.scroll] += 1
+        by_length_scrolls[str(len(item.gold))].add(item.scroll)
+    return {
+        "unique_scrolls": len(by_scroll),
+        "max_targets_per_scroll": max(by_scroll.values(), default=0),
+        "scrolls_by_word_count": {
+            length: len(scrolls) for length, scrolls in sorted(by_length_scrolls.items())
+        },
+        "sampling": "deterministic manuscript-round-robin, non-overlapping hidden intervals",
+    }
 
 
 def valid_word_token(token: str) -> bool:
@@ -832,12 +887,13 @@ def render_markdown(report: dict[str, Any]) -> str:
             f"{100 * result['decoder_failure_rate']:.1f}% |"
         )
     oracle = report["results"]["char_oracle_length"]
+    context_words = report["protocol"]["context_words_each_side"]
     severity_rows = []
-    for word_count, damage_label in (
-        ("1", "5.9%"),
-        ("2", "11.1%"),
-        ("3", "15.8%"),
-    ):
+    damage_labels = {
+        str(word_count): f"{100 * word_count / (2 * context_words + word_count):.1f}%"
+        for word_count in range(1, report["protocol"]["max_words_searched"] + 1)
+    }
+    for word_count, damage_label in damage_labels.items():
         result = report["results"]["by_word_count"][word_count]
         severity_rows.append(
             f"| {damage_label} / {word_count} word(s) | "
@@ -864,9 +920,9 @@ of complete spans. All spans remain in the primary denominator.
 
 ## Contiguous damage severity
 
-With eight context words on each side, hiding one, two, or three words removes
-5.9%, 11.1%, or 15.8% of the displayed word sequence. These are close to
-Embible's 5%, 10%, and 15% conditions, but the DSS targets remain contiguous.
+With {context_words} context words on each side, the masked share is calculated
+over the displayed sequence. The DSS targets are contiguous and are not
+numerically equated with Embible's masking conditions.
 
 | Approximate masked share | UWC Top-10 | Character Top-10 | Embible ensemble Top-10 | Rank ensemble Top-10 |
 | :--- | ---: | ---: | ---: | ---: |
@@ -1043,6 +1099,8 @@ def main() -> None:
             "heldout_sample_seed": 73,
             "dev_sample_sha256": sample_sha256(dev_items),
             "heldout_sample_sha256": sample_sha256(test_items),
+            "dev_sample_diagnostics": sample_diagnostics(dev_items),
+            "heldout_sample_diagnostics": sample_diagnostics(test_items),
             "eligible_dev_by_words": dev_eligible,
             "eligible_heldout_by_words": test_eligible,
             "tokenizer_coverage": tokenizer_coverage(test_items, word_tokenizer),

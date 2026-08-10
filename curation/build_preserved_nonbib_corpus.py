@@ -35,17 +35,18 @@ from curation.preserved_corpus import (
     classify_word,
 )
 
-DEFAULT_TF_DIR = Path(
-    os.environ.get(
-        "DSS_TF_DIR",
-        "/Users/shmulc/text-fabric-data/github/ETCBC/dss/tf/2.0",
-    )
-)
+DEFAULT_TF_DIR = Path(os.environ["DSS_TF_DIR"]) if "DSS_TF_DIR" in os.environ else None
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tf-dir", type=Path, default=DEFAULT_TF_DIR)
+    parser.add_argument(
+        "--tf-dir",
+        type=Path,
+        default=DEFAULT_TF_DIR,
+        required=DEFAULT_TF_DIR is None,
+        help="ETCBC DSS Text-Fabric 2.0 directory (or set DSS_TF_DIR)",
+    )
     parser.add_argument("--chunks-out", type=Path, default=CHUNKS_PATH)
     parser.add_argument("--lacunae-out", type=Path, default=LACUNAE_PATH)
     parser.add_argument("--manifest-out", type=Path, default=MANIFEST_PATH)
@@ -188,13 +189,17 @@ def main():
     chunks = []
     lacunae = []
     source_counts = Counter()
+    source_counts_by_scroll = {}
     for scroll, word_nodes in sorted(scroll_nodes.items()):
         split = split_by_scroll[scroll]
         events = []
+        scroll_counts = Counter()
         for word_node in word_nodes:
             event = classify_word(F, L, word_node)
             events.append(event)
             source_counts[event["kind"]] += 1
+            scroll_counts[event["kind"]] += 1
+        source_counts_by_scroll[scroll] = scroll_counts
         chunks.extend(
             chunk_events(
                 events,
@@ -205,6 +210,24 @@ def main():
             )
         )
         lacunae.extend(lacuna_records(events, split, scroll))
+
+    chunk_scrolls = {row["scroll"] for row in chunks}
+    scroll_eligibility = {}
+    for scroll in sorted(scroll_nodes):
+        preserved = source_counts_by_scroll[scroll]["word"]
+        damaged = source_counts_by_scroll[scroll]["gap"]
+        classified = preserved + damaged
+        preserved_fraction = preserved / classified if classified else 0.0
+        scroll_eligibility[scroll] = {
+            "preserved_source_words": preserved,
+            "damaged_source_positions": damaged,
+            "preserved_fraction": round(preserved_fraction, 8),
+            "primary_mlm_eligible": scroll in chunk_scrolls,
+            "zero_preserved_words": preserved == 0,
+            "extreme_fragmentation": (
+                preserved < 20 and preserved_fraction < 0.10
+            ),
+        }
 
     # Hard validation: emitted training text contains no editorial syntax and
     # every corpus record is non-biblical by construction.
@@ -230,7 +253,7 @@ def main():
     write_jsonl(args.lacunae_out, lacunae)
 
     manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
         "source": {
             "corpus": "ETCBC/dss",
             "text_fabric_version": "2.0",
@@ -249,6 +272,14 @@ def main():
             "modern_reconstruction_feature": "rec == 1 on signs",
             "gap_placeholder": GAP_TOKEN,
             "gap_size_metadata_retained": True,
+            "all_scrolls_retained_in_archival_registry": True,
+            "whole_scroll_deletion": False,
+            "primary_mlm_eligibility": (
+                "at least one emitted chunk satisfying min_preserved_words_per_chunk"
+            ),
+            "extreme_fragmentation_flag": (
+                "preserved_source_words < 20 and preserved_fraction < 0.10"
+            ),
         },
         "parameters": {
             "seed": args.seed,
@@ -257,6 +288,19 @@ def main():
         },
         "scroll_splits": {
             split: sorted(scrolls) for split, scrolls in scroll_splits.items()
+        },
+        "extreme_fragmentation_scrolls": {
+            scroll: {
+                key: row[key]
+                for key in (
+                    "preserved_source_words",
+                    "damaged_source_positions",
+                    "preserved_fraction",
+                    "zero_preserved_words",
+                )
+            }
+            for scroll, row in scroll_eligibility.items()
+            if row["extreme_fragmentation"]
         },
         "counts": {
             "scrolls": len(scroll_nodes),
@@ -277,6 +321,21 @@ def main():
                     }
                 )
             ),
+            "eligibility": {
+                "archival_registry_scrolls": len(scroll_nodes),
+                "primary_mlm_scrolls": len(chunk_scrolls),
+                "scrolls_without_primary_mlm_chunks": (
+                    len(scroll_nodes) - len(chunk_scrolls)
+                ),
+                "zero_preserved_word_scrolls": sum(
+                    row["zero_preserved_words"]
+                    for row in scroll_eligibility.values()
+                ),
+                "extreme_fragmentation_scrolls": sum(
+                    row["extreme_fragmentation"]
+                    for row in scroll_eligibility.values()
+                ),
+            },
         },
     }
     args.manifest_out.parent.mkdir(parents=True, exist_ok=True)

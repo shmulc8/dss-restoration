@@ -1,8 +1,7 @@
 # Reproducibility snapshot
 
-This repository is a shareable, reproduced research snapshot for team review.
-It is **not** a final promoted benchmark release. The authoritative status is
-`shareable_reproduced_snapshot_not_final_promotion` in
+This repository is a reproduced research snapshot for team review. The
+authoritative status is `team_review_evidence_snapshot` in
 `experiments/results/paper/paper_results_snapshot.json`.
 
 ## Environment
@@ -35,6 +34,7 @@ protocol boundaries:
 .venv/bin/python curation/validate_preserved_nonbib_corpus.py --derived-only
 .venv/bin/python experiments/validate_leakage.py
 .venv/bin/python experiments/validate_paper_protocol.py
+.venv/bin/python experiments/audit_split_similarity.py
 .venv/bin/python experiments/run_paper_benchmark.py
 .venv/bin/python experiments/build_paper_data_profile.py
 .venv/bin/python docs/generate_paper_tables.py
@@ -59,8 +59,10 @@ DSS_TF_DIR=/absolute/path/to/ETCBC/dss/tf/2.0 \
 From the repository root:
 
 ```bash
-latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=output/pdflatex docs/paper.tex
-latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=output/xelatex docs/paper.tex
+latexmk -cd -pdf -interaction=nonstopmode -halt-on-error \
+  -outdir=../output/pdflatex docs/paper.tex
+latexmk -cd -xelatex -interaction=nonstopmode -halt-on-error \
+  -outdir=../output/xelatex docs/paper.tex
 ```
 
 The tracked `docs/paper.pdf` is the team-review PDF. CI independently compiles
@@ -71,11 +73,8 @@ the source and uploads its PDF as a workflow artifact.
 The headline natural-lacuna result is agreement with at least one attributed
 modern proposal, not recovery of historical truth. The 300-span task is a
 synthetic unknown-length benchmark with known answers. Corpus counts are not
-model evaluation counts. The three remaining promotion gates are:
-
-1. train and evaluate all three checkpoints under identical hyperparameters and
-   multiple seeds;
-2. freeze one authoritative manuscript split registry for every comparison;
-3. complete a formulaic and near-duplicate cross-split audit.
+model evaluation counts. ByT5 has a matched three-seed replication; the MLM
+comparisons remain single-checkpoint evidence. A future model-comparison claim
+requires matched MLM seeds and a composition-grouped training split.
 
 No human-subjects study is part of this snapshot.

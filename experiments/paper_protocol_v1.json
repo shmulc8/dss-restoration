@@ -1,29 +1,25 @@
 {
-  "schema_version": "dss-paper-protocol-v1",
-  "status": "locked_before_final_training",
-  "claim_status": "evaluation_stronger_than_embible_model_not_yet_superior",
+  "schema_version": "dss-paper-protocol-v2",
+  "status": "team_review_evidence_snapshot",
+  "claim_status": "evaluation_and_corpus_contribution_no_model_superiority_claim",
   "research_tracks": {
     "A": {
       "name": "synthetic_preserved_recovery",
       "reference_status": "observable_preserved_transcription",
-      "primary": true
+      "primary_metric": "exact_complete_span_top10"
     },
     "B": {
       "name": "real_lacuna_literature_agreement",
-      "reference_status": "multiple_attributed_scholarly_proposals_not_ground_truth",
-      "primary": false
-    },
-    "C": {
-      "name": "fixed_decoder_bible_transfer",
-      "reference_status": "observable_preserved_transcription",
-      "primary": false
+      "reference_status": "multiple_attributed_proposals_not_ground_truth",
+      "primary_metric": "target_level_literature_agreement_top10"
     }
   },
   "splits": {
     "primary": "scroll_disjoint",
-    "hard": "composition_disjoint",
-    "near_duplicate_grouping_required": true,
-    "retrieval_index": "training_scrolls_only",
+    "frozen_manifest": "curation/derived/preserved_nonbib_manifest.json",
+    "composition_grouped_training": false,
+    "composition_unseen_qd_subset": true,
+    "near_duplicate_audit": "exact_normalized_duplicates_and_preserved_word_5gram_jaccard",
     "test_used_for_selection": false
   },
   "primary_condition": {
@@ -31,92 +27,73 @@
     "length": "unknown",
     "word_count": "unknown",
     "word_boundaries": "unknown",
-    "visible_fragments": "physically_observable_only",
+    "visible_fragments": "not_supplied",
     "failed_decode": "count_as_miss"
   },
   "primary_metric": "exact_complete_span_top10",
-  "secondary_metrics": [
-    "exact_complete_span_top1",
-    "exact_complete_span_top5",
-    "exact_complete_span_top20",
-    "mean_reciprocal_rank",
-    "top1_character_error_rate",
-    "boundary_f1",
-    "word_count_mae",
-    "decoder_failure_rate",
-    "calibration_error",
-    "selective_accuracy_by_coverage",
-    "latency"
-  ],
   "mandatory_diagnostics": [
     "tokenizer_word_coverage",
     "tokenizer_complete_span_coverage",
-    "oracle_exact_length",
-    "oracle_word_boundaries",
+    "oracle_word_length",
+    "candidate_set_coverage",
     "slot_wordhit_not_used_as_primary"
   ],
-  "damage_strata_words": ["1", "2", "3", "4-5", "6+"],
+  "sampling": {
+    "synthetic_targets": 300,
+    "word_count_strata": [1, 2, 3],
+    "manuscript_round_robin": true,
+    "overlapping_hidden_intervals": false,
+    "heldout_scrolls": 79
+  },
   "training": {
-    "labels": "physically_preserved_text_only",
+    "labels": "preserved_text_only",
     "natural_reconstructions_as_labels": false,
-    "seeds": [41, 42, 43],
-    "early_stopping": "development_only",
-    "model_selection": [
-      "development_exact_complete_span_top10",
-      "simpler_system_on_primary_metric_tie"
-    ],
-    "final_architecture_requirement": "tokenization_free_character_byte_or_subword_sequence_span_model"
+    "byt5_matched_seeds": [41, 42, 43],
+    "mlm_training_seeds": [42],
+    "single_seed_mlm_limitation_reported": true,
+    "model_selection": "development_only"
   },
   "required_systems": [
-    "frequency_or_ngram",
-    "pretrained_word_mlm",
+    "training_frequency_baseline",
     "preserved_only_word_span_model",
-    "tokenization_free_unknown_length_span_model",
-    "character_only",
-    "embible_paper_overlap_adaptation",
+    "preserved_only_character_model",
+    "embible_overlap_adaptation",
     "dev_fitted_rank_fusion",
-    "best_model_plus_train_only_retrieval"
+    "matched_seed_byt5"
   ],
-  "rag": {
-    "paired_same_targets": true,
-    "answer_string_removal_stress_test": true,
-    "report_retrieval_recall_mrr_ndcg": true,
-    "report_downstream_delta_with_ci": true,
-    "promotion_requires_positive_dev_selected_test_delta": true
-  },
+  "qd_conditions": [
+    "context_only",
+    "visible_traces",
+    "editor_length_oracle",
+    "visible_traces_plus_editor_length_oracle"
+  ],
   "statistics": {
     "unit": "manuscript_location",
     "confidence_interval": 0.95,
-    "bootstrap_cluster": ["scroll", "composition_for_hard_split"],
-    "paired_system_comparisons": true,
-    "multiple_comparison_correction": true
+    "bootstrap_cluster": "scroll",
+    "paired_condition_deltas": true,
+    "all_targets_retained_across_conditions": true
   },
   "promotion_gate": {
     "paper_result_requires": [
       "frozen_hashed_test_manifest",
-      "empty_split_intersections",
-      "near_duplicate_audit_passed",
+      "empty_scroll_intersections",
+      "near_duplicate_audit_reported",
       "development_only_selection",
-      "three_seed_results",
+      "matched_seeds_for_seed_variance_claims",
       "clustered_confidence_intervals",
       "exact_multiword_sequence_scoring",
       "unknown_length_primary_condition",
-      "target_level_audit_table",
+      "target_level_audit_records",
       "code_data_model_result_hashes"
-    ],
-    "stronger_than_embible_model_claim_requires": [
-      "shared_bible_protocol_outperforms_embible_style_baseline_with_paired_95pct_ci",
-      "dss_primary_outperforms_preserved_only_word_baseline_with_paired_95pct_ci",
-      "multiword_exact_span_gain_is_positive",
-      "no_oracle_length_or_boundary_information"
     ]
   },
-  "current_system_decision": {
-    "best_implemented_baseline": "preserved_only_word_span_model_unknown_length_decoder",
-    "reason": "ties_rank_fusion_on_expanded_exact_top10_and_is_simpler",
-    "character_model": "ablation_not_promoted",
-    "rank_fusion": "ablation_not_promoted",
-    "rag": "evidence_display_and_ablation_not_scoring_component",
-    "final_model": "not_yet_selected"
+  "current_result": {
+    "synthetic_exact_top10": 7.666666666666667,
+    "synthetic_multiword_conclusion": "one_percent_for_two_words_zero_for_three",
+    "qd_context_top10": 15.053763440860216,
+    "qd_visible_trace_top10": 50.53763440860215,
+    "editor_length_adds_top10": false,
+    "historical_truth_claim": false
   }
 }

@@ -1,14 +1,17 @@
-"""Score attributed Qumran Digital restorations with physical constraints.
+"""Score attributed Qumran Digital restorations under separated evidence conditions.
 
 The cached QD data contains several kinds of editorial disagreement.  This
 benchmark keeps only single-word lacuna restorations, removes the restored
-letters from the model input, and retains two pieces of physical evidence:
+letters from the model input, and separates two transcription-derived signals:
 
-* Hebrew letters visibly preserved outside square brackets; and
-* an approximate word length derived from the QD display/initial notation.
+* Hebrew letters encoded as visible outside square brackets; and
+* an editor-derived word length from the QD display/initial notation.
+
+The second signal is explicitly oracle/editor-assisted and must never be
+reported as an independently measured physical gap extent.
 
 The primary unit is one manuscript target, not one publication row.  A target
-is successful when any distinct, physically compatible attributed restoration
+is successful when any distinct attributed restoration
 appears in the model's Top-K.  Per-reading and per-source results are secondary.
 """
 
@@ -34,6 +37,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from curation.preserved_corpus import GAP_TOKEN, load_chunks
+from experiments.audit_split_similarity import audit as audit_frozen_split
 
 DEFAULT_INPUT = ROOT / "curation" / "derived" / "qd_researcher_variants.jsonl"
 DEFAULT_MODEL = ROOT / "models" / "ft_msbert_span_preserved_nonbib"
@@ -359,9 +363,12 @@ class PhysicalConstraint:
         return True
 
     def matches(self, candidate: str, length_tolerance: int) -> bool:
-        return self.matches_visible(candidate) and (
-            abs(len(candidate) - self.estimated_length) <= length_tolerance
+        return self.matches_visible(candidate) and self.matches_length(
+            candidate, length_tolerance
         )
+
+    def matches_length(self, candidate: str, length_tolerance: int) -> bool:
+        return abs(len(candidate) - self.estimated_length) <= length_tolerance
 
 
 def _slot_count(value: str) -> int:
@@ -450,8 +457,6 @@ def build_constraint(row: dict[str, Any]) -> tuple[PhysicalConstraint | None, st
 
 def parse_attributed_reading(
     row: dict[str, Any],
-    constraint: PhysicalConstraint,
-    length_tolerance: int,
 ) -> tuple[str | None, str]:
     reading = str(row.get("reading", ""))
     if any(char.isspace() for char in reading):
@@ -463,8 +468,6 @@ def parse_attributed_reading(
     normalized = hebrew_letters(reading)
     if len(normalized) < 2:
         return None, "reading_too_short"
-    if not constraint.matches(normalized, length_tolerance):
-        return None, "contradicts_physical_constraint"
     return normalized, "eligible"
 
 
@@ -522,6 +525,48 @@ def bootstrap_top10_ci(
     ]
 
 
+def bootstrap_top10_delta_ci(
+    target_records: list[dict[str, Any]],
+    left_rank_key: str,
+    right_rank_key: str,
+    *,
+    seed: int = 42,
+    samples: int = 2000,
+) -> list[float]:
+    """Paired scroll-cluster bootstrap CI for right minus left Top-10."""
+    if not target_records:
+        return [0.0, 0.0]
+    by_scroll: dict[str, list[tuple[int | None, int | None]]] = defaultdict(list)
+    for record in target_records:
+        by_scroll[str(record["siglum"])].append(
+            (record.get(left_rank_key), record.get(right_rank_key))
+        )
+    scrolls = sorted(by_scroll)
+    generator = random.Random(seed)
+    estimates = []
+    for _ in range(samples):
+        sampled = [scrolls[generator.randrange(len(scrolls))] for _ in scrolls]
+        pairs = [pair for scroll in sampled for pair in by_scroll[scroll]]
+        left = sum(rank is not None and rank < 10 for rank, _ in pairs)
+        right = sum(rank is not None and rank < 10 for _, rank in pairs)
+        estimates.append(100 * (right - left) / len(pairs))
+    estimates.sort()
+    return [
+        estimates[int(0.025 * samples)],
+        estimates[int(0.975 * samples) - 1],
+    ]
+
+
+def candidate_coverage(sizes: Iterable[int]) -> dict[str, int | float]:
+    values = list(sizes)
+    return {
+        "targets": len(values),
+        "empty": sum(value == 0 for value in values),
+        "fewer_than_10": sum(value < 10 for value in values),
+        "median_candidates": statistics.median(values) if values else 0,
+    }
+
+
 def rank_of(reading: str, predictions: list[str]) -> int | None:
     try:
         return predictions.index(reading)
@@ -530,14 +575,27 @@ def rank_of(reading: str, predictions: list[str]) -> int | None:
 
 
 def render_markdown(report: dict[str, Any]) -> str:
-    target = report["target_level_any_attributed_restoration"]
-    rag_target = report["rag_target_level_any_attributed_restoration"]
-    reading = report["unique_target_reading_level"]
-    rag_reading = report["rag_unique_target_reading_level"]
-    unconstrained = report["diagnostics"]["unconstrained_target_level"]
-    qd = report["qd_initial_control"]
     quality = report["protocol"]["quality_filter"]
-    ci = target["top10_scroll_cluster_bootstrap_95ci"]
+    conditions = report["condition_results"]
+    condition_labels = {
+        "context_only": "MLM: context only",
+        "visible_only": "MLM: visible traces",
+        "editor_length_only": "MLM: editor-derived length",
+        "visible_plus_editor_length": "MLM: traces + editor-derived length",
+        "frequency_context_only": "Frequency: context only",
+        "frequency_visible_only": "Frequency: visible traces",
+        "frequency_visible_plus_editor_length": "Frequency: traces + editor-derived length",
+    }
+    condition_rows = []
+    for key, label in condition_labels.items():
+        values = conditions[key]
+        ci = values["top10_scroll_cluster_bootstrap_95ci"]
+        coverage = values["candidate_coverage"]
+        condition_rows.append(
+            f"| {label} | {values['n']} | {values['top1']:.1f}% | "
+            f"{values['top10']:.1f}% | {ci[0]:.1f}--{ci[1]:.1f}% | "
+            f"{coverage['empty']} | {coverage['fewer_than_10']} |"
+        )
     sensitivity_rows = "\n".join(
         f"| ±{tolerance} | {values['n']} | {values['top1']:.1f}% | "
         f"{values['top10']:.1f}% | {values['top20']:.1f}% |"
@@ -556,27 +614,23 @@ def render_markdown(report: dict[str, Any]) -> str:
 
 ## Result
 
-This experiment evaluates the reconstruction-free preserved-only model on
-single-word lacunae from the stored Qumran Digital snapshot. Unlike the
-superseded whole-word-mask experiment, it retains visibly preserved letters
-and an approximate lacuna-derived word length
-(±{report["protocol"]["length_tolerance"]} character).
+This experiment evaluates a reconstruction-free preserved-only model on
+single-word lacunae from the stored Qumran Digital snapshot. It separates
+context, transcription-visible Hebrew, and an editor-derived length proxy.
+The latter is an oracle/editor-assisted condition, not an independent physical
+measurement. Every condition retains the same 93 targets and all attributed
+readings, including proposals that disagree with a supplied filter.
 
-| Unit | N | Top-1 | Top-5 | Top-10 | Top-20 |
-| :--- | ---: | ---: | ---: | ---: | ---: |
-| Target: constrained MLM | {target["n"]} | {target["top1"]:.1f}% | {target["top5"]:.1f}% | {target["top10"]:.1f}% | {target["top20"]:.1f}% |
-| Target: constrained MLM + train-only RAG | {rag_target["n"]} | {rag_target["top1"]:.1f}% | {rag_target["top5"]:.1f}% | {rag_target["top10"]:.1f}% | {rag_target["top20"]:.1f}% |
-| Unique target-reading pair: constrained MLM | {reading["n"]} | {reading["top1"]:.1f}% | {reading["top5"]:.1f}% | {reading["top10"]:.1f}% | {reading["top20"]:.1f}% |
-| Unique target-reading pair: MLM + RAG | {rag_reading["n"]} | {rag_reading["top1"]:.1f}% | {rag_reading["top5"]:.1f}% | {rag_reading["top10"]:.1f}% | {rag_reading["top20"]:.1f}% |
-| QD initial reading control | {qd["n"]} | {qd["top1"]:.1f}% | {qd["top5"]:.1f}% | {qd["top10"]:.1f}% | {qd["top20"]:.1f}% |
+| Condition | N | Top-1 | Top-10 | 95% scroll CI | Empty | <10 cand. |
+| :--- | ---: | ---: | ---: | :--- | ---: | ---: |
+{chr(10).join(condition_rows)}
 
-Baseline target-level Top-10 95% cluster-bootstrap interval:
-**{ci[0]:.1f}%–{ci[1]:.1f}%**. The RAG weight
-({report["protocol"]["rag"]["weight_fit"]["alpha"]}) was selected on preserved
-non-biblical dev scrolls only; held-out targets were not used for tuning.
-Without manuscript constraints, the same target-level Top-10 is
-{unconstrained["top10"]:.1f}%. The difference measures the value of physical
-evidence supplied to the decoder, not an improvement in the language model.
+Visible-trace conditioning improves Top-10 over context-only by 35.5 points;
+the paired scroll-cluster 95% interval is
+{conditions['visible_only']['top10_delta_vs_context_scroll_cluster_bootstrap_95ci'][0]:.1f}--{conditions['visible_only']['top10_delta_vs_context_scroll_cluster_bootstrap_95ci'][1]:.1f}
+points. The comparison is an input ablation on transcribed evidence, not a
+claim about image-derived ink or historical truth. Candidate coverage is
+reported because a restrictive filter can return fewer than ten hypotheses.
 
 ### Length-tolerance sensitivity
 
@@ -584,9 +638,8 @@ evidence supplied to the decoder, not an improvement in the language model.
 | :--- | ---: | ---: | ---: | ---: |
 {sensitivity_rows}
 
-The conclusion is stable across exact-length, ±1, and ±2 decoding. The number
-of eligible targets changes because a published proposal outside a tolerance
-is not treated as physically compatible at that setting.
+The target denominator stays fixed across tolerances; incompatible proposals
+remain references but are not retrievable under that particular filter.
 
 ## Largest publication samples
 
@@ -605,14 +658,13 @@ publication rows and duplicate readings do not receive extra weight.
 - Training: preserved letters only; square-bracket scholarly restorations are
   absent from fine-tuning data.
 - Primary unit: one manuscript target. Success means any distinct,
-  bibliographically attributed restoration compatible with the physical
-  pattern is in Top-K.
+  bibliographically attributed restoration is in Top-K.
 - Input rows: {quality["input_publication_rows"]}; eligible targets:
   {quality["eligible_targets"]}; unique compatible target-reading pairs:
   {quality["unique_compatible_target_readings"]}.
 - Multiword readings, scribal corrections, modern alternatives, incomplete
-  readings, non-lacuna variants, and readings contradicting visible letters
-  are reported as exclusions rather than concatenated into fake words.
+  readings, and non-lacuna variants are reported as exclusions rather than
+  concatenated into artificial single tokens.
 
 This is still a literature-agreement benchmark, not physical ground truth.
 QD selected these locations because they are disputed, and its variant
@@ -674,9 +726,7 @@ def main() -> None:
             continue
         readings: dict[str, dict[str, Any]] = {}
         for row in rows:
-            normalized, reading_reason = parse_attributed_reading(
-                row, constraint, pool_tolerance
-            )
+            normalized, reading_reason = parse_attributed_reading(row)
             if normalized is None:
                 exclusions[f"{reading_reason}_publication_rows"] += 1
                 continue
@@ -776,6 +826,19 @@ def main() -> None:
             flush=True,
         )
 
+    train_frequency = Counter(
+        hebrew_letters(token)
+        for row in load_chunks("train")
+        for token in row["text"].split()
+        if token != GAP_TOKEN and len(hebrew_letters(token)) >= 2
+    )
+    frequency_vocabulary = [
+        token
+        for token, _ in sorted(
+            train_frequency.items(), key=lambda item: (-item[1], item[0])
+        )
+    ]
+
     rag_index, rag_index_metadata = build_preserved_rag_index()
     rag_fit = fit_rag_alpha(
         model=model,
@@ -796,12 +859,44 @@ def main() -> None:
     for key, item in eligible.items():
         scored_predictions = predictions_by_target[key]
         unconstrained_predictions = [candidate for candidate, _ in scored_predictions]
+        conditions = {
+            "context_only": unconstrained_predictions,
+            "visible_only": [
+                candidate
+                for candidate in unconstrained_predictions
+                if item["constraint"].matches_visible(candidate)
+            ],
+            "editor_length_only": [
+                candidate
+                for candidate in unconstrained_predictions
+                if item["constraint"].matches_length(candidate, args.length_tolerance)
+            ],
+            "visible_plus_editor_length": [
+                candidate
+                for candidate in unconstrained_predictions
+                if item["constraint"].matches(candidate, args.length_tolerance)
+            ],
+        }
+        constrained_predictions = conditions["visible_plus_editor_length"]
+        constrained_set = set(constrained_predictions)
         constrained_scored = [
-            (candidate, model_score)
-            for candidate, model_score in scored_predictions
-            if item["constraint"].matches(candidate, args.length_tolerance)
+            (candidate, score)
+            for candidate, score in scored_predictions
+            if candidate in constrained_set
         ]
-        constrained_predictions = [candidate for candidate, _ in constrained_scored]
+        frequency_conditions = {
+            "frequency_context_only": frequency_vocabulary,
+            "frequency_visible_only": [
+                candidate
+                for candidate in frequency_vocabulary
+                if item["constraint"].matches_visible(candidate)
+            ],
+            "frequency_visible_plus_editor_length": [
+                candidate
+                for candidate in frequency_vocabulary
+                if item["constraint"].matches(candidate, args.length_tolerance)
+            ],
+        }
         rag_left, rag_right = contiguous_context(
             item["context_words"], item["target_index"]
         )
@@ -823,11 +918,13 @@ def main() -> None:
         rag_predictions = [row[0] for row in rag_scored]
         readings = []
         for reading, metadata in item["readings"].items():
-            if not item["constraint"].matches(reading, args.length_tolerance):
-                continue
-            constrained_rank = rank_of(reading, constrained_predictions)
+            condition_ranks = {
+                name: rank_of(reading, candidates)
+                for name, candidates in {**conditions, **frequency_conditions}.items()
+            }
+            constrained_rank = condition_ranks["visible_plus_editor_length"]
             rag_rank = rank_of(reading, rag_predictions)
-            unconstrained_rank = rank_of(reading, unconstrained_predictions)
+            unconstrained_rank = condition_ranks["context_only"]
             source_names = sorted(
                 source["abbreviation"] or source["formatted"]
                 for source in metadata["sources"].values()
@@ -839,6 +936,7 @@ def main() -> None:
                 "rank": constrained_rank,
                 "rag_rank": rag_rank,
                 "unconstrained_rank": unconstrained_rank,
+                "condition_ranks": condition_ranks,
                 "sources": source_names,
             }
             reading_records.append(record)
@@ -850,9 +948,7 @@ def main() -> None:
             exclusions["no_compatible_reading_at_primary_tolerance_targets"] += 1
             continue
 
-        finite_target = [
-            record["rank"] for record in readings if record["rank"] is not None
-        ]
+        finite_target = [record["rank"] for record in readings if record["rank"] is not None]
         finite_unconstrained = [
             record["unconstrained_rank"]
             for record in readings
@@ -876,13 +972,31 @@ def main() -> None:
                 "word_id": item["word_id"],
                 "qd_display_reading": item["qd_display_reading"],
                 "constraint": asdict(item["constraint"]),
-                "compatible_attributed_readings": sorted(item["readings"]),
+                "attributed_readings": sorted(item["readings"]),
+                "condition_rank_any_attributed": {
+                    name: min(
+                        (
+                            record["condition_ranks"][name]
+                            for record in readings
+                            if record["condition_ranks"][name] is not None
+                        ),
+                        default=None,
+                    )
+                    for name in {**conditions, **frequency_conditions}
+                },
+                "condition_candidate_counts": {
+                    name: len(candidates)
+                    for name, candidates in {**conditions, **frequency_conditions}.items()
+                },
                 "rank_any_attributed": min(finite_target) if finite_target else None,
                 "rag_rank_any_attributed": min(finite_rag) if finite_rag else None,
                 "unconstrained_rank_any_attributed": (
                     min(finite_unconstrained) if finite_unconstrained else None
                 ),
                 "qd_initial_rank": qd_rank,
+                "top_predictions_by_condition": {
+                    name: candidates[:20] for name, candidates in conditions.items()
+                },
                 "top_predictions": constrained_predictions[:20],
                 "rag_top_predictions": rag_predictions[:20],
                 "rag_context": {
@@ -895,6 +1009,86 @@ def main() -> None:
                 },
             }
         )
+
+    condition_rank_keys = {
+        "context_only": "context_only_rank",
+        "visible_only": "visible_only_rank",
+        "editor_length_only": "editor_length_only_rank",
+        "visible_plus_editor_length": "visible_plus_editor_length_rank",
+        "frequency_context_only": "frequency_context_only_rank",
+        "frequency_visible_only": "frequency_visible_only_rank",
+        "frequency_visible_plus_editor_length": "frequency_visible_plus_editor_length_rank",
+    }
+    for record in target_records:
+        for condition, rank_key in condition_rank_keys.items():
+            record[rank_key] = record["condition_rank_any_attributed"][condition]
+
+    condition_results = {}
+    for condition, rank_key in condition_rank_keys.items():
+        result = summarize_ranks(record[rank_key] for record in target_records)
+        result["top10_scroll_cluster_bootstrap_95ci"] = bootstrap_top10_ci(
+            target_records, rank_key
+        )
+        result["candidate_coverage"] = candidate_coverage(
+            record["condition_candidate_counts"][condition]
+            for record in target_records
+        )
+        condition_results[condition] = result
+    condition_results["visible_only"]["top10_delta_vs_context_scroll_cluster_bootstrap_95ci"] = bootstrap_top10_delta_ci(
+        target_records, "context_only_rank", "visible_only_rank"
+    )
+    condition_results["visible_plus_editor_length"]["top10_delta_vs_context_scroll_cluster_bootstrap_95ci"] = bootstrap_top10_delta_ci(
+        target_records, "context_only_rank", "visible_plus_editor_length_rank"
+    )
+    condition_results["visible_only"]["top10_delta_vs_frequency_scroll_cluster_bootstrap_95ci"] = bootstrap_top10_delta_ci(
+        target_records, "frequency_visible_only_rank", "visible_only_rank"
+    )
+    condition_results["visible_plus_editor_length"]["top10_delta_vs_frequency_scroll_cluster_bootstrap_95ci"] = bootstrap_top10_delta_ci(
+        target_records,
+        "frequency_visible_plus_editor_length_rank",
+        "visible_plus_editor_length_rank",
+    )
+
+    split_audit = audit_frozen_split()
+    composition_unseen = set(
+        split_audit["composition"]["heldout_composition_unseen_sigla"]
+    )
+    composition_unseen_records = [
+        record for record in target_records if str(record["siglum"]) in composition_unseen
+    ]
+    composition_unseen_results = {
+        condition: summarize_ranks(record[rank_key] for record in composition_unseen_records)
+        for condition, rank_key in condition_rank_keys.items()
+    }
+
+    def stratum_results(selector: Any) -> dict[str, dict[str, float | int]]:
+        subset = [record for record in target_records if selector(record)]
+        return {
+            condition: summarize_ranks(record[rank_key] for record in subset)
+            for condition, rank_key in condition_rank_keys.items()
+            if condition in {"context_only", "visible_only", "frequency_visible_only"}
+        }
+
+    trace_strata = {
+        "1": stratum_results(
+            lambda record: sum(
+                len(segment) for segment in record["constraint"]["visible_segments"]
+            )
+            == 1
+        ),
+        "2": stratum_results(
+            lambda record: sum(
+                len(segment) for segment in record["constraint"]["visible_segments"]
+            )
+            == 2
+        ),
+        "3+": stratum_results(
+            lambda record: sum(
+                len(segment) for segment in record["constraint"]["visible_segments"]
+            )
+            >= 3
+        ),
+    }
 
     target_ranks = [record["rank_any_attributed"] for record in target_records]
     rag_target_ranks = [record["rag_rank_any_attributed"] for record in target_records]
@@ -913,13 +1107,7 @@ def main() -> None:
     for tolerance in sensitivity_tolerances:
         ranks: list[int | None] = []
         for key, item in eligible.items():
-            compatible = [
-                reading
-                for reading in item["readings"]
-                if item["constraint"].matches(reading, tolerance)
-            ]
-            if not compatible:
-                continue
+            compatible = list(item["readings"])
             candidates = [
                 candidate
                 for candidate, _ in predictions_by_target[key]
@@ -955,9 +1143,9 @@ def main() -> None:
             "corpus": "held-out non-biblical DSS scrolls",
             "split_integrity": "scroll-disjoint from fine-tuning train/dev",
             "model_training": "preserved-only; no square-bracket restorations",
-            "target": "single masked token with post-MLM physical filtering",
+            "target": "single masked token with post-MLM evidence filtering",
             "physical_constraints": (
-                "visible Hebrew outside brackets plus approximate word length"
+                "visible Hebrew outside brackets; editor-derived length is a separate oracle condition"
             ),
             "length_tolerance": args.length_tolerance,
             "candidate_normalization": "exact Hebrew consonants",
@@ -972,8 +1160,8 @@ def main() -> None:
                 "exclusions": dict(sorted(exclusions.items())),
             },
             "interpretation": (
-                "agreement with attributed literature under manuscript "
-                "constraints; not verified physical ground truth"
+                "agreement with attributed literature; visible traces are transcription-encoded, "
+                "and length is editor-derived rather than independent physical ground truth"
             ),
             "rag": {
                 **rag_index_metadata,
@@ -982,6 +1170,23 @@ def main() -> None:
                 "heldout_used_for_tuning": False,
             },
         },
+        "condition_results": condition_results,
+        "condition_definitions": {
+            "context_only": "MLM ranking without trace or length filtering",
+            "visible_only": "transcription-visible Hebrew outside reconstruction brackets",
+            "editor_length_only": "editor-derived display/initial word length with tolerance",
+            "visible_plus_editor_length": "visible traces plus editor-derived length; not P0",
+            "frequency_context_only": "training-corpus frequency lexicon without constraints",
+            "frequency_visible_only": "training-corpus frequency lexicon filtered by visible traces",
+            "frequency_visible_plus_editor_length": "frequency lexicon with visible traces and editor-derived length",
+        },
+        "composition_unseen_subset": {
+            "definition": split_audit["definition"]["composition_unseen"],
+            "targets": len(composition_unseen_records),
+            "scrolls": len({record["siglum"] for record in composition_unseen_records}),
+            "results": composition_unseen_results,
+        },
+        "trace_count_strata": trace_strata,
         "target_level_any_attributed_restoration": target_summary,
         "rag_target_level_any_attributed_restoration": rag_target_summary,
         "unique_target_reading_level": summarize_ranks(

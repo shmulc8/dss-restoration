@@ -1,5 +1,5 @@
 {
-  "status": "shareable_reproduced_snapshot_not_final_promotion",
+  "status": "team_review_evidence_snapshot",
   "generated_file": "docs/paper_tables.tex",
   "evidence_register": "docs/RESULTS.md",
   "tables": [
@@ -19,6 +19,40 @@
       ],
       "source": "experiments/results/paper/paper_data_profile.json",
       "status": "descriptive_statistics_only"
+    },
+    {
+      "command": "ScrollEligibilityTable",
+      "environment": "table",
+      "caption": "Task-specific scroll eligibility. Categories overlap: zero-preserved and extreme-fragmentation scrolls are subsets of the no-chunk population. Preservation fraction is a transcription-position proxy, not parchment-area intactness.",
+      "label": "tab:scroll-eligibility",
+      "columns": "lrl",
+      "header": ["Population", "Scrolls", "Treatment"],
+      "rows": [
+        ["Archival registry", "736", "retain for provenance"],
+        ["Primary MLM contributors", "377", "at least one eligible chunk"],
+        ["No primary MLM chunk", "359", "exclude from MLM text"],
+        ["Zero preserved words", "25", "exclude from linguistic modeling"],
+        ["Extreme fragmentation", "71", "flag; exclude from primary context task"]
+      ],
+      "source": "experiments/results/paper/paper_data_profile.json",
+      "status": "descriptive_statistics_only"
+    },
+    {
+      "command": "PipelineAuditTable",
+      "environment": "table",
+      "caption": "Frozen corpus-policy audit against an independently implemented contiguous-run pipeline. The comparison concerns data eligibility, not model quality; its identity is withheld from the anonymous manuscript.",
+      "label": "tab:pipeline-audit",
+      "columns": "lrr",
+      "header": ["Policy dimension", "This work", "Contiguous-run audit"],
+      "rows": [
+        ["Model-contributing scrolls", "377", "254"],
+        ["Retained word tokens", "95,736", "44,083"],
+        ["Editorially reconstructed words", "0", "3,655 (8.3\\%)"],
+        ["Damage in model context", "inline \\texttt{<GAP>}", "breaks contiguous run"],
+        ["Minimum local evidence", "20 preserved / 128 units", "10 contiguous words"]
+      ],
+      "source": "experiments/results/paper/paper_data_profile.json",
+      "status": "descriptive_external_pipeline_audit"
     },
     {
       "command": "LacunaShapeTable",
@@ -45,8 +79,8 @@
       "columns": "lrrl",
       "header": ["Set", "Targets", "Scrolls", "Reference"],
       "rows": [
-        ["Unknown-length synthetic", "300", "6", "preserved complete span"],
-        ["QD natural lacunae", "74", "37", "99 attributed readings"]
+        ["Unknown-length synthetic", "300", "79", "preserved complete span"],
+        ["QD natural lacunae", "93", "40", "184 attributed readings"]
       ],
       "source": "experiments/results/paper/paper_data_profile.json",
       "status": "descriptive_statistics_only"
@@ -70,95 +104,66 @@
     {
       "command": "QDTable",
       "environment": "table",
-      "caption": "Agreement with attributed readings at 74 Qumran Digital targets. Generated from the frozen reproduced snapshot; the initial-reading row is not a controlled human experiment.",
+      "caption": "Agreement with attributed readings at 93 Qumran Digital targets under separated evidence conditions.",
       "label": "tab:qd",
       "columns": "lrrrr",
       "header": ["Condition", "Top-1", "Top-5", "Top-10", "Top-20"],
       "rows": [
-        ["Context only ($U0$)", "4.1\\%", "8.1\\%", "9.5\\%", "10.8\\%"],
-        ["Encoded traces + length ($P0$)", "40.5\\%", "62.2\\%", "63.5\\%", "67.6\\%"],
-        ["$P0$ + train-only retrieval", "40.5\\%", "62.2\\%", "63.5\\%", "67.6\\%"],
-        ["QD initial reading", "20.3\\%", "41.9\\%", "43.2\\%", "44.6\\%"]
+        ["MLM: context only", "4.3\\%", "11.8\\%", "15.1\\%", "17.2\\%"],
+        ["Frequency: context only", "0.0\\%", "2.2\\%", "3.2\\%", "6.5\\%"],
+        ["MLM: visible traces", "33.3\\%", "48.4\\%", "50.5\\%", "54.8\\%"],
+        ["Frequency: visible traces", "22.6\\%", "32.3\\%", "36.6\\%", "36.6\\%"],
+        ["MLM: editor length (oracle)", "6.5\\%", "14.0\\%", "16.1\\%", "18.3\\%"],
+        ["MLM: traces + length (oracle)", "32.3\\%", "49.5\\%", "50.5\\%", "53.8\\%"]
       ],
-      "source": "experiments/results/paper/qd_msbert_rerun_20260810.json",
-      "status": "literature_agreement_pilot"
-    },
-    {
-      "command": "QDCharacterTable",
-      "environment": "table",
-      "caption": "Character-model literature agreement on the same 74 QD targets under $P0$ ($\\pm1$ character). These exploratory single-run comparisons have no paired confidence intervals.",
-      "label": "tab:qdchar",
-      "columns": "lrrr",
-      "header": ["Character model", "Top-1", "Top-10", "Top-20"],
-      "rows": [
-        ["TavBERT base", "46.0\\%", "62.2\\%", "67.6\\%"],
-        ["TavBERT FT", "43.2\\%", "59.5\\%", "63.5\\%"],
-        ["DictaBERT-char FT", "44.6\\%", "66.2\\%", "73.0\\%"]
-      ],
-      "source": "experiments/results/runs/qd_char/*.json",
-      "status": "literature_agreement_ablation"
+      "source": "experiments/results/paper/qd_evidence_conditions_20260811.json",
+      "status": "literature_agreement_evidence_ablation"
     },
     {
       "command": "SpanPilotTable",
       "environment": "table",
-      "caption": "Unknown-length synthetic-damage pilot on 300 preserved DSS spans. Top-10 intervals use 10,000 scroll-cluster resamples over six scrolls and are unstable at that cluster count. The oracle uses unavailable gold word length.",
+      "caption": "Unknown-length synthetic damage on 300 non-overlapping preserved DSS spans sampled across 79 held-out scrolls. Intervals use 10,000 manuscript-cluster resamples. The oracle uses unavailable gold word length.",
       "label": "tab:spanpilot",
       "columns": "lrrrrr",
       "header": ["System", "Top-1", "Top-5", "Top-10", "95\\% CI", "CER"],
       "rows": [
-        ["Preserved-only word span", "4.3\\%", "12.7\\%", "15.0\\%", "8.0--16.1\\%", "0.824"],
-        ["Preserved-only TavBERT", "2.7\\%", "4.7\\%", "6.0\\%", "2.0--8.3\\%", "0.862"],
-        ["Embible-style overlap", "3.0\\%", "4.7\\%", "4.7\\%", "2.0--5.3\\%", "0.853"],
-        ["Dev-fitted rank fusion", "5.7\\%", "12.0\\%", "15.0\\%", "8.0--16.7\\%", "0.811"],
-        ["Oracle word-length filter", "12.7\\%", "19.7\\%", "20.7\\%", "--", "0.756"]
+        ["Preserved-only word span", "4.0\\%", "6.7\\%", "7.7\\%", "--", "0.893"],
+        ["Preserved-only TavBERT", "1.0\\%", "2.3\\%", "2.7\\%", "--", "0.898"],
+        ["Embible-style overlap", "2.3\\%", "2.3\\%", "2.3\\%", "--", "0.884"],
+        ["Dev-fitted rank fusion", "4.3\\%", "7.0\\%", "7.7\\%", "--", "0.868"],
+        ["Oracle word-length filter", "6.7\\%", "10.7\\%", "12.0\\%", "--", "0.860"]
       ],
-      "source": "experiments/results/paper/span_baselines_rerun_20260810.json",
-      "status": "model_selection_pilot"
+      "source": "experiments/results/paper/span_balanced_300_20260811.json",
+      "status": "heldout_synthetic_benchmark"
     },
     {
       "command": "SpanStrataTable",
       "environment": "table",
-      "caption": "Exact Top-10 and representability by hidden word count in the 300-span pilot. Each stratum has 100 spans. Coverage is diagnostic; uncovered cases remain misses.",
+      "caption": "Exact Top-10 and representability by hidden word count. Each stratum has 100 spans. Coverage is diagnostic; uncovered cases remain misses.",
       "label": "tab:strata",
       "columns": "lrrr",
       "header": ["Measure", "1 word", "2 words", "3 words"],
       "rows": [
-        ["Word-span exact Top-10", "40.0\\%", "5.0\\%", "0.0\\%"],
-        ["Complete-span coverage", "95.0\\%", "87.0\\%", "77.0\\%"]
+        ["Word-span exact Top-10", "22.0\\%", "1.0\\%", "0.0\\%"],
+        ["Complete-span coverage", "91.0\\%", "77.0\\%", "77.0\\%"]
       ],
-      "source": "experiments/results/paper/span_baselines_rerun_20260810.json",
-      "status": "model_selection_pilot"
+      "source": "experiments/results/paper/span_balanced_300_20260811.json",
+      "status": "heldout_synthetic_benchmark"
     },
     {
       "command": "ByTCheckpointTable",
       "environment": "table",
-      "caption": "Unknown-length ByT5 checkpoint replications on the same 300 targets. Seed 41 used different training hyperparameters, so the rows are not a controlled multi-seed estimate and are not averaged inferentially.",
+      "caption": "Unknown-length ByT5 replications on the same 300 targets. All three checkpoints use identical training hyperparameters; seed is the only varied training setting.",
       "label": "tab:byt5checkpoints",
       "columns": "rrrrrr",
       "header": ["Seed", "Epochs", "Batch", "LR", "Top-1", "Top-10"],
       "rows": [
-        ["41", "1", "4", "5e-04", "1.3\\%", "3.0\\%"],
-        ["42", "3", "32", "1e-03", "1.3\\%", "1.7\\%"],
-        ["43", "3", "32", "1e-03", "1.3\\%", "2.7\\%"]
+        ["41", "3", "32", "1e-03", "0.0\\%", "1.3\\%"],
+        ["42", "3", "32", "1e-03", "0.7\\%", "1.3\\%"],
+        ["43", "3", "32", "1e-03", "0.0\\%", "1.0\\%"]
       ],
-      "source": "experiments/results/paper/byt5_unknown_length_seed{41,42,43}.json",
-      "status": "checkpoint_replication_not_controlled_multiseed"
-    },
-    {
-      "command": "RetrievalTable",
-      "environment": "table*",
-      "caption": "Train-only retrieval ablation. QD uses literature agreement; Text-Fabric uses encoded editorial labels. Known slot counts make the Text-Fabric rows secondary diagnostics rather than the primary unknown-length task.",
-      "label": "tab:retrieval",
-      "columns": "lrrrll",
-      "header": ["Evaluation", "$n$", "Base Top-10", "+Retrieval", "Delta", "Unit"],
-      "rows": [
-        ["QD single-word", "74", "63.5\\%", "63.5\\%", "0.0", "target"],
-        ["TF single-word", "25", "60.0\\%", "64.0\\%", "+4.0", "exact span"],
-        ["TF multiword", "100", "7.0\\%", "9.0\\%", "+2.0", "exact sequence"],
-        ["TF multiword", "440", "41.4\\%", "41.8\\%", "+0.4", "slot"]
-      ],
-      "source": "comparison/reports/PRESERVED_RAG_LACUNA_LENGTHS.md",
-      "status": "retrieval_ablation_pilot"
+      "source": "experiments/results/paper/byt5_balanced_seed{41,42,43}_20260811.json",
+      "status": "controlled_three_seed_replication"
     },
     {
       "command": "SynthesisTable",
@@ -170,9 +175,9 @@
       "rows": [
         ["Material/language", "Akkadian tablets", "Biblical Heb./Aram.", "Hebrew MSS", "Latin inscriptions", "DSS transcriptions"],
         ["Generation unit", "subword/sign", "word + char.", "WordPiece", "character sequence", "word span + char. ablation"],
-        ["Natural lacuna eval.", "expert sample", "no", "yes", "yes", "QD agreement pilot"],
+        ["Natural lacuna eval.", "expert sample", "no", "yes", "yes", "QD literature agreement"],
         ["Unknown length", "greedy masks", "masked spans", "missing word", "arbitrary length", "primary protocol"],
-        ["Material evidence", "transcription", "mask extent", "transcription", "image + text", "encoded traces/length"],
+        ["Material evidence", "transcription", "mask extent", "transcription", "image + text", "traces; editor-length oracle"],
         ["Primary caution", "domain/task scope", "synthetic damage", "token alignment", "edition-derived targets", "no physical truth"]
       ],
       "source": "bibliography_and_paper_method_sections",

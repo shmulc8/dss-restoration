@@ -40,6 +40,28 @@ def hydrate_data_profile(data: dict[str, object]) -> None:
     ]
     tables["CorpusOverviewTable"]["source"] = str(PROFILE.relative_to(ROOT))
 
+    eligibility = corpus["scroll_eligibility"]
+    tables["ScrollEligibilityTable"]["rows"] = [
+        ["Archival registry", integer(eligibility["archival_registry_scrolls"]), "retain for provenance"],
+        ["Primary MLM contributors", integer(eligibility["primary_mlm_scrolls"]), "at least one eligible chunk"],
+        ["No primary MLM chunk", integer(eligibility["scrolls_without_primary_mlm_chunks"]), "exclude from MLM text"],
+        ["Zero preserved words", integer(eligibility["zero_preserved_word_scrolls"]), "exclude from linguistic modeling"],
+        ["Extreme fragmentation", integer(eligibility["extreme_fragmentation_scrolls"]), "flag; exclude from primary context task"],
+    ]
+    tables["ScrollEligibilityTable"]["source"] = str(PROFILE.relative_to(ROOT))
+
+    audit = corpus["external_pipeline_audit"]
+    strict = audit["strict_reconstruction_free_pipeline"]
+    contiguous = audit["contiguous_run_pipeline"]
+    tables["PipelineAuditTable"]["rows"] = [
+        ["Model-contributing scrolls", integer(strict["model_contributing_scrolls"]), integer(contiguous["model_contributing_scrolls"])],
+        ["Retained word tokens", integer(strict["retained_words"]), integer(contiguous["retained_words"])],
+        ["Editorially reconstructed words", "0", f'{integer(contiguous["partially_reconstructed_words"])} ({pct(contiguous["partially_reconstructed_word_percent"])})'],
+        ["Damage in model context", r"inline \texttt{<GAP>}", "breaks contiguous run"],
+        ["Minimum local evidence", "20 preserved / 128 units", "10 contiguous words"],
+    ]
+    tables["PipelineAuditTable"]["source"] = str(PROFILE.relative_to(ROOT))
+
     all_buckets = corpus["all_lacunae_shape"]["gap_word_count"]["buckets"]
     heldout_buckets = heldout_shape["gap_word_count"]["buckets"]
     tables["LacunaShapeTable"]["rows"] = [
@@ -108,22 +130,31 @@ def hydrate_reproduced_results(data: dict[str, object]) -> None:
         "Word-span exact Top-10",
         *[pct(strata[str(words)]["uwc_word"]["top10"]) for words in (1, 2, 3)],
     ]
+    coverage = source["protocol"]["tokenizer_coverage"]["by_word_count"]
+    tables["SpanStrataTable"]["rows"][1] = [
+        "Complete-span coverage",
+        *[
+            pct(100 * coverage[str(words)]["fully_representable_span_rate"])
+            for words in (1, 2, 3)
+        ],
+    ]
     tables["SpanStrataTable"]["source"] = snapshot["artifacts"]["span"]["path"]
 
     qd = snapshot["qd"]
     tables["QDTable"]["rows"] = [
-        ["Context only ($U0$)", *[pct(qd["u0"][key]) for key in ("top1", "top5", "top10", "top20")]],
-        ["Encoded traces + length ($P0$)", *[pct(qd["p0"][key]) for key in ("top1", "top5", "top10", "top20")]],
-        ["$P0$ + train-only retrieval", *[pct(qd["rag"][key]) for key in ("top1", "top5", "top10", "top20")]],
-        ["QD initial reading", *[pct(qd["initial_reading"][key]) for key in ("top1", "top5", "top10", "top20")]],
+        ["MLM: context only", *[pct(qd["context_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
+        ["Frequency: context only", *[pct(qd["frequency_context_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
+        ["MLM: visible traces", *[pct(qd["visible_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
+        ["Frequency: visible traces", *[pct(qd["frequency_visible_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
+        ["MLM: editor length (oracle)", *[pct(qd["editor_length_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
+        ["MLM: traces + length (oracle)", *[pct(qd["visible_plus_editor_length"][key]) for key in ("top1", "top5", "top10", "top20")]],
     ]
-    low, high = qd["p0"]["top10_scroll_cluster_ci"]
+    low, high = qd["visible_only"]["top10_scroll_cluster_ci"]
     tables["QDTable"]["caption"] = (
-        "Agreement with attributed readings at 74 Qumran Digital targets. "
-        f"The $P0$ Top-10 scroll-cluster bootstrap 95\\% CI is {low:.1f}--{high:.1f}. "
-        "All targets are held out under the checkpoint-associated split, but a later "
-        "registry assigns 40 to train; registries must not be mixed. The initial-reading "
-        "row is not a controlled human experiment."
+        "Agreement with any attributed reading at 93 Qumran Digital targets. "
+        f"The visible-trace MLM Top-10 scroll-cluster bootstrap 95\\% CI is {low:.1f}--{high:.1f}. "
+        "All rows retain the same targets and references. Editor-derived length is "
+        "reported only as an oracle-assisted condition."
     )
     tables["QDTable"]["source"] = snapshot["artifacts"]["qd"]["path"]
 
@@ -167,8 +198,8 @@ def render_table(table: dict[str, object]) -> str:
 
 def main() -> None:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    if data["status"] != "shareable_reproduced_snapshot_not_final_promotion":
-        raise ValueError("Paper manifest must remain below final-result promotion.")
+    if data["status"] != "team_review_evidence_snapshot":
+        raise ValueError("Paper manifest must be the team-review evidence snapshot.")
     hydrate_data_profile(data)
     hydrate_reproduced_results(data)
     commands: set[str] = set()

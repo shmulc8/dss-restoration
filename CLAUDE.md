@@ -1,111 +1,73 @@
 # CLAUDE.md
 
-## Project overview
+## Project scope
 
-Research project on restoring lost text in the Dead Sea Scrolls, built on the `ETCBC/dss` Text-Fabric
-corpus. It is the counterpart to [`new_dead_sea_scrolls`](../new_dead_sea_scrolls) and shares that
-project's masking/scoring machinery; the merge plan for the two codebases is
-[UNIFICATION_DECISION_POINTS.md](UNIFICATION_DECISION_POINTS.md).
+This repository evaluates language-model assistance for non-biblical Dead Sea
+Scroll lacunae using the ETCBC/dss Text-Fabric corpus. Training is
+reconstruction-free: editor-supplied letters are removed and damage is emitted
+as anonymous `<GAP>` markers.
 
-The distinguishing question here is **how much the surviving physical evidence at a lacuna — the ink
-still on the parchment, and the size of the hole — contributes to restoration.** That is measured by
-contrasting two information regimes on the same targets, so the project runs two evaluation tracks
-rather than one.
+Two tracks must remain separate:
 
-The repository is a linear pipeline of five stages, each consuming the previous stage's output:
+1. **Synthetic exact recovery:** hide preserved one-to-three-word spans and
+   score the full string under unknown character length, word count, and word
+   boundaries.
+2. **Natural-lacuna literature agreement:** rank any attributed Qumran Digital
+   proposal at one manuscript target. This is not historical ground truth.
 
-1. **`curation/`** — reads `ETCBC/dss` via Text-Fabric and emits the corpus. A word is dropped if
-   *any* of its signs is editor-supplied (`rec == 1`), damage-marked (`rem == 1`) or `#`, so the model
-   only ever sees physically surviving ink; `validate_preserved_nonbib_corpus.py` hard-fails if an
-   editorial character survives into the output. Writes `curation/derived/`:
-   `preserved_nonbib_chunks.jsonl` (1,647 chunks), `nonbib_lacunae.jsonl` (27,814 real lacunae),
-   `qd_researcher_variants.jsonl` (1,811 published reading proposals), and a manifest carrying
-   SHA-256s and counts.
-2. **`data_preparation/`** — assigns every scroll to a split by a deterministic hash of its name
-   (`sha1(scroll) % 100`, cut points 73/88), identical to the sibling project's scheme. The realized
-   assignment is frozen in `dss_scroll_splits_v1.json` (531 train / 108 val / 93 test, 0 straddling)
-   and every code path loads that file through `splits.py`.
-3. **`tuning/`** — fine-tuning plus the shared masking/prediction/scoring machinery: `eval_utils.py`
-   (the classes), `metrics_runner.py` (scoring, hit@k, cluster bootstrap, `mcnemar_test`),
-   `candidate_generator.py` (physical-ink filtering, length ensembling), `tokenizer_compat.py`.
-4. **`experiments/`** — one driver per benchmark, each writing a durable run directory under
-   `experiments/results/runs/<run_id>/` containing `predictions.jsonl`, `metrics.json`,
-   `word_scores.csv` and `manifest.json`.
-5. **`comparison/`** — aggregation and reporting over those run directories; generated reports live
-   in `comparison/reports/`. Paper-facing results are frozen under
-   `experiments/results/paper/` with provenance in `docs/paper_results_manifest.json`.
+There is no human-participant study and no image-derived ink analysis.
 
-`utils/` holds cross-cutting helpers (paths, Hebrew morphology, clitic joining, book filters).
-`tests/` is a conventional top-level suite.
+## Authoritative evidence
 
-## The two evaluation tracks
+- [`docs/RESULTS.md`](docs/RESULTS.md) is the human-readable register.
+- `experiments/results/paper/paper_results_snapshot.json` is the aggregate
+  machine-readable snapshot.
+- `docs/paper_results_manifest.json` drives generated LaTeX tables.
+- `experiments/paper_protocol_v1.json` is the current protocol despite its
+  compatibility filename; its schema is `dss-paper-protocol-v2`.
 
-Track A and Track B measure different things on different data. **Their numbers are not comparable
-and must never be chained into one progression.**
+Do not revive the superseded 74-target / 63.5% QD result or describe editor-
+derived length as physical measurement. The current QD denominator is 93
+targets. Visible traces, editor length, and context are separate conditions;
+all references remain in every denominator.
 
-- **Track A — synthetic cloze (`scatter-30`).** Hides 30% of the content words in *preserved* text.
-  Driver: `experiments/run_cloze_benchmark.py`. This is synthetic damage, not a real lacuna.
-- **Track B — real lacunae.** Physical damage cuts *through* words, leaving partial ink. Scored as
-  agreement with published scholarly restorations from Qumran-Digital. Driver:
-  `experiments/run_qd_benchmark.py`.
+## Frozen data and split
 
-Three information regimes are named throughout and must be stated with every number:
+The checkpoint-associated authority is
+`curation/derived/preserved_nonbib_manifest.json`: 736 identifiers, 1,647
+chunks, train/dev/heldout partitions, and zero scroll overlap. Active paper
+experiments load the derived corpus through `curation.preserved_corpus`.
+`data_preparation/dss_scroll_splits_v1.json` belongs to an older unification
+experiment and must not be mixed into checkpoint claims.
 
-| Regime | What the model gets |
-| :--- | :--- |
-| `U0` | context only |
-| `O-len` | context + gold character length as a proxy |
-| `P0` | context + surviving ink + estimated gap length (±1) |
+The split is manuscript-disjoint but not composition-disjoint. The paper
+reports a composition-unseen QD subset and a near-duplicate audit; it does not
+claim composition-grouped training.
 
-## Evidence discipline
+## Current paper evidence
 
-- **[docs/RESULTS.md](docs/RESULTS.md) is the evidence register** — the single index of paper-facing
-  numbers. A figure that is not there is exploratory, superseded, or not yet measured.
-- **Every number must trace to a generated artifact** under `comparison/reports/` or
-  `experiments/results/runs/`. Numbers written directly into a document, with no run behind them,
-  are the failure mode this project has already had once.
-- **`tests/test_public_claims.py` enforces that**: it fails if a figure with no artifact appears on a
-  public surface, if the QD headline drifts from the scorer's own report, or if a significance claim
-  is made without a test behind it. Documents covered are README, `docs/RESULTS.md`,
-  `docs/paper.tex`, and `docs/PAPER_PRESENTATION.html`.
-- **Statistics.** The QD interval resamples scrolls, which are the independent sampling unit.
-  Synthetic-span intervals resample their predeclared target clusters. Runs over the same frozen
-  targets are paired; a model-comparison significance claim still requires the corresponding paired
-  test artifact.
+- QD context-only MLM: 15.1% Top-10.
+- QD visible-trace MLM: 50.5% Top-10; frequency under the same traces: 36.6%.
+- Balanced synthetic spans: 300 targets across 79 held-out scrolls; word-span
+  exact Top-10 7.7%, with 22.0% / 1.0% / 0.0% by one/two/three words.
+- Matched ByT5 seeds 41--43: 1.3%, 1.3%, and 1.0% exact Top-10.
 
-## Known issues
+The positive claim is evidence-conditioned candidate narrowing. The negative
+claim is that unknown-length multiword restoration remains unsolved.
 
-- **Two split registries coexist.** `data_preparation/dss_scroll_splits_v1.json` (canonical, 732
-  scrolls) and the corpus manifest's own `scroll_splits` (736 scrolls, train/dev/heldout). The QD
-  benchmark ran against the manifest registry, so 40 of its 74 targets fall in the canonical
-  registry's *train* split. Consolidating these is decision #3 and blocks every model comparison.
-- **`transformers` is at 5.13.0 here, while the sibling project pins 4.48.0.** On 5.x, a checkpoint
-  declaring `"tokenizer_class": "BertTokenizer"` is honoured literally, so plain WordPiece is built
-  from `vocab.txt` and the `Split` pre-tokenizer in `tokenizer.json` is discarded. For a
-  character-vocab checkpoint that collapses **every Hebrew word to one `[UNK]`**, and nothing raises:
-  training and validation run happily on a corpus of `[UNK]`s while val loss goes to ~0.0001.
-  This is live on this version — `AutoTokenizer` returns 100% `[UNK]` on Hebrew for
-  `dicta-il/dictabert-large-char`. `tokenizer_compat.load_tokenizer` detects it, reloads from
-  `tokenizer.json`, and hard-asserts the result encodes Hebrew without `[UNK]`. **Do not bypass
-  `load_tokenizer`**, and sanity-check the `[UNK]` fraction when adding a checkpoint.
-- **`tuning/eval_utils.py` has drifted** from the sibling project's copy of the same classes (624
-  lines against 719). They are supposed to stay in lockstep.
-
-## Environment
+## Validation
 
 ```bash
-uv run pytest                       # full suite
-
-PYTHONPATH=. uv run python experiments/run_cloze_benchmark.py --run-dir experiments/results/runs/tavbert-base
-PYTHONPATH=. uv run python experiments/run_qd_benchmark.py    # offline, cached QD snapshot
-PYTHONPATH=. uv run python experiments/lacuna_corpus_stats.py
+.venv/bin/python -m pytest -q
+.venv/bin/python curation/validate_preserved_nonbib_corpus.py --derived-only
+.venv/bin/python experiments/validate_leakage.py
+.venv/bin/python experiments/validate_paper_protocol.py
+.venv/bin/python experiments/audit_split_similarity.py
+.venv/bin/python experiments/run_paper_benchmark.py
+.venv/bin/python experiments/build_paper_data_profile.py
+.venv/bin/python docs/generate_paper_tables.py
 ```
 
-`models/` (checkpoints) and `scratch/` (exploratory runs) are gitignored but **must not be deleted** —
-they hold the raw outputs behind the reports in `comparison/reports/`.
-
-## Data licensing
-
-`ETCBC/dss` is **CC BY-NC 4.0**. Attribution must name Martin G. Abegg Jr., James E. Bowley and
-Edward M. Cook. The non-commercial term applies to any redistributed derived text, including examples
-printed in a paper.
+`models/` and `scratch/` contain local evidence and must not be deleted. The
+source corpus is CC BY-NC 4.0 and requires attribution to Martin G. Abegg Jr.,
+James E. Bowley, and Edward M. Cook.

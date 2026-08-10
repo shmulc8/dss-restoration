@@ -5,6 +5,7 @@ from experiments.run_qd_benchmark import (
     PhysicalConstraint,
     _visible_segments,
     build_constraint,
+    bootstrap_top10_delta_ci,
     bootstrap_top10_ci,
     contiguous_context,
     join_clitics,
@@ -34,7 +35,7 @@ class QDEditorialParsingTests(unittest.TestCase):
         self.assertFalse(left)
         self.assertFalse(right)
 
-    def test_constraint_uses_initial_reading_only_for_length(self):
+    def test_constraint_labels_initial_reading_as_editor_length(self):
         constraint, reason = build_constraint(
             {
                 "qd_display_reading": "]להרוג",
@@ -52,14 +53,16 @@ class QDEditorialParsingTests(unittest.TestCase):
         constraint = PhysicalConstraint(("אדם",), False, True, 4, 4, 4)
         base = {"reading": "האדם"}
         self.assertEqual(
-            parse_attributed_reading(base, constraint, 1),
+            parse_attributed_reading(base),
             ("האדם", "eligible"),
         )
         for reading in ("כי רוח", "אדם/איש", "{ו}אדם", "אד○ם"):
-            normalized, reason = parse_attributed_reading(
-                {"reading": reading}, constraint, 1
-            )
+            normalized, reason = parse_attributed_reading({"reading": reading})
             self.assertIsNone(normalized, reason)
+
+    def test_reading_parser_does_not_filter_against_test_condition(self):
+        normalized, reason = parse_attributed_reading({"reading": "שלום"})
+        self.assertEqual((normalized, reason), ("שלום", "eligible"))
 
 
 class PreservedRAGTests(unittest.TestCase):
@@ -106,6 +109,18 @@ class QDStatisticsTests(unittest.TestCase):
             {"siglum": "B", "rank": None},
         ]
         low, high = bootstrap_top10_ci(records, "rank", seed=7, samples=500)
+        self.assertEqual(low, 0.0)
+        self.assertEqual(high, 100.0)
+
+    def test_paired_bootstrap_delta_resamples_scrolls(self):
+        records = [
+            {"siglum": "A", "left": None, "right": 0},
+            {"siglum": "A", "left": None, "right": 0},
+            {"siglum": "B", "left": None, "right": None},
+        ]
+        low, high = bootstrap_top10_delta_ci(
+            records, "left", "right", seed=7, samples=500
+        )
         self.assertEqual(low, 0.0)
         self.assertEqual(high, 100.0)
 

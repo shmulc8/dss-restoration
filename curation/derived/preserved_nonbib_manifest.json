@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "source": {
     "corpus": "ETCBC/dss",
     "text_fabric_version": "2.0",
@@ -17,7 +17,11 @@
     "modern_reconstruction_text_emitted": false,
     "modern_reconstruction_feature": "rec == 1 on signs",
     "gap_placeholder": "<GAP>",
-    "gap_size_metadata_retained": true
+    "gap_size_metadata_retained": true,
+    "all_scrolls_retained_in_archival_registry": true,
+    "whole_scroll_deletion": false,
+    "primary_mlm_eligibility": "at least one emitted chunk satisfying min_preserved_words_per_chunk",
+    "extreme_fragmentation_flag": "preserved_source_words < 20 and preserved_fraction < 0.10"
   },
   "parameters": {
     "seed": 0,
@@ -768,6 +772,434 @@
       "XQ8"
     ]
   },
+  "extreme_fragmentation_scrolls": {
+    "11Q23": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 20,
+      "preserved_fraction": 0.04761905,
+      "zero_preserved_words": false
+    },
+    "11Q29": {
+      "preserved_source_words": 2,
+      "damaged_source_positions": 27,
+      "preserved_fraction": 0.06896552,
+      "zero_preserved_words": false
+    },
+    "2Q18": {
+      "preserved_source_words": 4,
+      "damaged_source_positions": 115,
+      "preserved_fraction": 0.03361345,
+      "zero_preserved_words": false
+    },
+    "2Q32": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 7,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q125": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 12,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q168": {
+      "preserved_source_words": 4,
+      "damaged_source_positions": 78,
+      "preserved_fraction": 0.04878049,
+      "zero_preserved_words": false
+    },
+    "4Q214a": {
+      "preserved_source_words": 11,
+      "damaged_source_positions": 108,
+      "preserved_fraction": 0.09243697,
+      "zero_preserved_words": false
+    },
+    "4Q249a": {
+      "preserved_source_words": 4,
+      "damaged_source_positions": 70,
+      "preserved_fraction": 0.05405405,
+      "zero_preserved_words": false
+    },
+    "4Q249b": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 26,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q249c": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 59,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q249d": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 70,
+      "preserved_fraction": 0.01408451,
+      "zero_preserved_words": false
+    },
+    "4Q249e": {
+      "preserved_source_words": 8,
+      "damaged_source_positions": 140,
+      "preserved_fraction": 0.05405405,
+      "zero_preserved_words": false
+    },
+    "4Q249f": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 97,
+      "preserved_fraction": 0.01020408,
+      "zero_preserved_words": false
+    },
+    "4Q249g": {
+      "preserved_source_words": 2,
+      "damaged_source_positions": 284,
+      "preserved_fraction": 0.00699301,
+      "zero_preserved_words": false
+    },
+    "4Q249h": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 88,
+      "preserved_fraction": 0.01123596,
+      "zero_preserved_words": false
+    },
+    "4Q249i": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 66,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q249k": {
+      "preserved_source_words": 3,
+      "damaged_source_positions": 42,
+      "preserved_fraction": 0.06666667,
+      "zero_preserved_words": false
+    },
+    "4Q249l": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 52,
+      "preserved_fraction": 0.01886792,
+      "zero_preserved_words": false
+    },
+    "4Q249n": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 24,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q249o": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 11,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q249s": {
+      "preserved_source_words": 2,
+      "damaged_source_positions": 29,
+      "preserved_fraction": 0.06451613,
+      "zero_preserved_words": false
+    },
+    "4Q249w": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 18,
+      "preserved_fraction": 0.05263158,
+      "zero_preserved_words": false
+    },
+    "4Q249x": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 10,
+      "preserved_fraction": 0.09090909,
+      "zero_preserved_words": false
+    },
+    "4Q250a": {
+      "preserved_source_words": 2,
+      "damaged_source_positions": 24,
+      "preserved_fraction": 0.07692308,
+      "zero_preserved_words": false
+    },
+    "4Q250f": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 9,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q250i": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 15,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q282d": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 12,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q282e": {
+      "preserved_source_words": 4,
+      "damaged_source_positions": 45,
+      "preserved_fraction": 0.08163265,
+      "zero_preserved_words": false
+    },
+    "4Q282p": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 9,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q282r": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 4,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q282t": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 4,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q313": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 47,
+      "preserved_fraction": 0.02083333,
+      "zero_preserved_words": false
+    },
+    "4Q313a": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 6,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q324b": {
+      "preserved_source_words": 3,
+      "damaged_source_positions": 32,
+      "preserved_fraction": 0.08571429,
+      "zero_preserved_words": false
+    },
+    "4Q324e": {
+      "preserved_source_words": 10,
+      "damaged_source_positions": 93,
+      "preserved_fraction": 0.09708738,
+      "zero_preserved_words": false
+    },
+    "4Q324h": {
+      "preserved_source_words": 2,
+      "damaged_source_positions": 43,
+      "preserved_fraction": 0.04444444,
+      "zero_preserved_words": false
+    },
+    "4Q324i": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 26,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q346a": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 6,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q354": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 2,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q358": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 13,
+      "preserved_fraction": 0.07142857,
+      "zero_preserved_words": false
+    },
+    "4Q457a": {
+      "preserved_source_words": 5,
+      "damaged_source_positions": 54,
+      "preserved_fraction": 0.08474576,
+      "zero_preserved_words": false
+    },
+    "4Q465": {
+      "preserved_source_words": 2,
+      "damaged_source_positions": 26,
+      "preserved_fraction": 0.07142857,
+      "zero_preserved_words": false
+    },
+    "4Q468j": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 17,
+      "preserved_fraction": 0.05555556,
+      "zero_preserved_words": false
+    },
+    "4Q468m": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 12,
+      "preserved_fraction": 0.07692308,
+      "zero_preserved_words": false
+    },
+    "4Q468p": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 15,
+      "preserved_fraction": 0.0625,
+      "zero_preserved_words": false
+    },
+    "4Q468s": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 9,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q468t": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 6,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q468u": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 3,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q468w": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 7,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q468x": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 6,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q468z": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 6,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "4Q472a": {
+      "preserved_source_words": 2,
+      "damaged_source_positions": 24,
+      "preserved_fraction": 0.07692308,
+      "zero_preserved_words": false
+    },
+    "4Q484": {
+      "preserved_source_words": 4,
+      "damaged_source_positions": 85,
+      "preserved_fraction": 0.04494382,
+      "zero_preserved_words": false
+    },
+    "4Q488": {
+      "preserved_source_words": 3,
+      "damaged_source_positions": 29,
+      "preserved_fraction": 0.09375,
+      "zero_preserved_words": false
+    },
+    "4Q489": {
+      "preserved_source_words": 2,
+      "damaged_source_positions": 39,
+      "preserved_fraction": 0.04878049,
+      "zero_preserved_words": false
+    },
+    "4Q490": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 56,
+      "preserved_fraction": 0.01754386,
+      "zero_preserved_words": false
+    },
+    "4Q495": {
+      "preserved_source_words": 6,
+      "damaged_source_positions": 75,
+      "preserved_fraction": 0.07407407,
+      "zero_preserved_words": false
+    },
+    "4Q515": {
+      "preserved_source_words": 8,
+      "damaged_source_positions": 105,
+      "preserved_fraction": 0.07079646,
+      "zero_preserved_words": false
+    },
+    "4Q518": {
+      "preserved_source_words": 11,
+      "damaged_source_positions": 184,
+      "preserved_fraction": 0.05641026,
+      "zero_preserved_words": false
+    },
+    "4Q519": {
+      "preserved_source_words": 13,
+      "damaged_source_positions": 198,
+      "preserved_fraction": 0.06161137,
+      "zero_preserved_words": false
+    },
+    "4Q558a": {
+      "preserved_source_words": 5,
+      "damaged_source_positions": 48,
+      "preserved_fraction": 0.09433962,
+      "zero_preserved_words": false
+    },
+    "4Q578": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 15,
+      "preserved_fraction": 0.0625,
+      "zero_preserved_words": false
+    },
+    "4Q585": {
+      "preserved_source_words": 19,
+      "damaged_source_positions": 179,
+      "preserved_fraction": 0.0959596,
+      "zero_preserved_words": false
+    },
+    "5Q11": {
+      "preserved_source_words": 3,
+      "damaged_source_positions": 28,
+      "preserved_fraction": 0.09677419,
+      "zero_preserved_words": false
+    },
+    "6Q27": {
+      "preserved_source_words": 2,
+      "damaged_source_positions": 30,
+      "preserved_fraction": 0.0625,
+      "zero_preserved_words": false
+    },
+    "6Q28": {
+      "preserved_source_words": 1,
+      "damaged_source_positions": 21,
+      "preserved_fraction": 0.04545455,
+      "zero_preserved_words": false
+    },
+    "6Q29": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 8,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "6Q30": {
+      "preserved_source_words": 0,
+      "damaged_source_positions": 23,
+      "preserved_fraction": 0.0,
+      "zero_preserved_words": true
+    },
+    "PAM43661": {
+      "preserved_source_words": 3,
+      "damaged_source_positions": 44,
+      "preserved_fraction": 0.06382979,
+      "zero_preserved_words": false
+    },
+    "PAM43663": {
+      "preserved_source_words": 7,
+      "damaged_source_positions": 73,
+      "preserved_fraction": 0.0875,
+      "zero_preserved_words": false
+    },
+    "PAM43666": {
+      "preserved_source_words": 3,
+      "damaged_source_positions": 28,
+      "preserved_fraction": 0.09677419,
+      "zero_preserved_words": false
+    }
+  },
   "counts": {
     "scrolls": 736,
     "chunks": 1647,
@@ -791,6 +1223,13 @@
       "train": 55950,
       "dev": 14473,
       "heldout": 25313
+    },
+    "eligibility": {
+      "archival_registry_scrolls": 736,
+      "primary_mlm_scrolls": 377,
+      "scrolls_without_primary_mlm_chunks": 359,
+      "zero_preserved_word_scrolls": 25,
+      "extreme_fragmentation_scrolls": 71
     }
   },
   "sha256": {

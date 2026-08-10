@@ -4,7 +4,7 @@ This directory is generated from `ETCBC/dss` Text-Fabric 2.0 using:
 
 ```bash
 .venv/bin/python curation/build_preserved_nonbib_corpus.py
-.venv/bin/python data/validate_preserved_nonbib_corpus.py
+.venv/bin/python curation/validate_preserved_nonbib_corpus.py
 ```
 
 ## Data rules
@@ -18,6 +18,13 @@ This directory is generated from `ETCBC/dss` Text-Fabric 2.0 using:
   estimates, visible preserved-letter patterns, and adjacent preserved
   context. They do not retain reconstructed letters.
 - Scroll-level train, development, and held-out sets are disjoint.
+- All 736 scroll identifiers remain in the archival registry. A scroll enters
+  primary MLM text only when it yields a 128-unit chunk with at least 20
+  preserved words; the manifest records the resulting per-scroll eligibility.
+- The manifest flags zero-preserved scrolls and extreme fragmentation (fewer
+  than 20 preserved source words and below 10% preserved positions). These
+  flags support task-specific exclusion and do not assert parchment-area
+  intactness or philological worth.
 
 `rec == 1` identifies a modern reconstruction but does not identify the
 individual editor or edition responsible for that reading. These files
@@ -28,7 +35,8 @@ comparisons. The separately sourced Qumran Digital files below do.
 
 - `preserved_nonbib_chunks.jsonl`: model-training sequences.
 - `nonbib_lacunae.jsonl`: reconstruction-free lacuna metadata.
-- `preserved_nonbib_manifest.json`: rules, counts, splits, and checksums.
+- `preserved_nonbib_manifest.json`: rules, counts, splits, per-scroll
+  statistics for flagged extreme-fragmentation cases, and checksums.
 - `qd_researcher_variants.jsonl`: one-time 2026-05-21 Qumran Digital snapshot
   of explicit, bibliographically attributed readings at selected disputed
   held-out words. It is evaluation-only and is never used for training.

@@ -34,6 +34,18 @@ def test_checkpoint_rows_are_not_misreported_as_controlled_seeds() -> None:
     assert snapshot["byt5_checkpoint_replications"]["controlled_seed_set"] is False
 
 
+def test_checkpoint_artifacts_are_self_contained_and_portable() -> None:
+    for seed in (41, 42, 43):
+        artifact = json.loads(
+            (ROOT / f"experiments/results/paper/byt5_unknown_length_seed{seed}.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        protocol = artifact["protocol"]
+        assert protocol["training"]["seed"] == seed
+        assert not Path(protocol["model_dir"]).is_absolute()
+
+
 def test_human_participant_study_is_not_in_the_active_protocol() -> None:
     protocol = json.loads(
         (ROOT / "experiments/paper_protocol_v1.json").read_text(encoding="utf-8")

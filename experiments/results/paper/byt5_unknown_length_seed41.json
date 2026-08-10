@@ -18,8 +18,16 @@
     ],
     "gold_length_or_boundaries_given": false,
     "modern_reconstructions_used": false,
-    "model_dir": "/Users/shmulc/Stuff/tmp/digital-humanities/dss-restoration/models/ft_byt5_span_preserved_nonbib_seed41",
+    "model_dir": "models/ft_byt5_span_preserved_nonbib_seed41",
     "model_sha256": "39eaa3a654bdb4800874ba7a5bc890de12c980cc9aa4a208e6b120a59e0aac0c",
+    "training": {
+      "base_model": "google/byt5-small",
+      "seed": 41,
+      "epochs": 1,
+      "batch_size": 4,
+      "learning_rate": 0.0005,
+      "corpus_sha256": "4c73c58ce5cb59a14f4103af726554433a3da20ec3cbed00920c88c6044a517f"
+    },
     "beam_width": 10,
     "returned_sequences": 10
   },

@@ -139,9 +139,8 @@ def split_audit(qd: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def training_metadata(model_dir: str) -> dict[str, Any]:
-    directory = Path(model_dir)
-    metadata = load(directory / "byt5_training_metadata.json")
+def training_metadata(protocol: dict[str, Any]) -> dict[str, Any]:
+    metadata = protocol["training"]
     return {key: metadata[key] for key in ("seed", "epochs", "batch_size", "learning_rate")}
 
 
@@ -237,7 +236,7 @@ def aggregate(span_path: Path, qd_path: Path, byt5_paths: tuple[Path, ...]) -> d
     checkpoint_rows = []
     training_configs = []
     for path, report in zip(byt5_paths, byt5):
-        config = training_metadata(report["protocol"]["model_dir"])
+        config = training_metadata(report["protocol"])
         training_configs.append(config)
         result = report["results"]
         checkpoint_rows.append(

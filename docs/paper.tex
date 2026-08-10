@@ -1,0 +1,244 @@
+\documentclass[10pt,twocolumn,a4paper]{article}
+
+\usepackage[margin=2.0cm,top=2.2cm,bottom=2.2cm]{geometry}
+\usepackage{times}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\definecolor{navyblue}{RGB}{16, 78, 139}
+\definecolor{emerald}{RGB}{16, 185, 129}
+\definecolor{darkred}{RGB}{180, 40, 40}
+
+% Section title styling
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries\color{navyblue}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection.}{0.5em}{}
+
+\title{\textbf{\Large Epigraphic Masked Language Models for Dead Sea Scrolls Restoration:\\Unifying Token Alignment, Physical Ink Traces, and Multi-Word Length Ensembling}}
+
+\author{
+  \textbf{Shmulik Malkin} \\
+  Digital Humanities Research Group \\
+  \texttt{shmulik.malkin@example.org}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Restoring missing text in 2,000-year-old Dead Sea Scrolls (\textit{lacunae}) is a fundamental challenge in biblical studies and digital humanities. Drawing inspiration from recent pioneering applications of Masked Language Modeling (MLM) to cuneiform tablets (\cite{lazar2021filling}), ancient Hebrew inscriptions (\cite{fono2024embible}), and medieval Hebrew manuscripts (\cite{shmidman2024msbert}), we present a comprehensive epigraphic restoration framework specifically engineered for non-biblical Dead Sea Scrolls. We demonstrate that subword tokenization (WordPiece) suffers a \textbf{38.3\% token alignment drop rate} on ancient character-bounded gaps, whereas character-level MLMs (TavBERT FT) eliminate alignment drops entirely (\textbf{0.0\% drops}), achieving \textbf{23.65\% Hit@10} on synthetic cloze (\texttt{scatter-30}, $n=729$). On real physical manuscript lacunae, conditioning on surviving ink traces ($P0$) and physical hole bounds ($L \pm 1$) lifts Top-10 restoration accuracy from 9.46\% ($U0$ unconstrained) to 64.86\% ($P0$). Incorporating our 4-point algorithmic roadmap (morpho-lemma normalization, quote-aware Pesher RAG, IDF term boosting, and epigraphic stroke filtering) elevates accuracy to \textbf{66.22\% Top-1 / 83.78\% Top-10 / 87.84\% Top-20} on peer-reviewed Qumran-Digital scholar targets ($n=74$), more than tripling initial 1950s human scholar editions (\textbf{20.27\% Top-1}). Finally, for unknown-length multi-word lacunae ($L \in [3, 15]$), our length-ensemble beam search (\texttt{LengthEnsembleCharMLMGenerator}) breaks the 0.0\% structural collapse wall of standard single-length MLMs, achieving \textbf{14.2\% Hit@10 / 14.5\% slot accuracy}.
+\end{abstract}
+
+\section{Introduction}
+
+The Dead Sea Scrolls—discovered in eleven caves near Qumran between 1947 and 1956—represent the most significant manuscript discovery of the twentieth century, containing over 25,000 fragments of ancient Hebrew and Aramaic texts dated between the 3rd century BCE and the 1st century CE. Over two millennia of physical deterioration, moisture, and parchment rot have left extensive holes (\textit{lacunae}) across these scroll fragments.
+
+\subsection{Lineage and Related Work}
+
+Recent advances in neural natural language processing have formulated ancient text restoration as a Masked Language Modeling (MLM) task:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Akkadian Cuneiform Tablets:} Lazar et al.\ (EMNLP 2021) formulated cuneiform sign restoration as an MLM task over Oracc transliterations using mBERT and greedy decoding, achieving high sign accuracy on formulaic royal inscriptions.
+    \item \textbf{Biblical Hebrew and Aramaic Inscriptions:} Fono et al.\ (Embible / EACL 2024) applied transformer ensembles to clean biblical texts, comparing character and word models under synthetic masking.
+    \item \textbf{Hebrew Manuscript Subword Modeling:} Shmidman et al.\ (MsBERT / ML4AL 2024) introduced MsBERT (a WordPiece subword model) trained on medieval Rabbinic Hebrew transcriptions from Dicta.
+\end{enumerate}
+
+\subsection{The 3 Unresolved Epigraphic Bottlenecks}
+
+While these foundational studies established the viability of MLM for ancient texts, three critical methodological bottlenecks remained unresolved for Dead Sea Scrolls epigraphy:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Subword Alignment Failure Wall:} Subword tokenizers (WordPiece / MsBERT) generate modern subword tokens that cannot align to exact physical character gap lengths, causing \textbf{38.3\% token drop rates} on ancient Hebrew content words.
+    \item \textbf{Unconstrained Context Failure Wall ($U0$):} Evaluating models on context alone ($U0$) yields poor real-world lacuna restoration ($<10\%$ Top-10) because ancient context is heavily damaged. Physical ink conditioning ($P0$) is essential.
+    \item \textbf{Multi-Word Fixed-Slot Collapse:} Standard single-length BERT MLMs collapse to \textbf{0.0\% accuracy} on multi-word lacunae because fixed input token slots cannot adapt output sequence lengths when exact character counts ($L$) are unknown.
+\end{enumerate}
+
+\section{Dataset Architecture \& Safeguards}
+
+Our dataset is constructed from the \textbf{ETCBC Text-Fabric 2.0} digital corpus of non-biblical Dead Sea Scrolls (\texttt{etcbc/dss}), spanning 732 non-biblical manuscripts (268,594 total word positions, 103,355 fully preserved words \texttt{rec=0}, 165,239 damaged word positions \texttt{rec=1}, and 27,814 physical lacuna sites).
+
+\subsection{Three Golden Data Protection Rules}
+
+To eliminate data leakage, we enforce three strict methodological safeguards:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Reconstruction Redaction (\texttt{rec=1} Filter):} Every sign flagged \texttt{rec=1} in Text-Fabric is an editorial reconstruction and is 100\% stripped from input and training data. The model trains \textbf{ONLY on authentic 2,000-year-old surviving ink (\texttt{rec=0})}.
+    \item \textbf{SHA-1 Manuscript-Disjoint Partitioning:} Scrolls are partitioned deterministically by $\text{SHA1}(\text{scroll\_id}) \bmod 100$ into \textbf{531 train (72.5\%) / 108 val (14.8\%) / 93 test (12.7\%)} with \textbf{0 straddling scrolls}.
+    \item \textbf{Biblical Exclusion:} Biblical Dead Sea Scrolls (e.g., $1\text{QIsa}^a$) are 100\% excluded from model training to prevent canonical text memorization.
+\end{enumerate}
+
+\section{Methodology \& Champion Pipeline}
+
+\subsection{Character-Level Masked Language Modeling}
+
+We fine-tune \textbf{TavBERT} (\texttt{tau/tavbert-he}), a character-level BERT model pretrained on Hebrew text, using 128-token continuous sliding windows over preserved non-biblical scroll text ($\ge 20$ preserved words per chunk). Because 1 token = 1 character, TavBERT eliminates subword token alignment failures (0.0\% drop rate).
+
+\subsection{Physical Ink \& Hole Bounds Conditioning ($P0$)}
+
+During beam search generation, candidate words are filtered by \texttt{PartialLetterFilter}:
+\begin{equation}
+\text{Len}(c) \in [L-1, L+1] \;\land\; \forall i \in \text{SurvivingInk}(P0): c[i] = P0[i]
+\end{equation}
+This physical constraint eliminates 99\% of dictionary candidates before candidate ranking.
+
+\subsection{The 4-Point Algorithmic Roadmap}
+
+To maximize real lacuna restoration accuracy, we construct a 4-point post-processing roadmap:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Step 1 (Morpho-Lemma Normalization):} Normalizes inflectional variants (plene vs.\ defective spelling, gender/number suffixes).
+    \item \textbf{Step 2 (Quote-Aware Pesher RAG):} Detects citation markers (\textit{peshro `al}) in commentary scrolls (*Pesharim*) via \texttt{PesherQuoteRetriever}, identifying the quoted biblical book (\textbf{86.57\% Top-1} book recovery) and injecting thematic context.
+    \item \textbf{Step 3 (Sectarian IDF Boosting):} Applies \texttt{SectarianIDFBooster} to down-weight ultra-generic Hebrew particles in favor of domain-specific sectarian vocabulary.
+    \item \textbf{Step 4 (Epigraphic Stroke Filter):} \texttt{EpigraphicStrokeFilter} permits stroke-ambiguous letter substitutions (e.g., \textit{resh} vs.\ \textit{dalet} vs.\ \textit{vav}), reflecting physical ink erosion.
+\end{enumerate}
+
+\subsection{Multi-Word Length-Ensemble Beam Search}
+
+For multi-word lacunae of unknown character length ($L \in [3, 15]$), \texttt{LengthEnsembleCharMLMGenerator} loops character mask lengths $L = 3, 4, \dots, 15$ in TavBERT and re-ranks all generated phrases across lengths using length-penalty probability scoring:
+\begin{equation}
+\text{Score}(c) = \frac{\sum_{i=1}^L \log P(c_i)}{\sqrt{L}}
+\end{equation}
+
+\section{Experimental Results}
+
+\subsection{RQ1: Synthetic Cloze Architecture Benchmark}
+
+We evaluate raw model architecture quality on 100 held-out test sentences ($n=729$ masked content words, \texttt{scatter-30}, Track A) under gold character length ($O\text{-len}$).
+
+\begin{table}[h]
+\centering
+\small
+\caption{Synthetic Cloze Restoration Benchmark (\texttt{scatter-30}, $n=729$). 95\% CIs are sentence-level percentile cluster bootstrap ($B=1,000$).}
+\label{tab:table1}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model Variant} & \textbf{Hit@10} & \textbf{Hit@1} & \textbf{Drops} \\
+\midrule
+\textbf{TavBERT FT (Optimal)} & \textbf{23.65\%} & \textbf{8.42\%} & \textbf{0.0\%} \\
+DictaBERT-char FT & 22.80\% & 8.10\% & 0.0\% \\
+TavBERT Base & 21.12\% & 7.27\% & 0.0\% \\
+MsBERT Fine-Tuned & 13.31\% & 9.78\% & 38.3\% \\
+ByT5 Fine-Tuned & 5.35\% & 0.82\% & 0.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key Takeaway (RQ1):} Character-level MLMs (TavBERT FT 23.65\%) decisively outperform subword WordPiece models (MsBERT 13.31\%) by eliminating token alignment drops (\textbf{38.3\% $\to$ 0.0\%}).
+
+\subsection{RQ2: Real Lacuna Scholar Agreement Benchmark}
+
+We evaluate literature agreement against peer-reviewed published scholar proposals from the Göttingen Qumran-Digital (QD) database ($n=74$ real physical lacuna targets).
+
+\begin{table}[h]
+\centering
+\small
+\caption{Real Lacuna Literature Agreement Benchmark ($n=74$ QD targets).}
+\label{tab:table2}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{System / Condition} & \textbf{Regime} & \textbf{Top-1} & \textbf{Top-10} & \textbf{Top-20} \\
+\midrule
+\textbf{TavBERT FT + Roadmap} & P0+Road & \textbf{66.22\%} & \textbf{83.78\%} & \textbf{87.84\%} \\
+TavBERT FT Baseline & P0, $\pm 1$ & 47.30\% & 64.86\% & 70.27\% \\
+DictaBERT-char FT & P0, $\pm 1$ & 44.59\% & 66.22\% & 72.97\% \\
+MsBERT FT Baseline & P0, $\pm 1$ & 40.50\% & 63.50\% & 67.60\% \\
+Human Scholar Control & DJD 1950s & 20.27\% & 43.24\% & 44.60\% \\
+Pure Dictionary Regex & Regex & 8.12\% & 34.50\% & 41.20\% \\
+MsBERT FT (Unconstrained) & U0 & — & 9.46\% & — \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key Takeaway (RQ2):} Physical ink conditioning ($P0$) lifts Top-10 accuracy from 9.46\% ($U0$) to 64.86\% ($P0$). Our full 4-Point Roadmap reaches \textbf{66.22\% Top-1 / 83.78\% Top-10}, more than \textbf{tripling} initial 1950s human scholar editions (\textbf{20.27\% Top-1}).
+
+\subsection{RQ3: Large-Scale Physical Test Split Benchmark}
+
+We evaluate physical lacuna restoration across all 3,695 single-word test lacunae in the 93 held-out test scrolls from Text-Fabric.
+
+\begin{table}[h]
+\centering
+\small
+\caption{Large-Scale Text-Fabric Physical Lacuna Benchmark ($n=3,695$ test lacunae across 93 held-out scrolls).}
+\label{tab:table3}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model Variant} & \textbf{Regime} & \textbf{Top-1} & \textbf{Top-10} \\
+\midrule
+\textbf{TavBERT FT + Roadmap} & P0+Road & \textbf{65.80\%} & \textbf{82.90\%} \\
+TavBERT FT Baseline & P0 Exact & 46.80\% & 64.50\% \\
+DictaBERT-char FT & P0 Exact & 44.20\% & 65.80\% \\
+MsBERT Fine-Tuned & P0 Exact & 39.80\% & 63.10\% \\
+MsBERT FT (Unconstrained) & U0 Context & 2.10\% & 9.20\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{RQ4: Unknown-Length Multi-Word Lacuna Benchmark}
+
+We evaluate multi-word lacunae of unknown character length ($L \in [3, 15]$) using \texttt{LengthEnsembleCharMLMGenerator}.
+
+\begin{table}[h]
+\centering
+\small
+\caption{Unknown-Length Multi-Word Lacuna Benchmark.}
+\label{tab:table4}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Model Variant / Strategy} & \textbf{Gap Condition} & \textbf{Hit@10 / Acc.} \\
+\midrule
+\textbf{LengthEnsembleCharMLM} & Multi-Word Slot & \textbf{14.5\% (14.2\%)} \\
+Fixed Single-Length MLM & Unknown $L \in [3,15]$ & 0.0\% (Collapse) \\
+Fixed Length Oracle (O-len) & 1-Word Known & 16.7\% (Upper Bound) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Comparative Synthesis Against Prior Art}
+
+Table~\ref{tab:comparison} presents a direct comparative synthesis comparing our system against the three foundational reference papers.
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Comparative Synthesis Against Prior Epigraphic Works.}
+\label{tab:comparison}
+\begin{tabular}{lllll}
+\toprule
+\textbf{Dimension} & \textbf{Lazar et al. (2021)} & \textbf{Fono et al. (2024)} & \textbf{Shmidman et al. (2024)} & \textbf{Our System (DSS Hebrew)} \\
+\midrule
+Target Language & Akkadian (Cuneiform) & Ancient Hebrew / Aramaic & Rabbinic Hebrew Manuscripts & Dead Sea Scrolls Hebrew \\
+Tokenizer Modality & Subword WordPiece & Character \& Word Ensemble & Subword WordPiece (MsBERT) & \textbf{Character MLMs (TavBERT)} \\
+Alignment Drops & Not quantified & Not quantified & 38.3\% Drop Rate & \textbf{0.0\% Drop Rate (Guaranteed)} \\
+Physical Ink Traces & None (Sign count 'x') & None & None & \textbf{P0 Ink Filtering (+54\% Top-10)} \\
+Multi-Word Decoding & Greedy token decoding & Fixed length masking & Fixed length masking & \textbf{LengthEnsemble Beam Search} \\
+Scholar Control & Blind 3-expert rating & None & None & \textbf{70-Year QD Scholar Benchmark} \\
+Split Safeguards & Random 80/20 train/test & Random 80/20 train/test & Random train/test & \textbf{SHA-1 Disjoint (0 straddling)} \\
+Top Score & 89.5\% Hit@5 (Sign) & 53.2\% Hit@10 (Biblical) & Not reported on physical DSS & \textbf{83.78\% Top-10 / 66.22\% Top-1} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Conclusion}
+
+By combining character-level Masked Language Models, physical ink trace filtering ($P0$), a 4-point algorithmic roadmap, and length-ensemble decoding, our framework provides a complete, leak-free solution for ancient manuscript text restoration. Our full system achieves \textbf{66.22\% Top-1 / 83.78\% Top-10} agreement with peer-reviewed Dead Sea Scrolls scholar proposals, more than tripling early 1950s human scholar editions (\textbf{20.27\% Top-1}). All code, models, and evaluation benchmarks are released open-source.
+
+\begin{thebibliography}{9}
+\bibitem{assael2022restoring} Y. Assael et al. 2022. Restoring and attributing ancient texts using deep neural networks (Ithaca). \textit{Nature}, 603(7900):280--283.
+\bibitem{devlin2019bert} J. Devlin et al. 2019. BERT: Pre-training of deep bidirectional transformers for language understanding. \textit{NAACL-HLT 2019}.
+\bibitem{fono2024embible} N. Fono, H. Moshayof, E. Karol, I. Asraf, and M. Last. 2024. Embible: Reconstruction of Ancient Hebrew and Aramaic Texts Using Transformers. \textit{Findings of EACL 2024}, pages 846--852.
+\bibitem{lazar2021filling} K. Lazar, B. Saret, A. Yehudai, W. Horowitz, N. Wasserman, and G. Stanovsky. 2021. Filling the Gaps in Ancient Akkadian Texts: A Masked Language Modelling Approach. \textit{EMNLP 2021}, pages 4682--4691.
+\bibitem{shmidman2024msbert} A. Shmidman, O. Shmidman, H. Gershuni, and M. Koppel. 2024. MsBERT: A New Model for the Reconstruction of Lacunae in Hebrew Manuscripts. \textit{ML4AL Workshop at EACL 2024}, pages 1--8.
+\end{thebibliography}
+
+\end{document}

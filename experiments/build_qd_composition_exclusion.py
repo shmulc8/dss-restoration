@@ -39,6 +39,16 @@ def composition_map(path: Path) -> dict[str, set[str]]:
     return mapping
 
 
+def validate(result: dict) -> None:
+    target = set(result["target_compositions"])
+    retained = set(result["retained_compositions"])
+    overlap = sorted(target & retained)
+    if overlap or result["verified_composition_overlap"]:
+        raise AssertionError(f"composition exclusion failed: {overlap}")
+    if result["retained_train_chunks"] >= result["original_train_chunks"]:
+        raise AssertionError("composition exclusion did not remove training chunks")
+
+
 def build(qd_result: Path, source_csv: Path) -> dict:
     qd_result = qd_result.resolve()
     source_csv = source_csv.resolve()
@@ -87,6 +97,13 @@ def build(qd_result: Path, source_csv: Path) -> dict:
         },
         "target_scrolls": sorted(target_scrolls),
         "target_compositions": sorted(target_compositions),
+        "retained_compositions": sorted(
+            {
+                label
+                for scroll in retained_train_scrolls + retained_dev_scrolls
+                for label in compositions.get(scroll, set())
+            }
+        ),
         "labeled_targets": len(labeled_targets),
         "labeled_target_scrolls": len(
             {str(row["siglum"]) for row in labeled_targets}
@@ -111,8 +128,18 @@ def main() -> None:
     parser.add_argument("--qd-result", type=Path, default=QD_RESULT)
     parser.add_argument("--composition-csv", type=Path, default=SOURCE_CSV)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--validate-existing",
+        action="store_true",
+        help="validate the checked-in manifest without the licensed source CSV",
+    )
     args = parser.parse_args()
+    if args.validate_existing:
+        validate(json.loads(args.output.read_text(encoding="utf-8")))
+        print(f"composition exclusion manifest valid: {args.output}")
+        return
     result = build(args.qd_result, args.composition_csv)
+    validate(result)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"

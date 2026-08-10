@@ -62,8 +62,8 @@ EXPERIMENTS = (
     ),
     Experiment(
         "qd-composition-manifest",
-        "Regenerate the QD-target composition-exclusion manifest",
-        ("experiments/build_qd_composition_exclusion.py",),
+        "Validate the QD-target composition-exclusion manifest",
+        ("experiments/build_qd_composition_exclusion.py", "--validate-existing"),
         "checks",
     ),
     Experiment(

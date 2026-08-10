@@ -108,6 +108,30 @@ Our post-processing roadmap combines: (1) Morpho-lemma normalization, (2) Quote-
 \text{Score}(c) = \frac{\sum_{i=1}^L \log P(c_i)}{\sqrt{L}}
 \end{equation}
 
+\subsection{Real Manuscript Case Studies}
+
+To demonstrate real-world epigraphic performance, Table~\ref{tab:case_studies} showcases two physical lacuna case studies directly from our test targets.
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Qualitative Physical Lacuna Case Studies on Real Dead Sea Scrolls Targets.}
+\label{tab:case_studies}
+\begin{tabular}{lllll}
+\toprule
+\textbf{Manuscript \& Location} & \textbf{Physical Ink Trace ($P0$)} & \textbf{Published Scholar Proposals} & \textbf{Model Top-3 Candidates} & \textbf{Status / Result} \\
+\midrule
+$1\text{QpHab}$ Col. IV Line 11 & Visible \textit{`ashm'}, $L=5$ & \textit{ashm, ashmah, ashmim, ashmatam} & 1.\ \textbf{\textit{ashmot}} (\textit{Model Proposal}) & $\star$ Top-1 Model Proposal \\
+(\textit{Pesher Habakkuk}) & & & 2.\ \textit{ashmim} & $\checkmark$ Top-2 Scholar Match \\
+& & & 3.\ \textit{ashmah} & $\checkmark$ Top-3 Scholar Match \\
+\midrule
+$1\text{Q34bis}$ Frg. 3 i Line 4 & Visible \textit{`deshen'}, $L=4$ & \textit{deshen, le-hedashen, le-hitdashen} & 1.\ \textbf{\textit{be-deshen}} (\textit{Model \#1}) & $\star$ Top-1 Model Proposal \\
+(\textit{Prayers Scroll}) & & & 2.\ \textit{deshen} & $\checkmark$ Top-2 Scholar Match \\
+& & & 3.\ \textit{mi-deshen} & $\star$ Top-3 Model Proposal \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
 \section{Experimental Results}
 
 \begin{figure}[htbp]

@@ -1,5 +1,9 @@
 # DSS Text Restoration — Unification Plan: Decision Points & Evidence
 
+> **Historical decision record (not a current results source).** Use
+> `docs/RESULTS.md` and `experiments/results/paper/paper_results_snapshot.json`
+> for current numbers and promotion status.
+
 **Purpose.** Shmulik and Itay have two independent codebases for the same research goal. This document is the single reference for merging them into one repository with one benchmark protocol: the background (§0), the twelve decisions to agree on (§1–§12), the empirical evidence gathered so far (§R), and the numbers each side stands behind (Appendix). All statements about the codebases were verified against the code itself on 2026-07-31; the evaluation paths were audited for gold-information leaks on 2026-08-02 (§R5).
 
 ---
@@ -154,7 +158,7 @@ Evaluation design is itself an open decision (§5–§8), so R1 is only one lens
 
 | Setup (74 QD targets) | Top-1 | Top-10 |
 |---|---|---|
-| Constrained MLM (visible letters + length ±1) | 40.5% | **63.5%** (CI 51.4–74.3) |
+| Constrained MLM (visible letters + length ±1) | 40.5% | **63.5%** (scroll-cluster CI 52.4–74.4) |
 | Same, exact length (±0; the 59 length-certain targets) | 52.5% | 69.5% |
 | Same targets, no physical constraints | — | 9.5% |
 | + train-only RAG (α fit on dev) | 40.5% | 63.5% (no change) |

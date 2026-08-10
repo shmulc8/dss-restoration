@@ -40,8 +40,20 @@ EXPERIMENTS = (
     ),
     Experiment(
         "leakage",
-        "Validate legacy split boundaries and held-out exclusions",
+        "Validate the canonical registry boundaries and held-out exclusions",
         ("experiments/validate_leakage.py",),
+        "checks",
+    ),
+    Experiment(
+        "paper-snapshot",
+        "Validate and aggregate frozen target-level paper artifacts",
+        ("experiments/run_paper_benchmark.py",),
+        "checks",
+    ),
+    Experiment(
+        "data-profile",
+        "Regenerate descriptive corpus and lacuna-shape statistics",
+        ("experiments/build_paper_data_profile.py",),
         "checks",
     ),
     Experiment(

@@ -32,11 +32,11 @@ The repository is a linear pipeline of five stages, each consuming the previous 
    `experiments/results/runs/<run_id>/` containing `predictions.jsonl`, `metrics.json`,
    `word_scores.csv` and `manifest.json`.
 5. **`comparison/`** — aggregation and reporting over those run directories; generated reports live
-   in `comparison/reports/` and are the only citable source of numbers.
+   in `comparison/reports/`. Paper-facing results are frozen under
+   `experiments/results/paper/` with provenance in `docs/paper_results_manifest.json`.
 
 `utils/` holds cross-cutting helpers (paths, Hebrew morphology, clitic joining, book filters).
-`tests/` is a conventional top-level suite. `demo/` is a separate web app and is not part of the
-pipeline.
+`tests/` is a conventional top-level suite.
 
 ## The two evaluation tracks
 
@@ -67,11 +67,11 @@ Three information regimes are named throughout and must be stated with every num
 - **`tests/test_public_claims.py` enforces that**: it fails if a figure with no artifact appears on a
   public surface, if the QD headline drifts from the scorer's own report, or if a significance claim
   is made without a test behind it. Documents covered are README, `docs/RESULTS.md`,
-  `docs/PAPER_PRESENTATION.html`, `docs/PAPER_MASTER_SUMMARY.md` and the two demo pages.
-- **Statistics.** Confidence intervals come from a sentence-level percentile cluster bootstrap
-  (B=1000) — clustering on sentences, because words inside a sentence share a context and a masking
-  draw. Masking is seeded per sentence (`sha1(seed|uid)`), so runs over the same protocol are
-  **paired**, which is what makes `mcnemar_test` valid between two models.
+  `docs/paper.tex`, and `docs/PAPER_PRESENTATION.html`.
+- **Statistics.** The QD interval resamples scrolls, which are the independent sampling unit.
+  Synthetic-span intervals resample their predeclared target clusters. Runs over the same frozen
+  targets are paired; a model-comparison significance claim still requires the corresponding paired
+  test artifact.
 
 ## Known issues
 
@@ -108,4 +108,4 @@ they hold the raw outputs behind the reports in `comparison/reports/`.
 
 `ETCBC/dss` is **CC BY-NC 4.0**. Attribution must name Martin G. Abegg Jr., James E. Bowley and
 Edward M. Cook. The non-commercial term applies to any redistributed derived text, including examples
-printed in a paper or shipped in the demo.
+printed in a paper.

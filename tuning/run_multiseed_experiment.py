@@ -1,68 +1,33 @@
-"""Multi-Seed Local Fine-Tuning & Full Benchmark Pass.
+#!/usr/bin/env python3
+"""Guard against mistaking configuration scaffolds for multi-seed training.
 
-Executes 3-seed fine-tuning for dictabert-char and TavBERT on the frozen DSS train split
-(data_preparation/dss_scroll_splits_v1.json), followed by full 338-sentence evaluation and QD real lacuna scoring.
+The former script created per-seed JSON files but did not train or evaluate a
+model. It is intentionally retired. Use a model-specific training entry point,
+retain checkpoint metadata, and evaluate each checkpoint with a real benchmark.
 """
 
+from __future__ import annotations
+
 import argparse
-import json
-import logging
-from pathlib import Path
-import numpy as np
-import torch
-
-from data_preparation.splits import get_scroll_sets
-from curation.preserved_corpus import GAP_TOKEN, load_chunks
-from tuning.tokenizer_compat import load_tokenizer
-from tuning.candidate_generator import PartialLetterFilter, Candidate, CandidateGenerator
-from experiments.run_cloze_benchmark import run_full_test_benchmark
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 
-def run_multiseed_pass(
-    model_name: str = "tau/tavbert-he",
-    seeds: list[int] = [41, 42, 43],
-    epochs: int = 3,
-    output_base: str = "models/multiseed_tavbert",
-):
-    """Run multi-seed fine-tuning pass locally and compute aggregate statistics."""
-    results_by_seed = {}
-    
-    for seed in seeds:
-        out_dir = Path(output_base) / f"seed_{seed}"
-        out_dir.mkdir(parents=True, exist_ok=True)
-        logger.info(f"--- Starting local fine-tuning run for {model_name} (Seed {seed}) ---")
+RETIRED_MESSAGE = (
+    "Retired: this entry point never trained models; it only wrote configuration "
+    "files. Run a model-specific trainer and the frozen evaluator, then aggregate "
+    "target-level artifacts with experiments/run_paper_benchmark.py."
+)
 
-        # Record run configuration
-        config = {
-            "model_name": model_name,
-            "seed": seed,
-            "epochs": epochs,
-            "learning_rate": 1e-5,
-            "warmup_ratio": 0.1,
-            "weight_decay": 0.01,
-            "early_stopping": "best_val_loss",
-            "device": "mps" if torch.backends.mps.is_available() else "cpu",
-            "output_dir": str(out_dir),
-        }
-        (out_dir / "experiment_config.json").write_text(json.dumps(config, indent=2))
 
-        logger.info(f"Seed {seed} experiment initialized at {out_dir}.")
+def run_multiseed_pass(*args: object, **kwargs: object) -> None:
+    """Fail loudly instead of manufacturing experiment-looking directories."""
+    del args, kwargs
+    raise RuntimeError(RETIRED_MESSAGE)
 
-    logger.info("Multi-seed local experiment configuration complete.")
+
+def main() -> None:
+    argparse.ArgumentParser(description=__doc__).parse_args()
+    raise SystemExit(RETIRED_MESSAGE)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Multi-Seed Local Experiment Runner")
-    parser.add_argument("--model", type=str, default="tau/tavbert-he")
-    parser.add_argument("--epochs", type=int, default=3)
-    parser.add_argument("--output_base", type=str, default="models/multiseed_tavbert")
-    args = parser.parse_args()
-
-    run_multiseed_pass(
-        model_name=args.model,
-        epochs=args.epochs,
-        output_base=args.output_base,
-    )
+    main()

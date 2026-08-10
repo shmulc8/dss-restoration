@@ -5,6 +5,7 @@ from experiments.run_qd_benchmark import (
     PhysicalConstraint,
     _visible_segments,
     build_constraint,
+    bootstrap_top10_ci,
     contiguous_context,
     join_clitics,
     parse_attributed_reading,
@@ -95,6 +96,18 @@ class PreservedRAGTests(unittest.TestCase):
         self.assertEqual(span, 3)
         self.assertEqual(hits, 3)
         self.assertEqual(rag_score(index, *key, "שקר"), (0.0, 0, 0))
+
+
+class QDStatisticsTests(unittest.TestCase):
+    def test_bootstrap_resamples_scroll_clusters(self):
+        records = [
+            {"siglum": "A", "rank": 0},
+            {"siglum": "A", "rank": 0},
+            {"siglum": "B", "rank": None},
+        ]
+        low, high = bootstrap_top10_ci(records, "rank", seed=7, samples=500)
+        self.assertEqual(low, 0.0)
+        self.assertEqual(high, 100.0)
 
 
 if __name__ == "__main__":

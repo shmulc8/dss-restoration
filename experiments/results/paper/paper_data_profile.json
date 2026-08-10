@@ -1,0 +1,213 @@
+{
+  "status": "descriptive_statistics_only_no_model_scores",
+  "corpus": {
+    "source": {
+      "corpus": "ETCBC/dss",
+      "text_fabric_version": "2.0",
+      "transcription": "Martin Abegg data files",
+      "feature_creators": [
+        "Martin G. Abegg Jr.",
+        "James E. Bowley",
+        "Edward M. Cook"
+      ],
+      "license": "CC BY-NC 4.0",
+      "local_path_config": "DSS_TF_DIR"
+    },
+    "scrolls": 736,
+    "chunks": 1647,
+    "preserved_words": 95736,
+    "lacunae": 27814,
+    "splits": {
+      "train": {
+        "scrolls": 413,
+        "chunks": 1002,
+        "preserved_words": 55950,
+        "lacunae": 16914
+      },
+      "dev": {
+        "scrolls": 103,
+        "chunks": 238,
+        "preserved_words": 14473,
+        "lacunae": 4086
+      },
+      "heldout": {
+        "scrolls": 220,
+        "chunks": 407,
+        "preserved_words": 25313,
+        "lacunae": 6814
+      }
+    },
+    "all_lacunae_shape": {
+      "scrolls": 736,
+      "lacunae": 27814,
+      "damaged_word_positions": 165239,
+      "gap_word_count": {
+        "median": 4.0,
+        "p90_nearest_rank": 13,
+        "maximum": 268,
+        "buckets": {
+          "1": {
+            "n": 5239,
+            "percent": 18.835838067160424
+          },
+          "2": {
+            "n": 4536,
+            "percent": 16.308333932551953
+          },
+          "3": {
+            "n": 3997,
+            "percent": 14.370460918961674
+          },
+          "4-5": {
+            "n": 4941,
+            "percent": 17.764435176529805
+          },
+          "6+": {
+            "n": 9101,
+            "percent": 32.720931904796146
+          }
+        }
+      },
+      "material_evidence": {
+        "lacunae_with_at_least_one_traced_word": 23632,
+        "lacunae_with_at_least_one_traced_word_percent": 84.96440641403609,
+        "damaged_word_positions_retaining_ink": 49130,
+        "damaged_word_positions_retaining_ink_percent": 29.732690224462747,
+        "median_visible_letters_when_present": 4.0,
+        "missing_character_estimate_available": 25509,
+        "missing_character_estimate_available_percent": 91.71280650032358,
+        "missing_character_estimate_median": 5,
+        "missing_character_estimate_iqr_nearest_rank": [
+          2,
+          12
+        ]
+      },
+      "context": {
+        "both_sides_available": 26467,
+        "both_sides_available_percent": 95.15711512188106,
+        "median_preserved_context_words": 14.0
+      }
+    },
+    "checkpoint_associated_heldout_shape": {
+      "scrolls": 220,
+      "lacunae": 6814,
+      "damaged_word_positions": 43401,
+      "gap_word_count": {
+        "median": 4.0,
+        "p90_nearest_rank": 13,
+        "maximum": 268,
+        "buckets": {
+          "1": {
+            "n": 1207,
+            "percent": 17.713530965658936
+          },
+          "2": {
+            "n": 1090,
+            "percent": 15.996477839741708
+          },
+          "3": {
+            "n": 962,
+            "percent": 14.117992368652773
+          },
+          "4-5": {
+            "n": 1186,
+            "percent": 17.40534194305841
+          },
+          "6+": {
+            "n": 2369,
+            "percent": 34.76665688288817
+          }
+        }
+      },
+      "material_evidence": {
+        "lacunae_with_at_least_one_traced_word": 5756,
+        "lacunae_with_at_least_one_traced_word_percent": 84.47314352803052,
+        "damaged_word_positions_retaining_ink": 12523,
+        "damaged_word_positions_retaining_ink_percent": 28.85417386696159,
+        "median_visible_letters_when_present": 4.0,
+        "missing_character_estimate_available": 6207,
+        "missing_character_estimate_available_percent": 91.09186968007045,
+        "missing_character_estimate_median": 5,
+        "missing_character_estimate_iqr_nearest_rank": [
+          2,
+          13
+        ]
+      },
+      "context": {
+        "both_sides_available": 6411,
+        "both_sides_available_percent": 94.08570589961843,
+        "median_preserved_context_words": 13.0
+      }
+    },
+    "interpretation_caution": "Gap word counts use consecutive source-word positions after editorial text is removed; they are transcription-derived structural estimates, not direct measurements of a single physical hole."
+  },
+  "evaluation_sets": {
+    "unknown_length_synthetic": {
+      "targets": 300,
+      "scrolls": 6,
+      "sample_sha256": "d3a8701df04ae725655c6a1d423cf84b2fb82a6d55bbf76ac78eda152be18ec5",
+      "gold_length_word_count_and_boundaries_given": false,
+      "strata": {
+        "1": {
+          "n": 100,
+          "scrolls": 4,
+          "character_length_median": 3.0,
+          "character_length_iqr_nearest_rank": [
+            3,
+            4
+          ],
+          "character_length_range": [
+            2,
+            7
+          ]
+        },
+        "2": {
+          "n": 100,
+          "scrolls": 4,
+          "character_length_median": 7.0,
+          "character_length_iqr_nearest_rank": [
+            6,
+            8
+          ],
+          "character_length_range": [
+            4,
+            12
+          ]
+        },
+        "3": {
+          "n": 100,
+          "scrolls": 5,
+          "character_length_median": 10.0,
+          "character_length_iqr_nearest_rank": [
+            9,
+            11
+          ],
+          "character_length_range": [
+            7,
+            15
+          ]
+        }
+      }
+    },
+    "qd_literature_agreement": {
+      "targets": 74,
+      "scrolls": 37,
+      "unique_target_readings": 99,
+      "targets_with_multiple_readings": 22,
+      "targets_with_multiple_readings_percent": 29.72972972972973,
+      "estimated_length_median": 5.0,
+      "estimated_length_range": [
+        2,
+        9
+      ],
+      "targets_anchored_at_one_or_both_edges": 72,
+      "target_definition": "eligible non-biblical single-word natural lacunae"
+    }
+  },
+  "inputs": {
+    "curation/derived/preserved_nonbib_manifest.json": "f7fdae320083fd2eb0a3553b20deb54fffc4baea40806ba4961bafb7d9d6bb55",
+    "curation/derived/nonbib_lacunae.jsonl": "41206bc6d68211c7f53dcd588fa61bea896ee7dc4b009a73c7a2c02c7caff6b8",
+    "experiments/results/paper/qd_msbert_rerun_20260810.json": "e1a094f6edd9bd080f6eb1c44ddd95721e8c36d029ed7725e230f27ef2f3168d",
+    "experiments/results/paper/span_baselines_rerun_20260810.json": "1495b68969d1ade57dd8f0dbb78a7cd6a78c9116146a68a99566a96ddc53ad5f"
+  }
+}

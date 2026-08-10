@@ -6,8 +6,8 @@ The project is deliberately reconstruction-free during fine-tuning: modern
 editorial restorations are removed from training targets and from the retrieval
 index.
 
-- [Live research site](https://dss-restoration-demo.pages.dev/)
-- [Hebrew research deck](https://dss-restoration-demo.pages.dev/slides_he.html)
+- [Current paper briefing](docs/PAPER_PRESENTATION.html)
+- [Team-review PDF](docs/paper.pdf)
 - [Locked paper methodology](docs/METHODOLOGY.md)
 - [Final method and system decision](docs/archive/BEST_METHOD.md)
 - [Current evidence register](docs/RESULTS.md)
@@ -23,10 +23,9 @@ damaged manuscript. The framework separates four questions:
 2. Does it rank attested modern scholarly proposals highly at real lacunae?
 3. Do train-only textual parallels improve predictions on the same frozen test
    cases?
-4. Do candidates and parallels help scholars work more accurately or quickly?
 
-Only the first three have pilot results. The scholar-assistance study has not
-yet been run.
+The current draft evaluates only the first three questions. It does not include
+or propose a human-subjects study.
 
 ## Current results
 
@@ -52,6 +51,14 @@ The exact provenance, limitations, and status of every retained number are in
 [`docs/RESULTS.md`](docs/RESULTS.md). Superseded master reports and the earlier
 RAG evaluation that leaked gold length have been removed from the current
 repository. Git history preserves them for audit.
+
+## Reproducibility release
+
+The frozen paper snapshot, its source hashes, and the exact validation commands
+are documented in [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md). The CI workflow
+runs the full test suite and evidence validators, checks that generated paper
+artifacts are current, compiles `docs/paper.tex`, and publishes the compiled PDF
+as a workflow artifact.
 
 ## Clean data and training path
 
@@ -85,7 +92,7 @@ TavBERT-style character-only, constrained word completion, and a calibrated
 character-word ensemble under known, predicted, and unknown whitespace.
 Like Embible, this comparison creates synthetic damage in intact text so the
 answer is known. Real manuscript lacunae are a separate literature-agreement
-and scholar-evaluation track, not an automatic accuracy test.
+track, not an automatic accuracy test.
 
 The expanded diagnostic also shows that the word decoder can express only
 86.3% of complete targets because it assumes one tokenizer token per missing

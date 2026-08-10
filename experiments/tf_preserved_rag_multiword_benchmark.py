@@ -39,7 +39,7 @@ from curation.preserved_corpus import load_chunks, split_scrolls  # noqa: E402
 
 tlog.set_verbosity_error()
 
-DEFAULT_MODEL = ROOT / "ft_msbert_span_preserved_nonbib"
+DEFAULT_MODEL = ROOT / "models" / "ft_msbert_span_preserved_nonbib"
 DEFAULT_REPORT = ROOT / "comparison" / "reports" / "preserved_rag_lacuna_lengths.json"
 DEFAULT_MARKDOWN = ROOT / "comparison" / "reports" / "PRESERVED_RAG_LACUNA_LENGTHS.md"
 DEFAULT_TF_DIR = Path(

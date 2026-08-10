@@ -1,6 +1,10 @@
 # Current evidence register
 
-Status: 25 July 2026.
+Status: 10 August 2026.
+
+The authoritative shareable snapshot is
+[`experiments/results/paper/paper_results_snapshot.json`](../experiments/results/paper/paper_results_snapshot.json).
+Older artifacts below remain provenance records and must not override that snapshot.
 
 This file is the sole index of paper-facing numerical evidence. Results not
 listed here are exploratory, superseded, or awaiting a frozen protocol.
@@ -40,13 +44,15 @@ No result currently qualifies as a final paper result.
 - Input evidence: visible letters and approximate word length with tolerance of
   one character.
 - Target-level constrained MLM: 40.5% Top-1, 63.5% Top-10, 67.6% Top-20.
-- Cluster-bootstrap 95% interval for Top-10: 51.4%–74.3%.
+- Scroll-cluster bootstrap 95% interval for Top-10: 52.4%–74.4% (37 scrolls).
 - The same targets without physical constraints: 9.5% Top-10.
-- Status: literature-agreement pilot.
+- Status: reproduced literature-agreement diagnostic. All 74 targets are held
+  out under the checkpoint-associated split; a later registry assigns 40 to
+  train, 22 to validation, and 12 to test. Do not mix the two registries.
 - Limitation: selected disputed sites, single-word only, and modern proposals
   rather than physical truth.
 - Artifact:
-  [`comparison/reports/QD_RESEARCHER_BENCHMARK.md`](../comparison/reports/QD_RESEARCHER_BENCHMARK.md).
+  [`experiments/results/paper/qd_msbert_rerun_20260810.json`](../experiments/results/paper/qd_msbert_rerun_20260810.json).
 
 ### C. Train-only RAG ablation
 
@@ -140,13 +146,11 @@ No result currently qualifies as a final paper result.
 - Decision: retain word-only as the best implemented baseline under the locked
   simplicity tie-break; do not promote TavBERT, overlap fusion, rank fusion, or
   RAG into the final system.
-- Status: expanded model-selection pilot, not an independent or frozen test.
-  It extends the deterministic sample stream used by the earlier 30-span run
-  and lacks clustered uncertainty.
+- Status: reproduced model-selection pilot, not an independent frozen test.
+  It extends the deterministic sample stream used by the earlier 30-span run.
+  Scroll-cluster intervals are reported, but there are only six clusters.
 - Artifacts:
-  [`comparison/reports/EMBIBLE_DSS_EXPANDED_PILOT.md`](../comparison/reports/EMBIBLE_DSS_EXPANDED_PILOT.md)
-  and
-  [`comparison/reports/embible_dss_expanded_pilot_summary.json`](../comparison/reports/embible_dss_expanded_pilot_summary.json).
+  [`experiments/results/paper/span_baselines_rerun_20260810.json`](../experiments/results/paper/span_baselines_rerun_20260810.json).
 
 ### G. Quote-aware cross-corpus source recovery
 

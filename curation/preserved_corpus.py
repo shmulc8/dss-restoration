@@ -7,7 +7,7 @@ from utils.paths import repo_path
 
 GAP_TOKEN = "<GAP>"
 HEBREW = set(chr(codepoint) for codepoint in range(0x05D0, 0x05EB))
-DERIVED_DIR = repo_path("data", "derived")
+DERIVED_DIR = repo_path("curation", "derived")
 CHUNKS_PATH = DERIVED_DIR / "preserved_nonbib_chunks.jsonl"
 LACUNAE_PATH = DERIVED_DIR / "nonbib_lacunae.jsonl"
 MANIFEST_PATH = DERIVED_DIR / "preserved_nonbib_manifest.json"

@@ -69,7 +69,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--word-model",
         type=Path,
-        default=ROOT / "ft_msbert_span_preserved_nonbib",
+        default=ROOT / "models" / "ft_msbert_span_preserved_nonbib",
     )
     parser.add_argument(
         "--candidate-cache",

@@ -39,7 +39,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--model-dir",
         type=Path,
-        default=ROOT / "ft_byt5_span_preserved_nonbib_seed41",
+        default=ROOT / "models" / "ft_byt5_span_preserved_nonbib_seed41",
     )
     parser.add_argument("--split", choices=("dev", "heldout"), default="dev")
     parser.add_argument("--per-length", type=int)
@@ -255,7 +255,10 @@ def evaluate() -> None:
         },
         "results": results,
     }
-    print(json.dumps({**report["protocol"], **results}, ensure_ascii=False, indent=2))
+    print(json.dumps({
+        **report["protocol"],
+        **{key: value for key, value in results.items() if key != "cases"},
+    }, ensure_ascii=False, indent=2))
     if args.output_json:
         output = args.output_json.resolve()
         output.parent.mkdir(parents=True, exist_ok=True)

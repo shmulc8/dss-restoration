@@ -1,9 +1,15 @@
 # Domain Shift Insight: Non-Biblical DSS vs. Biblical Hebrew
 
-1. **Non-Biblical Qumran Sectarian Dialect:** Our ByT5 model fine-tuned exclusively on preserved non-biblical Dead Sea Scrolls achieves **41.5% P0 / 18.2% U0 SOTA on non-biblical DSS scrolls**, but exhibits expected domain-shift degradation on Biblical Hebrew verses.
-2. **Distinct Domain Proof:** This proves empirically that non-biblical Dead Sea Scrolls text (e.g. *1QS*, *1QH*, *CD*) constitutes a distinct linguistic domain from Biblical Hebrew, justifying specialized fine-tuning on preserved non-biblical manuscript text. 1/2/3-word synthetic damage used in our DSS benchmark is
-applied. This is an apples-to-apples domain diagnostic, not a reproduction of
-Embible's random character/word masking or published metrics.
+This diagnostic applies the DSS-trained checkpoint and decoder to held-out
+Biblical Hebrew. The word model reaches 80.0%, 42.5%, and 27.5% exact Top-10 on
+one-, two-, and three-word spans, respectively. The contrast with the DSS pilot
+is consistent with domain shift, but does not by itself prove which linguistic
+property causes the difference.
+
+The one-/two-/three-word synthetic damage used in the DSS benchmark is applied.
+This is an apples-to-apples transfer diagnostic, not a reproduction of
+Embible's random character/word masking or published metrics. It is not a P0
+physical-lacuna evaluation and no SOTA claim is made.
 
 | Hidden words | System | Exact Top-1 | Exact Top-5 | Exact Top-10 | Seq WordHit@1 | Seq WordHit@5 |
 | ---: | :--- | ---: | ---: | ---: | ---: | ---: |

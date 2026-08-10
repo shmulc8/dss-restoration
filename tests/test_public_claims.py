@@ -8,18 +8,15 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_SURFACES = (
     ROOT / "README.md",
     ROOT / "docs" / "RESULTS.md",
+    ROOT / "docs" / "paper.tex",
     ROOT / "docs" / "PAPER_PRESENTATION.html",
-    ROOT / "docs" / "PAPER_MASTER_SUMMARY.md",
-    ROOT / "demo" / "index.html",
-    ROOT / "demo" / "slides_he.html",
 )
 
-# Surfaces whose numbers must be traceable to a generated artifact. The demo
-# pages present a curated subset and are exempt from the numeric guards below.
+# Surfaces whose numbers must be traceable to a generated artifact.
 EVIDENCE_SURFACES = (
     ROOT / "docs" / "RESULTS.md",
+    ROOT / "docs" / "paper.tex",
     ROOT / "docs" / "PAPER_PRESENTATION.html",
-    ROOT / "docs" / "PAPER_MASTER_SUMMARY.md",
 )
 
 # These fragments identify the removed gold-length/slot-count aggregation.
@@ -40,6 +37,15 @@ UNSUPPORTED_FIGURES = {
     "2,179": "total text chunks; the corpus contains 1,647",
     "12,971": "damaged-word count; no such quantity exists in the dataset",
     "Single-Word RAG 48%": "legacy pilot claim replaced by quote-aware RAG Table A2",
+    "83.78\\%": "no checked roadmap artifact supports this QD figure",
+    "82.90\\%": "no checked large-scale artifact supports this figure",
+    "23.65\\%": "the shared n=729 TavBERT FT Hit@10 is 20.58%",
+    "14.2\\%": "known-slot slot accuracy was misreported as unknown-length exact recovery",
+    "14.5\\%": "known-slot slot accuracy was misreported as unknown-length exact recovery",
+    "83.78%": "no checked roadmap artifact supports this QD figure",
+    "82.90%": "no checked large-scale artifact supports this figure",
+    "23.65%": "the shared n=729 TavBERT FT Hit@10 is 20.58%",
+    "14.2%": "known-slot slot accuracy was misreported as unknown-length exact recovery",
 }
 
 # Significance claims that no artifact supports. tuning.metrics_runner.mcnemar_test
@@ -129,7 +135,7 @@ def test_qd_headline_matches_generated_report() -> None:
 
 
 def test_deck_declares_the_split_registry_conflict() -> None:
-    """40 of the 74 QD targets sit in the canonical train split; the deck must say so."""
+    """The paper must distinguish the checkpoint and later split registries."""
     report = json.loads(
         (ROOT / "comparison" / "reports" / "qd_researcher_comparison.json").read_text(
             encoding="utf-8"
@@ -148,6 +154,11 @@ def test_deck_declares_the_split_registry_conflict() -> None:
 
     deck = (ROOT / "docs" / "PAPER_PRESENTATION.html").read_text(encoding="utf-8")
     assert f"{mismatched} of its 74 targets" in deck
+
+    paper = (ROOT / "docs" / "paper.tex").read_text(encoding="utf-8")
+    assert f"{mismatched} of the 74 targets" in paper
+    assert "all 74 targets to held-out scrolls" in paper
+    assert "must not be mixed" in paper
 
 
 def test_public_surfaces_link_the_methodology() -> None:
@@ -176,8 +187,6 @@ def test_embible_public_numbers_match_generated_report() -> None:
         for path in (
             ROOT / "README.md",
             ROOT / "docs" / "RESULTS.md",
-            ROOT / "demo" / "index.html",
-            ROOT / "demo" / "slides_he.html",
         )
     )
     for system, displayed in expected.items():

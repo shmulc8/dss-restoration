@@ -91,7 +91,7 @@ def fetch_embible_test_verses() -> list[str]:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model-dir", type=Path, default=ROOT / "ft_byt5_span_preserved_nonbib_seed41"
+        "--model-dir", type=Path, default=ROOT / "models" / "ft_byt5_span_preserved_nonbib_seed41"
     )
     parser.add_argument("--num-samples", type=int, default=120)
     parser.add_argument("--seed", type=int, default=42)

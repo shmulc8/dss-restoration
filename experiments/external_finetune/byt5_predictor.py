@@ -17,7 +17,7 @@ from transformers import AutoTokenizer, T5ForConditionalGeneration
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent.parent
-MODEL_DIR = REPO / "ft_byt5_span_preserved_nonbib_seed41"
+MODEL_DIR = REPO / "models" / "ft_byt5_span_preserved_nonbib_seed41"
 SRC = HERE / "merged_results" / "tavbert-base" / "predictions.jsonl"
 OUT_DIR = HERE / "merged_results" / "byt5-preserved"
 TOP_K = 10

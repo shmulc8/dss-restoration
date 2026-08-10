@@ -6,7 +6,7 @@ metrics, and analysis code are frozen.
 
 ## 1. Research questions
 
-The paper must answer four questions separately.
+The paper answers three questions separately.
 
 **RQ1 — synthetic-damage recovery.** Can a model recover text that is
 physically preserved but hidden artificially under a realistic model of
@@ -18,12 +18,9 @@ more physically compatible, attributed scholarly restorations highly?
 **RQ3 — retrieval contribution.** On exactly the same test targets, does
 retrieval from eligible training material improve the base model, and when?
 
-**RQ4 — scholar utility.** Do model candidates, retrieved parallels, or their
-combination improve scholars' final decisions, time, or confidence?
-
 RQ1 has known transcription answers because the damage is synthetic. RQ2 has
 editorial reference readings at natural lacunae, but no observable manuscript
-truth. Neither substitutes for RQ4.
+truth. Agreement with those readings is not a human-subjects evaluation.
 
 ## 2. Corpus and provenance
 
@@ -226,21 +223,6 @@ letters, surrounding damage, named entities, and formulaicity.
 - Name the outcome **literature agreement**, never ground-truth accuracy.
 - Publish all exclusion reasons and counts.
 
-### Track C — scholar-assistance study
-
-Use a blinded, counterbalanced within-subject design with four conditions:
-
-1. manuscript context only;
-2. ranked model candidates;
-3. retrieved parallels;
-4. candidates plus parallels.
-
-Use approximately 60–100 real targets sampled across difficulty and gap-length
-strata. Record the final proposed reading, exact or minimum CER agreement, time,
-confidence, candidate adoption, parallel relevance, and perceived usefulness.
-Randomize condition order and candidate order. Measure inter-annotator
-agreement and use paired tests.
-
 ## 5. Primary and secondary metrics
 
 ### Primary
@@ -341,8 +323,7 @@ only if all are true:
 - confidence intervals are present;
 - multiword results use exact complete sequences;
 - RAG uses a matched paired ablation;
-- the claim states whether it is preserved recovery, literature agreement, or
-  scholar utility.
+- the claim states whether it is preserved recovery or literature agreement.
 
 ## 10. Relationship to prior work
 

@@ -1,0 +1,182 @@
+{
+  "status": "shareable_reproduced_snapshot_not_final_promotion",
+  "generated_file": "docs/paper_tables.tex",
+  "evidence_register": "docs/RESULTS.md",
+  "tables": [
+    {
+      "command": "CorpusOverviewTable",
+      "environment": "table",
+      "caption": "Reconstruction-free non-biblical corpus profile. Held-out refers to the checkpoint-associated split used by the preserved-only models.",
+      "label": "tab:corpus-overview",
+      "columns": "lrr",
+      "header": ["Measure", "Full corpus", "Held-out"],
+      "rows": [
+        ["Scroll identifiers", "736", "220"],
+        ["Training/evaluation chunks", "1,647", "407"],
+        ["Preserved word tokens", "95,736", "25,313"],
+        ["Lacuna records", "27,814", "6,814"],
+        ["Damaged word positions", "165,239", "43,401"]
+      ],
+      "source": "experiments/results/paper/paper_data_profile.json",
+      "status": "descriptive_statistics_only"
+    },
+    {
+      "command": "LacunaShapeTable",
+      "environment": "table",
+      "caption": "Lacunae by estimated source-word positions. Counts derive from consecutive damaged positions after editorial text is removed; they are structural estimates, not direct measurements of a single physical hole.",
+      "label": "tab:lacuna-shape",
+      "columns": "lrr",
+      "header": ["Positions", "Full corpus", "Held-out"],
+      "rows": [
+        ["1", "5,239 (18.8\\%)", "1,207 (17.7\\%)"],
+        ["2", "4,536 (16.3\\%)", "1,090 (16.0\\%)"],
+        ["3", "3,997 (14.4\\%)", "962 (14.1\\%)"],
+        ["4--5", "4,941 (17.8\\%)", "1,186 (17.4\\%)"],
+        ["6+", "9,101 (32.7\\%)", "2,369 (34.8\\%)"]
+      ],
+      "source": "experiments/results/paper/paper_data_profile.json",
+      "status": "descriptive_statistics_only"
+    },
+    {
+      "command": "EvaluationSetsTable",
+      "environment": "table",
+      "caption": "The two principal evaluation views. Synthetic damage has an observable preserved answer; QD measures agreement with attributed proposals and not historical truth.",
+      "label": "tab:evaluation-sets",
+      "columns": "lrrl",
+      "header": ["Set", "Targets", "Scrolls", "Reference"],
+      "rows": [
+        ["Unknown-length synthetic", "300", "6", "preserved complete span"],
+        ["QD natural lacunae", "74", "37", "99 attributed readings"]
+      ],
+      "source": "experiments/results/paper/paper_data_profile.json",
+      "status": "descriptive_statistics_only"
+    },
+    {
+      "command": "SyntheticAlignmentTable",
+      "environment": "table",
+      "caption": "Shared synthetic alignment diagnostic ($n=729$ preserved content words). Hit rates use all targets as the denominator; alignment failures are misses.",
+      "label": "tab:alignment",
+      "columns": "lrrr",
+      "header": ["System", "Hit@1", "Hit@10", "Drops"],
+      "rows": [
+        ["TavBERT base (character)", "7.27\\%", "21.12\\%", "0.00\\%"],
+        ["TavBERT FT (character)", "7.96\\%", "20.58\\%", "0.00\\%"],
+        ["MsBERT FT (WordPiece)", "6.04\\%", "13.31\\%", "38.27\\%"],
+        ["ByT5 unified (byte)", "0.82\\%", "5.35\\%", "0.00\\%"]
+      ],
+      "source": "experiments/results/runs/summary_with_subsets.json",
+      "status": "synthetic_diagnostic"
+    },
+    {
+      "command": "QDTable",
+      "environment": "table",
+      "caption": "Agreement with attributed readings at 74 Qumran Digital targets. Generated from the frozen reproduced snapshot; the initial-reading row is not a controlled human experiment.",
+      "label": "tab:qd",
+      "columns": "lrrrr",
+      "header": ["Condition", "Top-1", "Top-5", "Top-10", "Top-20"],
+      "rows": [
+        ["Context only ($U0$)", "4.1\\%", "8.1\\%", "9.5\\%", "10.8\\%"],
+        ["Encoded traces + length ($P0$)", "40.5\\%", "62.2\\%", "63.5\\%", "67.6\\%"],
+        ["$P0$ + train-only retrieval", "40.5\\%", "62.2\\%", "63.5\\%", "67.6\\%"],
+        ["QD initial reading", "20.3\\%", "41.9\\%", "43.2\\%", "44.6\\%"]
+      ],
+      "source": "experiments/results/paper/qd_msbert_rerun_20260810.json",
+      "status": "literature_agreement_pilot"
+    },
+    {
+      "command": "QDCharacterTable",
+      "environment": "table",
+      "caption": "Character-model literature agreement on the same 74 QD targets under $P0$ ($\\pm1$ character). These exploratory single-run comparisons have no paired confidence intervals.",
+      "label": "tab:qdchar",
+      "columns": "lrrr",
+      "header": ["Character model", "Top-1", "Top-10", "Top-20"],
+      "rows": [
+        ["TavBERT base", "46.0\\%", "62.2\\%", "67.6\\%"],
+        ["TavBERT FT", "43.2\\%", "59.5\\%", "63.5\\%"],
+        ["DictaBERT-char FT", "44.6\\%", "66.2\\%", "73.0\\%"]
+      ],
+      "source": "experiments/results/runs/qd_char/*.json",
+      "status": "literature_agreement_ablation"
+    },
+    {
+      "command": "SpanPilotTable",
+      "environment": "table",
+      "caption": "Unknown-length synthetic-damage pilot on 300 preserved DSS spans. Top-10 intervals use 10,000 scroll-cluster resamples over six scrolls and are unstable at that cluster count. The oracle uses unavailable gold word length.",
+      "label": "tab:spanpilot",
+      "columns": "lrrrrr",
+      "header": ["System", "Top-1", "Top-5", "Top-10", "95\\% CI", "CER"],
+      "rows": [
+        ["Preserved-only word span", "4.3\\%", "12.7\\%", "15.0\\%", "8.0--16.1\\%", "0.824"],
+        ["Preserved-only TavBERT", "2.7\\%", "4.7\\%", "6.0\\%", "2.0--8.3\\%", "0.862"],
+        ["Embible-style overlap", "3.0\\%", "4.7\\%", "4.7\\%", "2.0--5.3\\%", "0.853"],
+        ["Dev-fitted rank fusion", "5.7\\%", "12.0\\%", "15.0\\%", "8.0--16.7\\%", "0.811"],
+        ["Oracle word-length filter", "12.7\\%", "19.7\\%", "20.7\\%", "--", "0.756"]
+      ],
+      "source": "experiments/results/paper/span_baselines_rerun_20260810.json",
+      "status": "model_selection_pilot"
+    },
+    {
+      "command": "SpanStrataTable",
+      "environment": "table",
+      "caption": "Exact Top-10 and representability by hidden word count in the 300-span pilot. Each stratum has 100 spans. Coverage is diagnostic; uncovered cases remain misses.",
+      "label": "tab:strata",
+      "columns": "lrrr",
+      "header": ["Measure", "1 word", "2 words", "3 words"],
+      "rows": [
+        ["Word-span exact Top-10", "40.0\\%", "5.0\\%", "0.0\\%"],
+        ["Complete-span coverage", "95.0\\%", "87.0\\%", "77.0\\%"]
+      ],
+      "source": "experiments/results/paper/span_baselines_rerun_20260810.json",
+      "status": "model_selection_pilot"
+    },
+    {
+      "command": "ByTCheckpointTable",
+      "environment": "table",
+      "caption": "Unknown-length ByT5 checkpoint replications on the same 300 targets. Seed 41 used different training hyperparameters, so the rows are not a controlled multi-seed estimate and are not averaged inferentially.",
+      "label": "tab:byt5checkpoints",
+      "columns": "rrrrrr",
+      "header": ["Seed", "Epochs", "Batch", "LR", "Top-1", "Top-10"],
+      "rows": [
+        ["41", "1", "4", "5e-04", "1.3\\%", "3.0\\%"],
+        ["42", "3", "32", "1e-03", "1.3\\%", "1.7\\%"],
+        ["43", "3", "32", "1e-03", "1.3\\%", "2.7\\%"]
+      ],
+      "source": "experiments/results/paper/byt5_unknown_length_seed{41,42,43}.json",
+      "status": "checkpoint_replication_not_controlled_multiseed"
+    },
+    {
+      "command": "RetrievalTable",
+      "environment": "table*",
+      "caption": "Train-only retrieval ablation. QD uses literature agreement; Text-Fabric uses encoded editorial labels. Known slot counts make the Text-Fabric rows secondary diagnostics rather than the primary unknown-length task.",
+      "label": "tab:retrieval",
+      "columns": "lrrrll",
+      "header": ["Evaluation", "$n$", "Base Top-10", "+Retrieval", "Delta", "Unit"],
+      "rows": [
+        ["QD single-word", "74", "63.5\\%", "63.5\\%", "0.0", "target"],
+        ["TF single-word", "25", "60.0\\%", "64.0\\%", "+4.0", "exact span"],
+        ["TF multiword", "100", "7.0\\%", "9.0\\%", "+2.0", "exact sequence"],
+        ["TF multiword", "440", "41.4\\%", "41.8\\%", "+0.4", "slot"]
+      ],
+      "source": "comparison/reports/PRESERVED_RAG_LACUNA_LENGTHS.md",
+      "status": "retrieval_ablation_pilot"
+    },
+    {
+      "command": "SynthesisTable",
+      "environment": "table*",
+      "caption": "Methodological synthesis. Scores are not compared across corpora. A dash indicates that a dimension is not central to the cited evaluation.",
+      "label": "tab:synthesis",
+      "columns": "llllll",
+      "header": ["Dimension", "Lazar (2021)", "Embible (2024)", "MsBERT (2024)", "Aeneas (2025)", "This work"],
+      "rows": [
+        ["Material/language", "Akkadian tablets", "Biblical Heb./Aram.", "Hebrew MSS", "Latin inscriptions", "DSS transcriptions"],
+        ["Generation unit", "subword/sign", "word + char.", "WordPiece", "character sequence", "word span + char. ablation"],
+        ["Natural lacuna eval.", "expert sample", "no", "yes", "yes", "QD agreement pilot"],
+        ["Unknown length", "greedy masks", "masked spans", "missing word", "arbitrary length", "primary protocol"],
+        ["Material evidence", "transcription", "mask extent", "transcription", "image + text", "encoded traces/length"],
+        ["Primary caution", "domain/task scope", "synthetic damage", "token alignment", "edition-derived targets", "no physical truth"]
+      ],
+      "source": "bibliography_and_paper_method_sections",
+      "status": "qualitative_synthesis"
+    }
+  ]
+}

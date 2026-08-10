@@ -14,11 +14,6 @@
       "primary": false
     },
     "C": {
-      "name": "blinded_scholar_assistance",
-      "reference_status": "human_outcomes",
-      "primary": false
-    },
-    "D": {
       "name": "fixed_decoder_bible_transfer",
       "reference_status": "observable_preserved_transcription",
       "primary": false

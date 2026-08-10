@@ -36,7 +36,7 @@ if str(ROOT) not in sys.path:
 from curation.preserved_corpus import GAP_TOKEN, load_chunks
 
 DEFAULT_INPUT = ROOT / "curation" / "derived" / "qd_researcher_variants.jsonl"
-DEFAULT_MODEL = ROOT / "ft_msbert_span_preserved_nonbib"
+DEFAULT_MODEL = ROOT / "models" / "ft_msbert_span_preserved_nonbib"
 DEFAULT_REPORT = ROOT / "comparison" / "reports" / "qd_researcher_comparison.json"
 DEFAULT_MARKDOWN = ROOT / "comparison" / "reports" / "QD_RESEARCHER_BENCHMARK.md"
 HEBREW_RE = re.compile(r"[\u05d0-\u05ea]")
@@ -490,19 +490,26 @@ def summarize_ranks(ranks: Iterable[int | None]) -> dict[str, Any]:
 
 
 def bootstrap_top10_ci(
-    target_ranks: list[int | None],
+    target_records: list[dict[str, Any]],
+    rank_key: str,
     *,
     seed: int = 42,
     samples: int = 2000,
 ) -> list[float]:
-    if not target_ranks:
+    """Bootstrap manuscripts, retaining all targets from each sampled scroll."""
+    if not target_records:
         return [0.0, 0.0]
+    by_scroll: dict[str, list[int | None]] = defaultdict(list)
+    for record in target_records:
+        by_scroll[str(record["siglum"])].append(record.get(rank_key))
+    scrolls = sorted(by_scroll)
     generator = random.Random(seed)
     estimates = []
     for _ in range(samples):
-        resample = [
-            target_ranks[generator.randrange(len(target_ranks))] for _ in target_ranks
+        sampled_scrolls = [
+            scrolls[generator.randrange(len(scrolls))] for _ in scrolls
         ]
+        resample = [rank for scroll in sampled_scrolls for rank in by_scroll[scroll]]
         estimates.append(
             100
             * sum(rank is not None and rank < 10 for rank in resample)
@@ -530,7 +537,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     unconstrained = report["diagnostics"]["unconstrained_target_level"]
     qd = report["qd_initial_control"]
     quality = report["protocol"]["quality_filter"]
-    ci = target["top10_cluster_bootstrap_95ci"]
+    ci = target["top10_scroll_cluster_bootstrap_95ci"]
     sensitivity_rows = "\n".join(
         f"| ±{tolerance} | {values['n']} | {values['top1']:.1f}% | "
         f"{values['top10']:.1f}% | {values['top20']:.1f}% |"
@@ -895,10 +902,12 @@ def main() -> None:
         record["unconstrained_rank_any_attributed"] for record in target_records
     ]
     target_summary = summarize_ranks(target_ranks)
-    target_summary["top10_cluster_bootstrap_95ci"] = bootstrap_top10_ci(target_ranks)
+    target_summary["top10_scroll_cluster_bootstrap_95ci"] = bootstrap_top10_ci(
+        target_records, "rank_any_attributed"
+    )
     rag_target_summary = summarize_ranks(rag_target_ranks)
-    rag_target_summary["top10_cluster_bootstrap_95ci"] = bootstrap_top10_ci(
-        rag_target_ranks
+    rag_target_summary["top10_scroll_cluster_bootstrap_95ci"] = bootstrap_top10_ci(
+        target_records, "rag_rank_any_attributed"
     )
     sensitivity = {}
     for tolerance in sensitivity_tolerances:

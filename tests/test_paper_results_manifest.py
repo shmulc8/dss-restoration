@@ -2,6 +2,7 @@
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 
@@ -59,7 +60,7 @@ def test_generated_tables_are_current() -> None:
     generated = ROOT / "docs" / "paper_tables.tex"
     before = generated.read_bytes()
     subprocess.run(
-        [str(ROOT / ".venv/bin/python"), str(ROOT / "docs/generate_paper_tables.py")],
+        [sys.executable, str(ROOT / "docs/generate_paper_tables.py")],
         check=True,
         cwd=ROOT,
     )

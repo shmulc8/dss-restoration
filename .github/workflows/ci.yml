@@ -37,7 +37,7 @@ jobs:
 
       - name: Validate corpus, leakage, and protocol
         run: |
-          python curation/validate_preserved_nonbib_corpus.py
+          python curation/validate_preserved_nonbib_corpus.py --derived-only
           python experiments/validate_leakage.py
           python experiments/validate_paper_protocol.py
 

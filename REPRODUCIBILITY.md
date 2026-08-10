@@ -32,7 +32,7 @@ protocol boundaries:
 
 ```bash
 .venv/bin/python -m pytest -q
-.venv/bin/python curation/validate_preserved_nonbib_corpus.py
+.venv/bin/python curation/validate_preserved_nonbib_corpus.py --derived-only
 .venv/bin/python experiments/validate_leakage.py
 .venv/bin/python experiments/validate_paper_protocol.py
 .venv/bin/python experiments/run_paper_benchmark.py
@@ -44,6 +44,14 @@ git diff --exit-code -- \
   experiments/results/paper/paper_data_profile.json \
   experiments/results/paper/paper_results_snapshot.json \
   experiments/results/paper/PAPER_RESULTS_SNAPSHOT.md
+```
+
+For the stronger source-backed corpus check, obtain ETCBC DSS Text-Fabric 2.0
+under its license and run:
+
+```bash
+DSS_TF_DIR=/absolute/path/to/ETCBC/dss/tf/2.0 \
+  .venv/bin/python curation/validate_preserved_nonbib_corpus.py
 ```
 
 ## Compile the paper

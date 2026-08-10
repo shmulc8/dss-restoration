@@ -956,15 +956,15 @@
   "qd": {
     "context_only": {
       "n": 93,
-      "top1": 4.301075268817204,
-      "top5": 11.827956989247312,
-      "top10": 15.053763440860216,
-      "top20": 17.204301075268816,
+      "top1": 5.017921146953404,
+      "top5": 11.11111111111111,
+      "top10": 14.695340501792115,
+      "top20": 16.845878136200717,
       "in_candidate_vocabulary": 75,
       "median_rank_when_retrievable": 340,
       "top10_scroll_cluster_bootstrap_95ci": [
-        7.368421052631579,
-        23.157894736842106
+        7.482993197278912,
+        22.580645161290324
       ],
       "candidate_coverage": {
         "targets": 93,
@@ -972,22 +972,47 @@
         "fewer_than_10": 0,
         "median_candidates": 115690
       },
+      "seed_sd_top10": 0.6208067410641142,
       "top10_scroll_cluster_ci": [
-        7.368421052631579,
-        23.157894736842106
+        7.482993197278912,
+        22.580645161290324
+      ]
+    },
+    "soft_visible": {
+      "n": 93,
+      "top1": 35.12544802867384,
+      "top5": 53.40501792114695,
+      "top10": 56.63082437275986,
+      "top20": 61.29032258064516,
+      "in_candidate_vocabulary": 75,
+      "median_rank_when_retrievable": 1,
+      "top10_scroll_cluster_bootstrap_95ci": [
+        46.51162790697674,
+        66.66666666666667
+      ],
+      "candidate_coverage": {
+        "targets": 93,
+        "empty": 0,
+        "fewer_than_10": 0,
+        "median_candidates": 115690
+      },
+      "seed_sd_top10": 0.6208067410641153,
+      "top10_scroll_cluster_ci": [
+        46.51162790697674,
+        66.66666666666667
       ]
     },
     "visible_only": {
       "n": 93,
-      "top1": 33.333333333333336,
-      "top5": 48.38709677419355,
-      "top10": 50.53763440860215,
-      "top20": 54.83870967741935,
+      "top1": 32.61648745519713,
+      "top5": 49.46236559139785,
+      "top10": 52.32974910394265,
+      "top20": 55.19713261648745,
       "in_candidate_vocabulary": 56,
       "median_rank_when_retrievable": 0.0,
       "top10_scroll_cluster_bootstrap_95ci": [
-        40.25974025974026,
-        60.0
+        41.935483870967744,
+        62.4031007751938
       ],
       "candidate_coverage": {
         "targets": 93,
@@ -1003,9 +1028,10 @@
         3.7037037037037037,
         23.076923076923077
       ],
+      "seed_sd_top10": 2.2383505370603562,
       "top10_scroll_cluster_ci": [
-        40.25974025974026,
-        60.0
+        41.935483870967744,
+        62.4031007751938
       ]
     },
     "editor_length_only": {
@@ -1131,6 +1157,29 @@
         43.90243902439025
       ]
     },
+    "retrieval_visible_only": {
+      "n": 93,
+      "top1": 21.50537634408602,
+      "top5": 32.25806451612903,
+      "top10": 36.55913978494624,
+      "top20": 36.55913978494624,
+      "in_candidate_vocabulary": 36,
+      "median_rank_when_retrievable": 0.0,
+      "top10_scroll_cluster_bootstrap_95ci": [
+        26.666666666666668,
+        47.5609756097561
+      ],
+      "candidate_coverage": {
+        "targets": 93,
+        "empty": 29,
+        "fewer_than_10": 64,
+        "median_candidates": 1
+      },
+      "top10_scroll_cluster_ci": [
+        26.666666666666668,
+        47.5609756097561
+      ]
+    },
     "composition_unseen_subset": {
       "definition": "held-out scroll whose non-empty composition labels do not occur in train or dev",
       "targets": 24,
@@ -1144,6 +1193,15 @@
           "top20": 20.833333333333332,
           "in_candidate_vocabulary": 20,
           "median_rank_when_retrievable": 296.0
+        },
+        "soft_visible": {
+          "n": 24,
+          "top1": 58.333333333333336,
+          "top5": 66.66666666666667,
+          "top10": 70.83333333333333,
+          "top20": 70.83333333333333,
+          "in_candidate_vocabulary": 20,
+          "median_rank_when_retrievable": 0.0
         },
         "visible_only": {
           "n": 24,
@@ -1198,6 +1256,15 @@
           "top20": 33.333333333333336,
           "in_candidate_vocabulary": 8,
           "median_rank_when_retrievable": 0.0
+        },
+        "retrieval_visible_only": {
+          "n": 24,
+          "top1": 29.166666666666668,
+          "top5": 33.333333333333336,
+          "top10": 33.333333333333336,
+          "top20": 33.333333333333336,
+          "in_candidate_vocabulary": 8,
+          "median_rank_when_retrievable": 0.0
         }
       }
     },
@@ -1211,6 +1278,15 @@
           "top20": 41.666666666666664,
           "in_candidate_vocabulary": 11,
           "median_rank_when_retrievable": 117
+        },
+        "soft_visible": {
+          "n": 12,
+          "top1": 8.333333333333334,
+          "top5": 25.0,
+          "top10": 33.333333333333336,
+          "top20": 33.333333333333336,
+          "in_candidate_vocabulary": 11,
+          "median_rank_when_retrievable": 83
         },
         "visible_only": {
           "n": 12,
@@ -1229,6 +1305,15 @@
           "top20": 8.333333333333334,
           "in_candidate_vocabulary": 3,
           "median_rank_when_retrievable": 177
+        },
+        "retrieval_visible_only": {
+          "n": 12,
+          "top1": 0.0,
+          "top5": 0.0,
+          "top10": 8.333333333333334,
+          "top20": 8.333333333333334,
+          "in_candidate_vocabulary": 3,
+          "median_rank_when_retrievable": 178
         }
       },
       "2": {
@@ -1240,6 +1325,15 @@
           "top20": 28.571428571428573,
           "in_candidate_vocabulary": 14,
           "median_rank_when_retrievable": 116.0
+        },
+        "soft_visible": {
+          "n": 14,
+          "top1": 35.714285714285715,
+          "top5": 50.0,
+          "top10": 57.142857142857146,
+          "top20": 71.42857142857143,
+          "in_candidate_vocabulary": 14,
+          "median_rank_when_retrievable": 4.5
         },
         "visible_only": {
           "n": 14,
@@ -1258,6 +1352,15 @@
           "top20": 57.142857142857146,
           "in_candidate_vocabulary": 8,
           "median_rank_when_retrievable": 0.0
+        },
+        "retrieval_visible_only": {
+          "n": 14,
+          "top1": 28.571428571428573,
+          "top5": 42.857142857142854,
+          "top10": 57.142857142857146,
+          "top20": 57.142857142857146,
+          "in_candidate_vocabulary": 8,
+          "median_rank_when_retrievable": 0.5
         }
       },
       "3+": {
@@ -1270,6 +1373,15 @@
           "in_candidate_vocabulary": 50,
           "median_rank_when_retrievable": 600.0
         },
+        "soft_visible": {
+          "n": 67,
+          "top1": 40.298507462686565,
+          "top5": 56.71641791044776,
+          "top10": 59.701492537313435,
+          "top20": 64.17910447761194,
+          "in_candidate_vocabulary": 50,
+          "median_rank_when_retrievable": 0.0
+        },
         "visible_only": {
           "n": 67,
           "top1": 38.80597014925373,
@@ -1280,6 +1392,15 @@
           "median_rank_when_retrievable": 0
         },
         "frequency_visible_only": {
+          "n": 67,
+          "top1": 23.880597014925375,
+          "top5": 35.82089552238806,
+          "top10": 37.3134328358209,
+          "top20": 37.3134328358209,
+          "in_candidate_vocabulary": 25,
+          "median_rank_when_retrievable": 0
+        },
+        "retrieval_visible_only": {
           "n": 67,
           "top1": 23.880597014925375,
           "top5": 35.82089552238806,
@@ -1307,8 +1428,24 @@
       "sha256": "cd7de40f349b62f1f9fdf300a6920a4580a08684dfa8c06048886d467c495dec"
     },
     "qd": {
-      "path": "experiments/results/paper/qd_evidence_conditions_20260811.json",
-      "sha256": "954149ba771c65d41159067d8ec119e7a20c816289a26c0c9601555eeaaa5811"
+      "path": "experiments/results/paper/qd_methods_seed42_20260811.json",
+      "sha256": "21d347e90e4b6d87bc5d485e3c052af2d2461187d47633545f4b83ae2234ee19"
+    },
+    "qd_multiseed": {
+      "path": "experiments/results/paper/qd_method_extensions_summary.json",
+      "sha256": "2e9799befd29c7d9a23a7ba553c07d0e82d3b1fb9b5940072fe9ac447a8b1910"
+    },
+    "qd_composition": {
+      "path": "experiments/results/paper/qd_composition_exclusion_summary.json",
+      "sha256": "8127e1c9147955fe596a6ea5d8b02ea48806e46370571b19c8f94864913a4dc6"
+    },
+    "qd_context": {
+      "path": "experiments/results/paper/qd_context_window_summary.json",
+      "sha256": "3ca4789e7fe916b46accc7fe7f6e7869529b8a365b9cb9e479b7502351597be1"
+    },
+    "qd_memorization": {
+      "path": "experiments/results/paper/qd_memorization_audit.json",
+      "sha256": "35319c5d4fba839a323d52c05e4b614c5b5e987ee9f46b224eb0746a3000d4f8"
     },
     "byt5": [
       {
@@ -1326,7 +1463,7 @@
     ]
   },
   "remaining_promotion_gates": [
-    "replicate the single-checkpoint MLM comparisons across matched training seeds",
-    "train a model on a composition-disjoint development protocol"
+    "evaluate a representative composition-grouped population split",
+    "audit base-model pretraining exposure if a complete corpus becomes available"
   ]
 }

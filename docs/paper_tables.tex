@@ -125,19 +125,18 @@ System & Hit@1 & Hit@10 & Drops \\
 \newcommand{\QDTable}{%
 \begin{table}[t]
 \centering
-\caption{Agreement with any attributed reading at 93 Qumran Digital targets. The visible-trace MLM Top-10 scroll-cluster bootstrap 95\% CI is 40.3--60.0. All rows retain the same targets and references. Editor-derived length is reported only as an oracle-assisted condition.}
+\caption{Agreement with any attributed reading at 93 Qumran Digital targets. The soft-trace MLM Top-10 seed-and-scroll hierarchical bootstrap 95\% CI is 46.5--66.7. All rows retain the same targets and references.}
 \label{tab:qd}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lrrrr}
 \toprule
 Condition & Top-1 & Top-5 & Top-10 & Top-20 \\
 \midrule
-  MLM: context only & 4.3\% & 11.8\% & 15.1\% & 17.2\% \\
+  MLM: context only (3-seed mean) & 5.0\% & 11.1\% & 14.7\% & 16.8\% \\
   Frequency: context only & 0.0\% & 2.2\% & 3.2\% & 6.5\% \\
-  MLM: visible traces & 33.3\% & 48.4\% & 50.5\% & 54.8\% \\
+  MLM: soft traces (3-seed mean) & 35.1\% & 53.4\% & 56.6\% & 61.3\% \\
+  MLM: hard traces (3-seed mean) & 32.6\% & 49.5\% & 52.3\% & 55.2\% \\
   Frequency: visible traces & 22.6\% & 32.3\% & 36.6\% & 36.6\% \\
-  MLM: editor length (oracle) & 6.5\% & 14.0\% & 16.1\% & 18.3\% \\
-  MLM: traces + length (oracle) & 32.3\% & 49.5\% & 50.5\% & 53.8\% \\
 \bottomrule
 \end{tabular}%
 }
@@ -177,25 +176,6 @@ Measure & 1 word & 2 words & 3 words \\
 \midrule
   Word-span exact Top-10 & 22.0\% & 1.0\% & 0.0\% \\
   Complete-span coverage & 91.0\% & 77.0\% & 77.0\% \\
-\bottomrule
-\end{tabular}%
-}
-\end{table}%
-}
-
-\newcommand{\ByTCheckpointTable}{%
-\begin{table}[t]
-\centering
-\caption{Unknown-length ByT5 replications on the same 300 targets. All three checkpoints use identical training hyperparameters; seed is the only varied training setting.}
-\label{tab:byt5checkpoints}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{rrrrrr}
-\toprule
-Seed & Epochs & Batch & LR & Top-1 & Top-10 \\
-\midrule
-  41 & 3 & 32 & 1e-03 & 0.0\% & 1.3\% \\
-  42 & 3 & 32 & 1e-03 & 0.7\% & 1.3\% \\
-  43 & 3 & 32 & 1e-03 & 0.0\% & 1.0\% \\
 \bottomrule
 \end{tabular}%
 }

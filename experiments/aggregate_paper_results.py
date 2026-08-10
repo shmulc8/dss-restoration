@@ -22,7 +22,11 @@ from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SPAN = ROOT / "experiments/results/paper/span_balanced_300_20260811.json"
-DEFAULT_QD = ROOT / "experiments/results/paper/qd_evidence_conditions_20260811.json"
+DEFAULT_QD = ROOT / "experiments/results/paper/qd_methods_seed42_20260811.json"
+QD_MULTISEED = ROOT / "experiments/results/paper/qd_method_extensions_summary.json"
+QD_COMPOSITION = ROOT / "experiments/results/paper/qd_composition_exclusion_summary.json"
+QD_MEMORIZATION = ROOT / "experiments/results/paper/qd_memorization_audit.json"
+QD_CONTEXT = ROOT / "experiments/results/paper/qd_context_window_summary.json"
 DEFAULT_BYT5 = tuple(
     ROOT / f"experiments/results/paper/byt5_balanced_seed{seed}_20260811.json"
     for seed in (41, 42, 43)
@@ -161,9 +165,9 @@ def render_markdown(snapshot: dict[str, Any]) -> str:
             "",
             "## Qumran Digital literature agreement",
             "",
-            f"- Visible-trace Top-10: {qd['visible_only']['top10']:.1f}% "
-            f"({qd['visible_only']['top10_scroll_cluster_ci'][0]:.1f}%--"
-            f"{qd['visible_only']['top10_scroll_cluster_ci'][1]:.1f}%).",
+            f"- Soft-trace Top-10: {qd['soft_visible']['top10']:.1f}% "
+            f"({qd['soft_visible']['top10_scroll_cluster_ci'][0]:.1f}%--"
+            f"{qd['soft_visible']['top10_scroll_cluster_ci'][1]:.1f}%).",
             f"- Context-only Top-10: {qd['context_only']['top10']:.1f}%.",
             f"- Frequency + visible traces Top-10: {qd['frequency_visible_only']['top10']:.1f}%.",
             f"- Split audit: {qd['split_audit']['checkpoint_frozen_split']}.",
@@ -244,6 +248,20 @@ def aggregate(span_path: Path, qd_path: Path, byt5_paths: tuple[Path, ...]) -> d
     controlled_keys = {(row["epochs"], row["batch_size"], row["learning_rate"]) for row in training_configs}
 
     qd_conditions = qd["condition_results"]
+    qd_multiseed = load(QD_MULTISEED)
+    for condition in ("context_only", "soft_visible", "visible_only"):
+        aggregate_condition = qd_multiseed["conditions"][condition]
+        qd_conditions[condition] = {
+            **qd_conditions[condition],
+            **{
+                metric: aggregate_condition[f"mean_{metric}"]
+                for metric in ("top1", "top5", "top10", "top20")
+            },
+            "top10_scroll_cluster_bootstrap_95ci": aggregate_condition[
+                "seed_and_scroll_hierarchical_bootstrap_95ci"
+            ],
+            "seed_sd_top10": aggregate_condition["sample_sd_across_seeds"],
+        }
     snapshot = {
         "status": "team_review_evidence_snapshot",
         "primary_task": "synthetic_damage_unknown_length_exact_complete_span_top10",
@@ -278,14 +296,18 @@ def aggregate(span_path: Path, qd_path: Path, byt5_paths: tuple[Path, ...]) -> d
         "artifacts": {
             "span": {"path": str(span_path.relative_to(ROOT)), "sha256": sha256(span_path)},
             "qd": {"path": str(qd_path.relative_to(ROOT)), "sha256": sha256(qd_path)},
+            "qd_multiseed": {"path": str(QD_MULTISEED.relative_to(ROOT)), "sha256": sha256(QD_MULTISEED)},
+            "qd_composition": {"path": str(QD_COMPOSITION.relative_to(ROOT)), "sha256": sha256(QD_COMPOSITION)},
+            "qd_context": {"path": str(QD_CONTEXT.relative_to(ROOT)), "sha256": sha256(QD_CONTEXT)},
+            "qd_memorization": {"path": str(QD_MEMORIZATION.relative_to(ROOT)), "sha256": sha256(QD_MEMORIZATION)},
             "byt5": [
                 {"path": str(path.relative_to(ROOT)), "sha256": sha256(path)}
                 for path in byt5_paths
             ],
         },
         "remaining_promotion_gates": [
-            "replicate the single-checkpoint MLM comparisons across matched training seeds",
-            "train a model on a composition-disjoint development protocol",
+            "evaluate a representative composition-grouped population split",
+            "audit base-model pretraining exposure if a complete corpus becomes available",
         ],
     }
     return snapshot

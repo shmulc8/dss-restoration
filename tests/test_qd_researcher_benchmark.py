@@ -8,15 +8,33 @@ from experiments.run_qd_benchmark import (
     bootstrap_top10_delta_ci,
     bootstrap_top10_ci,
     contiguous_context,
+    context_window,
     join_clitics,
     parse_attributed_reading,
     rag_context_keys,
     rag_score,
+    simulate_constraint,
+    trace_penalty,
 )
 from curation.preserved_corpus import GAP_TOKEN
 
 
 class QDEditorialParsingTests(unittest.TestCase):
+    def test_soft_trace_cost_preserves_exact_matches_without_discarding(self):
+        constraint = PhysicalConstraint(("אב",), True, False, 4, 4, 4)
+        self.assertEqual(trace_penalty("אבגד", constraint), 0)
+        self.assertGreater(trace_penalty("אדגד", constraint), 0)
+
+    def test_simulated_trace_uses_shape_but_development_gold_letters(self):
+        template = PhysicalConstraint(("אב",), False, True, 5, 5, 5)
+        simulated = simulate_constraint("שלומ", template, 0)
+        self.assertEqual(simulated.visible_segments, ("ומ",))
+        self.assertTrue(simulated.anchored_right)
+
+    def test_context_window_reindexes_target(self):
+        item = {"context_words": ["א", "ב", "<TARGET>", "ג", "ד"], "target_index": 2}
+        self.assertEqual(context_window(item, 1), (["ב", "<TARGET>", "ג"], 1))
+
     def test_prefix_inside_lacuna_and_visible_suffix(self):
         segments, left, right = _visible_segments("מ]אדם")
         self.assertEqual(segments, ("אדם",))

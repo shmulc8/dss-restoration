@@ -41,13 +41,14 @@ experiments load the derived corpus through `curation.preserved_corpus`.
 experiment and must not be mixed into checkpoint claims.
 
 The split is manuscript-disjoint but not composition-disjoint. The paper
-reports a composition-unseen QD subset and a near-duplicate audit; it does not
-claim composition-grouped training.
+reports both a composition-unseen subset and a targeted composition-excluded
+seed-42 sensitivity; it does not claim a representative composition split.
 
 ## Current paper evidence
 
-- QD context-only MLM: 15.1% Top-10.
-- QD visible-trace MLM: 50.5% Top-10; frequency under the same traces: 36.6%.
+- QD context-only MLM: 14.7% mean Top-10 across seeds 41--43.
+- QD soft-trace MLM: 56.6% mean Top-10; hard-trace MLM: 52.3%; frequency with
+  hard traces: 36.6%.
 - Balanced synthetic spans: 300 targets across 79 held-out scrolls; word-span
   exact Top-10 7.7%, with 22.0% / 1.0% / 0.0% by one/two/three words.
 - Matched ByT5 seeds 41--43: 1.3%, 1.3%, and 1.0% exact Top-10.

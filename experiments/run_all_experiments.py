@@ -33,7 +33,7 @@ EXPERIMENTS = (
     Experiment(
         "corpus",
         "Validate the reconstruction-free derived corpus",
-        ("curation/validate_preserved_nonbib_corpus.py",),
+        ("curation/validate_preserved_nonbib_corpus.py", "--derived-only"),
         "checks",
     ),
     Experiment(
@@ -61,12 +61,42 @@ EXPERIMENTS = (
         "checks",
     ),
     Experiment(
+        "qd-composition-manifest",
+        "Regenerate the QD-target composition-exclusion manifest",
+        ("experiments/build_qd_composition_exclusion.py",),
+        "checks",
+    ),
+    Experiment(
+        "qd-memorization-audit",
+        "Audit exact preserved-training parallels for QD readings",
+        ("experiments/audit_qd_memorization.py",),
+        "checks",
+    ),
+    Experiment(
+        "qd-method-summary",
+        "Aggregate matched MLM seeds with seed-and-scroll uncertainty",
+        ("experiments/aggregate_qd_method_extensions.py",),
+        "checks",
+    ),
+    Experiment(
+        "qd-context-summary",
+        "Regenerate fixed-seed context-window sensitivity",
+        ("experiments/summarize_qd_context_windows.py",),
+        "checks",
+    ),
+    Experiment(
+        "qd-composition-summary",
+        "Regenerate the composition-excluded checkpoint sensitivity",
+        ("experiments/summarize_qd_composition_exclusion.py",),
+        "checks",
+    ),
+    Experiment(
         "qd",
         "Attributed Qumran Digital evidence-condition benchmark",
         (
             "experiments/run_qd_benchmark.py",
-            "--report", "experiments/results/paper/qd_evidence_conditions_20260811.json",
-            "--markdown", "comparison/reports/QD_EVIDENCE_CONDITIONS.md",
+            "--report", "experiments/results/paper/qd_methods_seed42_20260811.json",
+            "--markdown", "comparison/reports/QD_METHODS_SEED42_20260811.md",
         ),
         "pilots",
     ),

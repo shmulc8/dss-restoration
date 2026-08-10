@@ -28,8 +28,10 @@ def validate(protocol: dict) -> list[str]:
     training = protocol.get("training", {})
     if len(set(training.get("byt5_matched_seeds", []))) < 3:
         errors.append("ByT5 replication requires at least three matched seeds")
-    if not training.get("single_seed_mlm_limitation_reported"):
-        errors.append("single-seed MLM limitation must be explicit")
+    if len(set(training.get("mlm_training_seeds", []))) < 3:
+        errors.append("QD MLM requires at least three matched training seeds")
+    if training.get("single_seed_mlm_limitation_reported"):
+        errors.append("QD MLM is no longer a single-seed analysis")
     required_diagnostics = set(protocol.get("mandatory_diagnostics", []))
     for name in (
         "tokenizer_word_coverage",

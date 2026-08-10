@@ -29,14 +29,15 @@ different questions and must not be collapsed into one accuracy headline.
 
 | Track | Evaluation unit | Result | Interpretation |
 | :--- | :--- | :--- | :--- |
-| Natural lacuna, context only | 93 Qumran Digital targets / 40 scrolls | MLM 15.1% Top-10 | Agreement with any attributed reading; not historical truth |
-| Natural lacuna, visible traces | Same 93 targets | MLM 50.5%; frequency 36.6% Top-10 | Same trace filter and denominator; 13 MLM candidate sets are empty |
-| Composition-unseen QD subset | 24 targets / 11 scrolls | MLM 62.5%; frequency 33.3% Top-10 with traces | Small robustness subset, not composition-grouped training |
+| Natural lacuna, context only | 93 Qumran Digital targets / 40 scrolls | MLM 14.7% mean Top-10 | Three matched seeds; agreement with attributed readings, not truth |
+| Natural lacuna, soft traces | Same 93 targets | MLM 56.6% mean Top-10 | No candidates discarded; seed-and-scroll 95% interval 46.5--66.7 |
+| Natural lacuna, hard traces | Same 93 targets | MLM 52.3% mean; frequency 36.6% Top-10 | Hard filtering is less stable and can empty candidate sets |
+| Composition exclusion | 68 labeled QD targets / 28 scrolls | Soft-trace 52.9% with and without exclusion | Seed-42 sensitivity; 785/1,002 training chunks retained |
 | Unknown-length synthetic spans | 300 non-overlapping targets / 79 scrolls | word model 7.7% exact Top-10 | 22.0% / 1.0% / 0.0% for one/two/three words |
 | ByT5 replication | Same 300 targets, matched seeds 41--43 | 1.3%, 1.3%, 1.0% exact Top-10 | Stable negative sequence-model result |
 
-Visible-trace conditioning changes MLM Top-10 from 15.1% to 50.5% (paired
-manuscript-cluster 95% interval for the 35.5-point delta: 24.5--46.5). The
+Soft-trace conditioning changes mean MLM Top-10 from 14.7% to 56.6% (paired
+seed-and-scroll 95% interval for the 41.9-point delta: 30.8--53.0). The
 editor-derived length proxy adds no Top-10 gain and is labeled oracle-assisted.
 
 The exact provenance, limitations, and status of every retained number are in

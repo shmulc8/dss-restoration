@@ -141,35 +141,28 @@ def hydrate_reproduced_results(data: dict[str, object]) -> None:
     tables["SpanStrataTable"]["source"] = snapshot["artifacts"]["span"]["path"]
 
     qd = snapshot["qd"]
+    qd_multiseed = json.loads(
+        (ROOT / "experiments/results/paper/qd_method_extensions_summary.json").read_text(
+            encoding="utf-8"
+        )
+    )["conditions"]
     tables["QDTable"]["rows"] = [
-        ["MLM: context only", *[pct(qd["context_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
+        ["MLM: context only (3-seed mean)", *[pct(qd_multiseed["context_only"][f"mean_{key}"]) for key in ("top1", "top5", "top10", "top20")]],
         ["Frequency: context only", *[pct(qd["frequency_context_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
-        ["MLM: visible traces", *[pct(qd["visible_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
+        ["MLM: soft traces (3-seed mean)", *[pct(qd_multiseed["soft_visible"][f"mean_{key}"]) for key in ("top1", "top5", "top10", "top20")]],
+        ["MLM: hard traces (3-seed mean)", *[pct(qd_multiseed["visible_only"][f"mean_{key}"]) for key in ("top1", "top5", "top10", "top20")]],
         ["Frequency: visible traces", *[pct(qd["frequency_visible_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
-        ["MLM: editor length (oracle)", *[pct(qd["editor_length_only"][key]) for key in ("top1", "top5", "top10", "top20")]],
-        ["MLM: traces + length (oracle)", *[pct(qd["visible_plus_editor_length"][key]) for key in ("top1", "top5", "top10", "top20")]],
     ]
-    low, high = qd["visible_only"]["top10_scroll_cluster_ci"]
+    low, high = qd_multiseed["soft_visible"]["seed_and_scroll_hierarchical_bootstrap_95ci"]
     tables["QDTable"]["caption"] = (
         "Agreement with any attributed reading at 93 Qumran Digital targets. "
-        f"The visible-trace MLM Top-10 scroll-cluster bootstrap 95\\% CI is {low:.1f}--{high:.1f}. "
-        "All rows retain the same targets and references. Editor-derived length is "
-        "reported only as an oracle-assisted condition."
+        f"The soft-trace MLM Top-10 seed-and-scroll hierarchical bootstrap 95\\% CI is {low:.1f}--{high:.1f}. "
+        "All rows retain the same targets and references."
     )
-    tables["QDTable"]["source"] = snapshot["artifacts"]["qd"]["path"]
-
-    byt5 = snapshot["byt5_checkpoint_replications"]
-    tables["ByTCheckpointTable"]["rows"] = [
-        [
-            str(row["seed"]), str(row["epochs"]), str(row["batch_size"]),
-            f'{row["learning_rate"]:.0e}', pct(row["top1"]), pct(row["top10"]),
-        ]
-        for row in byt5["checkpoints"]
-    ]
-    tables["ByTCheckpointTable"]["source"] = ", ".join(
-        item["path"] for item in snapshot["artifacts"]["byt5"]
+    tables["QDTable"]["source"] = (
+        "experiments/results/paper/qd_method_extensions_summary.json and "
+        + snapshot["artifacts"]["qd"]["path"]
     )
-
 
 def render_table(table: dict[str, object]) -> str:
     environment = str(table["environment"])

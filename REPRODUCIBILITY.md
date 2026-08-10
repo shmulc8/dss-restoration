@@ -73,8 +73,10 @@ the source and uploads its PDF as a workflow artifact.
 The headline natural-lacuna result is agreement with at least one attributed
 modern proposal, not recovery of historical truth. The 300-span task is a
 synthetic unknown-length benchmark with known answers. Corpus counts are not
-model evaluation counts. ByT5 has a matched three-seed replication; the MLM
-comparisons remain single-checkpoint evidence. A future model-comparison claim
-requires matched MLM seeds and a composition-grouped training split.
+model evaluation counts. Both ByT5 and the QD MLM have matched three-seed
+replications. QD uncertainty resamples seeds and manuscript clusters. A
+targeted seed-42 composition-exclusion sensitivity is included, but it is not
+a representative population split because exclusion also reduces training
+volume.
 
 No human-subjects study is part of this snapshot.

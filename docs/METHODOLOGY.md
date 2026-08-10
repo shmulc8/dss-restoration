@@ -54,8 +54,9 @@ return fewer than ten candidates or none.
 - Condition comparisons use paired scroll-cluster bootstrap deltas.
 - The synthetic benchmark additionally reports paired exact McNemar tests with
   Holm adjustment for the declared system family.
-- The QD MLM uses one training seed; target uncertainty does not substitute for
-  optimization-seed variance. ByT5 uses matched seeds 41, 42, and 43.
+- The QD MLM uses matched seeds 41, 42, and 43 with identical data and
+  hyperparameters. Hierarchical intervals resample both seeds and scrolls.
+  ByT5 uses matched seeds 41, 42, and 43 as well.
 
 ## 4. Leakage and generalization
 
@@ -63,9 +64,10 @@ return fewer than ten candidates or none.
 - Test targets never select penalties, ensemble weights, or checkpoints.
 - Exact normalized duplicate chunks and preserved-word five-gram Jaccard are
   audited across the boundary.
-- Composition labels cross the manuscript split. Report the subset whose
-  labels are unseen in train/development, but do not call this a fully
-  composition-grouped training experiment.
+- Composition labels cross the manuscript split. In addition to the unseen
+  subset, train a seed-42 sensitivity checkpoint after excluding every
+  training scroll whose label occurs among labeled QD targets. Report its
+  reduced training volume; this is not a representative new split.
 
 ## 5. Claim boundary
 

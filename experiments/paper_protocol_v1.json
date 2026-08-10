@@ -18,6 +18,7 @@
     "primary": "scroll_disjoint",
     "frozen_manifest": "curation/derived/preserved_nonbib_manifest.json",
     "composition_grouped_training": false,
+    "qd_target_composition_exclusion_sensitivity": true,
     "composition_unseen_qd_subset": true,
     "near_duplicate_audit": "exact_normalized_duplicates_and_preserved_word_5gram_jaccard",
     "test_used_for_selection": false
@@ -49,12 +50,13 @@
     "labels": "preserved_text_only",
     "natural_reconstructions_as_labels": false,
     "byt5_matched_seeds": [41, 42, 43],
-    "mlm_training_seeds": [42],
-    "single_seed_mlm_limitation_reported": true,
+    "mlm_training_seeds": [41, 42, 43],
+    "single_seed_mlm_limitation_reported": false,
     "model_selection": "development_only"
   },
   "required_systems": [
     "training_frequency_baseline",
+    "exact_context_retrieval_baseline",
     "preserved_only_word_span_model",
     "preserved_only_character_model",
     "embible_overlap_adaptation",
@@ -63,6 +65,7 @@
   ],
   "qd_conditions": [
     "context_only",
+    "soft_visible_traces_development_tuned",
     "visible_traces",
     "editor_length_oracle",
     "visible_traces_plus_editor_length_oracle"
@@ -71,6 +74,7 @@
     "unit": "manuscript_location",
     "confidence_interval": 0.95,
     "bootstrap_cluster": "scroll",
+    "mlm_seed_uncertainty": "hierarchical_seed_and_scroll_bootstrap",
     "paired_condition_deltas": true,
     "all_targets_retained_across_conditions": true
   },
@@ -91,8 +95,9 @@
   "current_result": {
     "synthetic_exact_top10": 7.666666666666667,
     "synthetic_multiword_conclusion": "one_percent_for_two_words_zero_for_three",
-    "qd_context_top10": 15.053763440860216,
-    "qd_visible_trace_top10": 50.53763440860215,
+    "qd_context_top10_three_seed_mean": 14.695340501792115,
+    "qd_soft_visible_top10_three_seed_mean": 56.63082437275986,
+    "qd_hard_visible_top10_three_seed_mean": 52.32974910394265,
     "editor_length_adds_top10": false,
     "historical_truth_claim": false
   }

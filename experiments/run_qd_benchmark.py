@@ -18,6 +18,7 @@ appears in the model's Top-K.  Per-reading and per-source results are secondary.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import random
@@ -53,6 +54,7 @@ RAG_MAX_SIDE = 2
 RAG_DEV_SIZE = 300
 RAG_CANDIDATE_TOPN = 500
 RAG_ALPHAS = (0.0, 0.05, 0.1, 0.2, 0.35, 0.5, 0.75, 1.0)
+SOFT_TRACE_ALPHAS = (0.0, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0)
 tlog.set_verbosity_error()
 
 
@@ -63,6 +65,14 @@ def hebrew_letters(value: str) -> str:
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     with path.open(encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def rag_normalize(value: str) -> str:
@@ -225,15 +235,16 @@ def summarize_integer_ranks(ranks: list[int]) -> dict[str, float | int]:
     }
 
 
-def fit_rag_alpha(
+def fit_dev_weights(
     *,
     model: Any,
     tokenizer: Any,
     normalized_token_by_id: list[str],
     index: dict[tuple[tuple[str, ...], tuple[str, ...]], Counter[str]],
+    trace_templates: list["PhysicalConstraint"],
     batch_size: int,
 ) -> dict[str, Any]:
-    """Tune one retrieval weight on clean dev scrolls only."""
+    """Tune retrieval and soft-trace weights on preserved dev words only."""
     items = build_rag_dev_items()
     records: list[dict[str, Any]] = []
     for start in range(0, len(items), batch_size):
@@ -275,7 +286,9 @@ def fit_rag_alpha(
             ).logits.cpu()
         for row_index, position, item in positions:
             top = torch.topk(logits[row_index, position], RAG_CANDIDATE_TOPN)
-            candidates: list[tuple[str, float, float]] = []
+            template = trace_templates[len(records) % len(trace_templates)]
+            simulated = simulate_constraint(item["gold"], template, len(records))
+            candidates: list[tuple[str, float, float, int]] = []
             seen: set[str] = set()
             for token_id, model_score in zip(top.indices.tolist(), top.values.tolist()):
                 candidate = normalized_token_by_id[token_id]
@@ -288,8 +301,17 @@ def fit_rag_alpha(
                     item["rag_right"],
                     candidate,
                 )
-                candidates.append((candidate, model_score, retrieval_score))
-            records.append({"gold": item["gold"], "candidates": candidates})
+                candidates.append(
+                    (
+                        candidate,
+                        model_score,
+                        retrieval_score,
+                        trace_penalty(candidate, simulated),
+                    )
+                )
+            records.append(
+                {"gold": item["gold"], "constraint": simulated, "candidates": candidates}
+            )
 
     evaluations = {}
     for alpha in RAG_ALPHAS:
@@ -327,7 +349,7 @@ def fit_rag_alpha(
             -alpha,
         ),
     )
-    return {
+    rag_fit = {
         "fit_split": "preserved_nonbib dev",
         "sample_seed": 42,
         "candidate_topn": RAG_CANDIDATE_TOPN,
@@ -336,6 +358,45 @@ def fit_rag_alpha(
         "selected": evaluations[str(best_alpha)],
         "grid": evaluations,
     }
+    soft_evaluations = {}
+    for alpha in SOFT_TRACE_ALPHAS:
+        ranks = []
+        for record in records:
+            reranked = sorted(
+                record["candidates"],
+                key=lambda candidate: (-(candidate[1] - alpha * candidate[3]), candidate[0]),
+            )
+            ranks.append(
+                next(
+                    (
+                        position
+                        for position, candidate in enumerate(reranked)
+                        if candidate[0] == record["gold"]
+                    ),
+                    999,
+                )
+            )
+        soft_evaluations[str(alpha)] = summarize_integer_ranks(ranks)
+    soft_alpha = max(
+        SOFT_TRACE_ALPHAS,
+        key=lambda alpha: (
+            soft_evaluations[str(alpha)]["top10"],
+            soft_evaluations[str(alpha)]["top5"],
+            soft_evaluations[str(alpha)]["top1"],
+            -alpha,
+        ),
+    )
+    soft_fit = {
+        "fit_split": "preserved_nonbib dev",
+        "sample_seed": 42,
+        "candidate_topn": RAG_CANDIDATE_TOPN,
+        "trace_shapes": "QD visible-letter counts and anchor flags; no QD readings",
+        "alpha": soft_alpha,
+        "baseline": soft_evaluations["0.0"],
+        "selected": soft_evaluations[str(soft_alpha)],
+        "grid": soft_evaluations,
+    }
+    return {"rag": rag_fit, "soft_trace": soft_fit}
 
 
 @dataclass(frozen=True)
@@ -369,6 +430,63 @@ class PhysicalConstraint:
 
     def matches_length(self, candidate: str, length_tolerance: int) -> bool:
         return abs(len(candidate) - self.estimated_length) <= length_tolerance
+
+
+def lcs_length(left: str, right: str) -> int:
+    """Return longest-common-subsequence length for short Hebrew strings."""
+    previous = [0] * (len(right) + 1)
+    for left_char in left:
+        current = [0]
+        for index, right_char in enumerate(right, 1):
+            current.append(
+                previous[index - 1] + 1
+                if left_char == right_char
+                else max(previous[index], current[-1])
+            )
+        previous = current
+    return previous[-1]
+
+
+def trace_penalty(candidate: str, constraint: PhysicalConstraint) -> int:
+    """Graded disagreement cost; zero exactly preserves every hard trace rule."""
+    trace = "".join(constraint.visible_segments)
+    penalty = len(trace) - lcs_length(trace, candidate)
+    if constraint.anchored_left:
+        prefix = constraint.visible_segments[0]
+        penalty += sum(a != b for a, b in zip(prefix, candidate[: len(prefix)]))
+        penalty += max(0, len(prefix) - len(candidate))
+    if constraint.anchored_right:
+        suffix = constraint.visible_segments[-1]
+        penalty += sum(a != b for a, b in zip(suffix, candidate[-len(suffix) :]))
+        penalty += max(0, len(suffix) - len(candidate))
+    return penalty
+
+
+def simulate_constraint(
+    gold: str, template: PhysicalConstraint, item_index: int
+) -> PhysicalConstraint:
+    """Apply only a QD trace shape to a preserved development word."""
+    visible_count = min(
+        len(gold), max(1, sum(len(segment) for segment in template.visible_segments))
+    )
+    if template.anchored_left and template.anchored_right and visible_count > 1:
+        left_count = (visible_count + 1) // 2
+        segments = (gold[:left_count], gold[-(visible_count - left_count) :])
+    elif template.anchored_left:
+        segments = (gold[:visible_count],)
+    elif template.anchored_right:
+        segments = (gold[-visible_count:],)
+    else:
+        start = item_index % (len(gold) - visible_count + 1)
+        segments = (gold[start : start + visible_count],)
+    return PhysicalConstraint(
+        visible_segments=segments,
+        anchored_left=template.anchored_left,
+        anchored_right=template.anchored_right,
+        estimated_length=len(gold),
+        display_slots=len(gold),
+        initial_slots=len(gold),
+    )
 
 
 def _slot_count(value: str) -> int:
@@ -574,17 +692,84 @@ def rank_of(reading: str, predictions: list[str]) -> int | None:
         return None
 
 
+def context_window(item: dict[str, Any], words_each_side: int | None) -> tuple[list[str], int]:
+    words = item["context_words"]
+    target = int(item["target_index"])
+    if words_each_side is None:
+        return words, target
+    start = max(0, target - words_each_side)
+    end = min(len(words), target + words_each_side + 1)
+    return words[start:end], target - start
+
+
+def confidence_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Top-1 literature-agreement calibration and abstention diagnostics."""
+    available = [row for row in records if row["visible_top1_confidence"] is not None]
+    bins = []
+    ece = 0.0
+    for lower in (0.0, 0.2, 0.4, 0.6, 0.8):
+        upper = lower + 0.2
+        bucket = [
+            row
+            for row in available
+            if lower <= row["visible_top1_confidence"] <= upper
+            and (row["visible_top1_confidence"] < upper or upper == 1.0)
+        ]
+        confidence = (
+            statistics.mean(row["visible_top1_confidence"] for row in bucket)
+            if bucket
+            else None
+        )
+        agreement = (
+            statistics.mean(row["visible_top1_correct"] for row in bucket)
+            if bucket
+            else None
+        )
+        if bucket:
+            ece += len(bucket) / len(available) * abs(confidence - agreement)
+        bins.append(
+            {
+                "range": [lower, upper],
+                "n": len(bucket),
+                "mean_confidence": confidence,
+                "top1_agreement": agreement,
+            }
+        )
+    ordered = sorted(
+        available, key=lambda row: -float(row["visible_top1_confidence"])
+    )
+    selective = {}
+    for coverage in (0.25, 0.5, 0.75, 1.0):
+        retained = ordered[: max(1, round(len(ordered) * coverage))]
+        selective[str(coverage)] = {
+            "retained": len(retained),
+            "top1_agreement": 100
+            * statistics.mean(row["visible_top1_correct"] for row in retained),
+            "minimum_confidence": retained[-1]["visible_top1_confidence"],
+        }
+    return {
+        "interpretation": "agreement with incomplete attributed proposals, not truth calibration",
+        "available_targets": len(available),
+        "empty_candidate_targets": len(records) - len(available),
+        "expected_calibration_error": ece,
+        "bins": bins,
+        "selective_top1": selective,
+    }
+
+
 def render_markdown(report: dict[str, Any]) -> str:
     quality = report["protocol"]["quality_filter"]
     conditions = report["condition_results"]
     condition_labels = {
         "context_only": "MLM: context only",
+        "soft_visible": "MLM: soft traces",
         "visible_only": "MLM: visible traces",
         "editor_length_only": "MLM: editor-derived length",
         "visible_plus_editor_length": "MLM: traces + editor-derived length",
         "frequency_context_only": "Frequency: context only",
         "frequency_visible_only": "Frequency: visible traces",
         "frequency_visible_plus_editor_length": "Frequency: traces + editor-derived length",
+        "retrieval_visible_only": "Retrieval: visible traces",
     }
     condition_rows = []
     for key, label in condition_labels.items():
@@ -694,6 +879,11 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--min-context-words", type=int, default=10)
     parser.add_argument("--length-tolerance", type=int, default=1)
+    parser.add_argument(
+        "--context-window",
+        type=int,
+        help="preserved words retained on each side; default uses the full stored context",
+    )
     args = parser.parse_args()
     if not args.model.is_dir():
         raise FileNotFoundError(f"Model checkpoint not found: {args.model}")
@@ -701,6 +891,8 @@ def main() -> None:
         raise ValueError("--batch-size must be between 1 and 128")
     if not 0 <= args.length_tolerance <= 3:
         raise ValueError("--length-tolerance must be between 0 and 3")
+    if args.context_window is not None and not 1 <= args.context_window <= 40:
+        raise ValueError("--context-window must be between 1 and 40")
 
     all_rows = read_jsonl(args.input)
     target_rows: dict[tuple[str, int], list[dict[str, Any]]] = defaultdict(list)
@@ -753,6 +945,12 @@ def main() -> None:
 
     tokenizer = AutoTokenizer.from_pretrained(str(args.model), use_fast=True)
     model = AutoModelForMaskedLM.from_pretrained(str(args.model)).to(DEVICE).eval()
+    metadata_path = args.model / "preserved_training_metadata.json"
+    training_metadata = (
+        json.loads(metadata_path.read_text(encoding="utf-8"))
+        if metadata_path.is_file()
+        else None
+    )
     normalized_token_by_id = [
         hebrew_letters(tokenizer.decode([token_id]).strip())
         for token_id in range(len(tokenizer))
@@ -762,12 +960,13 @@ def main() -> None:
 
     for start in range(0, len(target_items), args.batch_size):
         batch = target_items[start : start + args.batch_size]
+        windowed = [context_window(item, args.context_window) for item in batch]
         model_words = [
             [
                 tokenizer.mask_token if word in {"<GAP>", "<TARGET>"} else word
-                for word in item["context_words"]
+                for word in words
             ]
-            for item in batch
+            for words, _ in windowed
         ]
         encoding = tokenizer(
             model_words,
@@ -779,13 +978,13 @@ def main() -> None:
         )
         input_ids = encoding["input_ids"].clone()
         positions: list[int] = []
-        for batch_index, item in enumerate(batch):
+        for batch_index, (item, (_, target_word_index)) in enumerate(zip(batch, windowed)):
             target_positions = [
                 position
                 for position, word_id in enumerate(
                     encoding.word_ids(batch_index=batch_index)
                 )
-                if word_id == item["target_index"]
+                if word_id == target_word_index
             ]
             if not target_positions:
                 raise RuntimeError(
@@ -840,14 +1039,18 @@ def main() -> None:
     ]
 
     rag_index, rag_index_metadata = build_preserved_rag_index()
-    rag_fit = fit_rag_alpha(
+    fitted_weights = fit_dev_weights(
         model=model,
         tokenizer=tokenizer,
         normalized_token_by_id=normalized_token_by_id,
         index=rag_index,
+        trace_templates=[item["constraint"] for item in target_items],
         batch_size=args.batch_size,
     )
+    rag_fit = fitted_weights["rag"]
     rag_alpha = float(rag_fit["alpha"])
+    soft_trace_fit = fitted_weights["soft_trace"]
+    soft_trace_alpha = float(soft_trace_fit["alpha"])
 
     target_records = []
     reading_records = []
@@ -859,8 +1062,19 @@ def main() -> None:
     for key, item in eligible.items():
         scored_predictions = predictions_by_target[key]
         unconstrained_predictions = [candidate for candidate, _ in scored_predictions]
+        soft_trace_predictions = [
+            candidate
+            for candidate, _ in sorted(
+                scored_predictions,
+                key=lambda row: (
+                    -(row[1] - soft_trace_alpha * trace_penalty(row[0], item["constraint"])),
+                    row[0],
+                ),
+            )
+        ]
         conditions = {
             "context_only": unconstrained_predictions,
+            "soft_visible": soft_trace_predictions,
             "visible_only": [
                 candidate
                 for candidate in unconstrained_predictions
@@ -877,6 +1091,19 @@ def main() -> None:
                 if item["constraint"].matches(candidate, args.length_tolerance)
             ],
         }
+        visible_scored = [
+            (candidate, score)
+            for candidate, score in scored_predictions
+            if item["constraint"].matches_visible(candidate)
+        ]
+        if visible_scored:
+            maximum = visible_scored[0][1]
+            normalizer = sum(math.exp(score - maximum) for _, score in visible_scored)
+            visible_top1_confidence = 1.0 / normalizer
+            visible_top1_correct = visible_scored[0][0] in item["readings"]
+        else:
+            visible_top1_confidence = None
+            visible_top1_correct = False
         constrained_predictions = conditions["visible_plus_editor_length"]
         constrained_set = set(constrained_predictions)
         constrained_scored = [
@@ -900,6 +1127,26 @@ def main() -> None:
         rag_left, rag_right = contiguous_context(
             item["context_words"], item["target_index"]
         )
+        supported_candidates = {
+            candidate
+            for context_key in rag_context_keys(rag_left, rag_right)
+            for candidate in rag_index.get(context_key, {})
+        }
+        retrieval_predictions = sorted(
+            frequency_vocabulary,
+            key=lambda candidate: (
+                -rag_score(rag_index, rag_left, rag_right, candidate)[0]
+                if candidate in supported_candidates
+                else 0,
+                -train_frequency[candidate],
+                candidate,
+            ),
+        )
+        frequency_conditions["retrieval_visible_only"] = [
+            candidate
+            for candidate in retrieval_predictions
+            if item["constraint"].matches_visible(candidate)
+        ]
         rag_scored = []
         for candidate, model_score in constrained_scored:
             retrieval_score, matched_span, hits = rag_score(
@@ -998,6 +1245,8 @@ def main() -> None:
                     name: candidates[:20] for name, candidates in conditions.items()
                 },
                 "top_predictions": constrained_predictions[:20],
+                "visible_top1_confidence": visible_top1_confidence,
+                "visible_top1_correct": visible_top1_correct,
                 "rag_top_predictions": rag_predictions[:20],
                 "rag_context": {
                     "left": list(rag_left),
@@ -1012,12 +1261,14 @@ def main() -> None:
 
     condition_rank_keys = {
         "context_only": "context_only_rank",
+        "soft_visible": "soft_visible_rank",
         "visible_only": "visible_only_rank",
         "editor_length_only": "editor_length_only_rank",
         "visible_plus_editor_length": "visible_plus_editor_length_rank",
         "frequency_context_only": "frequency_context_only_rank",
         "frequency_visible_only": "frequency_visible_only_rank",
         "frequency_visible_plus_editor_length": "frequency_visible_plus_editor_length_rank",
+        "retrieval_visible_only": "retrieval_visible_only_rank",
     }
     for record in target_records:
         for condition, rank_key in condition_rank_keys.items():
@@ -1066,7 +1317,14 @@ def main() -> None:
         return {
             condition: summarize_ranks(record[rank_key] for record in subset)
             for condition, rank_key in condition_rank_keys.items()
-            if condition in {"context_only", "visible_only", "frequency_visible_only"}
+            if condition
+            in {
+                "context_only",
+                "soft_visible",
+                "visible_only",
+                "frequency_visible_only",
+                "retrieval_visible_only",
+            }
         }
 
     trace_strata = {
@@ -1139,6 +1397,8 @@ def main() -> None:
                 else str(args.model)
             ),
             "device": DEVICE,
+            "model_sha256": sha256(args.model / "model.safetensors"),
+            "training": training_metadata,
             "source_snapshot": all_rows[0]["qd_snapshot"],
             "corpus": "held-out non-biblical DSS scrolls",
             "split_integrity": "scroll-disjoint from fine-tuning train/dev",
@@ -1148,6 +1408,7 @@ def main() -> None:
                 "visible Hebrew outside brackets; editor-derived length is a separate oracle condition"
             ),
             "length_tolerance": args.length_tolerance,
+            "context_words_each_side": args.context_window or "full_stored_context",
             "candidate_normalization": "exact Hebrew consonants",
             "primary_unit": "one target; any compatible attributed restoration",
             "network": "offline cached snapshot",
@@ -1169,16 +1430,23 @@ def main() -> None:
                 "score": "MLM logit + alpha * exact-context retrieval score",
                 "heldout_used_for_tuning": False,
             },
+            "soft_trace": {
+                "weight_fit": soft_trace_fit,
+                "score": "MLM logit minus alpha times graded trace disagreement",
+                "heldout_readings_used_for_tuning": False,
+            },
         },
         "condition_results": condition_results,
         "condition_definitions": {
             "context_only": "MLM ranking without trace or length filtering",
+            "soft_visible": "development-tuned graded trace compatibility; no candidate is discarded",
             "visible_only": "transcription-visible Hebrew outside reconstruction brackets",
             "editor_length_only": "editor-derived display/initial word length with tolerance",
             "visible_plus_editor_length": "visible traces plus editor-derived length; not P0",
             "frequency_context_only": "training-corpus frequency lexicon without constraints",
             "frequency_visible_only": "training-corpus frequency lexicon filtered by visible traces",
             "frequency_visible_plus_editor_length": "frequency lexicon with visible traces and editor-derived length",
+            "retrieval_visible_only": "non-neural exact-context retrieval backed off by frequency, then trace-filtered",
         },
         "composition_unseen_subset": {
             "definition": split_audit["definition"]["composition_unseen"],
@@ -1187,6 +1455,7 @@ def main() -> None:
             "results": composition_unseen_results,
         },
         "trace_count_strata": trace_strata,
+        "visible_trace_confidence": confidence_diagnostics(target_records),
         "target_level_any_attributed_restoration": target_summary,
         "rag_target_level_any_attributed_restoration": rag_target_summary,
         "unique_target_reading_level": summarize_ranks(

@@ -1,0 +1,134 @@
+{
+  "status": "controlled_three_seed_qd_replication",
+  "targets": 93,
+  "scrolls": 40,
+  "seeds": [
+    {
+      "seed": 41,
+      "epochs": 2,
+      "batch_size": 16,
+      "learning_rate": 3e-05,
+      "epoch_losses": [
+        5.92191986053709,
+        5.39682674407959
+      ],
+      "result": "experiments/results/paper/qd_methods_seed41_20260811.json",
+      "context_only_top1": 4.301075268817204,
+      "context_only_top5": 8.602150537634408,
+      "context_only_top10": 15.053763440860216,
+      "context_only_top20": 16.129032258064516,
+      "soft_visible_top1": 33.333333333333336,
+      "soft_visible_top5": 54.83870967741935,
+      "soft_visible_top10": 56.98924731182796,
+      "soft_visible_top20": 61.29032258064516,
+      "visible_only_top1": 31.182795698924732,
+      "visible_only_top5": 50.53763440860215,
+      "visible_only_top10": 54.83870967741935,
+      "visible_only_top20": 55.913978494623656
+    },
+    {
+      "seed": 42,
+      "epochs": 2,
+      "batch_size": 16,
+      "learning_rate": 3e-05,
+      "epoch_losses": [
+        5.864006171150813,
+        5.425495427752298
+      ],
+      "result": "experiments/results/paper/qd_methods_seed42_20260811.json",
+      "context_only_top1": 4.301075268817204,
+      "context_only_top5": 11.827956989247312,
+      "context_only_top10": 15.053763440860216,
+      "context_only_top20": 17.204301075268816,
+      "soft_visible_top1": 35.483870967741936,
+      "soft_visible_top5": 51.61290322580645,
+      "soft_visible_top10": 55.913978494623656,
+      "soft_visible_top20": 61.29032258064516,
+      "visible_only_top1": 33.333333333333336,
+      "visible_only_top5": 48.38709677419355,
+      "visible_only_top10": 50.53763440860215,
+      "visible_only_top20": 54.83870967741935
+    },
+    {
+      "seed": 43,
+      "epochs": 2,
+      "batch_size": 16,
+      "learning_rate": 3e-05,
+      "epoch_losses": [
+        5.91615421052963,
+        5.4356301549881225
+      ],
+      "result": "experiments/results/paper/qd_methods_seed43_20260811.json",
+      "context_only_top1": 6.451612903225806,
+      "context_only_top5": 12.903225806451612,
+      "context_only_top10": 13.978494623655914,
+      "context_only_top20": 17.204301075268816,
+      "soft_visible_top1": 36.55913978494624,
+      "soft_visible_top5": 53.763440860215056,
+      "soft_visible_top10": 56.98924731182796,
+      "soft_visible_top20": 61.29032258064516,
+      "visible_only_top1": 33.333333333333336,
+      "visible_only_top5": 49.46236559139785,
+      "visible_only_top10": 51.61290322580645,
+      "visible_only_top20": 54.83870967741935
+    }
+  ],
+  "conditions": {
+    "context_only": {
+      "mean_top1": 5.017921146953404,
+      "mean_top5": 11.11111111111111,
+      "mean_top10": 14.695340501792115,
+      "mean_top20": 16.845878136200717,
+      "sample_sd_across_seeds": 0.6208067410641142,
+      "minimum_top10": 13.978494623655914,
+      "maximum_top10": 15.053763440860216,
+      "seed_and_scroll_hierarchical_bootstrap_95ci": [
+        7.482993197278912,
+        22.580645161290324
+      ]
+    },
+    "soft_visible": {
+      "mean_top1": 35.12544802867384,
+      "mean_top5": 53.40501792114695,
+      "mean_top10": 56.63082437275986,
+      "mean_top20": 61.29032258064516,
+      "sample_sd_across_seeds": 0.6208067410641153,
+      "minimum_top10": 55.913978494623656,
+      "maximum_top10": 56.98924731182796,
+      "seed_and_scroll_hierarchical_bootstrap_95ci": [
+        46.51162790697674,
+        66.66666666666667
+      ]
+    },
+    "visible_only": {
+      "mean_top1": 32.61648745519713,
+      "mean_top5": 49.46236559139785,
+      "mean_top10": 52.32974910394265,
+      "mean_top20": 55.19713261648745,
+      "sample_sd_across_seeds": 2.2383505370603562,
+      "minimum_top10": 50.53763440860215,
+      "maximum_top10": 54.83870967741935,
+      "seed_and_scroll_hierarchical_bootstrap_95ci": [
+        41.935483870967744,
+        62.4031007751938
+      ]
+    }
+  },
+  "paired_top10_deltas": {
+    "soft_visible_minus_context": {
+      "mean_points": 41.935483870967744,
+      "seed_and_scroll_hierarchical_bootstrap_95ci": [
+        30.82437275985663,
+        53.01204819277108
+      ]
+    },
+    "soft_visible_minus_frequency_visible": {
+      "mean_points": 20.07168458781362,
+      "seed_and_scroll_hierarchical_bootstrap_95ci": [
+        9.183673469387756,
+        30.158730158730158
+      ]
+    }
+  },
+  "uncertainty": "hierarchical bootstrap resamples three optimization seeds and manuscript clusters with replacement"
+}

@@ -1,0 +1,38 @@
+{
+  "status": "single_seed_qd_composition_exclusion_sensitivity",
+  "targets_with_nonempty_composition_labels": 68,
+  "scrolls": 28,
+  "retained_training_chunks": 785,
+  "original_training_chunks": 1002,
+  "verified_composition_overlap": [],
+  "conditions": {
+    "context_only": {
+      "regular_top10": 11.764705882352942,
+      "composition_excluded_top10": 11.764705882352942,
+      "delta_points": 0.0,
+      "paired_scroll_cluster_delta_95ci": [
+        0.0,
+        0.0
+      ]
+    },
+    "soft_visible": {
+      "regular_top10": 52.94117647058823,
+      "composition_excluded_top10": 52.94117647058823,
+      "delta_points": 0.0,
+      "paired_scroll_cluster_delta_95ci": [
+        0.0,
+        0.0
+      ]
+    },
+    "visible_only": {
+      "regular_top10": 50.0,
+      "composition_excluded_top10": 50.0,
+      "delta_points": 0.0,
+      "paired_scroll_cluster_delta_95ci": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "limitation": "single matched seed; exclusion changes training volume as well as composition exposure"
+}

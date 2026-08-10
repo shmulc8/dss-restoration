@@ -13,12 +13,12 @@ Status: **team_review_evidence_snapshot**.
 
 ## Qumran Digital literature agreement
 
-- Visible-trace Top-10: 50.5% (40.3%--60.0%).
-- Context-only Top-10: 15.1%.
+- Soft-trace Top-10: 56.6% (46.5%--66.7%).
+- Context-only Top-10: 14.7%.
 - Frequency + visible traces Top-10: 36.6%.
 - Split audit: {'train': 0, 'dev': 0, 'heldout': 93}.
 
 ## Promotion status
 
-- replicate the single-checkpoint MLM comparisons across matched training seeds
-- train a model on a composition-disjoint development protocol
+- evaluate a representative composition-grouped population split
+- audit base-model pretraining exposure if a complete corpus becomes available

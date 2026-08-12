@@ -73,6 +73,12 @@ EXPERIMENTS = (
         "checks",
     ),
     Experiment(
+        "qd-image-registration",
+        "Validate the exploratory SQE image-registration coverage audit",
+        ("experiments/qumran_vision/audit_sqe_registration.py", "--validate-existing"),
+        "checks",
+    ),
+    Experiment(
         "qd-method-summary",
         "Aggregate matched MLM seeds with seed-and-scroll uncertainty",
         ("experiments/aggregate_qd_method_extensions.py",),

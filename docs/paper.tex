@@ -43,7 +43,7 @@ Token Alignment, Transcription-Encoded Evidence, and Unknown-Length Gaps}
 
 \begin{abstract}
 \normalsize
-Dead Sea Scroll lacunae differ from ordinary masked-word tasks: visible letters may survive, while character length, word count, and boundaries remain uncertain. We introduce a reconstruction-free corpus derivative and two complementary evaluations that keep these information sources explicit. Across three matched training seeds and 93 natural single-word lacunae, a preserved-only masked language model averages 14.7\% Top-10 agreement with attributed proposals from context alone and 56.6\% with development-tuned soft trace evidence; a frequency baseline with hard traces reaches 36.6\%. On 300 non-overlapping synthetic spans sampled across 79 held-out scrolls, the strongest unknown-length decoder reaches 7.7\% exact Top-10 and recovers no three-word target. These results establish a useful but bounded conclusion: transcription evidence sharply narrows candidate sets, whereas present language models do not solve unknown-length multiword restoration. Agreement with published proposals is not historical ground truth.
+Dead Sea Scroll lacunae differ from ordinary masked-word tasks: visible letters may survive, while character length, word count, and boundaries remain uncertain. We introduce a reconstruction-free corpus derivative and two complementary evaluations that keep these information sources explicit. Across three matched training seeds and 93 natural single-word lacunae, a preserved-only masked language model averages 14.7\% Top-10 agreement with attributed proposals from context alone and 56.6\% with development-tuned soft trace evidence; a frequency baseline with hard traces reaches 36.6\%. On 300 non-overlapping synthetic spans sampled across 79 held-out scrolls, the strongest unknown-length decoder reaches 7.7\% exact Top-10 and recovers no three-word target. The practical verdict is explicit: the method is useful as a trace-aware candidate ranker for eligible single-word lacunae, but it is not an effective general restoration system for unknown-length multiword gaps. Agreement with published proposals is not historical ground truth.
 \end{abstract}
 
 \section{Introduction}
@@ -187,6 +187,9 @@ The frozen split is scroll-disjoint. Test data are never used for selection. Fai
 
 We report 95\% bootstrap intervals clustered by scroll and paired cluster intervals for evidence-condition deltas. For the QD MLM, three checkpoints vary only seed (41--43), use two epochs, batch size 16, learning rate $3\times10^{-5}$, and the same 1,002 training chunks; hierarchical intervals resample both seeds and scrolls. Target-level predictions, exclusions, manifests, and code/data/model/result hashes accompany the aggregate tables. These choices follow reproducibility guidance in NLP \cite{dodge2019,ulmer2024}.
 
+\paragraph{Protocol validity and scope.}
+Reconstruction-free labels, scroll-disjoint splits, fixed denominators, non-neural controls, matched seeds, and clustered uncertainty make this protocol suitable for testing candidate ranking under declared transcription evidence. They do not validate historical truth, physical ink interpretation, or unconstrained restoration of arbitrary lacunae. We therefore judge the method separately on the natural single-word assistance task and the harder unknown-length synthetic task.
+
 \section{Results}
 
 The results follow the task's sources of uncertainty rather than a leaderboard: we first test whether tokenization can align a known interval, then require exact recovery when length and boundaries are hidden, and finally measure agreement with attributed proposals at natural lacunae. Metrics are comparable only within each table.
@@ -241,6 +244,9 @@ The frozen split is manuscript-disjoint but not composition-disjoint. We therefo
 
 With seed 42, context-only Top-10 rises from 6.5\% at two words per side to 11.8\%, 14.0\%, and 15.1\% at five, ten, and full stored context; soft-trace Top-10 remains 55.9--57.0\%. Among 80 nonempty hard-trace candidate sets, retaining the 50\% with highest normalized Top-1 score gives 60.0\% Top-1 literature agreement versus 38.8\% at full nonempty coverage; this is agreement calibration against incomplete proposals, not truth calibration. Finally, 59 targets have an attributed word seen somewhere in preserved training text, but none has an exact preserved-training trigram or five-gram containing that reading. Base-model pretraining exposure cannot be excluded.
 
+\paragraph{Operational verdict.}
+For eligible natural single-word lacunae, the soft-trace MLM is useful: its Top-10 literature agreement exceeds the hard-trace frequency control by 20.1 points, with a seed-and-scroll interval that remains positive. Context-only ranking is weak, so the gain cannot be attributed to the language model alone. For unknown-length spans, the verdict is negative: 7.7\% exact Top-10 overall, 1.0\% for two words, and 0\% for three words are not adequate for general restoration. The present method should therefore prioritize candidates under explicit transcription evidence, not autonomously fill arbitrary gaps.
+
 \section{Comparative Synthesis}
 
 \SynthesisTable
@@ -267,7 +273,7 @@ The system is intended for decision support. Every candidate should retain its m
 
 \section{Conclusion}
 
-Soft transcription evidence substantially narrows candidate space, remains stable across three matched seeds, and improves over frequency. This is the paper's positive result. Its equally important negative result is that token alignment and granularity ensembling do not solve unknown-length multiword restoration: exact recovery approaches zero beyond one word. Shared denominators, coverage accounting, manuscript-balanced sampling, hierarchical uncertainty, and explicit oracle labels make both conclusions reproducible without turning literature agreement into historical truth.
+The method is scientifically well controlled and practically useful for one bounded role: prioritizing candidates for eligible single-word lacunae when transcription-visible traces are supplied. It is not yet a general DSS restoration system. Token alignment and granularity ensembling do not solve unknown-length multiword restoration, where exact recovery approaches zero beyond one word. Shared denominators, coverage accounting, manuscript-balanced sampling, hierarchical uncertainty, and explicit oracle labels make this mixed verdict reproducible without turning literature agreement into historical truth.
 
 \section*{Responsible NLP Research Checklist}
 

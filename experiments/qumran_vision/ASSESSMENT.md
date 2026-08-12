@@ -73,3 +73,14 @@ historical ink.
 Until those alignments and labels exist, the correct use of Uzan et al. is as a
 methodological predecessor and a design constraint, not as a claimed component
 of the current restoration system.
+
+## Executed registration gate
+
+We joined the frozen 93 QD word IDs through the public SQE 0.33.0 database's
+word, sign-stream, position, and sign-ROI tables. Eighty-seven targets have an
+SQE/Qumran-Digital word and text-section mapping, but zero has a sign-level
+image ROI. SQE contains 162,754 image records, yet its 1,706 sign ROIs cover
+only 551 Qumran-Digital words and none of our targets. Consequently, an
+image-only/text-only/fused comparison is not currently estimable on the frozen
+benchmark. This is a measured data-coverage failure, not a negative model
+result.

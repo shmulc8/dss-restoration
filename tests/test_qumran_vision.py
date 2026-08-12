@@ -5,6 +5,7 @@ from pathlib import Path
 import torch
 from PIL import Image
 
+from experiments.qumran_vision.audit_sqe_registration import query, target_id_sha256
 from experiments.qumran_vision.download_data import safe_extract_images
 from experiments.qumran_vision.modern_pilot import (
     BinaryPixelCNN,
@@ -46,3 +47,11 @@ def test_qumran_archive_extraction_ignores_pickle_and_traversal(tmp_path: Path) 
     assert safe_extract_images(archive, destination, "release") == 1
     assert (destination / "release/train/letters/one.png").is_file()
     assert not (destination / "escape.png").exists()
+
+
+def test_registration_query_uses_numeric_ids_and_sign_rois() -> None:
+    ids = [7, 42]
+    sql = query(ids)
+    assert "INSERT INTO target_word VALUES (7),(42)" in sql
+    assert "sign_interpretation_roi" in sql
+    assert len(target_id_sha256(ids)) == 64

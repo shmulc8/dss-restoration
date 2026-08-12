@@ -25,6 +25,20 @@ support an accuracy claim without new annotation.
 See [ASSESSMENT.md](ASSESSMENT.md) for the integration decision and the DSS
 research practices carried into the main paper.
 
+The frozen QD-to-image registration gate can be reproduced against the public
+SQE database image:
+
+```bash
+docker run --rm -d --name dss-sqe -e MYSQL_ROOT_PASSWORD=none \
+  qumranica/sqe-database:0.33.0
+.venv/bin/python experiments/qumran_vision/audit_sqe_registration.py \
+  --container dss-sqe
+```
+
+In the pinned snapshot, 87 of 93 QD word IDs map to SQE text sections, but zero
+maps onward to a sign-level image ROI. The audit therefore blocks image-only
+and fused scoring rather than substituting unrelated 11Q5 letter crops.
+
 Source: <https://github.com/ghostcow/pixel-cnn-qumran>
 
 Data redistribution terms are not stated separately from the code license.

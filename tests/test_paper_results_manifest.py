@@ -21,25 +21,20 @@ def test_paper_manifest_is_the_team_review_snapshot() -> None:
     assert all(table["status"] != "paper_result" for table in manifest["tables"])
 
 
-def test_shared_alignment_rows_match_artifact() -> None:
+def test_shared_alignment_claims_match_artifact() -> None:
     artifact = json.loads(
         (ROOT / "experiments/results/runs/summary_with_subsets.json").read_text(
             encoding="utf-8"
         )
     )["full"]
-    manifest = json.loads(
-        (ROOT / "docs" / "paper_results_manifest.json").read_text(encoding="utf-8")
-    )
-    rows = {row[0]: row for row in _table(manifest, "SyntheticAlignmentTable")["rows"]}
-
-    tavbert = artifact["tavbert-finetuned"]
-    assert rows["TavBERT FT (character)"][2] == f'{100 * tavbert["hit@10"]:.2f}\\%'
-
+    paper = (ROOT / "docs" / "paper.tex").read_text(encoding="utf-8")
+    tavbert = artifact["tavbert-base"]
+    assert f'{100 * tavbert["hit@10"]:.1f}\\%' in paper
     msbert = artifact["msbert-finetuned"]
     coverage = (msbert["masked_words"] - msbert["unaligned"]) / msbert["masked_words"]
-    assert rows["MsBERT FT (WordPiece)"][1] == f'{100 * msbert["hit@1"] * coverage:.2f}\\%'
-    assert rows["MsBERT FT (WordPiece)"][2] == f'{100 * msbert["hit@10"] * coverage:.2f}\\%'
-    assert rows["MsBERT FT (WordPiece)"][3] == f'{100 * (1 - coverage):.2f}\\%'
+    assert f'{100 * msbert["hit@10"]:.1f}\\%' in paper
+    assert f'{100 * msbert["hit@10"] * coverage:.1f}\\%' in paper
+    assert str(msbert["unaligned"]) in paper
 
 
 def test_span_pilot_headline_matches_fresh_snapshot() -> None:

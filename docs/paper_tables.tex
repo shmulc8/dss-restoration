@@ -102,26 +102,6 @@ Set & Targets & Scrolls & Reference \\
 \end{table}%
 }
 
-\newcommand{\SyntheticAlignmentTable}{%
-\begin{table}[t]
-\centering
-\caption{Shared synthetic alignment diagnostic ($n=729$ preserved content words). Hit rates use all targets as the denominator; alignment failures are misses.}
-\label{tab:alignment}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{lrrr}
-\toprule
-System & Hit@1 & Hit@10 & Drops \\
-\midrule
-  TavBERT base (character) & 7.27\% & 21.12\% & 0.00\% \\
-  TavBERT FT (character) & 7.96\% & 20.58\% & 0.00\% \\
-  MsBERT FT (WordPiece) & 6.04\% & 13.31\% & 38.27\% \\
-  ByT5 unified (byte) & 0.82\% & 5.35\% & 0.00\% \\
-\bottomrule
-\end{tabular}%
-}
-\end{table}%
-}
-
 \newcommand{\QDTable}{%
 \begin{table}[t]
 \centering
@@ -180,26 +160,4 @@ Measure & 1 word & 2 words & 3 words \\
 \end{tabular}%
 }
 \end{table}%
-}
-
-\newcommand{\SynthesisTable}{%
-\begin{table*}[t]
-\centering
-\caption{Methodological synthesis. Scores are not compared across corpora. A dash indicates that a dimension is not central to the cited evaluation.}
-\label{tab:synthesis}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{llllll}
-\toprule
-Dimension & Lazar (2021) & Embible (2024) & MsBERT (2024) & Aeneas (2025) & This work \\
-\midrule
-  Material/language & Akkadian tablets & Biblical Heb./Aram. & Hebrew MSS & Latin inscriptions & DSS transcriptions \\
-  Generation unit & subword/sign & word + char. & WordPiece & character sequence & word span + char. ablation \\
-  Natural lacuna eval. & expert sample & no & yes & yes & QD literature agreement \\
-  Unknown length & greedy masks & masked spans & missing word & arbitrary length & primary protocol \\
-  Material evidence & transcription & mask extent & transcription & image + text & traces; editor-length oracle \\
-  Primary caution & domain/task scope & synthetic damage & token alignment & edition-derived targets & no physical truth \\
-\bottomrule
-\end{tabular}%
-}
-\end{table*}%
 }

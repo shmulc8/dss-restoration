@@ -65,32 +65,6 @@ The present draft makes four evidence-bounded contributions:
 
 The contribution is therefore primarily methodological and diagnostic rather than a claim of historically correct restoration.
 
-\begin{figure}[t]
-\centering
-\resizebox{\linewidth}{!}{%
-\begin{tikzpicture}[
-  node distance=5mm,
-  stage/.style={draw=DSSNavy!75,fill=DSSPaper,rounded corners=3pt,
-    minimum width=6.9cm,text width=6.3cm,minimum height=8mm,
-    align=center,inner sep=4pt,font=\small,
-    drop shadow={opacity=0.10,shadow xshift=1pt,shadow yshift=-1pt}},
-  flow/.style={-{Stealth[length=2.2mm]},line width=0.75pt,draw=DSSNavy!80}
-]
-\node[stage,fill=DSSNavy!7] (input) {\textbf{Preserved transcription}\\ context and anonymous gap marker};
-\node[stage,fill=DSSNavy!13,below=of input] (gen) {\textbf{Candidate generator}\\ preserved-only MLM or sequence model};
-\node[stage,fill=DSSEmerald!10,below=of gen] (constraint) {\textbf{Declared evidence condition}\\ none; soft/hard traces; editor-length oracle};
-\node[stage,fill=DSSEmerald!17,below=of constraint] (rank) {\textbf{Coverage-aware ranking}\\ retain failures and small candidate sets};
-\node[stage,fill=DSSEmerald!27,below=of rank] (output) {\textbf{Evaluation output}\\ exact span or attributed-reading agreement};
-\draw[flow] (input) -- (gen);
-\draw[flow] (gen) -- (constraint);
-\draw[flow] (constraint) -- (rank);
-\draw[flow] (rank) -- (output);
-\end{tikzpicture}%
-}
-\caption{Evaluation architecture. Visible letters are copied from a transcription; no image or stroke inference is performed. Each result names its supplied evidence.}
-\label{fig:architecture}
-\end{figure}
-
 \section{Related Work}
 
 \paragraph{Ancient-text restoration.}
@@ -164,6 +138,8 @@ The QD snapshot dated 21 May 2026 contains 1,811 publication rows at 346 candida
 
 \section{Models and Decoding}
 
+The comparison separates two questions: how complete-string candidates are generated, and how declared transcription evidence changes their ranking.
+
 \paragraph{Word-span baseline.}
 The word-span baseline enumerates one to three word-mask hypotheses and ranks complete surfaced strings. It is fine-tuned only on preserved non-biblical text. The tokenizer can represent 81.7\% of complete synthetic targets with one token per word; all other targets remain in the denominator as misses.
 
@@ -192,12 +168,10 @@ Reconstruction-free labels, scroll-disjoint splits, fixed denominators, non-neur
 
 \section{Results}
 
-The results follow the task's sources of uncertainty rather than a leaderboard: we first test whether tokenization can align a known interval, then require exact recovery when length and boundaries are hidden, and finally measure agreement with attributed proposals at natural lacunae. Metrics are comparable only within each table.
-
-\SyntheticAlignmentTable
+The results follow the task's sources of uncertainty rather than a leaderboard: we first diagnose token alignment, then require exact recovery when length and boundaries are hidden, and finally measure agreement with attributed proposals at natural lacunae. Metrics are comparable only within each table.
 
 \paragraph{Alignment is necessary but insufficient.}
-Table~\ref{tab:alignment} uses a genuinely shared denominator. TavBERT base obtains the highest Hit@10, while DSS fine-tuning does not improve it. MsBERT's aligned-only rates are 9.78\% Hit@1 and 21.56\% Hit@10, but presenting those alone would condition on successful tokenization. With 279 of 729 failures counted as misses, its all-target rates are 6.04\% and 13.31\%. DictaBERT-char is omitted because the available 22.80\% result comes from a different 250-word pilot.
+On a shared 729-word diagnostic, TavBERT base obtains 21.1\% Hit@10, while DSS fine-tuning does not improve it. MsBERT's aligned-only Hit@10 is 21.6\%, but 279 alignment failures reduce its all-target rate to 13.3\%. Alignment failures therefore remain misses in every subsequent comparison; the full diagnostic is preserved in the released artifact.
 
 \SpanPilotTable
 \SpanStrataTable
@@ -207,31 +181,9 @@ The word-span model and rank fusion tie at 7.7\% exact Top-10 (Table~\ref{tab:sp
 
 Three matched ByT5 checkpoints were rerun on the identical target manifest. Their overall exact Top-10 scores are 1.3\%, 1.3\%, and 1.0\%; every checkpoint obtains 0\% on the two- and three-word strata. The seed result therefore confirms a stable negative finding rather than a competitive sequence baseline.
 
-\QDTable
+We next turn from synthetic spans with observable answers to genuine single-word lacunae, where the defensible outcome is agreement with attributed proposals rather than historical accuracy.
 
-\begin{figure}[t]
-\centering
-\resizebox{\linewidth}{!}{%
-\begin{tikzpicture}
-\begin{axis}[
-  ybar,width=7.8cm,height=5.4cm,ymin=0,ymax=60,
-  ylabel={Top-10 agreement (\%)},
-  symbolic x coords={FreqC,MLMC,FreqV,MLMV},xtick=data,
-  xticklabels={Freq. context,MLM context,Freq. + traces,MLM + traces},
-  x tick label style={rotate=25,anchor=east,font=\scriptsize},
-  ytick={0,10,20,30,40,50,60},ymajorgrids=true,
-  grid style={draw=DSSRule,dashed},bar width=9mm,enlarge x limits=0.18,
-  nodes near coords,every node near coord/.append style={font=\scriptsize},
-  nodes near coords align={vertical},clip=false
-]
-\addplot[draw=DSSNavy,fill=DSSNavy!76] coordinates
-  {(FreqC,3.23) (MLMC,14.70) (FreqV,36.56) (MLMV,56.63)};
-\end{axis}
-\end{tikzpicture}%
-}
-\caption{QD Top-10 literature agreement on a fixed 93-target denominator. MLM bars are three-seed means; the final bar uses soft trace evidence.}
-\label{fig:qd-bars}
-\end{figure}
+\QDTable
 
 \paragraph{Soft transcription traces carry most of the QD signal.}
 On the same 93 targets, mean MLM Top-10 agreement changes from 14.7\% context-only to 56.6\% with soft traces (Table~\ref{tab:qd}). The paired improvement is 41.9 points, with a 30.8--53.0 seed-and-scroll hierarchical 95\% interval; the absolute soft-trace interval is 46.5--66.7\%. The hard-trace mean is 52.3\% and varies more across seeds (SD 2.2 versus 0.6 points). Frequency with hard traces reaches 36.6\%; the soft-MLM advantage is 20.1 points (9.2--30.2). Exact-context retrieval also reaches 36.6\% and therefore adds no non-neural gain. The seed-42 editor-length proxy adds no Top-10 gain over hard traces and remains an oracle diagnostic.
@@ -239,19 +191,11 @@ On the same 93 targets, mean MLM Top-10 agreement changes from 14.7\% context-on
 \paragraph{Trace-count error analysis.}
 Visible conditioning is not uniformly beneficial. Averaged across seeds, the 12 one-letter targets score 41.7\% context-only, 33.3\% with soft traces, and 16.7\% with hard filtering. For 14 two-letter targets, soft and hard traces reach 64.3\% and 66.7\%; for 67 targets with at least three letters they reach 59.2\% and 55.7\%. Soft evidence therefore repairs much, but not all, of the brittle one-letter failure without discarding candidates.
 
-\paragraph{Composition, context, calibration, and memorization checks.}
-The frozen split is manuscript-disjoint but not composition-disjoint. We therefore train a matched seed-42 sensitivity checkpoint after removing every training scroll whose non-empty composition label occurs among QD targets, retaining 785 of 1,002 chunks and zero such label overlap. On the 68 labeled QD targets, regular and excluded training have identical Top-10 hit rates: 11.8\% context-only, 52.9\% soft-trace, and 50.0\% hard-trace, although rankings differ. This is a single-seed, reduced-data sensitivity rather than a representative new split.
-
-With seed 42, context-only Top-10 rises from 6.5\% at two words per side to 11.8\%, 14.0\%, and 15.1\% at five, ten, and full stored context; soft-trace Top-10 remains 55.9--57.0\%. Among 80 nonempty hard-trace candidate sets, retaining the 50\% with highest normalized Top-1 score gives 60.0\% Top-1 literature agreement versus 38.8\% at full nonempty coverage; this is agreement calibration against incomplete proposals, not truth calibration. Finally, 59 targets have an attributed word seen somewhere in preserved training text, but none has an exact preserved-training trigram or five-gram containing that reading. Base-model pretraining exposure cannot be excluded.
+\paragraph{Robustness checks.}
+On the 68 QD targets with composition labels, removing all matching compositions from seed-42 training leaves context, soft-trace, and hard-trace Top-10 unchanged at 11.8\%, 52.9\%, and 50.0\%. Soft-trace Top-10 also remains 55.9--57.0\% across context windows. No attributed reading occurs in an exact preserved-training trigram or five-gram, although base-model pretraining exposure cannot be excluded. Detailed calibration and sensitivity artifacts accompany the release.
 
 \paragraph{Operational verdict.}
 For eligible natural single-word lacunae, the soft-trace MLM is useful: its Top-10 literature agreement exceeds the hard-trace frequency control by 20.1 points, with a seed-and-scroll interval that remains positive. Context-only ranking is weak, so the gain cannot be attributed to the language model alone. For unknown-length spans, the verdict is negative: 7.7\% exact Top-10 overall, 1.0\% for two words, and 0\% for three words are not adequate for general restoration. The present method should therefore prioritize candidates under explicit transcription evidence, not autonomously fill arbitrary gaps.
-
-\section{Comparative Synthesis}
-
-\SynthesisTable
-
-Table~\ref{tab:synthesis} places the framework in its lineage. Lazar establishes ancient Semitic MLM completion; Embible motivates granularity ensembles; MsBERT motivates manuscript-domain pretraining; Aeneas demonstrates arbitrary-length multimodal restoration. Our contribution is a DSS corpus and evaluation framework that separates supplied evidence from model ability; we do not claim a new state-of-the-art architecture.
 
 \section{Reproducibility and Data Statement}
 

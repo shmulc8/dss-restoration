@@ -86,22 +86,6 @@
       "status": "descriptive_statistics_only"
     },
     {
-      "command": "SyntheticAlignmentTable",
-      "environment": "table",
-      "caption": "Shared synthetic alignment diagnostic ($n=729$ preserved content words). Hit rates use all targets as the denominator; alignment failures are misses.",
-      "label": "tab:alignment",
-      "columns": "lrrr",
-      "header": ["System", "Hit@1", "Hit@10", "Drops"],
-      "rows": [
-        ["TavBERT base (character)", "7.27\\%", "21.12\\%", "0.00\\%"],
-        ["TavBERT FT (character)", "7.96\\%", "20.58\\%", "0.00\\%"],
-        ["MsBERT FT (WordPiece)", "6.04\\%", "13.31\\%", "38.27\\%"],
-        ["ByT5 unified (byte)", "0.82\\%", "5.35\\%", "0.00\\%"]
-      ],
-      "source": "experiments/results/runs/summary_with_subsets.json",
-      "status": "synthetic_diagnostic"
-    },
-    {
       "command": "QDTable",
       "environment": "table",
       "caption": "Agreement with attributed readings at 93 Qumran Digital targets under separated evidence conditions and three matched MLM seeds.",
@@ -148,24 +132,6 @@
       ],
       "source": "experiments/results/paper/span_balanced_300_20260811.json",
       "status": "heldout_synthetic_benchmark"
-    },
-    {
-      "command": "SynthesisTable",
-      "environment": "table*",
-      "caption": "Methodological synthesis. Scores are not compared across corpora. A dash indicates that a dimension is not central to the cited evaluation.",
-      "label": "tab:synthesis",
-      "columns": "llllll",
-      "header": ["Dimension", "Lazar (2021)", "Embible (2024)", "MsBERT (2024)", "Aeneas (2025)", "This work"],
-      "rows": [
-        ["Material/language", "Akkadian tablets", "Biblical Heb./Aram.", "Hebrew MSS", "Latin inscriptions", "DSS transcriptions"],
-        ["Generation unit", "subword/sign", "word + char.", "WordPiece", "character sequence", "word span + char. ablation"],
-        ["Natural lacuna eval.", "expert sample", "no", "yes", "yes", "QD literature agreement"],
-        ["Unknown length", "greedy masks", "masked spans", "missing word", "arbitrary length", "primary protocol"],
-        ["Material evidence", "transcription", "mask extent", "transcription", "image + text", "traces; editor-length oracle"],
-        ["Primary caution", "domain/task scope", "synthetic damage", "token alignment", "edition-derived targets", "no physical truth"]
-      ],
-      "source": "bibliography_and_paper_method_sections",
-      "status": "qualitative_synthesis"
     }
   ]
 }

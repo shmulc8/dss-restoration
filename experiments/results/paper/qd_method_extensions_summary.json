@@ -18,9 +18,9 @@
       "context_only_top10": 15.053763440860216,
       "context_only_top20": 16.129032258064516,
       "soft_visible_top1": 33.333333333333336,
-      "soft_visible_top5": 54.83870967741935,
+      "soft_visible_top5": 52.68817204301075,
       "soft_visible_top10": 56.98924731182796,
-      "soft_visible_top20": 61.29032258064516,
+      "soft_visible_top20": 62.365591397849464,
       "visible_only_top1": 31.182795698924732,
       "visible_only_top5": 50.53763440860215,
       "visible_only_top10": 54.83870967741935,
@@ -41,8 +41,8 @@
       "context_only_top10": 15.053763440860216,
       "context_only_top20": 17.204301075268816,
       "soft_visible_top1": 35.483870967741936,
-      "soft_visible_top5": 51.61290322580645,
-      "soft_visible_top10": 55.913978494623656,
+      "soft_visible_top5": 50.53763440860215,
+      "soft_visible_top10": 52.68817204301075,
       "soft_visible_top20": 61.29032258064516,
       "visible_only_top1": 33.333333333333336,
       "visible_only_top5": 48.38709677419355,
@@ -89,15 +89,15 @@
     },
     "soft_visible": {
       "mean_top1": 35.12544802867384,
-      "mean_top5": 53.40501792114695,
-      "mean_top10": 56.63082437275986,
-      "mean_top20": 61.29032258064516,
-      "sample_sd_across_seeds": 0.6208067410641153,
-      "minimum_top10": 55.913978494623656,
+      "mean_top5": 52.32974910394265,
+      "mean_top10": 55.55555555555556,
+      "mean_top20": 61.64874551971326,
+      "sample_sd_across_seeds": 2.4832269642564566,
+      "minimum_top10": 52.68817204301075,
       "maximum_top10": 56.98924731182796,
       "seed_and_scroll_hierarchical_bootstrap_95ci": [
-        46.51162790697674,
-        66.66666666666667
+        45.267489711934154,
+        65.55555555555556
       ]
     },
     "visible_only": {
@@ -116,17 +116,17 @@
   },
   "paired_top10_deltas": {
     "soft_visible_minus_context": {
-      "mean_points": 41.935483870967744,
+      "mean_points": 40.86021505376344,
       "seed_and_scroll_hierarchical_bootstrap_95ci": [
-        30.82437275985663,
-        53.01204819277108
+        29.05982905982906,
+        52.38095238095238
       ]
     },
     "soft_visible_minus_frequency_visible": {
-      "mean_points": 20.07168458781362,
+      "mean_points": 18.996415770609318,
       "seed_and_scroll_hierarchical_bootstrap_95ci": [
-        9.183673469387756,
-        30.158730158730158
+        8.239700374531836,
+        28.937728937728938
       ]
     }
   },

@@ -1,10 +1,10 @@
 {
   "status": "blocked_no_registered_qd_targets",
-  "audit_date": "2026-08-12",
+  "audit_date": "2026-08-13",
   "target_count": 93,
   "target_id_sha256": "ac83ebc71dc98297b146ee85476b0c6ce76e6338a50f92d1b21225931a5b0b8c",
   "qd_artifact": "experiments/results/paper/qd_methods_seed42_20260811.json",
-  "qd_artifact_sha256": "21d347e90e4b6d87bc5d485e3c052af2d2461187d47633545f4b83ae2234ee19",
+  "qd_artifact_sha256": "20d3c23178a49191b32ecfc40139d6af65e168bce8c62d14988f3e59d082cf84",
   "sqe_database_image": "qumranica/sqe-database:0.33.0",
   "sqe_database_digest": "sha256:450a994563b79524de5a7cd3cdb9289a09bca9bfc6b64bacefe852678e1545dd",
   "coverage": {

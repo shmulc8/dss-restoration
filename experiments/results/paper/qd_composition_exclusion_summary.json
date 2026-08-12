@@ -16,12 +16,12 @@
       ]
     },
     "soft_visible": {
-      "regular_top10": 52.94117647058823,
+      "regular_top10": 51.470588235294116,
       "composition_excluded_top10": 52.94117647058823,
-      "delta_points": 0.0,
+      "delta_points": 1.4705882352941178,
       "paired_scroll_cluster_delta_95ci": [
         0.0,
-        0.0
+        4.615384615384615
       ]
     },
     "visible_only": {

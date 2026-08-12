@@ -13,7 +13,7 @@ Status: **team_review_evidence_snapshot**.
 
 ## Qumran Digital literature agreement
 
-- Soft-trace Top-10: 56.6% (46.5%--66.7%).
+- Soft-trace Top-10: 55.6% (45.3%--65.6%).
 - Context-only Top-10: 14.7%.
 - Frequency + visible traces Top-10: 36.6%.
 - Split audit: {'train': 0, 'dev': 0, 'heldout': 93}.

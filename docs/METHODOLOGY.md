@@ -43,6 +43,10 @@ Evaluate these conditions on the identical targets and references:
 3. editor-derived length within one character (oracle-assisted);
 4. visible segments plus editor-derived length (oracle-assisted).
 
+The soft-trace penalty weight is selected on preserved development words using
+trace shapes drawn only from single-word development-split lacunae. QD target
+inputs and attributed readings are not used for selection.
+
 Run both the preserved-only MLM and a training-corpus frequency baseline where
 applicable. Report candidate-set coverage because a hard trace filter may
 return fewer than ten candidates or none.

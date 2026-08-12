@@ -981,14 +981,14 @@
     "soft_visible": {
       "n": 93,
       "top1": 35.12544802867384,
-      "top5": 53.40501792114695,
-      "top10": 56.63082437275986,
-      "top20": 61.29032258064516,
+      "top5": 52.32974910394265,
+      "top10": 55.55555555555556,
+      "top20": 61.64874551971326,
       "in_candidate_vocabulary": 75,
       "median_rank_when_retrievable": 1,
       "top10_scroll_cluster_bootstrap_95ci": [
-        46.51162790697674,
-        66.66666666666667
+        45.267489711934154,
+        65.55555555555556
       ],
       "candidate_coverage": {
         "targets": 93,
@@ -996,10 +996,10 @@
         "fewer_than_10": 0,
         "median_candidates": 115690
       },
-      "seed_sd_top10": 0.6208067410641153,
+      "seed_sd_top10": 2.4832269642564566,
       "top10_scroll_cluster_ci": [
-        46.51162790697674,
-        66.66666666666667
+        45.267489711934154,
+        65.55555555555556
       ]
     },
     "visible_only": {
@@ -1198,7 +1198,7 @@
           "n": 24,
           "top1": 58.333333333333336,
           "top5": 66.66666666666667,
-          "top10": 70.83333333333333,
+          "top10": 66.66666666666667,
           "top20": 70.83333333333333,
           "in_candidate_vocabulary": 20,
           "median_rank_when_retrievable": 0.0
@@ -1283,10 +1283,10 @@
           "n": 12,
           "top1": 8.333333333333334,
           "top5": 25.0,
-          "top10": 33.333333333333336,
+          "top10": 25.0,
           "top20": 33.333333333333336,
           "in_candidate_vocabulary": 11,
-          "median_rank_when_retrievable": 83
+          "median_rank_when_retrievable": 152
         },
         "visible_only": {
           "n": 12,
@@ -1333,7 +1333,7 @@
           "top10": 57.142857142857146,
           "top20": 71.42857142857143,
           "in_candidate_vocabulary": 14,
-          "median_rank_when_retrievable": 4.5
+          "median_rank_when_retrievable": 4.0
         },
         "visible_only": {
           "n": 14,
@@ -1376,8 +1376,8 @@
         "soft_visible": {
           "n": 67,
           "top1": 40.298507462686565,
-          "top5": 56.71641791044776,
-          "top10": 59.701492537313435,
+          "top5": 55.223880597014926,
+          "top10": 56.71641791044776,
           "top20": 64.17910447761194,
           "in_candidate_vocabulary": 50,
           "median_rank_when_retrievable": 0.0
@@ -1429,23 +1429,23 @@
     },
     "qd": {
       "path": "experiments/results/paper/qd_methods_seed42_20260811.json",
-      "sha256": "21d347e90e4b6d87bc5d485e3c052af2d2461187d47633545f4b83ae2234ee19"
+      "sha256": "20d3c23178a49191b32ecfc40139d6af65e168bce8c62d14988f3e59d082cf84"
     },
     "qd_multiseed": {
       "path": "experiments/results/paper/qd_method_extensions_summary.json",
-      "sha256": "2e9799befd29c7d9a23a7ba553c07d0e82d3b1fb9b5940072fe9ac447a8b1910"
+      "sha256": "1c2df5430794269fde7cde9b76a0dde15e369a8564bedbf2327317eb13793413"
     },
     "qd_composition": {
       "path": "experiments/results/paper/qd_composition_exclusion_summary.json",
-      "sha256": "8127e1c9147955fe596a6ea5d8b02ea48806e46370571b19c8f94864913a4dc6"
+      "sha256": "109d87b5bebd0457afb19ac6d125b466d3403561de9faa79b3187df37297a16b"
     },
     "qd_context": {
       "path": "experiments/results/paper/qd_context_window_summary.json",
-      "sha256": "3ca4789e7fe916b46accc7fe7f6e7869529b8a365b9cb9e479b7502351597be1"
+      "sha256": "39a5508c5cf14c7aebbd359002ce322a4b2dc5ef583dd416b4e26038765223e5"
     },
     "qd_memorization": {
       "path": "experiments/results/paper/qd_memorization_audit.json",
-      "sha256": "35319c5d4fba839a323d52c05e4b614c5b5e987ee9f46b224eb0746a3000d4f8"
+      "sha256": "18e931421b32600cfd611e76f97c6ef245775fdaac739a12ffc667722fd55973"
     },
     "byt5": [
       {

@@ -96,7 +96,7 @@
     "synthetic_exact_top10": 7.666666666666667,
     "synthetic_multiword_conclusion": "one_percent_for_two_words_zero_for_three",
     "qd_context_top10_three_seed_mean": 14.695340501792115,
-    "qd_soft_visible_top10_three_seed_mean": 56.63082437275986,
+    "qd_soft_visible_top10_three_seed_mean": 55.55555555555556,
     "qd_hard_visible_top10_three_seed_mean": 52.32974910394265,
     "editor_length_adds_top10": false,
     "historical_truth_claim": false

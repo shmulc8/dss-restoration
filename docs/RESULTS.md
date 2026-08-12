@@ -1,6 +1,6 @@
 # Current evidence register
 
-Status: 11 August 2026. The authoritative team-review snapshot is
+Status: 13 August 2026. The authoritative team-review snapshot is
 [`paper_results_snapshot.json`](../experiments/results/paper/paper_results_snapshot.json).
 Older result files are provenance records and do not override this register.
 
@@ -30,13 +30,13 @@ Older result files are provenance records and do not override this register.
 - Three matched MLM seeds: 41, 42, and 43; identical two-epoch, batch-16,
   learning-rate $3\times10^{-5}$ training on 1,002 chunks.
 - Context-only MLM: 5.0% mean Top-1 and 14.7% mean Top-10.
-- Soft-trace MLM: 35.1% mean Top-1 and 56.6% mean Top-10; seed-and-scroll
-  hierarchical 95% interval 46.5%--66.7%.
-- Hard-trace MLM: 52.3% mean Top-10; seed SD 2.2 points versus 0.6 for soft traces.
-- Paired soft-trace minus context delta: +41.9 points; hierarchical 95% interval
-  +30.8--+53.0.
-- Frequency with hard traces: 36.6% Top-10. The soft-MLM advantage is +20.1
-  points; hierarchical 95% interval +9.2--+30.2.
+- Soft-trace MLM: 35.1% mean Top-1 and 55.6% mean Top-10; seed-and-scroll
+  hierarchical 95% interval 45.3%--65.6%.
+- Hard-trace MLM: 52.3% mean Top-10; seed SD 2.2 points versus 2.5 for soft traces.
+- Paired soft-trace minus context delta: +40.9 points; hierarchical 95% interval
+  +29.1--+52.4.
+- Frequency with hard traces: 36.6% Top-10. The soft-MLM advantage is +19.0
+  points; hierarchical 95% interval +8.2--+28.9.
 - Candidate coverage: the visible-trace MLM produces no candidate for 13 targets
   and fewer than ten for 37; these remain misses.
 - Editor-derived length alone reaches 16.1% Top-10. Adding it to traces leaves
@@ -44,10 +44,10 @@ Older result files are provenance records and do not override this register.
   ground truth.
 - Targeted composition exclusion retains 785/1,002 training chunks and removes
   all 23 QD-associated non-empty labels. On 68 labeled targets, regular and
-  excluded seed-42 checkpoints have identical Top-10 hit rates: 11.8% context,
-  52.9% soft traces, and 50.0% hard traces.
+  excluded seed-42 checkpoints have identical Top-10 hit rates for context
+  (11.8%) and hard traces (50.0%); soft traces change from 51.5% to 52.9%.
 - Context-only Top-10 is 6.5%, 11.8%, 14.0%, and 15.1% at 2, 5, 10, and full
-  stored context; soft traces remain 55.9%--57.0%.
+  stored context; soft traces range from 52.7% to 54.8%.
 - Exact-context retrieval ties frequency at 36.6%. No QD reading forms an exact
   preserved-training trigram or five-gram, though 59 targets contain a reading
   seen somewhere in training vocabulary.

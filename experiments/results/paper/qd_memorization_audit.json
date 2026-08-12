@@ -1,7 +1,7 @@
 {
   "status": "exact_preserved_training_parallel_audit",
   "input": "experiments/results/paper/qd_methods_seed42_20260811.json",
-  "input_sha256": "21d347e90e4b6d87bc5d485e3c052af2d2461187d47633545f4b83ae2234ee19",
+  "input_sha256": "20d3c23178a49191b32ecfc40139d6af65e168bce8c62d14988f3e59d082cf84",
   "targets": 93,
   "targets_with_lexically_seen_reading": 59,
   "targets_with_exact_3gram_parallel": 0,

@@ -88,18 +88,18 @@
     {
       "command": "QDTable",
       "environment": "table",
-      "caption": "Agreement with attributed readings at 93 Qumran Digital targets under separated evidence conditions and three matched MLM seeds.",
+      "caption": "Agreement with any attributed reading at 93 Qumran Digital targets. The soft-trace MLM Top-10 seed-and-scroll hierarchical bootstrap 95\\% CI is 45.3--65.6. All rows retain the same targets and references.",
       "label": "tab:qd",
       "columns": "lrrrr",
       "header": ["Condition", "Top-1", "Top-5", "Top-10", "Top-20"],
       "rows": [
         ["MLM: context only (3-seed mean)", "5.0\\%", "11.1\\%", "14.7\\%", "16.8\\%"],
         ["Frequency: context only", "0.0\\%", "2.2\\%", "3.2\\%", "6.5\\%"],
-        ["MLM: soft traces (3-seed mean)", "35.1\\%", "53.4\\%", "56.6\\%", "61.3\\%"],
+        ["MLM: soft traces (3-seed mean)", "35.1\\%", "52.3\\%", "55.6\\%", "61.6\\%"],
         ["MLM: hard traces (3-seed mean)", "32.6\\%", "49.5\\%", "52.3\\%", "55.2\\%"],
         ["Frequency: visible traces", "22.6\\%", "32.3\\%", "36.6\\%", "36.6\\%"]
       ],
-      "source": "experiments/results/paper/qd_method_extensions_summary.json and experiments/results/paper/qd_evidence_conditions_20260811.json",
+      "source": "experiments/results/paper/qd_method_extensions_summary.json and experiments/results/paper/qd_methods_seed42_20260811.json",
       "status": "literature_agreement_evidence_ablation"
     },
     {

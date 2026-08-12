@@ -41,6 +41,7 @@ from curation.preserved_corpus import GAP_TOKEN, load_chunks
 from experiments.audit_split_similarity import audit as audit_frozen_split
 
 DEFAULT_INPUT = ROOT / "curation" / "derived" / "qd_researcher_variants.jsonl"
+DEFAULT_LACUNAE = ROOT / "curation" / "derived" / "nonbib_lacunae.jsonl"
 DEFAULT_MODEL = ROOT / "models" / "ft_msbert_span_preserved_nonbib"
 DEFAULT_REPORT = ROOT / "comparison" / "reports" / "qd_researcher_comparison.json"
 DEFAULT_MARKDOWN = ROOT / "comparison" / "reports" / "QD_RESEARCHER_BENCHMARK.md"
@@ -390,7 +391,10 @@ def fit_dev_weights(
         "fit_split": "preserved_nonbib dev",
         "sample_seed": 42,
         "candidate_topn": RAG_CANDIDATE_TOPN,
-        "trace_shapes": "QD visible-letter counts and anchor flags; no QD readings",
+        "trace_shapes": (
+            "single-word preserved_nonbib development lacunae; "
+            "no QD target inputs or readings"
+        ),
         "alpha": soft_alpha,
         "baseline": soft_evaluations["0.0"],
         "selected": soft_evaluations[str(soft_alpha)],
@@ -432,6 +436,39 @@ class PhysicalConstraint:
         return abs(len(candidate) - self.estimated_length) <= length_tolerance
 
 
+def build_dev_trace_templates(
+    path: Path = DEFAULT_LACUNAE,
+) -> list[PhysicalConstraint]:
+    """Build trace-shape templates without consulting QD evaluation targets."""
+    templates = []
+    for row in read_jsonl(path):
+        patterns = row.get("visible_patterns", [])
+        if (
+            row.get("split") != "dev"
+            or row.get("gap_word_count_estimate") != 1
+            or len(patterns) != 1
+        ):
+            continue
+        pattern = str(patterns[0])
+        visible = hebrew_letters(pattern)
+        if not visible:
+            continue
+        templates.append(
+            PhysicalConstraint(
+                visible_segments=(visible,),
+                anchored_left=bool(HEBREW_RE.fullmatch(pattern[0])),
+                anchored_right=bool(HEBREW_RE.fullmatch(pattern[-1])),
+                estimated_length=len(pattern),
+                display_slots=len(pattern),
+                initial_slots=len(pattern),
+            )
+        )
+    random.Random(42).shuffle(templates)
+    if not templates:
+        raise RuntimeError("No development-split trace templates are available")
+    return templates
+
+
 def lcs_length(left: str, right: str) -> int:
     """Return longest-common-subsequence length for short Hebrew strings."""
     previous = [0] * (len(right) + 1)
@@ -465,7 +502,7 @@ def trace_penalty(candidate: str, constraint: PhysicalConstraint) -> int:
 def simulate_constraint(
     gold: str, template: PhysicalConstraint, item_index: int
 ) -> PhysicalConstraint:
-    """Apply only a QD trace shape to a preserved development word."""
+    """Apply only a development-lacuna trace shape to a preserved dev word."""
     visible_count = min(
         len(gold), max(1, sum(len(segment) for segment in template.visible_segments))
     )
@@ -1044,7 +1081,7 @@ def main() -> None:
         tokenizer=tokenizer,
         normalized_token_by_id=normalized_token_by_id,
         index=rag_index,
-        trace_templates=[item["constraint"] for item in target_items],
+        trace_templates=build_dev_trace_templates(),
         batch_size=args.batch_size,
     )
     rag_fit = fitted_weights["rag"]
@@ -1433,7 +1470,7 @@ def main() -> None:
             "soft_trace": {
                 "weight_fit": soft_trace_fit,
                 "score": "MLM logit minus alpha times graded trace disagreement",
-                "heldout_readings_used_for_tuning": False,
+                "heldout_inputs_or_readings_used_for_tuning": False,
             },
         },
         "condition_results": condition_results,

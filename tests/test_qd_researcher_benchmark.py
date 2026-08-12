@@ -5,6 +5,7 @@ from experiments.run_qd_benchmark import (
     PhysicalConstraint,
     _visible_segments,
     build_constraint,
+    build_dev_trace_templates,
     bootstrap_top10_delta_ci,
     bootstrap_top10_ci,
     contiguous_context,
@@ -20,6 +21,11 @@ from curation.preserved_corpus import GAP_TOKEN
 
 
 class QDEditorialParsingTests(unittest.TestCase):
+    def test_soft_trace_templates_come_from_development_lacunae(self):
+        templates = build_dev_trace_templates()
+        self.assertTrue(templates)
+        self.assertTrue(all(template.visible_segments for template in templates))
+
     def test_soft_trace_cost_preserves_exact_matches_without_discarding(self):
         constraint = PhysicalConstraint(("אב",), True, False, 4, 4, 4)
         self.assertEqual(trace_penalty("אבגד", constraint), 0)

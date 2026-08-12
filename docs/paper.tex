@@ -20,7 +20,7 @@
   linkcolor=DSSNavy,
   citecolor=DSSEmerald,
   urlcolor=DSSNavy,
-  pdftitle={Reconstruction-Free Evaluation for Dead Sea Scroll Restoration},
+  pdftitle={Reconstruction-Free Evaluation for Dead Sea Scroll Restoration: Token Alignment, Transcription-Encoded Evidence, and Unknown-Length Gaps},
   pdfauthor={Anonymous EMNLP/ACL Submission}
 }
 \captionsetup{font=small,labelfont=bf}
@@ -43,7 +43,7 @@ Token Alignment, Transcription-Encoded Evidence, and Unknown-Length Gaps}
 
 \begin{abstract}
 \normalsize
-Dead Sea Scroll lacunae differ from ordinary masked-word tasks: visible letters may survive, while character length, word count, and boundaries remain uncertain. We introduce a reconstruction-free corpus derivative and two complementary evaluations that keep these information sources explicit. Across three matched training seeds and 93 natural single-word lacunae, a preserved-only masked language model averages 14.7\% Top-10 agreement with attributed proposals from context alone and 56.6\% with development-tuned soft trace evidence; a frequency baseline with hard traces reaches 36.6\%. On 300 non-overlapping synthetic spans sampled across 79 held-out scrolls, the strongest unknown-length decoder reaches 7.7\% exact Top-10 and recovers no three-word target. The practical verdict is explicit: the method is useful as a trace-aware candidate ranker for eligible single-word lacunae, but it is not an effective general restoration system for unknown-length multiword gaps. Agreement with published proposals is not historical ground truth.
+Dead Sea Scroll lacunae differ from ordinary masked-word tasks: visible letters may survive, while character length, word count, and boundaries remain uncertain. We introduce a reconstruction-free corpus derivative and two complementary evaluations that keep these information sources explicit. Across three matched training seeds and 93 natural single-word lacunae, a preserved-only masked language model averages 14.7\% Top-10 agreement with attributed proposals from context alone and 55.6\% with development-tuned soft trace evidence; a frequency baseline with hard traces reaches 36.6\%. On 300 non-overlapping synthetic spans sampled across 79 held-out scrolls, the strongest unknown-length decoder reaches 7.7\% exact Top-10 and recovers no three-word target. The evidence supports further evaluation as a trace-aware candidate ranker for eligible single-word lacunae, but not as a general restoration system for unknown-length multiword gaps. Agreement with published proposals is not historical ground truth.
 \end{abstract}
 
 \section{Introduction}
@@ -141,7 +141,7 @@ The QD snapshot dated 21 May 2026 contains 1,811 publication rows at 346 candida
 The comparison separates two questions: how complete-string candidates are generated, and how declared transcription evidence changes their ranking.
 
 \paragraph{Word-span baseline.}
-The word-span baseline enumerates one to three word-mask hypotheses and ranks complete surfaced strings. It is fine-tuned only on preserved non-biblical text. The tokenizer can represent 81.7\% of complete synthetic targets with one token per word; all other targets remain in the denominator as misses.
+The word-span baseline enumerates one to three word-mask hypotheses and ranks complete surfaced strings. It is fine-tuned only on preserved non-biblical text. The tokenizer can represent 81.7\% of complete synthetic targets with one token per word; all other targets remain in the denominator as misses. Search is bounded at three words and 18 characters, matching the benchmark's declared scope rather than solving arbitrary-length decoding.
 
 \paragraph{Character and byte models.}
 TavBERT supplies character-aligned masks and ByT5 supplies a byte-level sequence-to-sequence comparison \cite{raffel2020}. Character alignment avoids WordPiece drops, but alignment alone does not imply superior exact-span ranking. Three ByT5 checkpoints vary only the training seed (41--43) and share three epochs, batch size 32, learning rate $10^{-3}$, and the same corpus hash.
@@ -153,7 +153,7 @@ We implement both the paper-described overlap rule and a development-fitted rank
 For the QD task, we rank Hebrew surface forms by frequency in preserved training chunks, then apply exactly the same trace and length filters as the MLM. This baseline isolates how much apparent success follows from a narrow constraint set rather than contextual modeling.
 
 \paragraph{Soft traces and exact-context retrieval.}
-Soft trace cost is the visible-string longest-common-subsequence deficit plus anchored-edge disagreement. Its weight is selected from a fixed grid on 300 preserved development words using only QD trace shapes, never QD readings. A non-neural contextual baseline ranks exact preserved-training context matches and backs off to frequency; it uses at most two words per side and never crosses a natural \texttt{<GAP>}.
+Soft trace cost is the visible-string longest-common-subsequence deficit plus anchored-edge disagreement. Its weight is selected from a fixed grid on 300 preserved development words using trace shapes sampled from single-word development-split lacunae; no QD target input or reading enters selection. A non-neural contextual baseline ranks exact preserved-training context matches and backs off to frequency; it uses at most two words per side and never crosses a natural \texttt{<GAP>}.
 
 \section{Evaluation Protocol}
 
@@ -161,7 +161,7 @@ The primary automatic task is exact complete-span Top-10 under unknown length, w
 
 The frozen split is scroll-disjoint. Test data are never used for selection. Failed decoding, tokenizer misalignment, unrepresentable targets, empty candidate sets, and lists shorter than $K$ remain in the denominator. Exact duplicate normalized chunks are absent across the development/test boundary. Maximum preserved-word five-gram Jaccard is 0.174; none of 407 held-out chunks reaches 0.5. Because 26 of 88 composition labels cross partitions, we separately report the QD targets whose composition labels are unseen in train and development.
 
-We report 95\% bootstrap intervals clustered by scroll and paired cluster intervals for evidence-condition deltas. For the QD MLM, three checkpoints vary only seed (41--43), use two epochs, batch size 16, learning rate $3\times10^{-5}$, and the same 1,002 training chunks; hierarchical intervals resample both seeds and scrolls. Target-level predictions, exclusions, manifests, and code/data/model/result hashes accompany the aggregate tables. These choices follow reproducibility guidance in NLP \cite{dodge2019,ulmer2024}.
+We report 95\% bootstrap intervals clustered by scroll and paired cluster intervals for evidence-condition deltas. For the QD MLM, three checkpoints vary only seed (41--43), use two epochs, batch size 16, learning rate $3\times10^{-5}$, and the same 1,002 training chunks; hierarchical intervals resample both seeds and scrolls. Target-level predictions, exclusions, manifests, and code/data/model/result hashes accompany the aggregate tables. These choices follow reproducibility guidance in NLP \cite{dodge2019,lourie2024}.
 
 \paragraph{Protocol validity and scope.}
 Reconstruction-free labels, scroll-disjoint splits, fixed denominators, non-neural controls, matched seeds, and clustered uncertainty make this protocol suitable for testing candidate ranking under declared transcription evidence. They do not validate historical truth, physical ink interpretation, or unconstrained restoration of arbitrary lacunae. We therefore judge the method separately on the natural single-word assistance task and the harder unknown-length synthetic task.
@@ -171,7 +171,7 @@ Reconstruction-free labels, scroll-disjoint splits, fixed denominators, non-neur
 The results follow the task's sources of uncertainty rather than a leaderboard: we first diagnose token alignment, then require exact recovery when length and boundaries are hidden, and finally measure agreement with attributed proposals at natural lacunae. Metrics are comparable only within each table.
 
 \paragraph{Alignment is necessary but insufficient.}
-On a shared 729-word diagnostic, TavBERT base obtains 21.1\% Hit@10, while DSS fine-tuning does not improve it. MsBERT's aligned-only Hit@10 is 21.6\%, but 279 alignment failures reduce its all-target rate to 13.3\%. Alignment failures therefore remain misses in every subsequent comparison; the full diagnostic is preserved in the released artifact.
+On a shared 729-word diagnostic, TavBERT base obtains 21.1\% Hit@10, while DSS fine-tuning does not improve it. MsBERT's aligned-only Hit@10 is 21.6\%, but 279 alignment failures reduce its all-target rate to 13.3\%. Alignment failures remain misses in that diagnostic; the full results are preserved in the released artifact.
 
 \SpanPilotTable
 \SpanStrataTable
@@ -186,18 +186,18 @@ We next turn from synthetic spans with observable answers to genuine single-word
 \QDTable
 
 \paragraph{Soft transcription traces carry most of the QD signal.}
-On the same 93 targets, mean MLM Top-10 agreement changes from 14.7\% context-only to 56.6\% with soft traces (Table~\ref{tab:qd}). The paired improvement is 41.9 points, with a 30.8--53.0 seed-and-scroll hierarchical 95\% interval; the absolute soft-trace interval is 46.5--66.7\%. The hard-trace mean is 52.3\% and varies more across seeds (SD 2.2 versus 0.6 points). Frequency with hard traces reaches 36.6\%; the soft-MLM advantage is 20.1 points (9.2--30.2). Exact-context retrieval also reaches 36.6\% and therefore adds no non-neural gain. The seed-42 editor-length proxy adds no Top-10 gain over hard traces and remains an oracle diagnostic.
+On the same 93 targets, mean MLM Top-10 agreement changes from 14.7\% context-only to 55.6\% with soft traces (Table~\ref{tab:qd}). The paired improvement is 40.9 points, with a 29.1--52.4 seed-and-scroll hierarchical 95\% interval; the absolute soft-trace interval is 45.3--65.6\%. The hard-trace mean is 52.3\%. Across-seed SD is 2.5 points for soft traces and 2.2 for hard traces. Frequency with hard traces reaches 36.6\%; the soft-MLM advantage is 19.0 points (8.2--28.9). Exact-context retrieval also reaches 36.6\% and therefore adds no aggregate non-neural gain. Hard filtering yields no MLM candidate for 13 targets and fewer than ten for 37; these targets remain in the denominator. The seed-42 editor-length proxy adds no Top-10 gain over hard traces and remains an oracle diagnostic.
 
 \paragraph{Trace-count error analysis.}
-Visible conditioning is not uniformly beneficial. Averaged across seeds, the 12 one-letter targets score 41.7\% context-only, 33.3\% with soft traces, and 16.7\% with hard filtering. For 14 two-letter targets, soft and hard traces reach 64.3\% and 66.7\%; for 67 targets with at least three letters they reach 59.2\% and 55.7\%. Soft evidence therefore repairs much, but not all, of the brittle one-letter failure without discarding candidates.
+Visible conditioning is not uniformly beneficial. Averaged across seeds, the 12 one-letter targets score 41.7\% context-only, 27.8\% with soft traces, and 16.7\% with hard filtering. For 14 two-letter targets, soft and hard traces both reach 66.7\%; for 67 targets with at least three letters they reach 58.2\% and 55.7\%. Soft evidence therefore mitigates, but does not eliminate, the brittle one-letter failure without discarding candidates.
 
 \paragraph{Robustness checks.}
-On the 68 QD targets with composition labels, removing all matching compositions from seed-42 training leaves context, soft-trace, and hard-trace Top-10 unchanged at 11.8\%, 52.9\%, and 50.0\%. Soft-trace Top-10 also remains 55.9--57.0\% across context windows. No attributed reading occurs in an exact preserved-training trigram or five-gram, although base-model pretraining exposure cannot be excluded. Detailed calibration and sensitivity artifacts accompany the release.
+On the 68 QD targets with composition labels, removing all matching compositions from seed-42 training leaves context and hard-trace Top-10 unchanged at 11.8\% and 50.0\%; soft-trace Top-10 changes from 51.5\% to 52.9\%. At seed 42, soft-trace Top-10 ranges from 52.7\% to 54.8\% across context windows. No attributed reading occurs in an exact preserved-training trigram or five-gram, although base-model pretraining exposure cannot be excluded. Detailed calibration and sensitivity artifacts accompany the release.
 
 \paragraph{Operational verdict.}
-For eligible natural single-word lacunae, the soft-trace MLM is useful: its Top-10 literature agreement exceeds the hard-trace frequency control by 20.1 points, with a seed-and-scroll interval that remains positive. Context-only ranking is weak, so the gain cannot be attributed to the language model alone. For unknown-length spans, the verdict is negative: 7.7\% exact Top-10 overall, 1.0\% for two words, and 0\% for three words are not adequate for general restoration. The present method should therefore prioritize candidates under explicit transcription evidence, not autonomously fill arbitrary gaps.
+For eligible natural single-word lacunae, the soft-trace MLM merits further study as a decision-support ranker: its Top-10 literature agreement exceeds the hard-trace frequency control by 19.0 points, with a seed-and-scroll interval that remains positive. Context-only ranking is weak, so the gain cannot be attributed to the language model alone. For unknown-length spans, the verdict is negative: 7.7\% exact Top-10 overall, 1.0\% for two words, and 0\% for three words are not adequate for general restoration. The present method should therefore prioritize candidates under explicit transcription evidence, not autonomously fill arbitrary gaps.
 
-\section{Reproducibility and Data Statement}
+\section{Reproducibility}
 
 Core paper-facing numbers are regenerated from frozen result snapshots containing target-manifest, model, input, and artifact hashes; a machine-readable table specification records evidence class and sources. The snapshots reproduce the 300-span baselines, three matched ByT5 evaluations, three matched QD MLM seeds, context sensitivity, and composition exclusion. The preserved corpus validator enforces non-biblical membership, removal of modern reconstruction text, anonymous gap representation, and disjoint scrolls. Separate audits record composition overlap, exact duplicates, five-gram similarity, and exact QD/training parallels.
 
@@ -217,7 +217,7 @@ The system is intended for decision support. Every candidate should retain its m
 
 \section{Conclusion}
 
-The method is scientifically well controlled and practically useful for one bounded role: prioritizing candidates for eligible single-word lacunae when transcription-visible traces are supplied. It is not yet a general DSS restoration system. Token alignment and granularity ensembling do not solve unknown-length multiword restoration, where exact recovery approaches zero beyond one word. Shared denominators, coverage accounting, manuscript-balanced sampling, hierarchical uncertainty, and explicit oracle labels make this mixed verdict reproducible without turning literature agreement into historical truth.
+The protocol controls several major confounds and supports one bounded next step: evaluating trace-aware candidate ranking for eligible single-word lacunae in scholarly use. It does not establish practical utility and is not a general DSS restoration system. Token alignment and granularity ensembling do not solve unknown-length multiword restoration, where exact recovery approaches zero beyond one word. Shared denominators, coverage accounting, manuscript-balanced sampling, hierarchical uncertainty, and explicit oracle labels make this mixed verdict reproducible without turning literature agreement into historical truth.
 
 \section*{Responsible NLP Research Checklist}
 
@@ -322,7 +322,7 @@ and Nando de Freitas. 2023.
 Machine Learning for Ancient Languages: A Survey.
 \textit{Computational Linguistics}, 49(3):703--747.
 
-\bibitem{ulmer2024}
+\bibitem{lourie2024}
 Nicholas Lourie, Kyunghyun Cho, and He He. 2024.
 Show Your Work with Confidence: Confidence Bands for Tuning Curves.
 In \textit{Proceedings of NAACL}, pages 3455--3472.

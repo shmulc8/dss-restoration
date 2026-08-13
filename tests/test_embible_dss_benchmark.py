@@ -1,4 +1,4 @@
-from eval.tf_embible_dss_benchmark import (
+from experiments.tf_embible_dss_benchmark import (
     boundary_f1,
     deduplicate,
     ensemble_candidates,

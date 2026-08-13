@@ -1,0 +1,28 @@
+{
+  "status": "blocked_no_registered_qd_targets",
+  "audit_date": "2026-08-13",
+  "target_count": 93,
+  "target_id_sha256": "ac83ebc71dc98297b146ee85476b0c6ce76e6338a50f92d1b21225931a5b0b8c",
+  "qd_artifact": "experiments/results/paper/qd_methods_seed42_20260811.json",
+  "qd_artifact_sha256": "20d3c23178a49191b32ecfc40139d6af65e168bce8c62d14988f3e59d082cf84",
+  "sqe_database_image": "qumranica/sqe-database:0.33.0",
+  "sqe_database_digest": "sha256:450a994563b79524de5a7cd3cdb9289a09bca9bfc6b64bacefe852678e1545dd",
+  "coverage": {
+    "target_count": 93,
+    "qwb_word_overlap": 87,
+    "sign_section_overlap": 87,
+    "sign_roi_overlap": 0,
+    "database_qwb_words": 328073,
+    "database_sign_rois": 1706,
+    "database_qwb_words_with_roi": 551,
+    "database_sqe_images": 162754
+  },
+  "join_path": [
+    "qwb_word",
+    "sign_stream_section_to_qwb_word",
+    "position_in_stream_to_section_rel",
+    "position_in_stream",
+    "sign_interpretation_roi"
+  ],
+  "interpretation": "No image-only or fused QD score is estimable from this public snapshot; new sign-level registration is required."
+}

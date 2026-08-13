@@ -4,6 +4,8 @@
 __pycache__/
 **/__pycache__/
 *.py[cod]
+# Rebuildable LaTeX/PDF outputs; docs/paper.pdf is the tracked shareable copy.
+/output/
 
 # Local training artifacts
 ft_msbert/
@@ -19,9 +21,22 @@ dss_chunks.csv
 
 # Node dependencies
 node_modules/
-demo/node_modules/
+
+# Local model checkpoints
+models/*
+!models/README.md
+ft_*
 
 # Large local artifacts (unification work)
-ft_byt5_span_*/
-analysis/cache/
+comparison/cache/
+scratch/
+experiments/external_finetune/merged_results/
+experiments/results/runs/**/predictions.jsonl
+experiments/results/runs/**/*.xlsx
+experiments/results/runs/**/*.csv
+
+# Large local artifacts: model checkpoints and exploratory runs.
+# Kept on disk, never committed — they hold the raw outputs behind the reports
+# under comparison/reports/, so do not delete them.
+models/
 scratch/

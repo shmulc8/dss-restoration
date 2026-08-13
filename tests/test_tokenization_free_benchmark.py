@@ -1,5 +1,5 @@
-from eval.tf_embible_dss_benchmark import Item
-from eval.tf_tokenization_free_benchmark import normalize_candidate, summarize
+from experiments.tf_embible_dss_benchmark import Item
+from experiments.tf_tokenization_free_benchmark import normalize_candidate, summarize
 
 
 def test_normalize_candidate_removes_sentinel_and_normalizes_space() -> None:

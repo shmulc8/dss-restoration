@@ -1,7 +1,7 @@
 import numpy as np
 
-from analysis.cross_corpus_connections import Passage
-from eval.cross_corpus_retrieval_ablation import (
+from experiments.cross_corpus_connections import Passage
+from experiments.cross_corpus_retrieval_ablation import (
     candidate_support,
     contains_phrase,
     holm_adjust,
@@ -9,7 +9,7 @@ from eval.cross_corpus_retrieval_ablation import (
     rerank_candidates,
     visible_query,
 )
-from eval.tf_embible_dss_benchmark import Item
+from experiments.tf_embible_dss_benchmark import Item
 
 
 def test_visible_query_excludes_hidden_gold():

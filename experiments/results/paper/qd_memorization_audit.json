@@ -1,0 +1,1369 @@
+{
+  "status": "exact_preserved_training_parallel_audit",
+  "input": "experiments/results/paper/qd_methods_seed42_20260811.json",
+  "input_sha256": "20d3c23178a49191b32ecfc40139d6af65e168bce8c62d14988f3e59d082cf84",
+  "targets": 93,
+  "targets_with_lexically_seen_reading": 59,
+  "targets_with_exact_3gram_parallel": 0,
+  "targets_with_exact_5gram_parallel": 0,
+  "definition": {
+    "3gram": "one preserved word on each side plus an attributed reading",
+    "5gram": "two preserved words on each side plus an attributed reading",
+    "gap_handling": "ngrams never cross anonymous natural gap markers"
+  },
+  "unresolved": "Base-model pretraining corpora are not fully enumerated, so this audit cannot exclude pretraining exposure.",
+  "records": [
+    {
+      "siglum": "11Q11",
+      "word_id": 185288,
+      "attributed_readings": [
+        "ולהרוג",
+        "להרוג"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "11Q11",
+      "word_id": 185380,
+      "attributed_readings": [
+        "חושך"
+      ],
+      "lexical_seen": [
+        "חושך"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "11Q11",
+      "word_id": 185432,
+      "attributed_readings": [
+        "אדם",
+        "האדם"
+      ],
+      "lexical_seen": [
+        "אדם",
+        "האדם"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "11Q17",
+      "word_id": 187240,
+      "attributed_readings": [
+        "יישרו",
+        "ישרו",
+        "שרו"
+      ],
+      "lexical_seen": [
+        "שרו"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "11Q17",
+      "word_id": 187304,
+      "attributed_readings": [
+        "יצא"
+      ],
+      "lexical_seen": [
+        "יצא"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "11Q17",
+      "word_id": 187305,
+      "attributed_readings": [
+        "ומבין",
+        "ומכון"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1Q26",
+      "word_id": 29380,
+      "attributed_readings": [
+        "ונכלמתה"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1Q26",
+      "word_id": 29399,
+      "attributed_readings": [
+        "אגדלכה",
+        "גורלכה"
+      ],
+      "lexical_seen": [
+        "גורלכה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1Q34bis",
+      "word_id": 30326,
+      "attributed_readings": [
+        "דשן",
+        "להדשן",
+        "להתדשן"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1Q34bis",
+      "word_id": 30339,
+      "attributed_readings": [
+        "ובישרים"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1QS",
+      "word_id": 6480,
+      "attributed_readings": [
+        "אערב",
+        "אשר"
+      ],
+      "lexical_seen": [
+        "אשר"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1QSb",
+      "word_id": 8487,
+      "attributed_readings": [
+        "וחיננכה",
+        "ויחונכה",
+        "ונכה",
+        "יחונכה",
+        "יחוננכה"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1QSb",
+      "word_id": 8552,
+      "attributed_readings": [
+        "ובמו",
+        "ובמועד"
+      ],
+      "lexical_seen": [
+        "ובמועד"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1QSb",
+      "word_id": 8919,
+      "attributed_readings": [
+        "דויד",
+        "היחד",
+        "לעד"
+      ],
+      "lexical_seen": [
+        "דויד",
+        "היחד",
+        "לעד"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1QpHab",
+      "word_id": 9470,
+      "attributed_readings": [
+        "אשמ",
+        "אשמה",
+        "אשמים",
+        "אשמתם"
+      ],
+      "lexical_seen": [
+        "אשמ",
+        "אשמה",
+        "אשמים",
+        "אשמתם"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1QpHab",
+      "word_id": 9960,
+      "attributed_readings": [
+        "פת",
+        "פתאאום",
+        "פתאום",
+        "פתעאום"
+      ],
+      "lexical_seen": [
+        "פת",
+        "פתאום"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "1QpHab",
+      "word_id": 9961,
+      "attributed_readings": [
+        "אום"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "2Q22",
+      "word_id": 31847,
+      "attributed_readings": [
+        "ידעו",
+        "ידעתי"
+      ],
+      "lexical_seen": [
+        "ידעו",
+        "ידעתי"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q161",
+      "word_id": 35318,
+      "attributed_readings": [
+        "אילו",
+        "אילי",
+        "לו",
+        "עלו"
+      ],
+      "lexical_seen": [
+        "אילי",
+        "לו",
+        "עלו"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q161",
+      "word_id": 35330,
+      "attributed_readings": [
+        "ישובי"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q161",
+      "word_id": 35351,
+      "attributed_readings": [
+        "הרגה",
+        "כלה",
+        "לה"
+      ],
+      "lexical_seen": [
+        "כלה",
+        "לה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q161",
+      "word_id": 35358,
+      "attributed_readings": [
+        "למט",
+        "למטעם",
+        "למטעת"
+      ],
+      "lexical_seen": [
+        "למטעת"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q161",
+      "word_id": 35534,
+      "attributed_readings": [
+        "ינתנו",
+        "יפלו"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q161",
+      "word_id": 35576,
+      "attributed_readings": [
+        "גדולו"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q163",
+      "word_id": 35981,
+      "attributed_readings": [
+        "מבלעים"
+      ],
+      "lexical_seen": [
+        "מבלעים"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q163",
+      "word_id": 36148,
+      "attributed_readings": [
+        "ימועט",
+        "למועט",
+        "למיעט"
+      ],
+      "lexical_seen": [
+        "למועט"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q167",
+      "word_id": 37758,
+      "attributed_readings": [
+        "הבוהן",
+        "הכוהן"
+      ],
+      "lexical_seen": [
+        "הבוהן",
+        "הכוהן"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q179",
+      "word_id": 42865,
+      "attributed_readings": [
+        "מכתינו"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q179",
+      "word_id": 42978,
+      "attributed_readings": [
+        "עניה",
+        "עריריה",
+        "ערמה"
+      ],
+      "lexical_seen": [
+        "עניה",
+        "ערמה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q179",
+      "word_id": 42984,
+      "attributed_readings": [
+        "ורחובה",
+        "ורחובותיה"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q185",
+      "word_id": 43787,
+      "attributed_readings": [
+        "ישפט",
+        "ישפטביד",
+        "ישפטו"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q185",
+      "word_id": 43829,
+      "attributed_readings": [
+        "ימיו",
+        "ימים"
+      ],
+      "lexical_seen": [
+        "ימיו",
+        "ימים"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q185",
+      "word_id": 43841,
+      "attributed_readings": [
+        "גבורת",
+        "מןגבורת"
+      ],
+      "lexical_seen": [
+        "גבורת"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q185",
+      "word_id": 43898,
+      "attributed_readings": [
+        "ביראתו",
+        "ויראתו",
+        "יראתו"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q220",
+      "word_id": 56862,
+      "attributed_readings": [
+        "ובמחרת"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q264a",
+      "word_id": 69267,
+      "attributed_readings": [
+        "ולשתות"
+      ],
+      "lexical_seen": [
+        "ולשתות"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q265",
+      "word_id": 69598,
+      "attributed_readings": [
+        "ילבש",
+        "יתכס"
+      ],
+      "lexical_seen": [
+        "ילבש"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q265",
+      "word_id": 69766,
+      "attributed_readings": [
+        "היה"
+      ],
+      "lexical_seen": [
+        "היה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q270",
+      "word_id": 76769,
+      "attributed_readings": [
+        "איש"
+      ],
+      "lexical_seen": [
+        "איש"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q270",
+      "word_id": 76770,
+      "attributed_readings": [
+        "אומן",
+        "האומן"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q270",
+      "word_id": 77135,
+      "attributed_readings": [
+        "יעמודו"
+      ],
+      "lexical_seen": [
+        "יעמודו"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q272",
+      "word_id": 78329,
+      "attributed_readings": [
+        "ושבעת"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q287",
+      "word_id": 81339,
+      "attributed_readings": [
+        "זוהר",
+        "טוהר"
+      ],
+      "lexical_seen": [
+        "טוהר"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q287",
+      "word_id": 81428,
+      "attributed_readings": [
+        "כולמה"
+      ],
+      "lexical_seen": [
+        "כולמה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q287",
+      "word_id": 81429,
+      "attributed_readings": [
+        "ומחדש",
+        "מחדש"
+      ],
+      "lexical_seen": [
+        "ומחדש"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q302",
+      "word_id": 84921,
+      "attributed_readings": [
+        "טוביך",
+        "כהטיביך"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q303",
+      "word_id": 85332,
+      "attributed_readings": [
+        "חושך"
+      ],
+      "lexical_seen": [
+        "חושך"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q303",
+      "word_id": 85335,
+      "attributed_readings": [
+        "ובהו"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q303",
+      "word_id": 85366,
+      "attributed_readings": [
+        "כנגדו"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q372",
+      "word_id": 100875,
+      "attributed_readings": [
+        "ללוי"
+      ],
+      "lexical_seen": [
+        "ללוי"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q372",
+      "word_id": 100964,
+      "attributed_readings": [
+        "המלמד",
+        "למד",
+        "מלמד"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q372",
+      "word_id": 100978,
+      "attributed_readings": [
+        "לעשות"
+      ],
+      "lexical_seen": [
+        "לעשות"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q372",
+      "word_id": 101027,
+      "attributed_readings": [
+        "המות",
+        "המז"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q372",
+      "word_id": 101092,
+      "attributed_readings": [
+        "יובדו",
+        "ישכחו"
+      ],
+      "lexical_seen": [
+        "יובדו"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q385a",
+      "word_id": 109164,
+      "attributed_readings": [
+        "ארץ",
+        "יהץ",
+        "יוון",
+        "יון"
+      ],
+      "lexical_seen": [
+        "ארץ",
+        "יון"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q385a",
+      "word_id": 109175,
+      "attributed_readings": [
+        "וישבתה"
+      ],
+      "lexical_seen": [
+        "וישבתה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q385a",
+      "word_id": 109202,
+      "attributed_readings": [
+        "אהבתו",
+        "הבינו",
+        "הבתר"
+      ],
+      "lexical_seen": [
+        "אהבתו",
+        "הבינו"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q385a",
+      "word_id": 109227,
+      "attributed_readings": [
+        "מעב",
+        "מעבר",
+        "מצרים"
+      ],
+      "lexical_seen": [
+        "מצרים"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q385a",
+      "word_id": 109231,
+      "attributed_readings": [
+        "לברוח"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q397",
+      "word_id": 114032,
+      "attributed_readings": [
+        "להרביעה",
+        "לרבעה"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q397",
+      "word_id": 114117,
+      "attributed_readings": [
+        "ומהתערב",
+        "מהתערב"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q397",
+      "word_id": 114122,
+      "attributed_readings": [
+        "לגב",
+        "עלגב"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q405",
+      "word_id": 118135,
+      "attributed_readings": [
+        "דממת"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q410",
+      "word_id": 119669,
+      "attributed_readings": [
+        "אלה"
+      ],
+      "lexical_seen": [
+        "אלה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q410",
+      "word_id": 119679,
+      "attributed_readings": [
+        "יוביש",
+        "יחריש"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q424",
+      "word_id": 130722,
+      "attributed_readings": [
+        "ונתר",
+        "ינתר",
+        "יסתר"
+      ],
+      "lexical_seen": [
+        "יסתר"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q424",
+      "word_id": 130779,
+      "attributed_readings": [
+        "תאמין"
+      ],
+      "lexical_seen": [
+        "תאמין"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q427",
+      "word_id": 131742,
+      "attributed_readings": [
+        "די",
+        "המלכ",
+        "ולכבודי"
+      ],
+      "lexical_seen": [
+        "די",
+        "המלכ"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q427",
+      "word_id": 131956,
+      "attributed_readings": [
+        "לעשות",
+        "נפלאות",
+        "פלאות"
+      ],
+      "lexical_seen": [
+        "לעשות",
+        "נפלאות",
+        "פלאות"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q427",
+      "word_id": 131960,
+      "attributed_readings": [
+        "גבורה",
+        "גבורת",
+        "גבורתו"
+      ],
+      "lexical_seen": [
+        "גבורה",
+        "גבורת",
+        "גבורתו"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q432",
+      "word_id": 134233,
+      "attributed_readings": [
+        "להמס",
+        "למוס",
+        "למסוס"
+      ],
+      "lexical_seen": [
+        "להמס"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q433a",
+      "word_id": 134677,
+      "attributed_readings": [
+        "ויוציא",
+        "ויציא"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q433a",
+      "word_id": 134690,
+      "attributed_readings": [
+        "עצת",
+        "עצתו"
+      ],
+      "lexical_seen": [
+        "עצת",
+        "עצתו"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q433a",
+      "word_id": 134741,
+      "attributed_readings": [
+        "באוש",
+        "באושים"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q433a",
+      "word_id": 134805,
+      "attributed_readings": [
+        "צדי"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q436",
+      "word_id": 135592,
+      "attributed_readings": [
+        "גערתה"
+      ],
+      "lexical_seen": [
+        "גערתה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q443",
+      "word_id": 136492,
+      "attributed_readings": [
+        "אנה"
+      ],
+      "lexical_seen": [
+        "אנה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q443",
+      "word_id": 136610,
+      "attributed_readings": [
+        "ישךכדני",
+        "כדני"
+      ],
+      "lexical_seen": [
+        "כדני"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q448",
+      "word_id": 137058,
+      "attributed_readings": [
+        "בא",
+        "בחסדך"
+      ],
+      "lexical_seen": [
+        "בא"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q458",
+      "word_id": 137503,
+      "attributed_readings": [
+        "שריפות"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q471b",
+      "word_id": 134033,
+      "attributed_readings": [
+        "ומי",
+        "מי"
+      ],
+      "lexical_seen": [
+        "ומי",
+        "מי"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q471b",
+      "word_id": 134034,
+      "attributed_readings": [
+        "ישב",
+        "ישבתי",
+        "ישוה"
+      ],
+      "lexical_seen": [
+        "ישב",
+        "ישבתי",
+        "ישוה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q471b",
+      "word_id": 134069,
+      "attributed_readings": [
+        "דמה"
+      ],
+      "lexical_seen": [
+        "דמה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q502",
+      "word_id": 146584,
+      "attributed_readings": [
+        "ישראל"
+      ],
+      "lexical_seen": [
+        "ישראל"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q509",
+      "word_id": 154586,
+      "attributed_readings": [
+        "תכחיד"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q509",
+      "word_id": 154698,
+      "attributed_readings": [
+        "זכור",
+        "כור"
+      ],
+      "lexical_seen": [
+        "זכור",
+        "כור"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q514",
+      "word_id": 162765,
+      "attributed_readings": [
+        "אל",
+        "יתגאל"
+      ],
+      "lexical_seen": [
+        "אל"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q514",
+      "word_id": 162768,
+      "attributed_readings": [
+        "ישתה",
+        "יתה"
+      ],
+      "lexical_seen": [
+        "יתה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q528",
+      "word_id": 167209,
+      "attributed_readings": [
+        "חנפ"
+      ],
+      "lexical_seen": [],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "4Q528",
+      "word_id": 167226,
+      "attributed_readings": [
+        "ישראל",
+        "תגאל",
+        "תואל"
+      ],
+      "lexical_seen": [
+        "ישראל"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "CD",
+      "word_id": 415,
+      "attributed_readings": [
+        "אהב",
+        "אוהב"
+      ],
+      "lexical_seen": [
+        "אוהב"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "CD",
+      "word_id": 2748,
+      "attributed_readings": [
+        "יענוהו",
+        "ענוה",
+        "ענוהו"
+      ],
+      "lexical_seen": [
+        "ענוה"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    },
+    {
+      "siglum": "CD",
+      "word_id": 3336,
+      "attributed_readings": [
+        "פי",
+        "פיהו",
+        "פעלו"
+      ],
+      "lexical_seen": [
+        "פי",
+        "פיהו"
+      ],
+      "exact_training_parallel": {
+        "3": [],
+        "5": []
+      }
+    }
+  ]
+}

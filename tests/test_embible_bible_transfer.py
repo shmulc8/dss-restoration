@@ -1,6 +1,6 @@
 import pytest
 
-from eval.embible_bible_transfer_benchmark import (
+from experiments.embible_bible_transfer_benchmark import (
     normalize_bible_text,
     restore_verse,
     sample_items,

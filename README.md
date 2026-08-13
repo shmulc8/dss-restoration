@@ -6,52 +6,52 @@ The project is deliberately reconstruction-free during fine-tuning: modern
 editorial restorations are removed from training targets and from the retrieval
 index.
 
-- [Live research site](https://dss-restoration-demo.pages.dev/)
-- [Hebrew research deck](https://dss-restoration-demo.pages.dev/slides_he.html)
+- [Team-review PDF](docs/paper.pdf)
 - [Locked paper methodology](docs/METHODOLOGY.md)
-- [Final method and system decision](docs/BEST_METHOD.md)
+- [Final method and system decision](docs/archive/BEST_METHOD.md)
 - [Current evidence register](docs/RESULTS.md)
 
 ## Research claim
 
 The intended contribution is a leakage-controlled evaluation framework for DSS
 restoration, not a claim that a model has recovered the original wording of a
-damaged manuscript. The framework separates four questions:
+damaged manuscript. The framework separates two questions:
 
 1. Can the model recover preserved DSS language after we hide it synthetically
    for testing?
 2. Does it rank attested modern scholarly proposals highly at real lacunae?
-3. Do train-only textual parallels improve predictions on the same frozen test
-   cases?
-4. Do candidates and parallels help scholars work more accurately or quickly?
-
-Only the first three have pilot results. The scholar-assistance study has not
-yet been run.
+The current draft does not include or propose a human-subjects study.
 
 ## Current results
 
-These numbers are retained as pilot or diagnostic evidence. They are not
-interchangeable and must not be collapsed into one accuracy headline.
+Synthetic exact recovery and natural-lacuna literature agreement answer
+different questions and must not be collapsed into one accuracy headline.
 
 | Track | Evaluation unit | Result | Interpretation |
 | :--- | :--- | :--- | :--- |
-| Preserved-language sanity check | 300 intact words from held-out non-biblical scrolls | Preserved-only model: 43.7% Top-20 | Grounded language-recovery check; not a real-lacuna benchmark |
-| Attributed real-lacuna comparison | 74 single-word Qumran Digital targets | 63.5% Top-10 | Agreement with any physically compatible attributed reading; not ground truth |
-| RAG ablation on those targets | Same 74 targets | 63.5% to 63.5% Top-10 | No measured improvement |
-| Multiword RAG pilot | 100 held-out Text-Fabric spans | 7.0% to 9.0% exact-sequence Top-10 | Descriptive pilot; word-slot count is supplied and uncertainty is too large for a paper claim |
-| Embible-style synthetic-damage baseline | 30 artificially hidden spans from held-out DSS scrolls | UWC 16.7%, character 6.7%, Embible overlap ensemble 6.7%, rank ensemble 10.0% exact Top-10 | Known-answer pilot, not real-lacuna evaluation; neither ensemble improves UWC and all 2–3 word exact scores are 0% |
-| Expanded system-selection diagnostic | 300 artificially hidden held-out DSS spans | word-only 15.0%, preserved-only TavBERT 6.0%, Embible overlap 4.7%, rank fusion 15.0% exact Top-10 | Word-only retained by the primary-metric simplicity tie-break; expanded nested pilot, not a frozen paper test |
-| Bible domain-transfer diagnostic | 120 spans from Embible's held-out Biblical verses | UWC exact Top-10: 80.0%, 42.5%, 27.5% for 1/2/3 words | Same DSS-trained model and decoder; the large DSS-to-Bible gap identifies domain generalization as a major bottleneck |
+| Natural lacuna, context only | 93 Qumran Digital targets / 40 scrolls | MLM 14.7% mean Top-10 | Three matched seeds; agreement with attributed readings, not truth |
+| Natural lacuna, soft traces | Same 93 targets | MLM 56.6% mean Top-10 | No candidates discarded; seed-and-scroll 95% interval 46.5--66.7 |
+| Natural lacuna, hard traces | Same 93 targets | MLM 52.3% mean; frequency 36.6% Top-10 | Hard filtering is less stable and can empty candidate sets |
+| Composition exclusion | 68 labeled QD targets / 28 scrolls | Soft-trace 52.9% with and without exclusion | Seed-42 sensitivity; 785/1,002 training chunks retained |
+| Unknown-length synthetic spans | 300 non-overlapping targets / 79 scrolls | word model 7.7% exact Top-10 | 22.0% / 1.0% / 0.0% for one/two/three words |
+| ByT5 replication | Same 300 targets, matched seeds 41--43 | 1.3%, 1.3%, 1.0% exact Top-10 | Stable negative sequence-model result |
 
-The physical-constraint ablation on the 74 Qumran Digital targets scores 9.5%
-Top-10 without visible-letter and approximate-length constraints versus 63.5%
-with them. This measures the complete constrained decoder, not an improvement
-in the language model.
+Soft-trace conditioning changes mean MLM Top-10 from 14.7% to 56.6% (paired
+seed-and-scroll 95% interval for the 41.9-point delta: 30.8--53.0). The
+editor-derived length proxy adds no Top-10 gain and is labeled oracle-assisted.
 
 The exact provenance, limitations, and status of every retained number are in
 [`docs/RESULTS.md`](docs/RESULTS.md). Superseded master reports and the earlier
 RAG evaluation that leaked gold length have been removed from the current
 repository. Git history preserves them for audit.
+
+## Reproducibility release
+
+The frozen paper snapshot, its source hashes, and the exact validation commands
+are documented in [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md). The CI workflow
+runs the full test suite and evidence validators, checks that generated paper
+artifacts are current, compiles `docs/paper.tex`, and publishes the compiled PDF
+as a workflow artifact.
 
 ## Clean data and training path
 
@@ -62,75 +62,73 @@ The derived corpus is built from `ETCBC/dss` Text-Fabric 2.0:
 3. permit only physically preserved words to become fine-tuning labels;
 4. split by scroll before training, tuning, retrieval, or evaluation.
 
-The checked-in manifest records 736 scrolls, 1,647 chunks, and 27,814 lacuna
-records. Rebuild and validate the corpus with:
+The checked-in manifest records 736 archival scroll identifiers, of which 377
+contribute at least one reconstruction-free MLM chunk, together with 1,647
+chunks and 27,814 lacuna records. Scrolls without eligible model text remain in
+the registry for provenance and lacuna-shape analysis. Rebuild and validate the
+corpus with:
 
 ```bash
-.venv/bin/python data/build_preserved_nonbib_corpus.py
-.venv/bin/python data/validate_preserved_nonbib_corpus.py
-.venv/bin/python eval/validate_leakage.py
+.venv/bin/python curation/build_preserved_nonbib_corpus.py
+.venv/bin/python curation/validate_preserved_nonbib_corpus.py
+.venv/bin/python experiments/validate_leakage.py
 ```
 
 Fine-tune the current preserved-only baseline with:
 
 ```bash
-.venv/bin/python training/finetune_span_preserved_nonbib.py
+.venv/bin/python tuning/unified_trainer.py
 ```
 
-This checkpoint is a baseline, not the final paper model. The paper protocol
-requires multiple seeds, dev-only model selection, composition-level stress
-tests, realistic damage generation, and an unknown-length decoder. The baseline
-matrix also adopts Embible's Hebrew character/word comparison: word-only,
-TavBERT-style character-only, constrained word completion, and a calibrated
-character-word ensemble under known, predicted, and unknown whitespace.
+This checkpoint is a baseline, not a claim of a final restoration model. The
+evaluation uses development-only decoder selection, manuscript-cluster
+uncertainty, a composition-unseen stress subset, realistic candidate failures,
+and an unknown-length decoder. The baseline matrix also adopts Embible's Hebrew
+character/word comparison: word-only, TavBERT-style character-only, and
+character-word ensembles.
 Like Embible, this comparison creates synthetic damage in intact text so the
 answer is known. Real manuscript lacunae are a separate literature-agreement
-and scholar-evaluation track, not an automatic accuracy test.
+track, not an automatic accuracy test.
 
-The expanded diagnostic also shows that the word decoder can express only
-86.3% of complete targets because it assumes one tokenizer token per missing
-word. The final paper model must therefore be tokenization-free at the word
-level—character, byte, or unrestricted subword sequence generation—while the
-word system remains the strongest implemented baseline.
+The benchmark also shows that the word decoder can express only 81.7% of
+complete targets because it assumes one tokenizer token per missing word.
+Unrepresentable targets remain misses.
 
 ## Current evaluation entry points
 
 ```bash
 # List the paper-facing evaluations without running them
-.venv/bin/python eval/run_all_experiments.py --list
+.venv/bin/python experiments/run_all_experiments.py --list
 
 # Run validation only
-.venv/bin/python eval/run_all_experiments.py --checks
+.venv/bin/python experiments/run_all_experiments.py --checks
 
 # Validate the machine-readable promotion and evaluation contract directly
-.venv/bin/python eval/validate_paper_protocol.py
+.venv/bin/python experiments/validate_paper_protocol.py
 
-# Run the retained pilot evaluations
-.venv/bin/python eval/run_all_experiments.py --pilots
+# Rerun the paper evaluations (requires local checkpoints)
+.venv/bin/python experiments/run_all_experiments.py --pilots
 
 # Run only the Embible-style character/word matrix
-.venv/bin/python eval/run_all_experiments.py --pilots --only embible
+.venv/bin/python experiments/run_all_experiments.py --pilots --only embible
 
-# Run the fixed-decoder Bible transfer diagnostic
-.venv/bin/python eval/run_all_experiments.py --pilots --only bible-transfer
+# Run one matched ByT5 seed
+.venv/bin/python experiments/run_all_experiments.py --pilots --only byt5-42
 ```
 
-The runner includes only the supported pipeline. Older experimental scripts may
-remain for exploratory diagnosis, but they are not registered paper results.
+The runner includes only the paper-facing pipeline. Older experimental scripts
+are not registered paper results.
 
 ## Result terminology
 
 - **Synthetic preserved recovery:** physically preserved transcription is
   hidden artificially, creating a known-answer benchmark rather than a real
   lacuna.
-- **Literature agreement:** a prediction matches at least one compatible,
+- **Literature agreement:** a prediction matches at least one
   attributed modern proposal.
 - **Slot score:** an individual missing word is evaluated independently.
 - **Exact-sequence score:** every word in the proposed span must match in order.
-- **RAG:** retrieval uses preserved text from training scrolls only; its weight
-  is selected on development scrolls.
-
-The primary metric for the next paper benchmark is exact complete-span Top-10
+The primary synthetic metric is exact complete-span Top-10
 under unknown length. Top-1/5/20, character error rate, reciprocal rank, slot
 scores, calibration, and abstention are secondary diagnostics.
 

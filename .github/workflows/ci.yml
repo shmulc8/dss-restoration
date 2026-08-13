@@ -1,0 +1,79 @@
+name: Reproducibility CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reproducibility-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence:
+    name: Tests and evidence validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run tests
+        run: python -m pytest -q
+
+      - name: Validate corpus, leakage, and protocol
+        run: |
+          python curation/validate_preserved_nonbib_corpus.py --derived-only
+          python experiments/validate_leakage.py
+          python experiments/validate_paper_protocol.py
+
+      - name: Regenerate paper evidence
+        run: |
+          python experiments/run_paper_benchmark.py
+          python experiments/build_paper_data_profile.py
+          python docs/generate_paper_tables.py
+
+      - name: Require committed generated artifacts
+        run: |
+          git diff --exit-code -- \
+            docs/paper_results_manifest.json \
+            docs/paper_tables.tex \
+            experiments/results/paper/paper_data_profile.json \
+            experiments/results/paper/paper_results_snapshot.json \
+            experiments/results/paper/PAPER_RESULTS_SNAPSHOT.md
+
+  paper:
+    name: Compile paper
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Compile with pdfLaTeX
+        uses: xu-cheng/latex-action@e2f99d4b3685b0da93f97e1b86ad8fab81105098
+        with:
+          root_file: paper.tex
+          working_directory: docs
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
+
+      - name: Upload compiled paper
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: dss-restoration-paper
+          path: docs/paper.pdf
+          if-no-files-found: error

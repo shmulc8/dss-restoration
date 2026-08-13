@@ -1,0 +1,104 @@
+{
+  "schema_version": "dss-paper-protocol-v2",
+  "status": "team_review_evidence_snapshot",
+  "claim_status": "evaluation_and_corpus_contribution_no_model_superiority_claim",
+  "research_tracks": {
+    "A": {
+      "name": "synthetic_preserved_recovery",
+      "reference_status": "observable_preserved_transcription",
+      "primary_metric": "exact_complete_span_top10"
+    },
+    "B": {
+      "name": "real_lacuna_literature_agreement",
+      "reference_status": "multiple_attributed_proposals_not_ground_truth",
+      "primary_metric": "target_level_literature_agreement_top10"
+    }
+  },
+  "splits": {
+    "primary": "scroll_disjoint",
+    "frozen_manifest": "curation/derived/preserved_nonbib_manifest.json",
+    "composition_grouped_training": false,
+    "qd_target_composition_exclusion_sensitivity": true,
+    "composition_unseen_qd_subset": true,
+    "near_duplicate_audit": "exact_normalized_duplicates_and_preserved_word_5gram_jaccard",
+    "test_used_for_selection": false
+  },
+  "primary_condition": {
+    "track": "A",
+    "length": "unknown",
+    "word_count": "unknown",
+    "word_boundaries": "unknown",
+    "visible_fragments": "not_supplied",
+    "failed_decode": "count_as_miss"
+  },
+  "primary_metric": "exact_complete_span_top10",
+  "mandatory_diagnostics": [
+    "tokenizer_word_coverage",
+    "tokenizer_complete_span_coverage",
+    "oracle_word_length",
+    "candidate_set_coverage",
+    "slot_wordhit_not_used_as_primary"
+  ],
+  "sampling": {
+    "synthetic_targets": 300,
+    "word_count_strata": [1, 2, 3],
+    "manuscript_round_robin": true,
+    "overlapping_hidden_intervals": false,
+    "heldout_scrolls": 79
+  },
+  "training": {
+    "labels": "preserved_text_only",
+    "natural_reconstructions_as_labels": false,
+    "byt5_matched_seeds": [41, 42, 43],
+    "mlm_training_seeds": [41, 42, 43],
+    "single_seed_mlm_limitation_reported": false,
+    "model_selection": "development_only"
+  },
+  "required_systems": [
+    "training_frequency_baseline",
+    "exact_context_retrieval_baseline",
+    "preserved_only_word_span_model",
+    "preserved_only_character_model",
+    "embible_overlap_adaptation",
+    "dev_fitted_rank_fusion",
+    "matched_seed_byt5"
+  ],
+  "qd_conditions": [
+    "context_only",
+    "soft_visible_traces_development_tuned",
+    "visible_traces",
+    "editor_length_oracle",
+    "visible_traces_plus_editor_length_oracle"
+  ],
+  "statistics": {
+    "unit": "manuscript_location",
+    "confidence_interval": 0.95,
+    "bootstrap_cluster": "scroll",
+    "mlm_seed_uncertainty": "hierarchical_seed_and_scroll_bootstrap",
+    "paired_condition_deltas": true,
+    "all_targets_retained_across_conditions": true
+  },
+  "promotion_gate": {
+    "paper_result_requires": [
+      "frozen_hashed_test_manifest",
+      "empty_scroll_intersections",
+      "near_duplicate_audit_reported",
+      "development_only_selection",
+      "matched_seeds_for_seed_variance_claims",
+      "clustered_confidence_intervals",
+      "exact_multiword_sequence_scoring",
+      "unknown_length_primary_condition",
+      "target_level_audit_records",
+      "code_data_model_result_hashes"
+    ]
+  },
+  "current_result": {
+    "synthetic_exact_top10": 7.666666666666667,
+    "synthetic_multiword_conclusion": "one_percent_for_two_words_zero_for_three",
+    "qd_context_top10_three_seed_mean": 14.695340501792115,
+    "qd_soft_visible_top10_three_seed_mean": 55.55555555555556,
+    "qd_hard_visible_top10_three_seed_mean": 52.32974910394265,
+    "editor_length_adds_top10": false,
+    "historical_truth_claim": false
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "status": "fixed_seed_context_window_sensitivity",
+  "seed": 42,
+  "targets": 93,
+  "selection": "descriptive sensitivity; no test-window selection",
+  "rows": [
+    {
+      "context_words_each_side": "2",
+      "context_only_top10": 6.451612903225806,
+      "soft_visible_top10": 54.83870967741935,
+      "hard_visible_top10": 51.61290322580645,
+      "source": "experiments/results/paper/qd_context_window2_seed42_20260811.json"
+    },
+    {
+      "context_words_each_side": "5",
+      "context_only_top10": 11.827956989247312,
+      "soft_visible_top10": 54.83870967741935,
+      "hard_visible_top10": 51.61290322580645,
+      "source": "experiments/results/paper/qd_context_window5_seed42_20260811.json"
+    },
+    {
+      "context_words_each_side": "10",
+      "context_only_top10": 13.978494623655914,
+      "soft_visible_top10": 53.763440860215056,
+      "hard_visible_top10": 51.61290322580645,
+      "source": "experiments/results/paper/qd_context_window10_seed42_20260811.json"
+    },
+    {
+      "context_words_each_side": "full",
+      "context_only_top10": 15.053763440860216,
+      "soft_visible_top10": 52.68817204301075,
+      "hard_visible_top10": 50.53763440860215,
+      "source": "experiments/results/paper/qd_methods_seed42_20260811.json"
+    }
+  ]
+}
